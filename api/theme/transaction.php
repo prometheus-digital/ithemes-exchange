@@ -246,7 +246,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	/**
 	 * Returns the transaction method label.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -269,7 +269,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	/**
 	 * Retrieve the order note.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -398,7 +398,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	/**
 	 * Get the shipping method for the transaction.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -592,7 +592,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	/**
 	 * Iterate over all the line items in the transaction.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -641,7 +641,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	/**
 	 * Iterate over transaction totals.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -714,7 +714,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	/**
 	 * Get information about a total line.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -754,7 +754,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	/**
 	 * Get the demo line items.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Line_Item_Collection
 	 */
@@ -783,7 +783,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	/**
 	 * Get the demo products.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -809,7 +809,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	/**
 	 * Get the demo totals.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -911,7 +911,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	/**
 	 * Get the purchase message for a product.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -945,7 +945,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	/**
 	 * Get the transaction description.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -965,7 +965,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	/**
 	 * Print the varaints.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -1119,7 +1119,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	/**
 	 * Check if there are downloads.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -1395,7 +1395,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	/**
 	 * Print the thank you message.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *

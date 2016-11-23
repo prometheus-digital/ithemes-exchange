@@ -2,7 +2,7 @@
 /**
  * Tax Manager.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -49,7 +49,7 @@ class ITE_Tax_Manager implements ITE_Cart_Aware {
 	/**
 	 * Register a tax provider.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Tax_Provider $provider Tax provider. Take care to only register it once.
 	 * @param bool              $sort     Whether to automatically resort the providers.
@@ -70,7 +70,7 @@ class ITE_Tax_Manager implements ITE_Cart_Aware {
 	/**
 	 * Sort all tax providers.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return $this
 	 */
@@ -83,7 +83,7 @@ class ITE_Tax_Manager implements ITE_Cart_Aware {
 	/**
 	 * Sort tax providers by their location.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $providers
 	 *
@@ -117,7 +117,7 @@ class ITE_Tax_Manager implements ITE_Cart_Aware {
 	/**
 	 * Register hooks.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 */
 	public function hooks() {
 		add_action( 'it_exchange_add_line_item_to_cart', array( $this, 'on_add_item' ), 10, 2 );
@@ -130,7 +130,7 @@ class ITE_Tax_Manager implements ITE_Cart_Aware {
 	/**
 	 * Add taxes when an item is added to the cart.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item $item
 	 * @param \ITE_Cart      $cart
@@ -172,7 +172,7 @@ class ITE_Tax_Manager implements ITE_Cart_Aware {
 	/**
 	 * Finalize tax totals on the cart.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Cart $cart
 	 */
@@ -186,7 +186,7 @@ class ITE_Tax_Manager implements ITE_Cart_Aware {
 	/**
 	 * When the shipping address is updated, possibly recalculate taxes.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Cart $cart
 	 */
@@ -206,7 +206,7 @@ class ITE_Tax_Manager implements ITE_Cart_Aware {
 	/**
 	 * When the billing address is updated, possibly recalculate taxes.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Cart $cart
 	 */
@@ -226,7 +226,7 @@ class ITE_Tax_Manager implements ITE_Cart_Aware {
 	/**
 	 * Handle carts merging.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Cart $cart
 	 * @param \ITE_Cart $other
@@ -258,7 +258,7 @@ class ITE_Tax_Manager implements ITE_Cart_Aware {
 	/**
 	 * Handle an address being updated.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Location|null $new_address
 	 */
@@ -299,7 +299,7 @@ class ITE_Tax_Manager implements ITE_Cart_Aware {
 	/**
 	 * Add taxes to a taxable item for a provider.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Taxable_Line_Item $item
 	 * @param \ITE_Tax_Provider      $provider

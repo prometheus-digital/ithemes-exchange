@@ -2,7 +2,7 @@
 /**
  * Deprecated Meta.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -78,7 +78,7 @@ class IT_Exchange_Deprecated_Meta {
 	/**
 	 * Add a deprecated meta key to be handled.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $deprecated  Deprecated meta key.
 	 * @param string $replacement Replacement meta key.
@@ -100,7 +100,7 @@ class IT_Exchange_Deprecated_Meta {
 	/**
 	 * Replace all deprecated meta keys in WP_Query.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \WP_Query $query
 	 */
@@ -125,7 +125,7 @@ class IT_Exchange_Deprecated_Meta {
 	/**
 	 * Replace meta keys in WP_USer_Query.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \WP_User_Query $query
 	 */
@@ -150,7 +150,7 @@ class IT_Exchange_Deprecated_Meta {
 	/**
 	 * Do the replacements of meta queries.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array  $meta_query
 	 * @param string $context
@@ -241,7 +241,7 @@ class IT_Exchange_Deprecated_Meta {
 	/**
 	 * Check if a given meta key is deprecated.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $key
 	 *
@@ -254,7 +254,7 @@ class IT_Exchange_Deprecated_Meta {
 	/**
 	 * Get the replacement meta key.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $key
 	 *
@@ -267,7 +267,7 @@ class IT_Exchange_Deprecated_Meta {
 	/**
 	 * Warn a user about using a deprecated meta key.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $deprecated Deprecated meta key.
 	 * @param string $context    Contextualize where the deprecated meta key was used. Ex: 'add_post_meta()'
@@ -284,7 +284,7 @@ class IT_Exchange_Deprecated_Meta {
 		/**
 		 * Fires when a deprecated meta key is is used.
 		 *
-		 * @since 1.36.0
+		 * @since 2.0.0
 		 *
 		 * @param string $deprecated  The meta key that was used.
 		 * @param string $replacement The meta key that should be used as a replacement.
@@ -300,7 +300,7 @@ class IT_Exchange_Deprecated_Meta {
 		/**
 		 * Filters whether to trigger deprecated meta key errors.
 		 *
-		 * @since 1.36.0
+		 * @since 2.0.0
 		 *
 		 * @param bool $trigger Whether to trigger deprecated meta key errors.
 		 *                      Requires `WP_DEBUG` to be defined true.

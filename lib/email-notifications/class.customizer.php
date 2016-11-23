@@ -2,7 +2,7 @@
 /**
  * Contains the Email Customizer class.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLV2
  */
 
@@ -34,7 +34,7 @@ class IT_Exchange_Email_Customizer {
 	/**
 	 * IT_Exchange_Email_Customizer constructor.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 */
 	public function __construct() {
 
@@ -52,7 +52,7 @@ class IT_Exchange_Email_Customizer {
 	/**
 	 * Retrieve the email settings.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $setting Optionally, provide a specific setting to retrieve.
 	 *
@@ -78,7 +78,7 @@ class IT_Exchange_Email_Customizer {
 	/**
 	 * Fires when the customizer is registered.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param WP_Customize_Manager $customizer
 	 */
@@ -111,7 +111,7 @@ class IT_Exchange_Email_Customizer {
 	/**
 	 * Get all customizer sections.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param WP_Customize_Manager $customizer
 	 *
@@ -161,7 +161,7 @@ class IT_Exchange_Email_Customizer {
 	/**
 	 * Get all customizer settings.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param WP_Customize_Manager $customizer
 	 *
@@ -305,7 +305,7 @@ class IT_Exchange_Email_Customizer {
 	/**
 	 * Get all customizer controls.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param WP_Customize_Manager $customizer
 	 *
@@ -562,7 +562,7 @@ class IT_Exchange_Email_Customizer {
 	/**
 	 * Get the default footer text.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -585,7 +585,7 @@ class IT_Exchange_Email_Customizer {
 	/**
 	 * Get the available presets.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -753,7 +753,7 @@ class IT_Exchange_Email_Customizer {
 		/**
 		 * Filter the presets available.
 		 *
-		 * @since 1.36
+		 * @since 2.0.0
 		 *
 		 * @param array $presets
 		 */
@@ -763,7 +763,7 @@ class IT_Exchange_Email_Customizer {
 	/**
 	 * Sideload an image.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $file
 	 *
@@ -827,7 +827,7 @@ class IT_Exchange_Email_Customizer {
 	/**
 	 * Get the preset choices.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -846,7 +846,7 @@ class IT_Exchange_Email_Customizer {
 	 *
 	 * This is based off the default preset.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $setting
 	 *
@@ -872,7 +872,7 @@ class IT_Exchange_Email_Customizer {
 	 * We only remove widgets, because widgets is sticky. If both widgets and nav-menus are hidden,
 	 * no components appear.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $components
 	 *
@@ -898,7 +898,7 @@ class IT_Exchange_Email_Customizer {
 	/**
 	 * Restrict the sections loaded in the customizer if we are doing the Exchange Emails Preview.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param bool                 $active
 	 * @param WP_Customize_Section $section
@@ -917,7 +917,7 @@ class IT_Exchange_Email_Customizer {
 	/**
 	 * Overload the template to use the Exchange email template whenever we are in the customizer.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $template
 	 *
@@ -939,7 +939,7 @@ class IT_Exchange_Email_Customizer {
 	/**
 	 * Enqueue control scripts.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 */
 	public function enqueue_control_scripts() {
 		wp_enqueue_script( 'it-exchange-email-customizer-controls', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/assets/controls.js', array(
@@ -956,7 +956,7 @@ class IT_Exchange_Email_Customizer {
 	/**
 	 * Enqueue our control script when the email customizer is loaded.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 */
 	public function enqueue_preview_scripts() {
 		if ( self::is_active() ) {
@@ -978,7 +978,7 @@ class IT_Exchange_Email_Customizer {
 	/**
 	 * Dequeue scripts and actions when we are in the email customizer.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 */
 	public function dequeue_scripts_and_actions() {
 
@@ -1035,7 +1035,7 @@ class IT_Exchange_Email_Customizer {
 	/**
 	 * Check if the email customizer is active.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -1046,7 +1046,7 @@ class IT_Exchange_Email_Customizer {
 	/**
 	 * Get a link to the customizer preview.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -1062,7 +1062,7 @@ class IT_Exchange_Email_Customizer {
 	 *
 	 * Ensures that the user is running WordPress 4.3+
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */

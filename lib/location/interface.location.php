@@ -2,7 +2,7 @@
 /**
  * Location Interface.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -30,7 +30,7 @@ interface ITE_Location extends ArrayAccess, IteratorAggregate {
 	/**
 	 * Whether this location contains another location.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Location $location
 	 * @param string        $upper_bound Specify the upper bound that must match. For example, passing 'state'
@@ -43,7 +43,7 @@ interface ITE_Location extends ArrayAccess, IteratorAggregate {
 	/**
 	 * Whether this location is equal to another location.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Location $location
 	 *
@@ -54,7 +54,7 @@ interface ITE_Location extends ArrayAccess, IteratorAggregate {
 	/**
 	 * Convert the location to an array.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */

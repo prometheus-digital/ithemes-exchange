@@ -2,7 +2,7 @@
 /**
  * Settings Controller class.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -33,7 +33,7 @@ class ITE_Settings_Controller {
 	/**
 	 * Lazy-load settings.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -49,7 +49,7 @@ class ITE_Settings_Controller {
 	/**
 	 * Get a setting.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $key
 	 *
@@ -71,7 +71,7 @@ class ITE_Settings_Controller {
 	/**
 	 * Check if a setting exists.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $key
 	 *
@@ -84,7 +84,7 @@ class ITE_Settings_Controller {
 	/**
 	 * Get all settings values.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -95,7 +95,7 @@ class ITE_Settings_Controller {
 	/**
 	 * Alter a setting value.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $key
 	 * @param mixed  $val
@@ -119,7 +119,7 @@ class ITE_Settings_Controller {
 	/**
 	 * Save settings.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */

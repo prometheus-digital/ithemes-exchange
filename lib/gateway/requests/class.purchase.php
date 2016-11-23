@@ -2,7 +2,7 @@
 /**
  * Purchase Request class.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -32,6 +32,9 @@ class ITE_Gateway_Purchase_Request implements ITE_Gateway_Purchase_Request_Inter
 	/** @var string */
 	protected $redirect_to;
 
+	/** @var IT_Exchange_Transaction|null */
+	protected $child_of;
+
 	/**
 	 * ITE_Gateway_Purchase_Request constructor.
 	 *
@@ -48,7 +51,7 @@ class ITE_Gateway_Purchase_Request implements ITE_Gateway_Purchase_Request_Inter
 	/**
 	 * Get the cart being purchased.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Cart
 	 */
@@ -59,7 +62,7 @@ class ITE_Gateway_Purchase_Request implements ITE_Gateway_Purchase_Request_Inter
 	/**
 	 * Get the HTTP request.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -70,7 +73,7 @@ class ITE_Gateway_Purchase_Request implements ITE_Gateway_Purchase_Request_Inter
 	/**
 	 * Get the nonce.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -81,7 +84,7 @@ class ITE_Gateway_Purchase_Request implements ITE_Gateway_Purchase_Request_Inter
 	/**
 	 * Get the card being used for the purchase.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Gateway_Card|null
 	 */
@@ -92,7 +95,7 @@ class ITE_Gateway_Purchase_Request implements ITE_Gateway_Purchase_Request_Inter
 	/**
 	 * Set the card to be used for the purchase.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Gateway_Card $card
 	 */
@@ -103,7 +106,7 @@ class ITE_Gateway_Purchase_Request implements ITE_Gateway_Purchase_Request_Inter
 	/**
 	 * Get the payment token.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Payment_Token|null
 	 */
@@ -114,7 +117,7 @@ class ITE_Gateway_Purchase_Request implements ITE_Gateway_Purchase_Request_Inter
 	/**
 	 * Set the payment token.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Payment_Token|null $token
 	 *
@@ -134,7 +137,7 @@ class ITE_Gateway_Purchase_Request implements ITE_Gateway_Purchase_Request_Inter
 	 *
 	 * This might be used in scenarios like Guest Checkout.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Gateway_Tokenize_Request|null
 	 */
@@ -145,7 +148,7 @@ class ITE_Gateway_Purchase_Request implements ITE_Gateway_Purchase_Request_Inter
 	/**
 	 * Set the tokenize request.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Gateway_Tokenize_Request $tokenize
 	 */
@@ -156,7 +159,7 @@ class ITE_Gateway_Purchase_Request implements ITE_Gateway_Purchase_Request_Inter
 	/**
 	 * Get the destination the customer should be redirected to after purchase.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -169,12 +172,26 @@ class ITE_Gateway_Purchase_Request implements ITE_Gateway_Purchase_Request_Inter
 	 *
 	 * This defaults to the confirmation page.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $redirect_to
 	 */
 	public function set_redirect_to( $redirect_to ) {
 		$this->redirect_to = $redirect_to;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_child_of() {
+		return $this->child_of;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function set_child_of( IT_Exchange_Transaction $transaction ) {
+		$this->child_of = $transaction;
 	}
 
 	/**

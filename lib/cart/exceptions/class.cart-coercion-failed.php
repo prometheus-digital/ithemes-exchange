@@ -2,7 +2,7 @@
 /**
  * Cart Coercion Failed Exception.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -40,7 +40,7 @@ class ITE_Cart_Coercion_Failed_Exception extends Exception {
 	/**
 	 * Get the cart validator.
 	 * 
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 * 
 	 * @return \ITE_Cart_Validator
 	 */
@@ -51,7 +51,7 @@ class ITE_Cart_Coercion_Failed_Exception extends Exception {
 	/**
 	 * Get the cart that failed coercion.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Cart
 	 */

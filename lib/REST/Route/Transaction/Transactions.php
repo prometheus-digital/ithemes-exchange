@@ -2,7 +2,7 @@
 /**
  * Transactions Endpoint.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -52,8 +52,8 @@ class Transactions extends Base implements Getable {
 			$args['cleared'] = $request['cleared_for_delivery'];
 		}
 
-		if ( $request['s'] ) {
-			$args['s'] = $request['s'];
+		if ( $request['search'] ) {
+			$args['s'] = sanitize_text_field( $request['search'] );
 		}
 
 		$transactions = it_exchange_get_transactions( $args, $total );
@@ -85,7 +85,7 @@ class Transactions extends Base implements Getable {
 
 		$response = new \WP_REST_Response( $data );
 		$response->header( 'X-WP-Total', $total );
-		$response->header( 'X-WP-TotalPages', $total ? ceil( $total / $total_pages ) : 0 );
+		$response->header( 'X-WP-TotalPages', $total_pages );
 
 		$first_link = add_query_arg( 'page', 1, $base_pagination_url );
 		$response->link_header( 'first', $first_link );
@@ -120,7 +120,7 @@ class Transactions extends Base implements Getable {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you must be logged-in to view transactions.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::UNAUTHORIZED )
+				array( 'status' => rest_authorization_required_code() )
 			);
 		}
 
@@ -128,7 +128,7 @@ class Transactions extends Base implements Getable {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( "Sorry, you are not allowed to list other customer's transactions.", 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::UNAUTHORIZED )
+				array( 'status' => rest_authorization_required_code() )
 			);
 		}
 
@@ -136,7 +136,7 @@ class Transactions extends Base implements Getable {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you cannot edit that prent transaction.' ),
-				array( 'status' => \WP_Http::UNAUTHORIZED )
+				array( 'status' => rest_authorization_required_code() )
 			);
 
 		}
@@ -144,7 +144,7 @@ class Transactions extends Base implements Getable {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you cannot filter transactions by method id.' ),
-				array( 'status' => \WP_Http::UNAUTHORIZED )
+				array( 'status' => rest_authorization_required_code() )
 			);
 		}
 
@@ -207,8 +207,8 @@ class Transactions extends Base implements Getable {
 				'description' => __( 'Filter by method id.', 'it-l10n-ithemes-exchange' ),
 				'type'        => 'string',
 			),
-			's'                    => array(
-				'description' => __( 'Search transactions.', 'it-l10n-ithemes-exchange' ),
+			'search'               => array(
+				'description' => __( 'Limit results to those matching a string.', 'it-l10n-ithemes-exchange' ),
 				'type'        => 'string',
 				'minLength'   => 3,
 				'maxLength'   => 300,

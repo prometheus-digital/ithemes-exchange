@@ -2,7 +2,7 @@
 /**
  * Cart Meta.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -39,7 +39,7 @@ class ITE_Cart_Meta {
 	/**
 	 * Get a meta key.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -50,7 +50,7 @@ class ITE_Cart_Meta {
 	/**
 	 * Does this meta key show in rest.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -61,7 +61,7 @@ class ITE_Cart_Meta {
 	/**
 	 * Is this meta key editable in rest.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -74,7 +74,7 @@ class ITE_Cart_Meta {
 	 *
 	 * ie, 'string' or 'integer'.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */

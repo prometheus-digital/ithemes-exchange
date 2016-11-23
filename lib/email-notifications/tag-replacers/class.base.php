@@ -2,7 +2,7 @@
 /**
  * Contains the base tag replacer class.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -24,7 +24,7 @@ abstract class IT_Exchange_Email_Tag_Replacer_Base implements IT_Exchange_Email_
 	/**
 	 * Add a tag to be replaced.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Email_Tag $tag
 	 *
@@ -37,9 +37,20 @@ abstract class IT_Exchange_Email_Tag_Replacer_Base implements IT_Exchange_Email_
 	}
 
 	/**
+	 * @inheritDoc
+	 */
+	public function add_tags( array $tags ) {
+		foreach ( $tags as $tag ) {
+			$this->tags[ $tag->get_tag() ] = $tag;
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Get a tag object for a given tag.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $tag
 	 *
@@ -52,7 +63,7 @@ abstract class IT_Exchange_Email_Tag_Replacer_Base implements IT_Exchange_Email_
 	/**
 	 * Get all registered tags.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return IT_Exchange_Email_Tag[]
 	 */
@@ -63,7 +74,7 @@ abstract class IT_Exchange_Email_Tag_Replacer_Base implements IT_Exchange_Email_
 	/**
 	 * Get all tags for a given notification.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Email_Notification $notification
 	 *
@@ -85,7 +96,7 @@ abstract class IT_Exchange_Email_Tag_Replacer_Base implements IT_Exchange_Email_
 	/**
 	 * Handle a sendable object before it has been sent.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Sendable_Mutable_Wrapper $sendable
 	 *
@@ -102,7 +113,7 @@ abstract class IT_Exchange_Email_Tag_Replacer_Base implements IT_Exchange_Email_
 	/**
 	 * Replace the email tags.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $content
 	 * @param array  $context
@@ -125,7 +136,7 @@ abstract class IT_Exchange_Email_Tag_Replacer_Base implements IT_Exchange_Email_
 	/**
 	 * Replace an individual tag.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Email_Tag $tag
 	 * @param array                 $context
@@ -146,7 +157,7 @@ abstract class IT_Exchange_Email_Tag_Replacer_Base implements IT_Exchange_Email_
 		 *
 		 * The dynamic portion of this hook, `{$tag->get_tag()}`, refers to the email tag.
 		 *
-		 * @since 1.36
+		 * @since 2.0.0
 		 *
 		 * @param string                $r
 		 * @param IT_Exchange_Email_Tag $tag
@@ -158,7 +169,7 @@ abstract class IT_Exchange_Email_Tag_Replacer_Base implements IT_Exchange_Email_
 		/**
 		 * Filter the replaced email tag.
 		 *
-		 * @since 1.36
+		 * @since 2.0.0
 		 *
 		 * @param string                $r
 		 * @param IT_Exchange_Email_Tag $tag
@@ -173,7 +184,7 @@ abstract class IT_Exchange_Email_Tag_Replacer_Base implements IT_Exchange_Email_
 	/**
 	 * Replace a legacy tag.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $tag
 	 * @param array  $options
@@ -207,21 +218,21 @@ abstract class IT_Exchange_Email_Tag_Replacer_Base implements IT_Exchange_Email_
 	/**
 	 * Get legacy tag replacement functions.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
 	protected function get_legacy_functions() {
 
 		if ( has_filter( 'it_exchange_email_notification_shortcode_functions' ) ) {
-			it_exchange_deprecated_filter( 'it_exchange_email_notification_shortcode_functions', '1.36',
+			it_exchange_deprecated_filter( 'it_exchange_email_notification_shortcode_functions', '2.0.0',
 				'IT_Exchange_Email_Tag_Replacer::add_tag' );
 		}
 
 		/**
 		 * Filter the available shortcode functions.
 		 *
-		 * @deprecated 1.36
+		 * @deprecated 2.0.0
 		 *
 		 * @since      1.0
 		 *
@@ -235,7 +246,7 @@ abstract class IT_Exchange_Email_Tag_Replacer_Base implements IT_Exchange_Email_
 	 *
 	 * These should not be relied upon.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $context
 	 */
@@ -251,7 +262,7 @@ abstract class IT_Exchange_Email_Tag_Replacer_Base implements IT_Exchange_Email_
 	/**
 	 * Get the data array. This is mainly for back-compat.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */

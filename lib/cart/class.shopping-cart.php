@@ -47,7 +47,7 @@ class IT_Exchange_Shopping_Cart {
 	 *
 	 * If not, redirect to the store with an error.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 */
 	public function check_requested_cart_auth() {
 
@@ -641,7 +641,7 @@ class IT_Exchange_Shopping_Cart {
 	/**
 	 * Prepare the cart for purchase on the checkout page.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 */
 	public function prepare_for_purchase() {
 
@@ -653,7 +653,7 @@ class IT_Exchange_Shopping_Cart {
 	/**
 	 * Convert feedback to notices.
 	 *
-	 * @sicne 1.36.0
+	 * @sicne 2.0.0
 	 */
 	public function convert_feedback_to_notices() {
 
@@ -679,7 +679,7 @@ class IT_Exchange_Shopping_Cart {
 	/**
 	 * Clear the cart meta session data when a transaction is completed.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param int            $transaction_id
 	 * @param \ITE_Cart|null $cart
@@ -693,7 +693,7 @@ class IT_Exchange_Shopping_Cart {
 	/**
 	 * Clear cart meta when the cart is emptied.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Cart $cart
 	 */
@@ -763,7 +763,7 @@ class IT_Exchange_Shopping_Cart {
 	/**
 	 * Merge sessions on user login.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string  $user_login
 	 * @param WP_User $user
@@ -796,12 +796,12 @@ class IT_Exchange_Shopping_Cart {
 	 *
 	 * @since      1.9.0
 	 *
-	 * @deprecated 1.36.0
+	 * @deprecated 2.0.0
 	 *
 	 * @return void
 	 */
 	public function sync_customer_active_carts() {
-		_deprecated_function( __FUNCTION__, '1.36.0' );
+		_deprecated_function( __FUNCTION__, '2.0.0' );
 	}
 }
 

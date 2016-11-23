@@ -2,7 +2,7 @@
 /**
  * Contains the Postmark email sender.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -59,7 +59,7 @@ class IT_Exchange_Email_Postmark_Sender implements IT_Exchange_Email_Sender {
 	/**
 	 * Send the email.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Sendable $email
 	 *
@@ -73,7 +73,7 @@ class IT_Exchange_Email_Postmark_Sender implements IT_Exchange_Email_Sender {
 	/**
 	 * Bulk send emails.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Sendable[] $emails
 	 *
@@ -99,7 +99,7 @@ class IT_Exchange_Email_Postmark_Sender implements IT_Exchange_Email_Sender {
 	/**
 	 * Convert a sendable object to the API format.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Sendable $sendable
 	 *
@@ -145,7 +145,7 @@ class IT_Exchange_Email_Postmark_Sender implements IT_Exchange_Email_Sender {
 		/**
 		 * Filter the email data after it is prepared for Postmark.
 		 *
-		 * @since 1.36
+		 * @since 2.0.0
 		 *
 		 * @param array                $api_format
 		 * @param IT_Exchange_Sendable $sendable
@@ -158,7 +158,7 @@ class IT_Exchange_Email_Postmark_Sender implements IT_Exchange_Email_Sender {
 	/**
 	 * Make an API request to Postmark.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string               $endpoint
 	 * @param array                $data
@@ -228,7 +228,7 @@ class IT_Exchange_Email_Postmark_Sender implements IT_Exchange_Email_Sender {
 	 *
 	 * @internal
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Email_Recipient $recipient
 	 *
@@ -241,7 +241,7 @@ class IT_Exchange_Email_Postmark_Sender implements IT_Exchange_Email_Sender {
 	/**
 	 * Get the from email address.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */

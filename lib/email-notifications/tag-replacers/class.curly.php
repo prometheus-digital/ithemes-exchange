@@ -2,7 +2,7 @@
 /**
  * Contains the curly tag replacer.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,7 +14,7 @@ class IT_Exchange_Email_Curly_Tag_Replacer extends IT_Exchange_Email_Tag_Replace
 	/**
 	 * Format a tag.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Email_Tag|string $tag
 	 *
@@ -36,7 +36,7 @@ class IT_Exchange_Email_Curly_Tag_Replacer extends IT_Exchange_Email_Tag_Replace
 	/**
 	 * Replace the email tags.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $content
 	 * @param array  $context
@@ -52,7 +52,7 @@ class IT_Exchange_Email_Curly_Tag_Replacer extends IT_Exchange_Email_Tag_Replace
 	/**
 	 * Get a map of tags to their replacements.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $content
 	 * @param array  $context
@@ -86,7 +86,7 @@ class IT_Exchange_Email_Curly_Tag_Replacer extends IT_Exchange_Email_Tag_Replace
 	/**
 	 * Replace tags.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $matches
 	 *
@@ -118,7 +118,7 @@ class IT_Exchange_Email_Curly_Tag_Replacer extends IT_Exchange_Email_Tag_Replace
 	 *
 	 * Used when passing content to the templating system of the mail provider.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $open_tag  Format to be used for opening a tag.
 	 * @param string $close_tag Format to be used for closing a tag.

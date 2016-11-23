@@ -2,7 +2,7 @@
 /**
  * Aggregate Line Item interface.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,7 +14,7 @@ interface ITE_Aggregate_Line_Item {
 	/**
 	 * Get all of the line items being represented.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return ITE_Line_Item_Collection|ITE_Aggregatable_Line_Item[]
 	 */
@@ -23,7 +23,7 @@ interface ITE_Aggregate_Line_Item {
 	/**
 	 * Add a line item to this aggregate.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Aggregatable_Line_Item $item
 	 *
@@ -34,7 +34,7 @@ interface ITE_Aggregate_Line_Item {
 	/**
 	 * Remove an item from the aggregate.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string     $type
 	 * @param string|int $id

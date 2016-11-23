@@ -2,7 +2,7 @@
 /**
  * Gateway API functions.
  *
- * @since 1.36.0
+ * @since 2.0.0
  * @license GPLv2
  */
 
@@ -12,7 +12,7 @@
  * A payment gateway can be activated, so that past transactions can work properly,
  * but no longer accepting new payments.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param \ITE_Gateway|string $gateway
  *

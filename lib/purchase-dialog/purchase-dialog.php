@@ -295,7 +295,7 @@ class IT_Exchange_Purchase_Dialog{
 	/**
 	 * Get saved cards selector.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -399,7 +399,7 @@ class IT_Exchange_Purchase_Dialog{
 	/**
 	 * Get a Gateway Card from the submitted form values.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Gateway_Card|null
 	 */

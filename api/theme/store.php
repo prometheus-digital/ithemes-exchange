@@ -125,7 +125,7 @@ class IT_Theme_API_Store implements IT_Theme_API {
 	/**
 	 * Print the Store name.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */

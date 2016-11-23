@@ -12,13 +12,13 @@
  */
 class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware {
 
-	/** @deprecated 1.36 */
+	/** @deprecated 2.0.0 */
 	public $transaction_id;
 
-	/** @deprecated 1.36 */
+	/** @deprecated 2.0.0 */
 	public $customer_id;
 
-	/** @deprecated 1.36 */
+	/** @deprecated 2.0.0 */
 	public $user;
 
 	/**
@@ -64,7 +64,7 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 	/**
 	 * Register a notification.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Email_Notification $notification
 	 *
@@ -79,7 +79,7 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 	/**
 	 * Get a notification.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $slug
 	 *
@@ -92,7 +92,7 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 	/**
 	 * Retrieve all registered notifications.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return IT_Exchange_Email_Notification[]
 	 */
@@ -103,7 +103,7 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 	/**
 	 * Get all the email notification groups.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -124,7 +124,7 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 	/**
 	 * Get the sender.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return IT_Exchange_Email_Sender
 	 */
@@ -135,7 +135,7 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 	/**
 	 * Set the email sender to be used.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Email_Sender $sender
 	 */
@@ -146,7 +146,7 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 	/**
 	 * Get the tag replacer.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return IT_Exchange_Email_Tag_Replacer
 	 */
@@ -169,7 +169,7 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 	/**
 	 * Send an email notification.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param int    $customer_id
 	 * @param string $subject
@@ -346,13 +346,13 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 	 *
 	 * @since      0.4.0
 	 *
-	 * @deprecated 1.36
+	 * @deprecated 2.0.0
 	 *
 	 * @return string HTML header
 	 */
 	public function body_header() {
 
-		_deprecated_function( __METHOD__, '1.36' );
+		_deprecated_function( __METHOD__, '2.0.0' );
 
 		$data = empty( $GLOBALS['it_exchange']['email-confirmation-data'] ) ? false : $GLOBALS['it_exchange']['email-confirmation-data'];
 		ob_start();
@@ -375,13 +375,13 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 	 *
 	 * @since      0.4.0
 	 *
-	 * @deprecated 1.36
+	 * @deprecated 2.0.0
 	 *
 	 * @return string HTML footer
 	 */
 	public function body_footer() {
 
-		_deprecated_function( __METHOD__, '1.36' );
+		_deprecated_function( __METHOD__, '2.0.0' );
 
 		$data = empty( $GLOBALS['it_exchange']['email-confirmation-data'] ) ? false : $GLOBALS['it_exchange']['email-confirmation-data'];
 		ob_start();
@@ -399,7 +399,7 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 	/**
 	 * Back-compat magic method.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $name
 	 * @param array  $arguments
@@ -413,7 +413,7 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 			$new_name = str_replace( 'it_exchange_replace_', '', $name );
 			$new_name = str_replace( '_tag', '', $new_name );
 
-			_deprecated_function( __CLASS__ . '::' . $name, '1.36', "IT_Exchange_Email_Tag_Replacer::$new_name" );
+			_deprecated_function( __CLASS__ . '::' . $name, '2.0.0', "IT_Exchange_Email_Tag_Replacer::$new_name" );
 
 			/** @var IT_Exchange_Email_Notifications $notifications */
 			$notifications = $arguments[0];

@@ -2,7 +2,7 @@
 /**
  * Line Item Repository aware interface.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,7 +14,7 @@ interface ITE_Line_Item_Repository_Aware {
 	/**
 	 * Set the line item repository on this object.
 	 * 
-	 * @since 1.36
+	 * @since 2.0.0
 	 * 
 	 * @param \ITE_Line_Item_Repository $repository
 	 */

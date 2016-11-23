@@ -2,7 +2,7 @@
 /**
  * Cart Meta registry.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -19,7 +19,7 @@ class ITE_Cart_Meta_Registry {
 	/**
 	 * Register metadata.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param ITE_Cart_Meta $meta
 	 */
@@ -30,7 +30,7 @@ class ITE_Cart_Meta_Registry {
 	/**
 	 * Get meta key.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $key
 	 *
@@ -43,7 +43,7 @@ class ITE_Cart_Meta_Registry {
 	/**
 	 * Get all meta values from the registry.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return ITE_Cart_Meta[]
 	 */
@@ -54,7 +54,7 @@ class ITE_Cart_Meta_Registry {
 	/**
 	 * Get all meta that is editable in REST.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return ITE_Cart_Meta[]
 	 */

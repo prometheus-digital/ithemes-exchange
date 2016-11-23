@@ -79,6 +79,13 @@ function it_exchange_get_data_set_properties( $data_key=false ) {
  * @return mixed
 */
 function it_exchange_get_data_set( $key, $options=array() ) {
+
+	static $cache = array();
+
+	if ( isset( $cache[ $key . serialize( $options ) ] ) && empty( $options['break_cache'] ) ) {
+		return $cache[ $key . serialize( $options ) ];
+	}
+
 	$data_set_props = it_exchange_get_data_set_properties( $key );
 
 	// Return false if we don't have a file or function
@@ -96,6 +103,8 @@ function it_exchange_get_data_set( $key, $options=array() ) {
 		$data_set = call_user_func( $data_set_props['function'], $options );
 	else
 		return false;
+
+	$cache[ $key . serialize( $options ) ] = $data_set;
 
 	// Return the data. It should be filtered by the function. Not here.
 	return $data_set;

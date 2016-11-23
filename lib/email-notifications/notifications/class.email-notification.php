@@ -2,7 +2,7 @@
 /**
  * Single email notification class.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -122,7 +122,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Setup this object's properties.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $data
 	 */
@@ -135,7 +135,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Get the email slug.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -146,7 +146,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Get the email name.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -157,7 +157,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Get the notification type.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param bool $label
 	 *
@@ -168,7 +168,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Get the subject line of the notification.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -179,7 +179,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Set the subject line of the notification.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $subject
 	 *
@@ -194,7 +194,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Get the notification body.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -205,7 +205,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Set the notification body.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $body
 	 *
@@ -220,7 +220,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Check if this notification is active.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return boolean
 	 */
@@ -231,7 +231,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Set the active state of the email notification.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param boolean $active
 	 *
@@ -251,7 +251,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Get the template for this notification.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return IT_Exchange_Email_Template
 	 */
@@ -262,7 +262,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Get the notification description.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -273,7 +273,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Check if the notification has a description.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -284,7 +284,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Get the previous email contents.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -295,7 +295,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Check if this notification has a previous value.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -306,7 +306,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Get the group this notification belongs to.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -317,7 +317,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Check if the notification values are not at their default settings.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -339,7 +339,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Get the data to save.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -354,7 +354,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Save the email notification.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -376,7 +376,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Convert content to curly tags instead of shortcodes.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $content
 	 *

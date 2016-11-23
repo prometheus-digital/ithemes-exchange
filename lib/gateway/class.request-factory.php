@@ -2,7 +2,7 @@
 /**
  * Payment Gateway Request Factory.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,7 +14,7 @@ class ITE_Gateway_Request_Factory {
 	/**
 	 * Construct a request object.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $type
 	 * @param array  $args
@@ -79,6 +79,16 @@ class ITE_Gateway_Request_Factory {
 					}
 
 					$request->set_tokenize( $tokenize );
+				}
+
+				if ( ! empty( $args['child_of'] ) ) {
+					$child_of = it_exchange_get_transaction( $args['child_of'] );
+
+					if ( ! $child_of instanceof IT_Exchange_Transaction ) {
+						throw new InvalidArgumentException( 'Invalid `child_of` option.' );
+					}
+
+					$request->set_child_of( $child_of );
 				}
 
 				if ( ! empty( $args['redirect_to'] ) ) {
@@ -158,13 +168,14 @@ class ITE_Gateway_Request_Factory {
 				/**
 				 * Filter the gateway request for an unknown request type.
 				 *
-				 * @since 1.36.0
+				 * @since 2.0.0
 				 *
-				 * @param ITE_Gateway_Request $request
-				 * @param array               $args
-				 * @param string              $type
+				 * @param ITE_Gateway_Request          $request
+				 * @param array                        $args
+				 * @param string                       $type
+				 * @param \ITE_Gateway_Request_Factory $this
 				 */
-				$request = apply_filters( "it_exchange_make_{$type}_gateway_request", null, $args, $type );
+				$request = apply_filters( "it_exchange_make_{$type}_gateway_request", null, $args, $type, $this );
 
 				if ( $request && ( ! $request instanceof ITE_Gateway_Request || $request->get_name() !== $type ) ) {
 					throw new UnexpectedValueException( "Unable to construct {$type} request." );
@@ -183,13 +194,14 @@ class ITE_Gateway_Request_Factory {
 			/**
 			 * Filter the created gateway request.
 			 *
-			 * @since 1.36.0
+			 * @since 2.0.0
 			 *
-			 * @param ITE_Gateway_Request $request
-			 * @param array               $args
-			 * @param string              $type
+			 * @param ITE_Gateway_Request          $request
+			 * @param array                        $args
+			 * @param string                       $type
+			 * @param \ITE_Gateway_Request_Factory $this
 			 */
-			$filtered = apply_filters( "it_exchange_make_{$type}_gateway_request", $request, $args, $type );
+			$filtered = apply_filters( "it_exchange_make_{$type}_gateway_request", $request, $args, $type, $this );
 
 			if ( $filtered instanceof $request ) {
 				$request = $filtered;
@@ -199,13 +211,14 @@ class ITE_Gateway_Request_Factory {
 		/**
 		 * Filter the created gateway request.
 		 *
-		 * @since 1.36.0
+		 * @since 2.0.0
 		 *
-		 * @param \ITE_Gateway_Request $request
-		 * @param array                $args
-		 * @param string               $type
+		 * @param \ITE_Gateway_Request         $request
+		 * @param array                        $args
+		 * @param string                       $type
+		 * @param \ITE_Gateway_Request_Factory $this
 		 */
-		$filtered = apply_filters( 'it_exchange_make_gateway_request', $request, $args, $type );
+		$filtered = apply_filters( 'it_exchange_make_gateway_request', $request, $args, $type, $this );
 
 		if ( $filtered instanceof $request ) {
 			$request = $filtered;
@@ -217,13 +230,13 @@ class ITE_Gateway_Request_Factory {
 	/**
 	 * Build a card from an array.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $card
 	 *
 	 * @return \ITE_Gateway_Card|null
 	 */
-	protected function build_card( array $card ) {
+	public function build_card( array $card ) {
 		if ( isset( $card['number'], $card['year'], $card['month'], $card['cvc'] ) ) {
 			$name = empty( $card['name'] ) ? '' : $card['name'];
 
@@ -236,7 +249,7 @@ class ITE_Gateway_Request_Factory {
 	/**
 	 * Build a bank account from an array.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $account
 	 *
@@ -244,7 +257,7 @@ class ITE_Gateway_Request_Factory {
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	protected function build_bank_account( array $account ) {
+	public function build_bank_account( array $account ) {
 
 		if ( isset( $account['name'], $account['number'], $account['type'] ) ) {
 			$routing = empty( $account['routing'] ) ? '' : $account['routing'];

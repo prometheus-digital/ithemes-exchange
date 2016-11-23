@@ -2,7 +2,7 @@
 /**
  * This file contains the markup for the email template head.
  *
- * @since   1.36
+ * @since   2.0.0
  * @link    http://ithemes.com/codex/page/Exchange_Template_Updates
  * @package IT_Exchange
  *

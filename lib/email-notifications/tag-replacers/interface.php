@@ -2,7 +2,7 @@
 /**
  * Contains the email tag replacer interface.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,7 +14,7 @@ interface IT_Exchange_Email_Tag_Replacer extends IT_Exchange_Email_Middleware {
 	/**
 	 * Replace the email tags.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $content
 	 * @param array  $context
@@ -26,7 +26,7 @@ interface IT_Exchange_Email_Tag_Replacer extends IT_Exchange_Email_Middleware {
 	/**
 	 * Format a tag.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Email_Tag|string $tag
 	 *
@@ -37,7 +37,7 @@ interface IT_Exchange_Email_Tag_Replacer extends IT_Exchange_Email_Middleware {
 	/**
 	 * Add a tag to be replaced.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Email_Tag $tag
 	 *
@@ -46,9 +46,20 @@ interface IT_Exchange_Email_Tag_Replacer extends IT_Exchange_Email_Middleware {
 	public function add_tag( IT_Exchange_Email_Tag $tag );
 
 	/**
+	 * Register multiple tags at once.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param IT_Exchange_Email_Tag[] $tags
+	 *
+	 * @return self
+	 */
+	public function add_tags( array $tags );
+
+	/**
 	 * Get a tag object for a given tag.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $tag
 	 *
@@ -59,7 +70,7 @@ interface IT_Exchange_Email_Tag_Replacer extends IT_Exchange_Email_Middleware {
 	/**
 	 * Get all registered tags.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return IT_Exchange_Email_Tag[]
 	 */
@@ -68,7 +79,7 @@ interface IT_Exchange_Email_Tag_Replacer extends IT_Exchange_Email_Middleware {
 	/**
 	 * Get all tags for a given notification.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Email_Notification $notification
 	 *
@@ -79,7 +90,7 @@ interface IT_Exchange_Email_Tag_Replacer extends IT_Exchange_Email_Middleware {
 	/**
 	 * Get a map of tags to their replacements.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $content
 	 * @param array  $context
@@ -93,7 +104,7 @@ interface IT_Exchange_Email_Tag_Replacer extends IT_Exchange_Email_Middleware {
 	 *
 	 * Used when passing content to the templating system of the mail provider.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $open_tag  Format to be used for opening a tag.
 	 * @param string $close_tag Format to be used for closing a tag.

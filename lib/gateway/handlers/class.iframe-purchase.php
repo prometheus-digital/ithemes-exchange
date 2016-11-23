@@ -2,7 +2,7 @@
 /**
  * IFrame purchase request handler.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,7 +14,7 @@ abstract class ITE_IFrame_Purchase_Request_Handler extends ITE_Purchase_Request_
 	/**
 	 * Retrieve any inline JS necessary for completing a checkout.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param ITE_Gateway_Purchase_Request_Interface $request
 	 *

@@ -2,14 +2,14 @@
 /**
  * Bank Account class.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
 /**
  * Class ITE_Gateway_Bank_Account
  */
-class ITE_Gateway_Bank_Account {
+class ITE_Gateway_Bank_Account implements ITE_Gateway_Payment_Source {
 
 	const INDIVIDUAL = 'individual';
 	const COMPANY = 'company';
@@ -51,7 +51,7 @@ class ITE_Gateway_Bank_Account {
 	/**
 	 * Get the bank account holder's name.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -62,7 +62,7 @@ class ITE_Gateway_Bank_Account {
 	/**
 	 * Get the bank account type.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -73,7 +73,7 @@ class ITE_Gateway_Bank_Account {
 	/**
 	 * Get the bank account number.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -84,12 +84,35 @@ class ITE_Gateway_Bank_Account {
 	/**
 	 * Get the routing number.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
 	public function get_routing_number() {
 		return $this->routing_number;
+	}
+
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_label() {
+		return sprintf(
+			__( 'Bank account ending in %s', 'it-l10n-ithemes-exchange' ),
+			substr( $this->get_account_number(), - 4 )
+		);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_identifier() {
+		return md5(
+			substr( $this->get_account_number(), - 4 ) .
+			$this->get_routing_number() .
+			$this->get_type() .
+			$this->get_holder_name()
+		);
 	}
 
 	/**

@@ -2,7 +2,7 @@
 /**
  * Contains the tag interface.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,7 +14,7 @@ interface IT_Exchange_Email_Tag {
 	/**
 	 * Get the email tag.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -23,7 +23,7 @@ interface IT_Exchange_Email_Tag {
 	/**
 	 * Get the name of the tag.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -32,7 +32,7 @@ interface IT_Exchange_Email_Tag {
 	/**
 	 * Get the tag's description.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -41,7 +41,7 @@ interface IT_Exchange_Email_Tag {
 	/**
 	 * Get the required context to render this tag.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -50,7 +50,7 @@ interface IT_Exchange_Email_Tag {
 	/**
 	 * Is this email tag available for a given notification.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Email_Notification $notification
 	 *
@@ -61,7 +61,7 @@ interface IT_Exchange_Email_Tag {
 	/**
 	 * Add a notification this tag is available for.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $notification_slug
 	 *
@@ -72,7 +72,7 @@ interface IT_Exchange_Email_Tag {
 	/**
 	 * Add a notification that this tag is NOT available for.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $notification_slug
 	 *
@@ -86,7 +86,7 @@ interface IT_Exchange_Email_Tag {
 	 * If not all required context is available,
 	 * the render method won't be called.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $context
 	 * @param array $options

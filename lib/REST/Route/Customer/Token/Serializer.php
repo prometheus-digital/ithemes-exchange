@@ -2,7 +2,7 @@
 /**
  * Token Serializer.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -18,7 +18,7 @@ class Serializer {
 	/**
 	 * Serialize the payment token.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Payment_Token $token
 	 *
@@ -40,7 +40,7 @@ class Serializer {
 	/**
 	 * Get the schema for Payment Tokens.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */

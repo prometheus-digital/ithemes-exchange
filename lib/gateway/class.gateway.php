@@ -2,7 +2,7 @@
 /**
  * Gateway API class.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -25,7 +25,7 @@ abstract class ITE_Gateway {
 	/**
 	 * Get the name of the gateway.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -34,7 +34,7 @@ abstract class ITE_Gateway {
 	/**
 	 * Get the gateway slug.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -43,7 +43,7 @@ abstract class ITE_Gateway {
 	/**
 	 * Get the add-on slug.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -52,7 +52,7 @@ abstract class ITE_Gateway {
 	/**
 	 * Get the request handlers this gateway provides.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return ITE_Gateway_Request_Handler[]
 	 */
@@ -61,7 +61,7 @@ abstract class ITE_Gateway {
 	/**
 	 * Get the handler for a given request.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Gateway_Request $request
 	 *
@@ -82,7 +82,7 @@ abstract class ITE_Gateway {
 	 *
 	 * ::get_handler_for() should be the preferred method to use to retreive a handler.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $request_name
 	 *
@@ -101,7 +101,7 @@ abstract class ITE_Gateway {
 	/**
 	 * Can the gateway handle a given request.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $request_name
 	 *
@@ -120,7 +120,7 @@ abstract class ITE_Gateway {
 	/**
 	 * Is the gateway in sandbox mode.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -129,7 +129,7 @@ abstract class ITE_Gateway {
 	/**
 	 * Does this gateway require the cart after the purchase has been made.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -138,7 +138,7 @@ abstract class ITE_Gateway {
 	/**
 	 * Get the available transaction statuses.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -149,7 +149,7 @@ abstract class ITE_Gateway {
 	/**
 	 * Get the webhook param name.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -158,7 +158,7 @@ abstract class ITE_Gateway {
 	/**
 	 * Get the SSL mode of the gateway.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -167,7 +167,7 @@ abstract class ITE_Gateway {
 	/**
 	 * Does this gateway reduce the currency options available.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -176,7 +176,7 @@ abstract class ITE_Gateway {
 	/**
 	 * Get supported currencies.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return array A list of upper-case currency codes.
 	 */
@@ -185,7 +185,7 @@ abstract class ITE_Gateway {
 	/**
 	 * Get settings fields configuration.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -194,7 +194,7 @@ abstract class ITE_Gateway {
 	/**
 	 * Get the settings form controller.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return IT_Exchange_Admin_Settings_Form
 	 */
@@ -208,7 +208,7 @@ abstract class ITE_Gateway {
 	/**
 	 * Get the name of the settings key for `it_exchange_get_option()`.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -217,7 +217,7 @@ abstract class ITE_Gateway {
 	/**
 	 * Get the settings that should be displayed in the wizard.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -226,7 +226,7 @@ abstract class ITE_Gateway {
 	/**
 	 * Retrieve the settings controller for this gateway.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return ITE_Settings_Controller
 	 */

@@ -2,7 +2,7 @@
 /**
  * Abstract Line Item Repository.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,7 +14,7 @@ abstract class ITE_Line_Item_Repository {
 	/**
 	 * Get an item from the repository.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $type
 	 * @param string $id
@@ -26,7 +26,7 @@ abstract class ITE_Line_Item_Repository {
 	/**
 	 * Get all line items.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $type Optionally specify the type of line items to retrieve.
 	 *
@@ -37,7 +37,7 @@ abstract class ITE_Line_Item_Repository {
 	/**
 	 * Save an item.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item $item
 	 *
@@ -48,7 +48,7 @@ abstract class ITE_Line_Item_Repository {
 	/**
 	 * Save multiple items.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param ITE_Line_Item[] $items
 	 *
@@ -62,7 +62,7 @@ abstract class ITE_Line_Item_Repository {
 	 * If an aggregatable line item is passed, the repository should remove the line item from the aggregate,
 	 * if one exists.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item $item
 	 *
@@ -73,7 +73,7 @@ abstract class ITE_Line_Item_Repository {
 	/**
 	 * Get all meta stored on the cart.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -82,7 +82,7 @@ abstract class ITE_Line_Item_Repository {
 	/**
 	 * Determine if the cart has a given meta key.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $key
 	 *
@@ -93,7 +93,7 @@ abstract class ITE_Line_Item_Repository {
 	/**
 	 * Retrieve metadata from the cart.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $key
 	 *
@@ -104,7 +104,7 @@ abstract class ITE_Line_Item_Repository {
 	/**
 	 * Set a meta value for the cart.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $key
 	 * @param mixed  $value
@@ -116,7 +116,7 @@ abstract class ITE_Line_Item_Repository {
 	/**
 	 * Remove metadata from the cart.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $key
 	 *
@@ -127,7 +127,7 @@ abstract class ITE_Line_Item_Repository {
 	/**
 	 * Get the customer's shipping address.
 	 * 
-	 * @since 1.36
+	 * @since 2.0.0
 	 * 
 	 * @return \ITE_Location|null
 	 */
@@ -136,7 +136,7 @@ abstract class ITE_Line_Item_Repository {
 	/**
 	 * Get the customer's billing address.
 	 * 
-	 * @since 1.36
+	 * @since 2.0.0
 	 * 
 	 * @return \ITE_Location|null
 	 */
@@ -145,7 +145,7 @@ abstract class ITE_Line_Item_Repository {
 	/**
 	 * Save the billing address for this purchase.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Location|null $location
 	 *
@@ -156,7 +156,7 @@ abstract class ITE_Line_Item_Repository {
 	/**
 	 * Save the shipping address for this purchase.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Location|null $location
 	 *
@@ -167,7 +167,7 @@ abstract class ITE_Line_Item_Repository {
 	/**
 	 * Set the repository for a line item if necessary.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item $item
 	 */

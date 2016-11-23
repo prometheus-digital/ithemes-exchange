@@ -2,7 +2,7 @@
 /**
  * REST Route Interface.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -17,7 +17,7 @@ interface Route {
 	/**
 	 * Get the route major version number.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return int
 	 */
@@ -32,7 +32,7 @@ interface Route {
 	 *
 	 * transactions/(?P<id>[\d+])/
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -41,7 +41,7 @@ interface Route {
 	/**
 	 * Get route args.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -50,7 +50,7 @@ interface Route {
 	/**
 	 * Get the route schema.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -59,7 +59,7 @@ interface Route {
 	/**
 	 * Whether this has a parent route.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -68,7 +68,7 @@ interface Route {
 	/**
 	 * Get the parent route.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return Route
 	 *

@@ -2,7 +2,7 @@
 /**
  * Tax Line Item class.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -17,7 +17,7 @@ class ITE_Simple_Tax_Line_Item extends ITE_Line_Item implements ITE_Tax_Line_Ite
 	/**
 	 * Create a new tax line item.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param float                       $rate
 	 * @param array                       $codes

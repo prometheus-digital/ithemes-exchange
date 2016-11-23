@@ -169,7 +169,7 @@ abstract class IT_Exchange_Shipping_Method {
 	/**
 	 * Get any additional costs this method imposes on the cart as a whole, not an individual product.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Cart $cart
 	 *

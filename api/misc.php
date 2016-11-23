@@ -94,7 +94,7 @@ function it_exchange_php_date_format_to_jquery_datepicker_format( $date_format )
  *
  * @link http://stackoverflow.com/a/30192680
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param string $format
  *
@@ -605,7 +605,7 @@ function it_exchange_get_pending_purchase_requirements() {
 /**
  * Check if a purchase requirement is registered.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param string $requirement_slug
  *
@@ -651,7 +651,7 @@ function it_exchange_get_formatted_billing_address( $billing_address = false ) {
 /**
  * Format any address.
  *
- * @since 1.36
+ * @since 2.0.0
  *
  * @param array $address Raw parts of the address.
  * @param array $args    {
@@ -683,7 +683,7 @@ function it_exchange_format_address( $address, $args = array(), $format = null )
 	/**
 	 * Filter the format used to format an address.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $format  Format for address, see default_format for example.
 	 * @param array $address Raw address to be formatted.
@@ -702,7 +702,7 @@ function it_exchange_format_address( $address, $args = array(), $format = null )
 	/**
 	 * Filter the formatting args.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $args    Args used for controlling address format.
 	 * @param array $address Raw address to be formatted.
@@ -749,7 +749,7 @@ function it_exchange_format_address( $address, $args = array(), $format = null )
 	/**
 	 * Filter the final output of the formatted address.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $output  Final formatted address.
 	 * @param array  $address Raw address before formatting.
@@ -874,7 +874,7 @@ function it_exchange_convert_country_code( $code ) {
 /**
  * Send an email.
  *
- * @since 1.36
+ * @since 2.0.0
  *
  * @param IT_Exchange_Sendable|IT_Exchange_Sendable[]|string                  $email_or_message
  * @param string                                                              $subject

@@ -2,7 +2,7 @@
 /**
  * REST Route Manager
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,6 +14,8 @@ use JsonSchema\Constraints\Constraint;
 use JsonSchema\Constraints\Factory;
 use JsonSchema\SchemaStorage;
 use JsonSchema\Uri\Retrievers\PredefinedArray;
+use JsonSchema\Uri\UriRetriever;
+use JsonSchema\UriResolverInterface;
 use JsonSchema\Validator;
 
 /**
@@ -35,6 +37,12 @@ class Manager {
 	/** @var SchemaStorage */
 	private $schema_storage;
 
+	/** @var UriResolverInterface */
+	private $uri_retreiver;
+
+	/** @var array */
+	private $schemas = array();
+
 	/** @var bool */
 	private $initialized = false;
 
@@ -53,15 +61,14 @@ class Manager {
 	 * @param \iThemes\Exchange\REST\Middleware\Stack $stack
 	 */
 	public function __construct( $namespace, Stack $stack ) {
-		$this->namespace      = $namespace;
-		$this->middleware     = $stack;
-		$this->schema_storage = new SchemaStorage();
+		$this->namespace  = $namespace;
+		$this->middleware = $stack;
 	}
 
 	/**
 	 * Register a route.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Route $route
 	 *
@@ -87,7 +94,7 @@ class Manager {
 	/**
 	 * Register a route provider.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Route_Provider $provider
 	 *
@@ -105,7 +112,7 @@ class Manager {
 	/**
 	 * Get the first route matching a given class.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $class
 	 *
@@ -125,7 +132,7 @@ class Manager {
 	/**
 	 * Get all routes matching a given class.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $class
 	 *
@@ -157,16 +164,54 @@ class Manager {
 			$this->register_with_server( $route );
 		}
 
+		$modified = array();
+
+		foreach ( $this->schemas as $id => $schema ) {
+			$modified[ url_for_schema( $id ) ] = $schema;
+		}
+
+		$strategy            = new PredefinedArray( $modified );
+		$this->uri_retreiver = new UriRetriever();
+		$this->uri_retreiver->setUriRetriever( $strategy );
+
+		$this->schema_storage = new SchemaStorage( $this->uri_retreiver );
+
 		add_filter( 'rest_authentication_errors', array( $this, 'authenticate' ), 20 );
 		add_filter( 'rest_dispatch_request', array( $this, 'conform_request_to_schema' ), 10, 4 );
+
+		$this->initialized = true;
 
 		return $this;
 	}
 
 	/**
+	 * Get a list of schemas.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param array $titles A list of schema titles to retrieve. If empty, all schemas will be returned.
+	 *
+	 * @return array
+	 */
+	public function get_schemas( $titles = array() ) {
+
+		$flipped = array_flip( $titles );
+		$schemas = array();
+
+		foreach ( $this->routes as $route ) {
+
+			if ( ( $schema = $route->get_schema() ) && ( isset( $flipped[ $schema['title'] ] ) || empty( $flipped ) ) ) {
+				$schemas[ $schema['title'] ] = $schema;
+			}
+		}
+
+		return $schemas;
+	}
+
+	/**
 	 * Get the manager namespace.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -177,7 +222,7 @@ class Manager {
 	/**
 	 * Get the Middleware Stack.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \iThemes\Exchange\REST\Middleware\Stack
 	 */
@@ -188,7 +233,7 @@ class Manager {
 	/**
 	 * Register a route with the server.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Route $route
 	 *
@@ -197,9 +242,7 @@ class Manager {
 	private function register_with_server( Route $route ) {
 
 		if ( $schema = $route->get_schema() ) {
-			$transformed_schema = $this->transform_schema( $schema );
-			$schema_object      = json_decode( json_encode( $transformed_schema ) );
-			$this->schema_storage->addSchema( $transformed_schema['title'], $schema_object );
+			$this->schemas[ $schema['title'] ] = json_encode( $this->transform_schema( $schema ) );
 		}
 
 		$path     = '';
@@ -298,7 +341,7 @@ class Manager {
 	/**
 	 * Conform a request to a schema.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \WP_Error|\WP_HTTP_Response|null $response
 	 * @param \WP_REST_Request                 $request
@@ -310,7 +353,7 @@ class Manager {
 	public function conform_request_to_schema( $response, $request, $route, $handler ) {
 
 		if ( $request->get_method() === 'DELETE' ) {
-			return null;
+			return $response;
 		}
 
 		if ( is_wp_error( $response ) ) {
@@ -337,11 +380,11 @@ class Manager {
 
 		$factory       = new Factory(
 			$this->schema_storage,
-			null, //new PredefinedArray( array() ),
+			$this->uri_retreiver,
 			Constraint::CHECK_MODE_TYPE_CAST | Constraint::CHECK_MODE_COERCE
 		);
 		$validator     = new Validator( $factory );
-		$schema_object = $this->schema_storage->getSchema( $schema['title'] );
+		$schema_object = $this->schema_storage->getSchema( url_for_schema( $schema['title'] ) );
 
 		$to_validate = array();
 
@@ -389,7 +432,7 @@ class Manager {
 	/**
 	 * Transform a schema to properly adhere to JSON schema.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $schema
 	 *
@@ -411,7 +454,9 @@ class Manager {
 			unset( $config['required'] );
 		}
 
-		$schema['required'] = $required;
+		if ( $required ) {
+			$schema['required'] = $required;
+		}
 
 		return $schema;
 	}
@@ -419,7 +464,7 @@ class Manager {
 	/**
 	 * Generate the endpoint args for the server.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Route $route
 	 * @param string                       $verb
@@ -480,7 +525,7 @@ class Manager {
 	/**
 	 * Generate query args for the server.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Route $route
 	 *
@@ -509,7 +554,7 @@ class Manager {
 	 *
 	 * Ensures consistent description between endpoints, and populates enum from schema.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Route $route
 	 * @param array                        $args
@@ -547,7 +592,7 @@ class Manager {
 	/**
 	 * Is the request going to our endpoint.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -566,7 +611,7 @@ class Manager {
 	/**
 	 * Authenticate the user.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \WP_Error|null|bool $authed
 	 *

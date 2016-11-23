@@ -2,7 +2,7 @@
 /**
  * Refunds Table.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 use IronBound\DB\Table\Column\DateTime;
@@ -18,6 +18,9 @@ use IronBound\DB\Table\TimestampedTable;
  */
 class ITE_Refunds_Table extends \IronBound\DB\Table\BaseTable implements TimestampedTable {
 
+	/** @var array */
+	private $columns = array();
+
 	/**
 	 * @inheritDoc
 	 */
@@ -32,7 +35,12 @@ class ITE_Refunds_Table extends \IronBound\DB\Table\BaseTable implements Timesta
 	 * @inheritDoc
 	 */
 	public function get_columns() {
-		return array(
+
+		if ( $this->columns ) {
+			return $this->columns;
+		}
+
+		$this->columns = array(
 			'ID'          =>
 				new IntegerBased( 'BIGINT', 'ID', array( 'unsigned', 'NOT NULL', 'auto_increment' ), array( 20 ) ),
 			'amount'      => new DecimalBased( 'DECIMAL', 'amount', array(), array( 16, 6 ) ),
@@ -43,6 +51,8 @@ class ITE_Refunds_Table extends \IronBound\DB\Table\BaseTable implements Timesta
 			'created_at'  => new DateTime( 'created_at' ),
 			'updated_at'  => new DateTime( 'updated_at' ),
 		);
+
+		return $this->columns;
 	}
 
 	/**

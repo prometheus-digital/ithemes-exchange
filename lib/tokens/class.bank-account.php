@@ -2,7 +2,7 @@
 /**
  * Bank Account Payment Token.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -26,7 +26,7 @@ class ITE_Payment_Token_Bank_Account extends ITE_Payment_Token {
 	/**
 	 * Get the Bank Account's institution name.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -35,7 +35,7 @@ class ITE_Payment_Token_Bank_Account extends ITE_Payment_Token {
 	/**
 	 * Set the Bank Account's institution name.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $name
 	 *
@@ -48,7 +48,7 @@ class ITE_Payment_Token_Bank_Account extends ITE_Payment_Token {
 	 *
 	 * Either 'individual' or 'company'.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -59,7 +59,7 @@ class ITE_Payment_Token_Bank_Account extends ITE_Payment_Token {
 	 *
 	 * Either 'individual' or 'company'.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $type
 	 *

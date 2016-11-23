@@ -2,7 +2,7 @@
 /**
  * Line Item interface.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -45,7 +45,7 @@ abstract class ITE_Line_Item implements ITE_Parameter_Bag {
 	 *
 	 * This need only be unique across line items of the same type.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string|int
 	 */
@@ -54,7 +54,7 @@ abstract class ITE_Line_Item implements ITE_Parameter_Bag {
 	/**
 	 * Get the name of this line item.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -65,7 +65,7 @@ abstract class ITE_Line_Item implements ITE_Parameter_Bag {
 	 *
 	 * HTML is permitted.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -74,7 +74,7 @@ abstract class ITE_Line_Item implements ITE_Parameter_Bag {
 	/**
 	 * Get the quantity of this line item.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return int
 	 */
@@ -85,7 +85,7 @@ abstract class ITE_Line_Item implements ITE_Parameter_Bag {
 	 *
 	 * To get the total, multiple the amount by the quantity.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return float
 	 */
@@ -96,7 +96,7 @@ abstract class ITE_Line_Item implements ITE_Parameter_Bag {
 	 *
 	 * Most often, this is simply the amount multiplied by the quantity.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return float
 	 */
@@ -120,7 +120,7 @@ abstract class ITE_Line_Item implements ITE_Parameter_Bag {
 	/**
 	 * Get the type of the line item.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param bool $label
 	 *
@@ -132,7 +132,7 @@ abstract class ITE_Line_Item implements ITE_Parameter_Bag {
 	 * Should this line item be displayed only in the summary view of the cart,
 	 * or should it also be displayed in the main cart rows.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -141,7 +141,7 @@ abstract class ITE_Line_Item implements ITE_Parameter_Bag {
 	/**
 	 * Get the line item object ID.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return int
 	 */
@@ -152,7 +152,7 @@ abstract class ITE_Line_Item implements ITE_Parameter_Bag {
 	 *
 	 * This should take any configuration that might change, and persist that to parameterized storage.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 */
 	public function freeze() {
 		$this->frozen->set_param( 'total', $this->get_amount() * $this->get_quantity() );
@@ -163,7 +163,7 @@ abstract class ITE_Line_Item implements ITE_Parameter_Bag {
 	 *
 	 * @internal
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Read_Only_Parameter_Bag
 	 */

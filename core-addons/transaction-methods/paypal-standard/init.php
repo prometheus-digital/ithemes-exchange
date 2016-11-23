@@ -518,7 +518,7 @@ function it_exchange_paypal_standard_addon_make_payment_button( $options ) {
 /**
  * Override the payment method button name.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param string $name
  *

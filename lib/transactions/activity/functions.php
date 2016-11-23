@@ -121,7 +121,7 @@ add_action( 'it_exchange_update_transaction_status', 'it_exchange_add_note_on_st
 /**
  * Add activity item when a refund is processed.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param ITE_Refund               $refund
  * @param \IT_Exchange_Transaction $transaction

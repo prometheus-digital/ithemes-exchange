@@ -2,7 +2,7 @@
 /**
  * Redirect purchase request handler.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -35,7 +35,7 @@ abstract class ITE_Redirect_Purchase_Request_Handler extends ITE_Purchase_Reques
 	/**
 	 * Maybe perform a redirect to an external payment gateway.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 * @throws \InvalidArgumentException
 	 * @throws \UnexpectedValueException
 	 */
@@ -59,7 +59,7 @@ abstract class ITE_Redirect_Purchase_Request_Handler extends ITE_Purchase_Reques
 	/**
 	 * Perform the redirect to an external gateway for payment.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param ITE_Gateway_Purchase_Request_Interface $request
 	 */
@@ -101,7 +101,7 @@ abstract class ITE_Redirect_Purchase_Request_Handler extends ITE_Purchase_Reques
 	/**
 	 * Get the redirect URL.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param ITE_Gateway_Purchase_Request_Interface $request
 	 *

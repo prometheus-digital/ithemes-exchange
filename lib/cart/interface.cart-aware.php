@@ -2,7 +2,7 @@
 /**
  * Cart Aware Interface
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,7 +14,7 @@ interface ITE_Cart_Aware {
 	/**
 	 * Set the cart object.
 	 * 
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 * 
 	 * @param \ITE_Cart $cart
 	 */

@@ -2,7 +2,7 @@
 /**
  * Load the tag replacements.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -40,7 +40,7 @@ class IT_Exchange_Email_Register_Default_Tags {
 	/**
 	 * Register the default tags.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Email_Tag_Replacer $replacer
 	 */
@@ -193,6 +193,8 @@ class IT_Exchange_Email_Register_Default_Tags {
 			)
 		);
 
+		$objects = array();
+
 		foreach ( $tags as $tag => $config ) {
 
 			$obj = new IT_Exchange_Email_Tag_Base( $tag, $config['name'], $config['desc'], array( $this, $tag ) );
@@ -205,8 +207,10 @@ class IT_Exchange_Email_Register_Default_Tags {
 				$obj->add_available_for( $notification );
 			}
 
-			$replacer->add_tag( $obj );
+			$objects[] = $obj;
 		}
+
+		$replacer->add_tags( $objects );
 	}
 
 	/**
@@ -676,7 +680,7 @@ class IT_Exchange_Email_Register_Default_Tags {
 	/**
 	 * Replace the profile link tag.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string Replaced value
 	 */
@@ -687,7 +691,7 @@ class IT_Exchange_Email_Register_Default_Tags {
 	/**
 	 * Replace the company name tag.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */

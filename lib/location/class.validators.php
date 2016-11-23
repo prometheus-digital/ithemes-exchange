@@ -2,7 +2,7 @@
 /**
  * Location Validators registry.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -17,7 +17,7 @@ final class ITE_Location_Validators {
 	/**
 	 * Add a validator.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Location_Validator $validator
 	 */
@@ -28,7 +28,7 @@ final class ITE_Location_Validators {
 	/**
 	 * Remove a validator.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $name
 	 */
@@ -39,7 +39,7 @@ final class ITE_Location_Validators {
 	/**
 	 * Get all validators.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Location_Validator[]
 	 */

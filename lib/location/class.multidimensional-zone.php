@@ -2,7 +2,7 @@
 /**
  * Multidimensional Zone
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -69,7 +69,7 @@ class ITE_Multidimensional_Zone implements ITE_Zone {
 	/**
 	 * Process a zone in the constructor.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string       $value
 	 * @param ITE_Location $zone

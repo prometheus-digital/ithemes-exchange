@@ -2,7 +2,7 @@
 /**
  * Contains the cart route.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -28,6 +28,11 @@ class Cart implements Getable, Putable, Deletable {
 	 * @inheritDoc
 	 */
 	public function handle_get( Request $request ) {
+
+		if ( ! $request->get_cart() ) {
+			return new \WP_REST_Response( array(), 500 );
+		}
+
 		return $this->prepare_item_for_response( $request->get_cart() );
 	}
 
@@ -125,7 +130,7 @@ class Cart implements Getable, Putable, Deletable {
 	/**
 	 * Perform a permission check.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Request $request
 	 * @param \IT_Exchange_Customer          $user
@@ -155,14 +160,14 @@ class Cart implements Getable, Putable, Deletable {
 		return new \WP_Error(
 			'it_exchange_rest_forbidden_context',
 			__( 'Sorry, you are not allowed to access this cart.', 'it-l10n-ithemes-exchange' ),
-			array( 'status' => \WP_Http::UNAUTHORIZED )
+			array( 'status' => rest_authorization_required_code() )
 		);
 	}
 
 	/**
 	 * Prepare a cart for response.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Cart $cart
 	 *
@@ -177,7 +182,7 @@ class Cart implements Getable, Putable, Deletable {
 			'shipping_address' => null,
 			'billing_address'  => null,
 			'subtotal'         => it_exchange_get_cart_subtotal( false, array( 'cart' => $cart ) ),
-			'total'            => $cart->calculate_total(),
+			'total'            => it_exchange_get_cart_total( false, array( 'cart' => $cart ) ),
 		);
 
 		if ( $cart->get_billing_address() ) {
@@ -256,26 +261,21 @@ class Cart implements Getable, Putable, Deletable {
 			return $this->schema;
 		}
 
-		$item_definitions = array();
-		$item_references  = array();
+		$item_references = array();
 
 		foreach ( \ITE_Line_Item_Types::shows_in_rest() as $item_type ) {
 
-			$type        = $item_type->get_type();
-			$title       = "cart_item_{$type}";
 			$item_schema = $item_type->get_rest_serializer()->get_schema();
-			unset( $item_schema['title'], $item_schema['$schema'] );
+			$title       = $item_schema['title'];
 
-			$item_references[]['$ref']  = "#definitions/{$title}";
-			$item_definitions[ $title ] = $item_schema;
+			$item_references[]['$ref'] = r\url_for_schema( $title );
 		}
 
 		$this->schema = array(
-			'$schema'     => 'http://json-schema.org/draft-04/schema#',
-			'definitions' => $item_definitions,
-			'title'       => 'cart',
-			'type'        => 'object',
-			'properties'  => array(
+			'$schema'    => 'http://json-schema.org/draft-04/schema#',
+			'title'      => 'cart',
+			'type'       => 'object',
+			'properties' => array(
 				'id'               => array(
 					'description' => __( 'The unique id for this cart.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'string',

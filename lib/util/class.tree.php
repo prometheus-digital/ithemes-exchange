@@ -2,7 +2,7 @@
 /**
  * K-Ary Tree.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -31,7 +31,7 @@ class ITE_Tree {
 	/**
 	 * Get the root of the tree.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Tree_Node
 	 */
@@ -42,7 +42,7 @@ class ITE_Tree {
 	/**
 	 * Set the root node for the tree.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param mixed $data
 	 */
@@ -53,7 +53,7 @@ class ITE_Tree {
 	/**
 	 * Add a child to the tree.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param mixed  $child The child element. If no `$key` provided, the child must have a `__toString()` method.
 	 * @param string $key   The key to identify the child by. Leave empty to use the `__toString()` method.
@@ -67,7 +67,7 @@ class ITE_Tree {
 	/**
 	 * Search a tree for a given piece of data.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param mixed $data
 	 *
@@ -96,7 +96,7 @@ class ITE_Tree {
 	/**
 	 * Perform a depth-first traversal.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param callable $callback
 	 * @param string   $order
@@ -124,7 +124,7 @@ class ITE_Tree {
 	/**
 	 * Get the height of the tree.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return int
 	 */
@@ -154,7 +154,7 @@ class ITE_Tree {
 	/**
 	 * Get the leaves of the tree.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -179,7 +179,7 @@ class ITE_Tree {
 	/**
 	 * Get the size of the tree.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return int
 	 */

@@ -2,7 +2,7 @@
 /**
  * Refund Serializer.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -21,7 +21,7 @@ class Serializer {
 	/**
 	 * Serialize a refund.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Refund           $refund
 	 * @param \IT_Exchange_Customer $user
@@ -35,7 +35,7 @@ class Serializer {
 			'amount'     => $refund->amount,
 			'reason'     => $refund->reason,
 			'issued_by'  => $refund->issued_by ? $refund->issued_by->ID : 0,
-			'created_at' => mysql_to_rfc3339( $refund->created_at->format( 'Y-m-d H:i:s' ) ),
+			'created_at' => \iThemes\Exchange\REST\format_rfc339( $refund->created_at->format( 'Y-m-d H:i:s' ) ),
 		);
 
 		if ( user_can( $user->wp_user, 'edit_it_transaction', $refund->transaction->ID ) ) {
@@ -48,7 +48,7 @@ class Serializer {
 	/**
 	 * Generate links.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Refund                    $refund
 	 * @param \iThemes\Exchange\REST\Manager $manager
@@ -73,7 +73,7 @@ class Serializer {
 	/**
 	 * Get the refund schema.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */

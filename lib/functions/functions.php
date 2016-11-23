@@ -230,6 +230,7 @@ function it_exchange_register_scripts() {
 	wp_register_script( 'jquery.payment', IT_Exchange::$url . '/lib/assets/js/jquery.payment.min.js', array( 'jquery' ), '1.3.2', true );
 	wp_register_script( 'backbonedeep', IT_Exchange::$url . '/lib/admin/js/backbone.modeldeep.min.js', array( 'backbone' ), '2.0.1', true );
 	wp_register_script( 'backbone.paginator', IT_Exchange::$url . '/lib/admin/js/backbone.paginator.min.js', array( 'backbone' ), '2.0.5', true );
+	wp_register_script( 'ithemes-momentjs', IT_Exchange::$url . '/lib/admin/js/moment.min.js', array(), '2.11.0', true );
 
 	// Select to Autocomplete
 	wp_register_script( 'jquery-select-to-autocomplete', IT_Exchange::$url . '/lib/assets/js/jquery.select-to-autocomplete.min.js',
@@ -251,6 +252,7 @@ function it_exchange_register_scripts() {
 		'decimalsSep'   => $settings['currency-decimals-separator'],
 		'restNonce'     => wp_create_nonce( 'wp_rest' ),
 		'restUrl'       => rest_url( 'it_exchange/v1/' ),
+		'currentUser'   => get_current_user_id(),
 	) );
 
 	wp_register_script(
@@ -259,6 +261,17 @@ function it_exchange_register_scripts() {
 		array(
 			'backbone', 'underscore', 'it-exchange-common', 'wp-util', 'ithemes-momentjs', 'backbonedeep',
 			'wp-backbone', 'backbone.paginator'
+		)
+	);
+
+	wp_localize_script(
+		'it-exchange-rest',
+		'ITExchangeRESTi18n',
+		array(
+			'visualCC' => array(
+				'name'   => _x( 'Name', 'Credit Card Holder Name', 'it-l10n-ithemes-exchange' ),
+				'number' => _x( 'Number', 'Credit Card Number', 'it-l10n-ithemes-exchange' ),
+			)
 		)
 	);
 
@@ -296,6 +309,98 @@ function it_exchange_register_scripts() {
 }
 add_action( 'wp_enqueue_scripts', 'it_exchange_register_scripts', 1 );
 add_action( 'admin_enqueue_scripts', 'it_exchange_register_scripts', 1 );
+
+/**
+ * Maybe preload REST schemas.
+ *
+ * @since 2.0.0
+ */
+function it_exchange_maybe_preload_schemas() {
+
+	/**
+	 * Filter the schemas to preload.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param $preload bool|array True to preload all schemas. False to preload no schemas. An array of schema
+	 *                            document titles to only preload a selected amount of schemas.
+	 */
+	$preload = apply_filters( 'it_exchange_preload_schemas', false );
+
+	if ( $preload === false ) {
+		return;
+	}
+
+	$manager = \iThemes\Exchange\REST\get_rest_manager();
+
+	// This action is documented in lib/REST/load.php
+	do_action( 'it_exchange_register_rest_routes', $manager );
+
+	if ( $preload === true ) {
+		$schemas = $manager->get_schemas();
+	} else {
+		$schemas = $manager->get_schemas( $preload );
+	}
+
+	wp_localize_script( 'it-exchange-rest', 'ITExchangeRESTSchemas', $schemas );
+}
+
+add_action( 'wp_enqueue_scripts', 'it_exchange_maybe_preload_schemas', 99 );
+add_action( 'admin_enqueue_scripts', 'it_exchange_maybe_preload_schemas', 99 );
+
+/**
+ * Add inline script data.
+ *
+ * Intended as a fallback for wp_add_inline_script().
+ *
+ * @since 2.0.0
+ *
+ * @param string $handle
+ * @param string $data
+ */
+function it_exchange_add_inline_script( $handle, $data ) {
+
+	if ( function_exists( 'wp_add_inline_script' ) ) {
+		wp_add_inline_script( $handle, $data );
+	} else {
+
+		if ( ! isset( $GLOBALS['it_exchange']['inline-scripts'] ) ) {
+			$GLOBALS['it_exchange']['inline-scripts'] = array();
+		}
+
+		$GLOBALS['it_exchange']['inline-scripts'][ $handle ][] = $data;
+	}
+}
+
+/**
+ * Print inline scripts.
+ *
+ * @since 2.0.0
+ */
+function it_exchange_print_inline_scripts() {
+
+	if ( function_exists( 'wp_add_inline_script' ) ) {
+		return;
+	}
+
+	if ( ! isset( $GLOBALS['it_exchange']['inline-scripts'] ) ) {
+		return;
+	}
+
+	foreach ( $GLOBALS['it_exchange']['inline-scripts'] as $handle => $scripts ) {
+
+		if ( ! wp_script_is( $handle, 'done' ) ) {
+			continue;
+		}
+
+		foreach ( $scripts as $script ) {
+			printf( "<script type='text/javascript'>\n%s\n</script>\n", $script );
+		}
+	}
+}
+
+add_action( 'admin_footer', 'it_exchange_print_inline_scripts', 100 );
+add_action( 'wp_footer', 'it_exchange_print_inline_scripts', 100 );
 
 /**
  * Loads functions.php in theme if it exists
@@ -1055,7 +1160,7 @@ add_action( 'init', 'it_exchange_register_default_purchase_requirements' );
 /**
  * Check if the billing address purchase requirement is complete.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @return bool
  */
@@ -1213,7 +1318,7 @@ add_action( 'it_exchange_empty_cart', 'it_exchange_clear_billing_on_cart_empty' 
 /**
  * Clear the billing address when a user logs out.
  *
- * @since 1.36.0
+ * @since 2.0.0
  */
 function it_exchange_clear_billing_on_logout() {
 	it_exchange_remove_cart_data( 'billing-address' );
@@ -1421,7 +1526,7 @@ function it_exchange_admin_tooltip( $text, $echo=true, $indicator='i' ) {
 /**
  * Get the requested cart and check the auth value.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param string $cart_var
  * @param string $auth_var
@@ -1924,7 +2029,7 @@ add_action( 'it_exchange_trans_txn_garbage_collection', 'it_exchange_trans_txn_c
 /**
  * Mark a filter as deprecated and inform when it has been used.
  *
- * @since 1.36
+ * @since 2.0.0
  *
  * @param string $filter      The Filter that was called.
  * @param string $version     The version of WordPress that deprecated the function.
@@ -1935,7 +2040,7 @@ function it_exchange_deprecated_filter( $filter, $version, $replacement = null )
 	/**
 	 * Fires when a deprecated filter is called.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $filter    The function that was called.
 	 * @param string $replacement The function that should have been called.
@@ -1968,7 +2073,7 @@ function it_exchange_deprecated_filter( $filter, $version, $replacement = null )
 /**
  * Get System Info.
  *
- * @since 1.36
+ * @since 2.0.0
  *
  * @return array
  */
@@ -2135,7 +2240,7 @@ function it_exchange_get_system_info() {
  *
  * Credit goes to Easy Digital Downloads
  *
- * @since 1.36
+ * @since 2.0.0
  *
  * @return string
  */
@@ -2209,5 +2314,11 @@ if ( ! function_exists( '_deprecated_hook' ) ) {
 				trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since version %2$s with no alternative available.' ), $hook, $version ) . $message );
 			}
 		}
+	}
+}
+
+if ( ! function_exists( 'rest_authorization_required_code' ) ) {
+	function rest_authorization_required_code() {
+		return is_user_logged_in() ? 403 : 401;
 	}
 }

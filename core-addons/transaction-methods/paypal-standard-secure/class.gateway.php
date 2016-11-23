@@ -2,7 +2,7 @@
 /**
  * PayPal Standard Secure Gateway.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -13,6 +13,9 @@ class ITE_PayPal_Standard_Secure_Gateway extends ITE_Gateway {
 
 	/** @var ITE_Gateway_Request_Handler[] */
 	private $handlers = array();
+
+	/** @var array */
+	private $fields = array();
 
 	/**
 	 * @inheritDoc
@@ -145,7 +148,12 @@ class ITE_PayPal_Standard_Secure_Gateway extends ITE_Gateway {
 	 * @inheritDoc
 	 */
 	public function get_settings_fields() {
-		return array(
+
+		if ( $this->fields ) {
+			return $this->fields;
+		}
+
+		$this->fields = array(
 			array(
 				'type' => 'html',
 				'slug' => 'preamble',
@@ -250,6 +258,8 @@ class ITE_PayPal_Standard_Secure_Gateway extends ITE_Gateway {
 				'required' => true,
 			),
 		);
+
+		return $this->fields;
 	}
 
 	/**
@@ -260,7 +270,7 @@ class ITE_PayPal_Standard_Secure_Gateway extends ITE_Gateway {
 	/**
 	 * Get Step 3-5 HTML.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */

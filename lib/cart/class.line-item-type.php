@@ -2,7 +2,7 @@
 /**
  * Line Item Type class.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 use iThemes\Exchange\REST\Route\Cart\Item_Serializer;
@@ -33,6 +33,12 @@ class ITE_Line_Item_Type {
 	/** @var array */
 	private $additional_schema_props = array();
 
+	/** @var bool */
+	private $aggregate = false;
+
+	/** @var bool */
+	private $aggregatable = false;
+
 	/**
 	 * ITE_Line_Item_Type constructor.
 	 *
@@ -45,6 +51,14 @@ class ITE_Line_Item_Type {
 
 		$this->type  = $type;
 		$this->label = ucfirst( $type );
+
+		if ( isset( $args['aggregate'] ) ) {
+			$this->aggregate = (bool) $args['aggregate'];
+		}
+
+		if ( isset( $args['aggregatable'] ) ) {
+			$this->aggregatable = (bool) $args['aggregatable'];
+		}
 
 		if ( isset( $args['show_in_rest'] ) ) {
 			$this->show_in_rest = (bool) $args['show_in_rest'];
@@ -81,9 +95,31 @@ class ITE_Line_Item_Type {
 	}
 
 	/**
+	 * Is this an aggregate line item type.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return boolean
+	 */
+	public function is_aggregate() {
+		return $this->aggregate;
+	}
+
+	/**
+	 * Is this an aggregatable line item type.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return boolean
+	 */
+	public function is_aggregatable() {
+		return $this->aggregatable;
+	}
+
+	/**
 	 * Should line items of this type be shown in the REST API.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return boolean
 	 */
@@ -94,7 +130,7 @@ class ITE_Line_Item_Type {
 	/**
 	 * Is this line item type editable in REST.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return boolean
 	 */
@@ -105,7 +141,7 @@ class ITE_Line_Item_Type {
 	/**
 	 * Get the line item type.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -116,7 +152,7 @@ class ITE_Line_Item_Type {
 	/**
 	 * Get the item type label.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -127,7 +163,7 @@ class ITE_Line_Item_Type {
 	/**
 	 * Get the rest serializer.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \iThemes\Exchange\REST\Route\Cart\Item_Serializer
 	 */
@@ -138,7 +174,7 @@ class ITE_Line_Item_Type {
 	/**
 	 * Get additional schema properties.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -149,7 +185,7 @@ class ITE_Line_Item_Type {
 	/**
 	 * Create a line item from a REST Request object.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Request $request
 	 *

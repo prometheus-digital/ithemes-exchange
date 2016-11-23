@@ -458,7 +458,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	/**
 	 * Mark that we are no longer in the sidebar.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 */
 	public function mark_out_of_sidebar() {
 		$this->in_sidebar = false;

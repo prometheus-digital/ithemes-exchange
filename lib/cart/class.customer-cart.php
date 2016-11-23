@@ -2,7 +2,7 @@
 /**
  * Cart class.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -72,7 +72,7 @@ class ITE_Cart {
 		/**
 		 * Fires when a cart is constructed.
 		 *
-		 * @since 1.36.0
+		 * @since 2.0.0
 		 *
 		 * @param \ITE_Cart $this
 		 */
@@ -85,7 +85,7 @@ class ITE_Cart {
 	 * This should only be called once for each cart session. If this cart is backed by the current session, the cart ID
 	 * will be set in the session.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item_Repository|null $repository Specify the repository to used. If null, the session
 	 *                                                   repository will be used.
@@ -113,6 +113,10 @@ class ITE_Cart {
 
 		$cart = new self( $repository, $cart_id, $customer );
 
+		if ( $customer instanceof IT_Exchange_Guest_Customer ) {
+			$cart->set_guest( $customer );
+		}
+
 		if ( $cart->get_billing_address() ) {
 			$compare = new ITE_In_Memory_Address( $cart->get_billing_address()->to_array() );
 			$address = $cart->get_billing_address();
@@ -138,7 +142,7 @@ class ITE_Cart {
 		/**
 		 * Fires when a new cart is created.
 		 *
-		 * @since 1.36.0
+		 * @since 2.0.0
 		 *
 		 * @param \ITE_Cart $cart
 		 */
@@ -150,7 +154,7 @@ class ITE_Cart {
 	/**
 	 * Get the cart ID.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -161,7 +165,7 @@ class ITE_Cart {
 	/**
 	 * Get the customer this cart belongs to.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return IT_Exchange_Customer|null
 	 */
@@ -172,7 +176,7 @@ class ITE_Cart {
 	/**
 	 * Check if the cart is the current active cart.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -183,7 +187,7 @@ class ITE_Cart {
 	/**
 	 * Is this the main cart for a customer.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -207,7 +211,7 @@ class ITE_Cart {
 	/**
 	 * Returns true if the cart is undergoing a merge.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return boolean
 	 */
@@ -216,9 +220,21 @@ class ITE_Cart {
 	}
 
 	/**
+	 * Set the guest customer for this cart.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param IT_Exchange_Guest_Customer $customer
+	 */
+	public function set_guest( IT_Exchange_Guest_Customer $customer ) {
+		$this->customer = $customer;
+		$this->set_meta( 'guest-email', $customer->get_email() );
+	}
+
+	/**
 	 * Get the customer's shipping address.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return ITE_Location|null
 	 */
@@ -229,7 +245,7 @@ class ITE_Cart {
 	/**
 	 * Set the customer's shipping address.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Location|null $location
 	 *
@@ -251,7 +267,7 @@ class ITE_Cart {
 			/**
 			 * Fires when the cart's shipping address has been updated.
 			 *
-			 * @since 1.36.0
+			 * @since 2.0.0
 			 *
 			 * @param \ITE_Cart          $cart
 			 * @param \ITE_Location|null $previous
@@ -266,7 +282,7 @@ class ITE_Cart {
 	/**
 	 * Get the customer's billing address.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return ITE_Location|null
 	 */
@@ -277,7 +293,7 @@ class ITE_Cart {
 	/**
 	 * Set the customer's billing address.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Location|null $location
 	 *
@@ -299,7 +315,7 @@ class ITE_Cart {
 			/**
 			 * Fires when the cart's billing address has been updated.
 			 *
-			 * @since 1.36.0
+			 * @since 2.0.0
 			 *
 			 * @param \ITE_Cart          $cart
 			 * @param \ITE_Location|null $previous
@@ -314,7 +330,7 @@ class ITE_Cart {
 	/**
 	 * Validate a location against all registered location validators.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Location $location
 	 *
@@ -336,7 +352,7 @@ class ITE_Cart {
 	/**
 	 * Add a line item to the cart.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item $item
 	 * @param bool           $coerce
@@ -381,7 +397,7 @@ class ITE_Cart {
 		/**
 		 * Fires when a line item is added to the cart.
 		 *
-		 * @since 1.36
+		 * @since 2.0.0
 		 *
 		 * @param \ITE_Line_Item $item
 		 * @param \ITE_Cart      $cart
@@ -395,7 +411,7 @@ class ITE_Cart {
 		 *
 		 * The dynamic portion of this hook refers to the line item type.
 		 *
-		 * @since 1.36
+		 * @since 2.0.0
 		 *
 		 * @param \ITE_Line_Item $item
 		 * @param \ITE_Cart      $cart
@@ -408,7 +424,7 @@ class ITE_Cart {
 	/**
 	 * Get the line items contained in the cart.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $type    If empty, all line items will be returned.
 	 * @param bool   $flatten Whether to flatten aggregate line items.
@@ -435,7 +451,7 @@ class ITE_Cart {
 	/**
 	 * Retrieve a line item from the cart.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string     $type
 	 * @param string|int $id
@@ -460,7 +476,7 @@ class ITE_Cart {
 	/**
 	 * Remove an item from the cart.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string     $type
 	 * @param string|int $id
@@ -489,7 +505,7 @@ class ITE_Cart {
 			/**
 			 * Fires when a line item is removed from the cart.
 			 *
-			 * @since 1.36
+			 * @since 2.0.0
 			 *
 			 * @param \ITE_Line_Item $item
 			 * @param \ITE_Cart      $cart
@@ -501,7 +517,7 @@ class ITE_Cart {
 			 *
 			 * The dynamic portion of this hook refers to the line item type.
 			 *
-			 * @since 1.36
+			 * @since 2.0.0
 			 *
 			 * @param \ITE_Line_Item $item
 			 * @param \ITE_Cart      $cart
@@ -515,7 +531,7 @@ class ITE_Cart {
 	/**
 	 * Remove all line items, or all line items of a given type from the cart.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $type    The item type. Optionally. If unspecified, all item types will be removed.
 	 * @param bool   $flatten Whether to remove all items, including aggregates' children.
@@ -540,9 +556,54 @@ class ITE_Cart {
 	}
 
 	/**
+	 * Check if the cart contains items of a given type. Either as child line items or top-level line items.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $type
+	 *
+	 * @return bool
+	 */
+	public function has_item_type( $type ) {
+
+		if ( $this->get_items( $type )->count() > 0 ) {
+			return true;
+		}
+
+		if ( $this->get_items()->flatten()->with_only( $type )->count() > 0 ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get all item types.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return array
+	 */
+	public function get_item_types() {
+
+		$all_items  = $this->get_items()->flatten();
+		$item_types = array();
+
+		foreach ( $all_items as $item ) {
+			if ( ! in_array( $item->get_type(), $item_types, true ) ) {
+				$item_types[] = $item->get_type();
+			}
+		}
+
+		sort( $item_types );
+
+		return $item_types;
+	}
+
+	/**
 	 * Callback to perform custom processing when a cart product line item is added to the cart.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Cart_Product $product
 	 *
@@ -572,7 +633,7 @@ class ITE_Cart {
 	/**
 	 * Callback to perform custom processing when a tax line item is added to the cart.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param ITE_Tax_Line_Item $tax
 	 *
@@ -592,7 +653,7 @@ class ITE_Cart {
 	/**
 	 * Callback to perform custom processing when a coupon line item is added to the cart.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Coupon_Line_Item $coupon
 	 *
@@ -612,11 +673,74 @@ class ITE_Cart {
 	}
 
 	/**
+	 * Get the cart subtotal.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param array $options
+	 *
+	 * @return float
+	 */
+	public function get_subtotal( array $options = array() ) {
+
+		$subtotal = 0;
+		$items    = $this->get_items()->non_summary_only();
+
+		if ( ! $items->count() ) {
+			return 0;
+		}
+
+		foreach ( $items as $item ) {
+			if ( ! $item instanceof ITE_Cart_Product || empty( $options['feature'] ) || $item->get_product()->get_feature( $options['feature'] ) ) {
+				$subtotal += $item->get_total();
+			}
+		}
+
+		/**
+		 * Filter the cart subtotal.
+		 *
+		 * @since 1.0.0
+		 * @since 2.0.0 Add the $cart parameter.
+		 *
+		 * @param float     $subtotal
+		 * @param array     $options
+		 * @param \ITE_Cart $cart
+		 */
+		return (float) apply_filters( 'it_exchange_get_cart_subtotal', $subtotal, $options, $this );
+	}
+
+	/**
+	 * Get the cart total.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return float
+	 */
+	public function get_total() {
+
+		$total = $this->get_subtotal();
+		$total += $this->get_items( '', true )->without( 'product' )->summary_only()->total();
+
+		/**
+		 * Filter the cart total.
+		 *
+		 * @since 1.0.0
+		 * @since 2.0.0 Add the $cart parameter.
+		 *
+		 * @param float     $total
+		 * @param \ITE_Cart $cart
+		 */
+		$total = apply_filters( 'it_exchange_get_cart_total', $total, $this );
+
+		return (float) max( 0, $total );
+	}
+
+	/**
 	 * Calculate the total of all line items or a given line item type.
 	 *
 	 * This calculation is not cached.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $type
 	 * @param bool   $unravel
@@ -630,7 +754,7 @@ class ITE_Cart {
 	/**
 	 * Validate the current state of the cart.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -660,7 +784,7 @@ class ITE_Cart {
 	/**
 	 * Coerce the cart to a valid state.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item $new_item
 	 *
@@ -696,7 +820,7 @@ class ITE_Cart {
 	/**
 	 * Is this a guest purchase.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -720,7 +844,7 @@ class ITE_Cart {
 	 * $cart->set_shipping_method( 'exchange-free-shipping', $product_a );
 	 * $cart->set_shipping_method( 'exchange-flat-rate-shipping', $product_b );
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string                        $method New shipping method slug. Or empty to remove.
 	 * @param \ITE_Aggregate_Line_Item|null $for    Update the shipping method for a given item only. For use with
@@ -800,7 +924,7 @@ class ITE_Cart {
 	/**
 	 * Get the shipping method for the cart.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item $for
 	 *
@@ -841,7 +965,7 @@ class ITE_Cart {
 	/**
 	 * Get all meta stored on the cart.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -852,7 +976,7 @@ class ITE_Cart {
 	/**
 	 * Determine if the cart has a given meta key.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $key
 	 *
@@ -865,7 +989,7 @@ class ITE_Cart {
 	/**
 	 * Retrieve metadata from the cart.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $key
 	 *
@@ -880,7 +1004,7 @@ class ITE_Cart {
 	/**
 	 * Set a meta value for the cart.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $key
 	 * @param mixed  $value
@@ -896,7 +1020,7 @@ class ITE_Cart {
 			/**
 			 * Fires when cart meta is set.
 			 *
-			 * @since 1.36.0
+			 * @since 2.0.0
 			 *
 			 * @param string    $key
 			 * @param mixed     $value
@@ -914,7 +1038,7 @@ class ITE_Cart {
 	/**
 	 * Remove metadata from the cart.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $key
 	 *
@@ -926,7 +1050,7 @@ class ITE_Cart {
 			/**
 			 * Fires when cart meta is removed.
 			 *
-			 * @since 1.36.0
+			 * @since 2.0.0
 			 *
 			 * @param string    $key
 			 * @param \ITE_Cart $this
@@ -942,14 +1066,14 @@ class ITE_Cart {
 	/**
 	 * Prepare the cart for purchase.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 */
 	public function prepare_for_purchase() {
 
 		/**
 		 * Fires when the cart totals should be finalized.
 		 *
-		 * @since 1.36.0
+		 * @since 2.0.0
 		 *
 		 * @param \ITE_Cart $cart
 		 */
@@ -961,14 +1085,14 @@ class ITE_Cart {
 	 *
 	 * This will remove all items, not just products. The cart will also be destroyed.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 */
 	public function empty_cart() {
 
 		/**
 		 * Fires when the cart is about to be emptied.
 		 *
-		 * @since 1.36
+		 * @since 2.0.0
 		 *
 		 * @param \ITE_Cart $cart
 		 */
@@ -980,7 +1104,7 @@ class ITE_Cart {
 		/**
 		 * Fires when the cart was just emptied.
 		 *
-		 * @since 1.36
+		 * @since 2.0.0
 		 *
 		 * @param \ITE_Cart                 $cart
 		 * @param \ITE_Line_Item_Collection $items Items removed from the cart.
@@ -993,7 +1117,7 @@ class ITE_Cart {
 	/**
 	 * Merge another cart into this cart.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Cart $cart
 	 * @param bool      $coerce
@@ -1006,7 +1130,7 @@ class ITE_Cart {
 		/**
 		 * Fires before a cart has been merged into another cart.
 		 *
-		 * @since 1.36
+		 * @since 2.0.0
 		 *
 		 * @param \ITE_Cart $this The primary cart.
 		 * @param \ITE_Cart $cart The cart being merged.
@@ -1030,7 +1154,7 @@ class ITE_Cart {
 		/**
 		 * Fires after a cart has been merged into another cart.
 		 *
-		 * @since 1.36
+		 * @since 2.0.0
 		 *
 		 * @param \ITE_Cart $this The primary cart.
 		 * @param \ITE_Cart $cart The cart being merged.
@@ -1045,7 +1169,7 @@ class ITE_Cart {
 	/**
 	 * Destroy the cart.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 */
 	public function destroy() {
 
@@ -1063,7 +1187,7 @@ class ITE_Cart {
 	 *
 	 * This only effects Session backed carts. Carts marked as purchased will be deleted every 7 days.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param bool $purchased
 	 *
@@ -1089,7 +1213,7 @@ class ITE_Cart {
 	/**
 	 * Clone this cart, saving its contents to a new repository.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item_Repository $repository
 	 *
@@ -1114,11 +1238,7 @@ class ITE_Cart {
 	/**
 	 * Generate an authentication secret.
 	 *
-	 * Example:
-	 * Create at 3:00 -> Expires 3:05
-	 * Create at 3:02 -> Expires 3:05
-	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param int $life The key lifetime.
 	 *
@@ -1147,7 +1267,7 @@ class ITE_Cart {
 	/**
 	 * Validate an authentication secret.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $secret
 	 *
@@ -1167,7 +1287,7 @@ class ITE_Cart {
 	/**
 	 * Get cart feedback.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Cart_Feedback
 	 */
@@ -1178,7 +1298,7 @@ class ITE_Cart {
 	/**
 	 * Add a cart wide validator.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Cart_Validator $validator
 	 *
@@ -1193,7 +1313,7 @@ class ITE_Cart {
 	/**
 	 * Remove a cart wide validator.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $name
 	 *
@@ -1208,7 +1328,7 @@ class ITE_Cart {
 	/**
 	 * Add a line item validator.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item_Validator $validator
 	 *
@@ -1223,7 +1343,7 @@ class ITE_Cart {
 	/**
 	 * Remove a line item validator.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $name
 	 *
@@ -1238,7 +1358,7 @@ class ITE_Cart {
 	/**
 	 * Add a location validator.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Location_Validator $validator
 	 *
@@ -1253,7 +1373,7 @@ class ITE_Cart {
 	/**
 	 * Remove a location validator.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $name
 	 *
@@ -1268,7 +1388,7 @@ class ITE_Cart {
 	/**
 	 * Get the repository being used for persistence.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Line_Item_Repository
 	 */
@@ -1279,7 +1399,7 @@ class ITE_Cart {
 	/**
 	 * Assert that the given type is valid.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $type
 	 *
@@ -1294,7 +1414,7 @@ class ITE_Cart {
 	/**
 	 * Get all available validators.
 	 *
-	 * @since  1.36.0
+	 * @since  2.0.0
 	 *
 	 * @return (\ITE_Line_Item_Validator|\ITE_Cart_Validator|\ITE_Location_Validator)[]
 	 */
@@ -1308,7 +1428,7 @@ class ITE_Cart {
 		/**
 		 * Filter the available validators.
 		 *
-		 * @since 1.36.0
+		 * @since 2.0.0
 		 *
 		 * @param array $validators
 		 */

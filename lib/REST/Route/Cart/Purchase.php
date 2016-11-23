@@ -2,7 +2,7 @@
 /**
  * Purchase Route.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -58,7 +58,7 @@ class Purchase extends Base implements Getable, Postable {
 	/**
 	 * Get the data for a handler.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Purchase_Request_Handler          $handler
 	 * @param ITE_Gateway_Purchase_Request_Interface $request
@@ -98,17 +98,35 @@ class Purchase extends Base implements Getable, Postable {
 			);
 		}
 
-		/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-		$purchase_request = $this->request_factory->make( 'purchase', array(
-			'cart'        => $cart,
-			'nonce'       => $request['nonce'],
-			'card'        => $request['card'],
-			'token'       => $request['token'],
-			'tokenize'    => $request['tokenize'],
-			'redirect_to' => $request['redirect_to']
-		) );
-		$gateway          = \ITE_Gateways::get( $request['id'] );
-		$handler          = $gateway->get_handler_for( $purchase_request );
+		$token = (int) $request['token'];
+
+		if ( $token && ! current_user_can( 'it_use_payment_token', $token ) ) {
+			return new \WP_Error(
+				'rest_invalid_param',
+				__( 'You cannot use that payment token.', 'it-l10n-ithemes-exchange' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		try {
+			$purchase_request = $this->request_factory->make( 'purchase', array(
+				'cart'        => $cart,
+				'nonce'       => $request['nonce'],
+				'card'        => $request['card'],
+				'token'       => $token,
+				'tokenize'    => $request['tokenize'],
+				'redirect_to' => $request['redirect_to']
+			) );
+		} catch ( \InvalidArgumentException $e ) {
+			return new \WP_Error(
+				'rest_invalid_param',
+				$e->getMessage(),
+				array( 'status' => \WP_Http::BAD_REQUEST )
+			);
+		}
+
+		$gateway = \ITE_Gateways::get( $request['id'] );
+		$handler = $gateway->get_handler_for( $purchase_request );
 
 		if ( ! $handler ) {
 			return new \WP_Error(

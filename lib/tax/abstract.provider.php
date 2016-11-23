@@ -2,7 +2,7 @@
 /**
  * Tax Provider Interface.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,7 +14,7 @@ abstract class ITE_Tax_Provider {
 	/**
 	 * Get the item class.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -23,7 +23,7 @@ abstract class ITE_Tax_Provider {
 	/**
 	 * Get the tax rate for a given product.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \IT_Exchange_Product $product
 	 *
@@ -34,7 +34,7 @@ abstract class ITE_Tax_Provider {
 	/**
 	 * Check if a product is tax exempt.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \IT_Exchange_Product $product
 	 *
@@ -45,7 +45,7 @@ abstract class ITE_Tax_Provider {
 	/**
 	 * Add taxes to the given item.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Taxable_Line_Item $item
 	 * @param \ITE_Cart              $cart
@@ -55,7 +55,7 @@ abstract class ITE_Tax_Provider {
 	/**
 	 * Finalize the taxes for a given cart.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Cart $cart
 	 */
@@ -64,7 +64,7 @@ abstract class ITE_Tax_Provider {
 	/**
 	 * Return the zone this tax type is restricted to, if any.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Zone
 	 */

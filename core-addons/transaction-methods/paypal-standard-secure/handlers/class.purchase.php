@@ -2,7 +2,7 @@
 /**
  * Purchase Handler for PayPal Standard Secure.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -31,7 +31,7 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 	/**
 	 * Generate an encrypted PayPal button.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param ITE_Gateway_Purchase_Request_Interface $request
 	 *
@@ -115,7 +115,7 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 		/**
 		 * Filter the Button Vars that are passed to PayPal.
 		 *
-		 * @since 1.36.0
+		 * @since 2.0.0
 		 *
 		 * @param array                                  $button_vars
 		 * @param ITE_Gateway_Purchase_Request_Interface $request
@@ -131,12 +131,12 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 		/**
 		 * Filter the Button Vars that are passed to PayPal.
 		 *
-		 * @deprecated 1.36.0
+		 * @deprecated 2.0.0
 		 *
 		 * @param array $L_VARS
 		 */
 		$L_VARS = apply_filters_deprecated(
-			'it_exchange_paypal_standard_secure_button_vars', array( $L_VARS ), '1.36.0',
+			'it_exchange_paypal_standard_secure_button_vars', array( $L_VARS ), '2.0.0',
 			'it_exchange_paypal_standard_secure_get_button_vars'
 		);
 
@@ -150,7 +150,7 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 		/**
 		 * Filter the full button request that is passed to PayPal.
 		 *
-		 * @since 1.36.0 Added the `$request` parameter.
+		 * @since 2.0.0 Added the `$request` parameter.
 		 *
 		 * @param array                                  $button_request
 		 * @param ITE_Gateway_Purchase_Request_Interface $request
@@ -190,7 +190,7 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 	/**
 	 * Get the subscription button request to pass to PayPal.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param ITE_Gateway_Purchase_Request_Interface $request
 	 *
@@ -351,8 +351,16 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 			$button_vars['t2'] = $trial_unit_2;
 		}
 
+		$total = $cart->get_total();
+		$fee   = $cart_product->get_line_items()->with_only( 'fee' )
+		                      ->having_param( 'is_free_trial', 'is_prorate_days' )->first();
+
+		if ( $fee ) {
+			$total += $fee->get_total() * - 1;
+		}
+
 		// Regular subscription price.
-		$button_vars['a3'] = number_format( it_exchange_get_cart_total( false, array( 'cart' => $cart ) ), 2, '.', '' );
+		$button_vars['a3'] = number_format( $total, 2, '.', '' );
 
 		// Subscription duration. Specify an integer value in the allowable range for the units of duration that you specify with t3.
 		$button_vars['p3'] = $duration;
@@ -481,7 +489,7 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 					return $transaction;
 				}
 
-				$txn_id = it_exchange_add_transaction( 'paypal-standard-secure', $paypal_id, $paypal_status, $cart );
+				$txn_id = $this->add_transaction( $request, $paypal_id, $paypal_status );
 
 				it_exchange_release_lock( $lock );
 
@@ -513,7 +521,7 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 					return $transaction;
 				}
 
-				$txn_id = it_exchange_add_transaction( 'paypal-standard-secure', $cart_id, 'Completed', $cart );
+				$txn_id = $this->add_transaction( $request, $cart_id, 'Completed' );
 
 				it_exchange_release_lock( $lock );
 
@@ -536,9 +544,30 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 	}
 
 	/**
+	 * Add the transaction in Exchange.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param ITE_Gateway_Purchase_Request_Interface $request
+	 * @param string                                 $method_id
+	 * @param string                                 $status
+	 * @param array                                  $args
+	 *
+	 * @return int|false
+	 */
+	protected function add_transaction( ITE_Gateway_Purchase_Request_Interface $request, $method_id, $status, $args = array() ) {
+
+		if ( $p = $request->get_child_of() ) {
+			return it_exchange_add_child_transaction( 'paypal-standard-secure', $method_id, $status, $request->get_cart(), $p->get_ID(), $args );
+		}
+
+		return it_exchange_add_transaction( 'paypal-standard-secure', $method_id, $status, $request->get_cart(), null, $args );
+	}
+
+	/**
 	 * Get the details of a transaction in PayPal.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $paypal_id
 	 *

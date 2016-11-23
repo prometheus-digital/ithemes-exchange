@@ -2,7 +2,7 @@
 /**
  * WP Mail sender.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -33,7 +33,7 @@ class IT_Exchange_WP_Mail_Sender implements IT_Exchange_Email_Sender {
 	/**
 	 * Send the email.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Sendable $email
 	 *
@@ -93,7 +93,7 @@ class IT_Exchange_WP_Mail_Sender implements IT_Exchange_Email_Sender {
 	/**
 	 * Bulk send emails.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Sendable[] $emails
 	 *
@@ -117,7 +117,7 @@ class IT_Exchange_WP_Mail_Sender implements IT_Exchange_Email_Sender {
 	/**
 	 * Generate a header from a recipient.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Email_Recipient $recipient
 	 * @param string                      $type Either Cc or Bcc
@@ -140,7 +140,7 @@ class IT_Exchange_WP_Mail_Sender implements IT_Exchange_Email_Sender {
 	/**
 	 * Fires whenever wp mail fails.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param WP_Error $error
 	 *

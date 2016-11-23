@@ -2,7 +2,7 @@
 /**
  * Item Type Serializer.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -18,7 +18,7 @@ class TypeSerializer {
 	/**
 	 * Serialize a line item type.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item_Type $type
 	 *
@@ -38,7 +38,7 @@ class TypeSerializer {
 	/**
 	 * Get the item type schema.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */

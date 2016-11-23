@@ -2,7 +2,7 @@
 /**
  * Contains the middleware handler class.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -26,7 +26,7 @@ class IT_Exchange_Email_Middleware_Handler {
 	/**
 	 * Push a bit of middleware onto the stack.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Email_Middleware $middleware
 	 * @param string                       $named
@@ -51,7 +51,7 @@ class IT_Exchange_Email_Middleware_Handler {
 	/**
 	 * Add a piece of middleware to be executed before another piece of middleware.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Email_Middleware $middleware
 	 * @param string                       $before
@@ -97,7 +97,7 @@ class IT_Exchange_Email_Middleware_Handler {
 	/**
 	 * Add a piece of middleware to be executed after another piece of middleware.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Email_Middleware $middleware
 	 * @param string                       $after
@@ -145,7 +145,7 @@ class IT_Exchange_Email_Middleware_Handler {
 	/**
 	 * Add a piece of middleware so it is executed first.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Email_Middleware $middleware
 	 * @param string                       $named
@@ -190,7 +190,7 @@ class IT_Exchange_Email_Middleware_Handler {
 	/**
 	 * Execute all middleware on an email.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Sendable_Mutable_Wrapper $sendable
 	 *
@@ -217,7 +217,7 @@ class IT_Exchange_Email_Middleware_Handler {
 	/**
 	 * Cleanup any state left over from executing middleware.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param bool $success
 	 *

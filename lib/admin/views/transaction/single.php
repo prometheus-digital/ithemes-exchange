@@ -385,8 +385,8 @@ $dtf      = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 				<?php do_action( 'it_exchange_transaction_print_metabox_before_transaction_method_name', $post ); ?>
 				<?php esc_attr_e( it_exchange_get_transaction_method_name( $post ) ); ?>
 				<code><?php echo it_exchange_get_transaction_method_id( $post ); ?></code>
-				<?php if ( $token = $txn->payment_token ) : ?>
-					<span class="payment-method-token"><?php echo $token->get_label(); ?></span>
+				<?php if ( $source = $txn->get_payment_source() ) : ?>
+					<span class="payment-method-source"><?php echo $source->get_label(); ?></span>
 				<?php endif; ?>
 				<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_method_name', $post ); ?>
 			</div>

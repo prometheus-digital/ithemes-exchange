@@ -111,7 +111,7 @@ class IT_Theme_API_Transaction_Method implements IT_Theme_API {
 	/**
 	 * Print the interstitial description.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -138,7 +138,7 @@ class IT_Theme_API_Transaction_Method implements IT_Theme_API {
 	/**
 	 * Print the target of the interstitial.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -149,7 +149,7 @@ class IT_Theme_API_Transaction_Method implements IT_Theme_API {
 	/**
 	 * Loop over interstitial vars.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -182,7 +182,7 @@ class IT_Theme_API_Transaction_Method implements IT_Theme_API {
 	/**
 	 * Get the interstitial var key.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -193,7 +193,7 @@ class IT_Theme_API_Transaction_Method implements IT_Theme_API {
 	/**
 	 * Get the interstitial var value.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */

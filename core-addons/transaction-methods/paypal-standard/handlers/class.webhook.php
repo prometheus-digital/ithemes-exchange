@@ -2,7 +2,7 @@
 /**
  * Webhook Handler.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -177,7 +177,7 @@ class ITE_PayPal_Standard_Webhook_Handler implements ITE_Gateway_Request_Handler
 	/**
 	 * Validate the request payload.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $webhook
 	 *

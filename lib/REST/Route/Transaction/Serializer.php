@@ -2,7 +2,7 @@
 /**
  * Serialize a transaction.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -21,7 +21,7 @@ class Serializer {
 	/**
 	 * Serialize a transaction.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \IT_Exchange_Transaction $transaction
 	 * @param \IT_Exchange_Customer    $user
@@ -44,7 +44,7 @@ class Serializer {
 			'method_id'            => $t->get_method_id(),
 			'status'               => array( 'slug' => $t->get_status(), 'label' => $t->get_status( true ) ),
 			'cleared_for_delivery' => $t->is_cleared_for_delivery(),
-			'order_date'           => mysql_to_rfc3339( $t->get_date() ),
+			'order_date'           => \iThemes\Exchange\REST\format_rfc339( $t->get_date() ),
 			'payment_token'        => $t->payment_token ? $t->payment_token->ID : 0,
 			'purchase_mode'        => $t->purchase_mode,
 			'parent'               => $t->has_parent() ? $t->get_parent()->get_ID() : 0,
@@ -62,7 +62,7 @@ class Serializer {
 	/**
 	 * Generate links for a transaction.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \IT_Exchange_Transaction       $transaction
 	 * @param \iThemes\Exchange\REST\Manager $manager
@@ -109,7 +109,7 @@ class Serializer {
 	/**
 	 * Get the transaction schema.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */

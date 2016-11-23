@@ -27,14 +27,17 @@ use IronBound\DB\Relations\HasMany;
  * @property-read float                                $total
  * @property-read float                                $subtotal
  * @property-read \DateTime                            $order_date
- * @property \ITE_Payment_Token|null                   $payment_token
  * @property string                                    $purchase_mode
+ * @property \ITE_Payment_Token|null                   $payment_token
+ * @property string                                    $card_redacted
+ * @property string                                    $card_month
+ * @property string                                    $card_year
  * @property-read \IT_Exchange_Transaction             $parent
  * @property-read stdClass                             $cart_object // Internal
  * @property-read Collection|IT_Exchange_Transaction[] $children
  * @property-read Collection|ITE_Refund[]              $refunds
  */
-class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Credit_Provider {
+class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_Prorate_Credit_Provider {
 
 	const P_MODE_LIVE = 'live';
 	const P_MODE_SANDBOX = 'sandbox';
@@ -44,7 +47,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	 *
 	 * @var array
 	 */
-	protected static $_eager_load = array( 'ID' );
+	//protected static $_eager_load = array( 'ID' );
 
 	/**
 	 * @var WP_Post
@@ -108,7 +111,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	/**
 	 * Assert the post is valid.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param mixed $post
 	 *
@@ -123,7 +126,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	/**
 	 * Check if a value is post like.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param mixed $post
 	 *
@@ -158,7 +161,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	/**
 	 * Upgrade a transaction to be saved in the database table as well.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param WP_Post $post
 	 *
@@ -190,8 +193,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 						array_intersect_key( $cart_details->billing_address, ITE_Saved_Address::table()->get_column_defaults() ),
 						array( 'customer' => $customer_id, 'type' => ITE_Saved_Address::T_BILLING )
 					) );
-				}
-				catch ( Exception $e ) {
+				} catch ( Exception $e ) {
 
 				}
 			} else {
@@ -211,8 +213,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 						array_intersect_key( $cart_details->shipping_address, ITE_Saved_Address::table()->get_column_defaults() ),
 						array( 'customer' => $customer_id, 'type' => ITE_Saved_Address::T_SHIPPING )
 					) );
-				}
-				catch ( Exception $e ) {
+				} catch ( Exception $e ) {
 
 				}
 			} else {
@@ -260,7 +261,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 		}
 
 		if ( $customer_email && ! empty( $cart_details->is_guest_checkout ) ) {
-			$transaction->cart()->set_meta( 'guest-email', $customer_email );
+			$transaction->cart()->set_guest( new IT_Exchange_Guest_Customer( $customer_email ) );
 		}
 
 		return $transaction;
@@ -269,7 +270,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	/**
 	 * Get all items in this transaction.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $type
 	 * @param bool   $flatten
@@ -291,7 +292,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	/**
 	 * Get a line item.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $type
 	 * @param string $id
@@ -309,19 +310,19 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	 *
 	 * @since      0.3.2
 	 *
-	 * @deprecated 1.36.0
+	 * @deprecated 2.0.0
 	 *
 	 * @return void
 	 */
 	protected function set_transaction_supports_and_data() {
 
-		do_action_deprecated( 'it_exchange_set_transaction_supports_and_data', array( $this->ID ), '1.36.0' );
+		do_action_deprecated( 'it_exchange_set_transaction_supports_and_data', array( $this->ID ), '2.0.0' );
 	}
 
 	/**
 	 * Get the transaction ID.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return int
 	 */
@@ -355,7 +356,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	 * There isn't a set list of transaction statuses available. Each payment gateway dynamically declares their own.
 	 *
 	 * @since 0.4.0
-	 * @since 1.36.0 Added $label parameter.
+	 * @since 2.0.0 Added $label parameter.
 	 *
 	 * @param bool $label
 	 *
@@ -379,7 +380,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	 * If the custom value is not set and we're on post-add.php, check for a URL param
 	 *
 	 * @since 0.4.0
-	 * @since 1.36.0 Add return value.
+	 * @since 2.0.0 Add return value.
 	 *
 	 * @param string $status
 	 *
@@ -436,7 +437,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	/**
 	 * Get the method used.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param bool $label
 	 *
@@ -458,7 +459,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	/**
 	 * Get the method ID.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -469,7 +470,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	/**
 	 * Update the method ID.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $method_id
 	 *
@@ -494,7 +495,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 			/**
 			 * Fires when the transaction method ID is updated.
 			 *
-			 * @since 1.36
+			 * @since 2.0.0
 			 *
 			 * @param IT_Exchange_Transaction $this
 			 * @param string                  $previous_method_id
@@ -508,7 +509,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	/**
 	 * Get the gateway used to pay for this transaction.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return ITE_Gateway|null
 	 */
@@ -522,7 +523,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	 * This should always be used over the `cleared` property. The `cleared` property is a cached value for assistance
 	 * in querying.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -533,7 +534,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	/**
 	 * Get the transaction customer.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return IT_Exchange_Customer|null
 	 */
@@ -556,7 +557,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	/**
 	 * Get the customer's email address.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -567,7 +568,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	/**
 	 * Check if this transaction is a guest purchase.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -578,7 +579,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	/**
 	 * Does this transaction have a parent.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -589,7 +590,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	/**
 	 * Get the parent transaction.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return IT_Exchange_Transaction
 	 */
@@ -600,7 +601,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	/**
 	 * Was this transaction purchased in live mode.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -609,7 +610,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	/**
 	 * Was this transaction purchased in sandbox mode.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -737,7 +738,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	/**
 	 * Get the billing address.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Location|null
 	 */
@@ -749,7 +750,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 		$raw = $address ? $address->to_array() : array();
 
 		$filtered = apply_filters_deprecated(
-			'it_exchange_get_transaction_billing_address', array( $raw, $this ), '1.36'
+			'it_exchange_get_transaction_billing_address', array( $raw, $this ), '2.0.0'
 		);
 
 		if ( ! $filtered && ! $address ) {
@@ -768,9 +769,9 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	/**
 	 * Get the shipping address.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
-	 * @return \ITE_Location|null
+	 * @return \ITE_Saved_Address|null
 	 */
 	public function get_shipping_address() {
 
@@ -780,7 +781,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 		$raw = $address ? $address->to_array() : array();
 
 		$filtered = apply_filters_deprecated(
-			'it_exchange_get_transaction_shipping_address', array( $raw, $this ), '1.36'
+			'it_exchange_get_transaction_shipping_address', array( $raw, $this ), '2.0.0'
 		);
 
 		if ( ! $filtered && ! $address ) {
@@ -877,6 +878,43 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	}
 
 	/**
+	 * Get the payment source used to make this transaction.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return ITE_Gateway_Payment_Source
+	 */
+	public function get_payment_source() {
+		if ( $this->payment_token ) {
+			return $this->payment_token;
+		}
+
+		return $this->get_card();
+	}
+
+	/**
+	 * Get the card used to make this payment.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return ITE_Gateway_Card|null
+	 */
+	public function get_card() {
+
+		if ( ! $this->card_redacted ) {
+			return null;
+		}
+
+		$name = '';
+
+		if ( $billing = $this->get_billing_address() ) {
+			$name = trim( $billing['first-name'] . ' ' . $billing['last-name'] );
+		}
+
+		return new ITE_Gateway_Card( $this->card_redacted, $this->card_year, $this->card_month, 0, $name );
+	}
+
+	/**
 	 * Add the transaction refund amount.
 	 *
 	 * @since 0.4.0
@@ -919,7 +957,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 		do_action_deprecated(
 			'it_exchange_add_refund_to_transaction',
 			array( $this, $amount, $date, $options ),
-			'1.36.0',
+			'2.0.0',
 			'it_exchange_add_transaction_refund'
 		);
 
@@ -951,7 +989,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	/**
 	 * Returns the a sum of all the applied refund amounts for this transaction
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return float
 	 */
@@ -979,13 +1017,13 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	 *
 	 * @since      0.4.0
 	 *
-	 * @deprecated 1.36.0
+	 * @deprecated 2.0.0
 	 *
 	 * @return array
 	 */
 	public function get_transaction_refunds() {
 
-		_deprecated_function( __METHOD__, '1.36.0', 'IT_Exchange_Transaction::refunds' );
+		_deprecated_function( __METHOD__, '2.0.0', 'IT_Exchange_Transaction::refunds' );
 
 		$refunds = array();
 
@@ -997,13 +1035,13 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 			);
 		}
 
-		return apply_filters_deprecated( 'it_exchange_get_transaction_refunds', array( $refunds, $this ), '1.36.0' );
+		return apply_filters_deprecated( 'it_exchange_get_transaction_refunds', array( $refunds, $this ), '2.0.0' );
 	}
 
 	/**
 	 * Get the customer's IP address for this transaction.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -1036,7 +1074,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	 * Gets the transactions children.
 	 *
 	 * @since 1.3.0
-	 * @since 1.36.0 Introduce `$return_transactions` parameter.
+	 * @since 2.0.0 Introduce `$return_transactions` parameter.
 	 *
 	 * @param array $args                Arguments to filter children.
 	 * @param bool  $return_transactions Return transaction objects.
@@ -1064,7 +1102,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	/**
 	 * Get the cart object for the transaction.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Cart
 	 */
@@ -1077,7 +1115,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	/**
 	 * Convert a cart object to line items.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -1148,12 +1186,27 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	/**
 	 * @inheritDoc
 	 */
+	public function __toString() {
+		return sprintf( __( 'Order %s', 'it-l10n-ithemes-exchange', $this->get_order_number() ) );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public static function get_object_type() {
+		return it_exchange_object_type_registry()->get( 'transaction' );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public static function accepts_prorate_credit_request( ITE_Prorate_Credit_Request $request ) {
 		return $request instanceof ITE_Prorate_Forever_Credit_Request;
 	}
 
 	/**
 	 * @inheritdoc
+	 * @param ITE_Prorate_Forever_Credit_Request $request
 	 */
 	public static function handle_prorate_credit_request( ITE_Prorate_Credit_Request $request, ITE_Daily_Price_Calculator $calculator ) {
 
@@ -1161,20 +1214,19 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 			throw new DomainException( "This credit request can't be handled by this provider." );
 		}
 
-		/** @var IT_Exchange_Transaction $transaction */
 		$transaction = $request->get_transaction();
+		$for         = $request->get_product_providing_credit();
 
-		$for = $request->get_product_providing_credit();
+		$product_id   = $for->ID;
+		$cart_product = $transaction->get_items( 'product')->filter( function( ITE_Cart_Product $product ) use ( $product_id ) {
+			return $product->get_product() && $product->get_product()->ID == $product_id;
+		} )->first();
 
-		foreach ( $transaction->get_products() as $product ) {
-			if ( $product['product_id'] == $for->ID ) {
-				$amount = (float) $product['product_subtotal'];
-			}
+		if ( ! $cart_product ) {
+			throw new UnexpectedValueException( 'Could not determine the amount paid for the subscription.' );
 		}
 
-		if ( ! isset( $amount ) ) {
-			throw new InvalidArgumentException( "Product with ID '$for->ID' not found in transaction '$transaction->ID'." );
-		}
+		$amount = $cart_product->get_amount() * $cart_product->get_quantity();
 
 		if ( (float) $transaction->get_total( false ) < $amount ) {
 			$amount = (float) $transaction->get_total( false );
@@ -1191,7 +1243,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	/**
 	 * Post helper.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \WP_Post
 	 */
@@ -1206,7 +1258,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	/**
 	 * is triggered when invoking inaccessible methods in an object context.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param $name      string
 	 * @param $arguments array
@@ -1235,7 +1287,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	/**
 	 * Provide backwards compatibility for deprecated properties.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $name
 	 *
@@ -1313,7 +1365,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	 * @deprecated
 	 */
 	public function set_add_edit_screen_supports() {
-		_deprecated_function( __METHOD__, '1.36' );
+		_deprecated_function( __METHOD__, '2.0.0' );
 	}
 
 	/**
@@ -1321,7 +1373,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	 *
 	 * @since      1.3.0
 	 *
-	 * @deprecated 1.36.0
+	 * @deprecated 2.0.0
 	 */
 	function get_transaction_meta( $key, $single = true ) {
 		return $this->get_meta( $key, $single );
@@ -1332,7 +1384,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	 *
 	 * @since      1.3.0
 	 *
-	 * @deprecated 1.36.0
+	 * @deprecated 2.0.0
 	 */
 	function update_transaction_meta( $key, $value ) {
 		$this->update_meta( $key, $value );
@@ -1343,7 +1395,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Contract_Prorate_Cred
 	 *
 	 * @since      1.3.0
 	 *
-	 * @deprecated 1.36.0
+	 * @deprecated 2.0.0
 	 */
 	function delete_transaction_meta( $key, $value = '' ) {
 		$this->delete_meta( $key, $value );

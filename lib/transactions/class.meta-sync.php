@@ -2,7 +2,7 @@
 /**
  * Deprecated Meta Handler.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -38,7 +38,7 @@ class ITE_Transaction_Meta_Sync {
 	/**
 	 * Add a deprecated pair of meta key to model attribute.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $meta_key
 	 * @param string $model_attribute
@@ -58,7 +58,7 @@ class ITE_Transaction_Meta_Sync {
 	 * This has to be a two step process to detect that a change is about to be detected, and then detect
 	 * after the change has been successfully made.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param int    $meta_id
 	 * @param int    $object_id
@@ -81,7 +81,7 @@ class ITE_Transaction_Meta_Sync {
 	/**
 	 * When a meta value is updated, update the corresponding model attribute.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param int    $meta_id
 	 * @param int    $object_id
@@ -122,7 +122,7 @@ class ITE_Transaction_Meta_Sync {
 	/**
 	 * Handle a cart object being updated.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param int      $ID
 	 * @param stdClass $new
@@ -160,7 +160,7 @@ class ITE_Transaction_Meta_Sync {
 
 				if ( $save ) {
 					_doing_it_wrong(
-						'it_exchange_update_transaction_cart_object', "Don't modify cart products via cart object.", '1.36.0'
+						'it_exchange_update_transaction_cart_object', "Don't modify cart products via cart object.", '2.0.0'
 					);
 					$repo->save( $item );
 				}
@@ -173,7 +173,7 @@ class ITE_Transaction_Meta_Sync {
 
 					if ( $item ) {
 						_doing_it_wrong(
-							'it_exchange_update_transaction_cart_object', "Don't delete cart products via cart object.", '1.36.0'
+							'it_exchange_update_transaction_cart_object', "Don't delete cart products via cart object.", '2.0.0'
 						);
 						$repo->delete( $item );
 					}
@@ -202,7 +202,7 @@ class ITE_Transaction_Meta_Sync {
 				);
 
 				_doing_it_wrong(
-					'it_exchange_update_transaction_cart_object', "Don't add cart products via cart object.", '1.36.0'
+					'it_exchange_update_transaction_cart_object', "Don't add cart products via cart object.", '2.0.0'
 				);
 
 				$repo->save( $item );
@@ -217,7 +217,7 @@ class ITE_Transaction_Meta_Sync {
 	/**
 	 * When a transaction is saved, update any corresponding meta values.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \IronBound\WPEvents\GenericEvent $event
 	 */

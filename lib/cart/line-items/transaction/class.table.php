@@ -9,10 +9,13 @@ use IronBound\DB\Table\TimestampedTable;
 /**
  * Transaction Line Item Table.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 class ITE_Transaction_Line_Item_Table extends BaseTable implements TimestampedTable {
+
+	/** @var array */
+	private $columns = array();
 
 	/**
 	 * @inheritDoc
@@ -32,7 +35,12 @@ class ITE_Transaction_Line_Item_Table extends BaseTable implements TimestampedTa
 	 * @inheritDoc
 	 */
 	public function get_columns() {
-		return array(
+
+		if ( $this->columns ) {
+			return $this->columns;
+		}
+
+		$this->columns = array(
 			'pk'           =>
 				new IntegerBased( 'BIGINT', 'pk', array( 'unsigned', 'NOT NULL', 'auto_increment' ), array( 20 ) ),
 			'id'           => new StringBased( 'VARCHAR', 'id', array( 'NOT NULL' ), array( 255 ) ),
@@ -50,6 +58,8 @@ class ITE_Transaction_Line_Item_Table extends BaseTable implements TimestampedTa
 			'_class'       => new StringBased( 'VARCHAR', '_class', array(), array( 255 ) ),
 			'_parent'      => new IntegerBased( 'BIGINT', '_parent', array(), array( 20 ) ),
 		);
+
+		return $this->columns;
 	}
 
 	/**

@@ -2,7 +2,7 @@
 /**
  * Contains the admin notification email class.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -19,7 +19,7 @@ class IT_Exchange_Admin_Email_Notification extends IT_Exchange_Email_Notificatio
 	/**
 	 * Setup this object's properties.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $data
 	 */
@@ -40,7 +40,7 @@ class IT_Exchange_Admin_Email_Notification extends IT_Exchange_Email_Notificatio
 	/**
 	 * Get the notification type.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param bool $label
 	 *
@@ -53,7 +53,7 @@ class IT_Exchange_Admin_Email_Notification extends IT_Exchange_Email_Notificatio
 	/**
 	 * Get the emails to notify.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -64,7 +64,7 @@ class IT_Exchange_Admin_Email_Notification extends IT_Exchange_Email_Notificatio
 	/**
 	 * Set the emails to notify.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $emails
 	 *
@@ -79,7 +79,7 @@ class IT_Exchange_Admin_Email_Notification extends IT_Exchange_Email_Notificatio
 	/**
 	 * Add an email to notify.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $email
 	 *
@@ -96,7 +96,7 @@ class IT_Exchange_Admin_Email_Notification extends IT_Exchange_Email_Notificatio
 	/**
 	 * Remove an email to notify.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $email
 	 *
@@ -116,7 +116,7 @@ class IT_Exchange_Admin_Email_Notification extends IT_Exchange_Email_Notificatio
 	/**
 	 * Get the data to save.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */

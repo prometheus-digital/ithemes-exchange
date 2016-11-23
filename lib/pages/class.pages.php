@@ -322,7 +322,7 @@ class IT_Exchange_Pages {
 	/**
 	 * Protect the confirmation page.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 */
 	protected function protect_confirmation() {
 
@@ -706,7 +706,7 @@ class IT_Exchange_Pages {
 	/**
 	 * Override the transaction URL when in compat-mode.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $url
 	 * @param string $page
@@ -729,7 +729,7 @@ class IT_Exchange_Pages {
 	/**
 	 * Override the confirmation URL to not use pretty permalinks when we are in compat-mode.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $url
 	 * @param int    $transaction_id

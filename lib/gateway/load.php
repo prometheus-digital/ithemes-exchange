@@ -2,10 +2,11 @@
 /**
  * Load the gateway API.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
+require_once dirname( __FILE__ ) . '/util/interface.payment-source.php';
 require_once dirname( __FILE__ ) . '/util/class.card.php';
 require_once dirname( __FILE__ ) . '/util/class.account.php';
 
@@ -34,7 +35,7 @@ add_action( 'it_exchange_enabled_addons_loaded', function () {
 	/**
 	 * Register payment gateways.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Gateways $gateways
 	 */

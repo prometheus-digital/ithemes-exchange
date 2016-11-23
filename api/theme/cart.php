@@ -121,7 +121,7 @@ class IT_Theme_API_Cart implements IT_Theme_API {
 	/**
 	 * Iterate over all the line items in the cart.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
