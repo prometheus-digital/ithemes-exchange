@@ -120,7 +120,7 @@ class Transactions extends Base implements Getable {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you must be logged-in to view transactions.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::UNAUTHORIZED )
+				array( 'status' => rest_authorization_required_code() )
 			);
 		}
 
@@ -128,7 +128,7 @@ class Transactions extends Base implements Getable {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( "Sorry, you are not allowed to list other customer's transactions.", 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::UNAUTHORIZED )
+				array( 'status' => rest_authorization_required_code() )
 			);
 		}
 
@@ -136,7 +136,7 @@ class Transactions extends Base implements Getable {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you cannot edit that prent transaction.' ),
-				array( 'status' => \WP_Http::UNAUTHORIZED )
+				array( 'status' => rest_authorization_required_code() )
 			);
 
 		}
@@ -144,7 +144,7 @@ class Transactions extends Base implements Getable {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you cannot filter transactions by method id.' ),
-				array( 'status' => \WP_Http::UNAUTHORIZED )
+				array( 'status' => rest_authorization_required_code() )
 			);
 		}
 

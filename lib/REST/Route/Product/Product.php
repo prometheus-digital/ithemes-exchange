@@ -67,7 +67,7 @@ class Product extends Base implements Getable {
 				return new \WP_Error(
 					'it_exchange_rest_forbidden_context',
 					__( 'Sorry, you are not allowed to access this product.', 'it-l10n-ithemes-exchange' ),
-					array( 'status' => \WP_Http::UNAUTHORIZED )
+					array( 'status' => rest_authorization_required_code() )
 				);
 			}
 		}
@@ -84,7 +84,7 @@ class Product extends Base implements Getable {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you are not allowed to access this product.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::UNAUTHORIZED )
+				array( 'status' => rest_authorization_required_code() )
 			);
 		}
 

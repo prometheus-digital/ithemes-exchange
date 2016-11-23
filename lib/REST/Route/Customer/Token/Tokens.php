@@ -62,7 +62,7 @@ class Tokens extends Base implements Getable, Postable {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( "Sorry, you are not allowed to view this customer's payment tokens.", 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::FORBIDDEN )
+				array( 'status' => rest_authorization_required_code() )
 			);
 		}
 
@@ -108,7 +108,7 @@ class Tokens extends Base implements Getable, Postable {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you are not allowed to create payment tokens for this customer.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::FORBIDDEN )
+				array( 'status' => rest_authorization_required_code() )
 			);
 		}
 
@@ -131,7 +131,7 @@ class Tokens extends Base implements Getable, Postable {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you are not allowed to access this customer.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::UNAUTHORIZED )
+				array( 'status' => rest_authorization_required_code() )
 			);
 		}
 

@@ -104,7 +104,7 @@ class Purchase extends Base implements Getable, Postable {
 			return new \WP_Error(
 				'rest_invalid_param',
 				__( 'You cannot use that payment token.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::FORBIDDEN )
+				array( 'status' => rest_authorization_required_code() )
 			);
 		}
 

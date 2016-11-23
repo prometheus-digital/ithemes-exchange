@@ -2316,3 +2316,9 @@ if ( ! function_exists( '_deprecated_hook' ) ) {
 		}
 	}
 }
+
+if ( ! function_exists( 'rest_authorization_required_code' ) ) {
+	function rest_authorization_required_code() {
+		return is_user_logged_in() ? 403 : 401;
+	}
+}

@@ -110,7 +110,7 @@ class Products extends Base implements Getable {
 			return new \WP_Error(
 				'it_exchange_rest_invalid_context',
 				__( "Sorry, you aren't allowed to filter products by their visibility.", 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::UNAUTHORIZED )
+				array( 'status' => rest_authorization_required_code() )
 			);
 		}
 
