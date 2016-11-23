@@ -2,7 +2,7 @@
 /**
  * Shipping Line Item interface.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,7 +14,7 @@ interface ITE_Shipping_Line_Item extends ITE_Aggregatable_Line_Item {
 	/**
 	 * Get the shipping provider.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return IT_Exchange_Shipping_Provider
 	 */
@@ -23,7 +23,7 @@ interface ITE_Shipping_Line_Item extends ITE_Aggregatable_Line_Item {
 	/**
 	 * Get the shipping method.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return IT_Exchange_Shipping_Method
 	 */
@@ -32,7 +32,7 @@ interface ITE_Shipping_Line_Item extends ITE_Aggregatable_Line_Item {
 	/**
 	 * Is the shipping applied to the cart or to a product.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */

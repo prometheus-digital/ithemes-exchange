@@ -4,7 +4,7 @@
  *
  * By definition this is a lossy procedure, and is only intended for backwards-compatibility.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -16,7 +16,7 @@ class ITE_Line_Item_Transaction_Object_Converter {
 	/**
 	 * Convert a transaction object to a series of line items.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \stdClass                $cart_object
 	 * @param \IT_Exchange_Transaction $transaction
@@ -61,7 +61,7 @@ class ITE_Line_Item_Transaction_Object_Converter {
 	/**
 	 * Convert products to line items.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array                                 $products
 	 * @param \ITE_Line_Item_Transaction_Repository $repository
@@ -115,7 +115,7 @@ class ITE_Line_Item_Transaction_Object_Converter {
 	/**
 	 * Build the line items for taxes.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param float                                 $taxes
 	 * @param float                                 $sub_total
@@ -395,7 +395,7 @@ class ITE_Line_Item_Transaction_Object_Converter {
 	/**
 	 * Build the line items for coupons.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array[]                               $coupons
 	 * @param float                                 $coupons_total
@@ -444,7 +444,7 @@ class ITE_Line_Item_Transaction_Object_Converter {
 	/**
 	 * Build the line item for single shipping.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string                                $method
 	 * @param float                                 $total
@@ -486,7 +486,7 @@ class ITE_Line_Item_Transaction_Object_Converter {
 	/**
 	 * Build the line items for multiple shipping methods.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array                                 $multiple
 	 * @param float                                 $total

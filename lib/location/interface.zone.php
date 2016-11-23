@@ -2,7 +2,7 @@
 /**
  * Zone interface.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -21,7 +21,7 @@ interface ITE_Zone {
 	/**
 	 * Whether this zone contains a location.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Location $location
 	 * @param string        $upper_bound Specify the upper bound that must match. For example, passing 'state'
@@ -34,7 +34,7 @@ interface ITE_Zone {
 	/**
 	 * Mask a location based on this zone.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Location $location
 	 *
@@ -47,7 +47,7 @@ interface ITE_Zone {
 	 *
 	 * For example 'city' if rates vary all the way down to city level.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */

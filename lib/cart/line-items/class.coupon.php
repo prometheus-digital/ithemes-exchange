@@ -2,7 +2,7 @@
 /**
  * Contains the coupon line item class.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -41,7 +41,7 @@ class ITE_Coupon_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Lin
 	/**
 	 * Create a coupon line item.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \IT_Exchange_Coupon    $coupon
 	 * @param \ITE_Cart_Product|null $product
@@ -80,7 +80,7 @@ class ITE_Coupon_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Lin
 	/**
 	 * Create a duplicate of this coupon, scoped for a given product.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Cart_Product $product
 	 *
@@ -103,7 +103,7 @@ class ITE_Coupon_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Lin
 	/**
 	 * Calculate the number of items this coupon applies to.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return int
 	 */
@@ -334,7 +334,7 @@ class ITE_Coupon_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Lin
 	/**
 	 * Get the coupon.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \IT_Exchange_Coupon
 	 */

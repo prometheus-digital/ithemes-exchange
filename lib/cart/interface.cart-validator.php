@@ -2,7 +2,7 @@
 /**
  * Cart Validator interface.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,7 +14,7 @@ interface ITE_Cart_Validator {
 	/**
 	 * Get the name of this validator.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -23,7 +23,7 @@ interface ITE_Cart_Validator {
 	/**
 	 * Perform validation on the cart.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Cart          $cart
 	 * @param \ITE_Cart_Feedback $feedback
@@ -35,7 +35,7 @@ interface ITE_Cart_Validator {
 	/**
 	 * Coerce a cart to be valid.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Cart          $cart
 	 * @param \ITE_Line_Item     $new_item The most recently added item.

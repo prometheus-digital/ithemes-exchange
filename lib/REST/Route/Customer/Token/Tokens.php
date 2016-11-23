@@ -2,7 +2,7 @@
 /**
  * Tokens route.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -15,6 +15,7 @@ use iThemes\Exchange\REST\Route\Base;
 
 /**
  * Class Tokens
+ *
  * @package iThemes\Exchange\REST\Customer\Token
  */
 class Tokens extends Base implements Getable, Postable {
@@ -61,7 +62,7 @@ class Tokens extends Base implements Getable, Postable {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( "Sorry, you are not allowed to view this customer's payment tokens.", 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::FORBIDDEN )
+				array( 'status' => rest_authorization_required_code() )
 			);
 		}
 
@@ -107,7 +108,7 @@ class Tokens extends Base implements Getable, Postable {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you are not allowed to create payment tokens for this customer.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::FORBIDDEN )
+				array( 'status' => rest_authorization_required_code() )
 			);
 		}
 
@@ -117,7 +118,7 @@ class Tokens extends Base implements Getable, Postable {
 	/**
 	 * Perform a permissions check.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Request $request
 	 * @param \IT_Exchange_Customer|null     $user
@@ -130,7 +131,7 @@ class Tokens extends Base implements Getable, Postable {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you are not allowed to access this customer.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::UNAUTHORIZED )
+				array( 'status' => rest_authorization_required_code() )
 			);
 		}
 
@@ -163,18 +164,15 @@ class Tokens extends Base implements Getable, Postable {
 	public function get_query_args() {
 		return array(
 			'context' => array(
-				'description'       => __( 'Scope under which the request is made; determines fields present in response.', 'it-l10n-ithemes-exchange' ),
-				'type'              => 'string',
-				'sanitize_callback' => 'sanitize_key',
-				'validate_callback' => 'rest_validate_request_arg',
-				'default'           => 'view',
-				'enum'              => array( 'view', 'edit' )
+				'description' => __( 'Scope under which the request is made; determines fields present in response.', 'it-l10n-ithemes-exchange' ),
+				'type'        => 'string',
+				'default'     => 'view',
+				'enum'        => array( 'view', 'edit' )
 			),
 			'gateway' => array(
-				'description'       => __( 'Gateway the payment token belongs to.', 'it-l10n-ithemes-exchange' ),
-				'type'              => 'string',
-				'enum'              => array_map( function ( $gateway ) { return $gateway->get_slug(); }, \ITE_Gateways::handles( 'tokenize' ) ),
-				'validate_callback' => 'rest_validate_request_arg',
+				'description' => __( 'Gateway the payment token belongs to.', 'it-l10n-ithemes-exchange' ),
+				'type'        => 'string',
+				'enum'        => array_map( function ( $gateway ) { return $gateway->get_slug(); }, \ITE_Gateways::handles( 'tokenize' ) ),
 			),
 		);
 	}

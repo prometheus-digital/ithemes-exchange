@@ -2,7 +2,7 @@
 /**
  * Contains the base tag class.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -74,7 +74,7 @@ class IT_Exchange_Email_Tag_Base implements IT_Exchange_Email_Tag {
 	/**
 	 * Get the email tag.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -85,7 +85,7 @@ class IT_Exchange_Email_Tag_Base implements IT_Exchange_Email_Tag {
 	/**
 	 * Get the name of the tag.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -96,7 +96,7 @@ class IT_Exchange_Email_Tag_Base implements IT_Exchange_Email_Tag {
 	/**
 	 * Get the tag's description.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -107,7 +107,7 @@ class IT_Exchange_Email_Tag_Base implements IT_Exchange_Email_Tag {
 	/**
 	 * Get the required context to render this tag.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -118,7 +118,7 @@ class IT_Exchange_Email_Tag_Base implements IT_Exchange_Email_Tag {
 	/**
 	 * Add an item of required context.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $context
 	 *
@@ -140,7 +140,7 @@ class IT_Exchange_Email_Tag_Base implements IT_Exchange_Email_Tag {
 	/**
 	 * Is this email tag available for a given notification.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Email_Notification $notification
 	 *
@@ -162,7 +162,7 @@ class IT_Exchange_Email_Tag_Base implements IT_Exchange_Email_Tag {
 	/**
 	 * Add a notification this tag is available for.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $notification_slug
 	 *
@@ -184,7 +184,7 @@ class IT_Exchange_Email_Tag_Base implements IT_Exchange_Email_Tag {
 	/**
 	 * Add a notification that this tag is NOT available for.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $notification_slug
 	 *
@@ -209,7 +209,7 @@ class IT_Exchange_Email_Tag_Base implements IT_Exchange_Email_Tag {
 	 * If not all required context is available,
 	 * the render method won't be called.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $context
 	 * @param array $options

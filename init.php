@@ -24,7 +24,7 @@
 */
 class IT_Exchange {
 	
-	const VERSION = '1.36.0';
+	const VERSION = '2.0.0';
 
 	/**
 	 * @var string
@@ -42,13 +42,13 @@ class IT_Exchange {
 	var $_series      = '';
 	var $_plugin_base = '';
 	
-	/** @deprecated 1.36 */
+	/** @deprecated 2.0.0 */
 	var $_plugin_path = '';
 
-	/** @deprecated 1.36 */
+	/** @deprecated 2.0.0 */
 	var $_plugin_url = '';
 
-	/** @deprecated 1.36 */
+	/** @deprecated 2.0.0 */
 	var $_version;
 
 	/**
@@ -158,7 +158,7 @@ class IT_Exchange {
 	/**
 	 * Display a notice if the minimum WordPress version is not met.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 */
 	public function minimum_wp_notice() {
 

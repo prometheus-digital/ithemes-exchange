@@ -2,7 +2,7 @@
 /**
  * Contains the transaction activity theme API.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -38,7 +38,7 @@ class IT_Theme_API_Transaction_Activity implements IT_Theme_API {
 	/**
 	 * Get the API context.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -49,7 +49,7 @@ class IT_Theme_API_Transaction_Activity implements IT_Theme_API {
 	/**
 	 * Get the transaction activity item description.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *
@@ -71,7 +71,7 @@ class IT_Theme_API_Transaction_Activity implements IT_Theme_API {
 	/**
 	 * Get the activity actor's name.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $options
 	 *

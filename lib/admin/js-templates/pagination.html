@@ -1,0 +1,46 @@
+<script type="text/template" id="tmpl-it-exchange-pagination">
+    <div class="tablenav top">
+    <div class="tablenav-pages">
+        <span class="displaying-num">{{ data.itemsLabel }}</span>
+
+        <span class="pagination-links">
+
+            <# if ( data.hasPrevious ) { #>
+                <a class="first-page" href="#">
+                    <span class="screen-reader-text">{{ data.firstPageLabel }}</span>
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+                <a class="prev-page" href="#">
+                    <span class="screen-reader-text">{{ data.previousPageLabel }}</span>
+                    <span aria-hidden="true">&lsaquo;</span>
+                </a>
+            <# } else { #>
+                <span class="tablenav-pages-navspan" aria-hidden="true">&laquo;</span>
+                <span class="tablenav-pages-navspan" aria-hidden="true">&lsaquo;</span>
+            <# } #>
+
+            <span class="paging-input">
+                <label for="current-page-selector" class="screen-reader-text">{{ data.currentPageLabel }}</label>
+
+                <input class="current-page" id="current-page-selector" type="text" name="paged" value="{{ data.currentPage }}" size="2">
+
+                <span class="tablenav-paging-text"> {{ data.ofLabel }} <span class="total-pages">{{ data.totalPages }}</span></span>
+            </span>
+
+            <# if ( data.hasNext ) { #>
+                <a class="next-page" href="#">
+                    <span class="screen-reader-text">{{ data.nextPageLabel }}</span>
+                    <span aria-hidden="true">&rsaquo;</span>
+                </a>
+                <a class="last-page" href="#">
+                    <span class="screen-reader-text">{{ data.lastPageLabel }}</span>
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            <# } else { #>
+                <span class="tablenav-pages-navspan" aria-hidden="true">&raquo;</span>
+                <span class="tablenav-pages-navspan" aria-hidden="true">&rsaquo;</span>
+            <# } #>
+        </span>
+    </div>
+    </div>
+</script>

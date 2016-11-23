@@ -102,6 +102,10 @@ class IT_Exchange_Transaction_Post_Type {
 			),
 			'capabilities'         => array(
 				'create_posts' => apply_filters( 'it_exchange_tran_create_posts_capabilities', 'do_not_allow' ),
+				'delete_posts' => 'delete_others_it_transactions',
+				'edit_post'    => 'edit_it_transaction',
+				'read_post'    => 'read_it_transaction',
+				'delete_post'  => 'delete_it_transaction'
 			),
 			'capability_type' => IT_Exchange_Capabilities::TRANSACTION,
 			'map_meta_cap'    => false
@@ -360,7 +364,7 @@ class IT_Exchange_Transaction_Post_Type {
 				echo empty( $method_name ) ? $transaction->transaction_method : $method_name;
 				break;
 			case 'it_exchange_transaction_status_column' :
-				echo it_exchange_get_transaction_status_label( $post );
+				echo it_exchange_get_transaction_status_label( $transaction );
 				break;
 			case 'it_exchange_transaction_customer_column' :
 				echo it_exchange_get_transaction_customer_display_name( $transaction );
@@ -646,7 +650,7 @@ class IT_Exchange_Transaction_Post_Type {
 	/**
 	 * Resend receipt from transaction single view.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return void
 	 */
@@ -681,7 +685,7 @@ class IT_Exchange_Transaction_Post_Type {
 	/**
 	 * Add a Refund from the transaction details page.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 */
 	public function ajax_add_refund() {
 

@@ -2,7 +2,7 @@
 /**
  * Transaction Line Item Repository.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -35,7 +35,7 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 	/**
 	 * Get the transaction line items are being retrieved from.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \IT_Exchange_Transaction
 	 */
@@ -46,7 +46,7 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 	/**
 	 * Set the transaction to retrieve line items from.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \IT_Exchange_Transaction $transaction
 	 *
@@ -156,6 +156,8 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 		}
 
 		$this->events->on_save( $item, $old, $this );
+
+		return true;
 	}
 
 	/**
@@ -196,7 +198,7 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 	/**
 	 * Find the model for a given item.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param ITE_Line_Item|string $item_or_id
 	 * @param string               $type
@@ -222,7 +224,7 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 	/**
 	 * Convert a model to its corresponding item object.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Transaction_Line_Item_Model $model
 	 * @param \ITE_Aggregate_Line_Item|null    $aggregate
@@ -265,7 +267,7 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 	/**
 	 * Set the additional properties on the newly constructed item.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item                   $item
 	 * @param \ITE_Transaction_Line_Item_Model $model
@@ -284,7 +286,7 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 	/**
 	 * Set the aggregate for a line item.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item                   $item
 	 * @param \ITE_Transaction_Line_Item_Model $model
@@ -310,7 +312,7 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 	/**
 	 * Set the aggregatables on an item.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item                   $item
 	 * @param \ITE_Transaction_Line_Item_Model $model
@@ -435,7 +437,7 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 	/**
 	 * Convert a set of models to items.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param ITE_Transaction_Line_Item_Model[] $models
 	 *
@@ -466,7 +468,7 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 	/**
 	 * Convert a set of models to items.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param ITE_Transaction_Line_Item_Model[] $models
 	 *

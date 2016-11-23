@@ -2,7 +2,7 @@
 /**
  * Purchase Handler.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -21,7 +21,7 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 	/**
 	 * @inheritDoc
 	 */
-	public function render_payment_button( ITE_Gateway_Purchase_Request $request ) {
+	public function render_payment_button( ITE_Gateway_Purchase_Request_Interface $request ) {
 
 		if ( ! $this->get_gateway()->settings()->get( 'live-email-address' ) ) {
 			return '';
@@ -33,7 +33,7 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 	/**
 	 * @inheritDoc
 	 */
-	public function get_redirect_url( ITE_Gateway_Purchase_Request $request ) {
+	public function get_redirect_url( ITE_Gateway_Purchase_Request_Interface $request ) {
 
 		$cart = $request->get_cart();
 
@@ -65,6 +65,10 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 		if ( ! $cart->is_current() ) {
 			$return_args['cart_id']   = $cart->get_id();
 			$return_args['cart_auth'] = $cart->generate_auth_secret();
+		}
+
+		if ( $request->get_redirect_to() ) {
+			$return_args['redirect_to'] = $request->get_redirect_to();
 		}
 
 		$return_url = add_query_arg( $return_args, it_exchange_get_page_url( 'transaction' ) );
@@ -124,13 +128,13 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 	/**
 	 * Get the subscription args to pass to PayPal.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
-	 * @param \ITE_Gateway_Purchase_Request $request
+	 * @param ITE_Gateway_Purchase_Request_Interface $request
 	 *
 	 * @return array
 	 */
-	protected function get_subscription_args( ITE_Gateway_Purchase_Request $request ) {
+	protected function get_subscription_args( ITE_Gateway_Purchase_Request_Interface $request ) {
 
 		$cart = $request->get_cart();
 
@@ -200,13 +204,21 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 			}
 		}
 
+		$total = $cart->get_total();
+		$fee   = $cart_product->get_line_items()->with_only( 'fee' )
+		                      ->having_param( 'is_free_trial', 'is_prorate_days' )->first();
+
+		if ( $fee ) {
+			$total += $fee->get_total() * - 1;
+		}
+
 		// https://developer.paypal.com/docs/classic/paypal-payments-standard/integration-guide/Appx_websitestandard_htmlvariables/
 		//a1, t1, p1 are for the first trial periods which is not supported with the Recurring Payments add-on
 		//a2, t2, p2 are for the second trial period, which is not supported with the Recurring Payments add-on
 		//a3, t3, p3 are required for the actual subscription details
 		$args = array(
 			'cmd' => '_xclick-subscriptions',
-			'a3'  => number_format( it_exchange_get_cart_total( false, array( 'cart' => $cart ) ), 2, '.', '' ),
+			'a3'  => number_format( $total, 2, '.', '' ),
 			//Regular subscription price.
 			'p3'  => $duration,
 			//Subscription duration. Specify an int value in the allowed range for the duration units specified in t3
@@ -228,7 +240,7 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 	/**
 	 * @inheritDoc
 	 *
-	 * @param ITE_Gateway_Purchase_Request $request
+	 * @param ITE_Gateway_Purchase_Request_Interface $request
 	 *
 	 * @throws \IT_Exchange_Locking_Exception
 	 */
@@ -319,7 +331,7 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 					return $transaction;
 				}
 
-				$txn_id = it_exchange_add_transaction( 'paypal-standard', $paypal_id, $paypal_status, $cart );
+				$txn_id = $this->add_transaction( $request, $paypal_id, $paypal_status );
 
 				it_exchange_release_lock( $lock );
 
@@ -345,7 +357,7 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 					return $transaction;
 				}
 
-				$txn_id = it_exchange_add_transaction( 'paypal-standard', $cart_id, 'Completed', $cart );
+				$txn_id = $this->add_transaction( $request, $cart_id, 'Completed' );
 
 				it_exchange_release_lock( $lock );
 
@@ -353,11 +365,9 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 			} else {
 				return null;
 			}
-		}
-		catch ( IT_Exchange_Locking_Exception $e ) {
+		} catch ( IT_Exchange_Locking_Exception $e ) {
 			throw $e;
-		}
-		catch ( Exception $e ) {
+		} catch ( Exception $e ) {
 
 			if ( $cart ) {
 				$cart->get_feedback()->add_error( $e->getMessage() );
@@ -367,5 +377,26 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 
 			return null;
 		}
+	}
+
+	/**
+	 * Add the transaction in Exchange.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param ITE_Gateway_Purchase_Request_Interface $request
+	 * @param string                                 $method_id
+	 * @param string                                 $status
+	 * @param array                                  $args
+	 *
+	 * @return int|false
+	 */
+	protected function add_transaction( ITE_Gateway_Purchase_Request_Interface $request, $method_id, $status, $args = array() ) {
+
+		if ( $p = $request->get_child_of() ) {
+			return it_exchange_add_child_transaction( 'paypal-standard', $method_id, $status, $request->get_cart(), $p->get_ID(), $args );
+		}
+
+		return it_exchange_add_transaction( 'paypal-standard', $method_id, $status, $request->get_cart(), null, $args );
 	}
 }

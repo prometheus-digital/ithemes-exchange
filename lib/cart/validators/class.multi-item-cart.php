@@ -3,7 +3,7 @@
 /**
  * Multi-item Cart Validator.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 class ITE_Multi_Item_Cart_Validator implements ITE_Cart_Validator {

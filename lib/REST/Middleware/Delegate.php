@@ -2,7 +2,7 @@
 /**
  * Middleware Delegate.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -38,11 +38,11 @@ class Delegate {
 	/**
 	 * Go to the next middleware.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param Request $request
 	 *
-	 * @return \WP_REST_Response
+	 * @return \WP_REST_Response|\WP_Error
 	 */
 	public function next( Request $request ) {
 
@@ -56,7 +56,7 @@ class Delegate {
 	/**
 	 * Get the next delegate in the chain.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \iThemes\Exchange\REST\Middleware\Delegate
 	 */

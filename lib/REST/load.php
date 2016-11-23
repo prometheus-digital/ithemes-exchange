@@ -2,7 +2,7 @@
 /**
  * Load the REST module.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -19,6 +19,8 @@ use iThemes\Exchange\REST\Route\Cart\Item;
 use iThemes\Exchange\REST\Route\Cart\Meta;
 use iThemes\Exchange\REST\Route\Cart\Purchase;
 use iThemes\Exchange\REST\Route\Cart\Shipping_Methods;
+use iThemes\Exchange\REST\Route\Cart\Types;
+use iThemes\Exchange\REST\Route\Cart\TypeSerializer;
 use iThemes\Exchange\REST\Route\Customer\Customer;
 use iThemes\Exchange\REST\Route\Customer\Token\Serializer as TokenSerializer;
 use iThemes\Exchange\REST\Route\Customer\Token\Tokens;
@@ -30,7 +32,7 @@ use iThemes\Exchange\REST\Route\Transaction\Transaction;
 /**
  * Register the rest routes on libraries loaded.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @return \iThemes\Exchange\REST\Manager
  */
@@ -41,7 +43,7 @@ add_action( 'rest_api_init', function () {
 	/**
 	 * Fires when routes should be registered.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Manager $manager
 	 */
@@ -52,9 +54,14 @@ add_action( 'rest_api_init', function () {
 
 add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 
-	$cart = new Route\Cart\Cart();
+	$cart  = new Route\Cart\Cart();
+	$carts = new Carts( $cart );
+
 	$manager->register_route( $cart );
-	$manager->register_route( new Carts( $cart ) );
+	$manager->register_route( $carts );
+
+	$item_types = new Route\Cart\Types( new TypeSerializer() );
+	$manager->register_route( $item_types );
 
 	foreach ( \ITE_Line_Item_Types::shows_in_rest() as $item_type ) {
 		$items_route = new Route\Cart\Items( $item_type->get_rest_serializer(), $item_type );
@@ -90,6 +97,9 @@ add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 	$transaction = new Route\Transaction\Transaction( new TransactionSerializer() );
 	$manager->register_route( $transaction->set_parent( $transactions ) );
 
+	$send_receipt = new Route\Transaction\Send_Receipt();
+	$manager->register_route( $send_receipt->set_parent( $transaction ) );
+
 	/* Activity */
 	$activity = new Route\Transaction\Activity\Activity( new ActivitySerializer() );
 	$manager->register_route( $activity->set_parent( $transaction ) );
@@ -103,12 +113,20 @@ add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 
 	$refund = new Route\Transaction\Refunds\Refund( new RefundSerializer() );
 	$manager->register_route( $refund->set_parent( $refunds ) );
+
+	// --- Products --- //
+	$serializer = new Route\Product\Serializer();
+	$products   = new Route\Product\Products( $serializer );
+	$manager->register_route( $products );
+
+	$product = new Route\Product\Product( $serializer );
+	$manager->register_route( $product->set_parent( $products ) );
 } );
 
 /**
  * Get the rest url for a given route.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param \iThemes\Exchange\REST\Route $route
  * @param array                        $path_parameters
@@ -147,13 +165,13 @@ function get_rest_url( Route $route, array $path_parameters ) {
 /**
  * Get the REST manager.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @return \iThemes\Exchange\REST\Manager
  */
 function get_rest_manager() {
 
-	static $manager;
+	static $manager = null;
 
 	if ( ! $manager ) {
 
@@ -173,7 +191,7 @@ function get_rest_manager() {
 /**
  * Transform a response to an array.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param \WP_REST_Response $response
  *
@@ -189,4 +207,41 @@ function response_to_array( \WP_REST_Response $response ) {
 	}
 
 	return $data;
+}
+
+/**
+ * Get the URL for a schema title.
+ *
+ * @since 2.0.0
+ *
+ * @param string $title
+ *
+ * @return string
+ */
+function url_for_schema( $title ) {
+	return "https://api.ithemes.com/exchange/schemas/$title";
+}
+
+/**
+ * Format a date to follow RFC339.
+ *
+ * @since 2.0.0
+ *
+ * @param \DateTime|string|int $date
+ *
+ * @return string
+ */
+function format_rfc339( $date ) {
+
+	if ( is_string( $date ) ) {
+		$datetime = new \DateTime( $date, new \DateTimeZone( 'UTC' ) );
+	} elseif ( is_numeric( $date ) ) {
+		$datetime = new \DateTime( "@{$date}", new \DateTimeZone( 'UTC' ) );
+	} elseif ( $date instanceof \DateTime ) {
+		$datetime = $date;
+	} else {
+		throw new \InvalidArgumentException();
+	}
+
+	return $datetime->format( \DateTime::RFC3339 );
 }

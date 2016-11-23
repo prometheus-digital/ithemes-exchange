@@ -2,7 +2,7 @@
 /**
  * Payment Token model.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 use IronBound\Cache\Cache;
@@ -21,7 +21,7 @@ use IronBound\DB\Query\FluentQuery;
  * @property string                     $redacted
  * @property-read bool                  $primary
  */
-class ITE_Payment_Token extends ModelWithMeta {
+class ITE_Payment_Token extends ModelWithMeta implements ITE_Object, ITE_Gateway_Payment_Source {
 
 	/** @var array */
 	protected static $token_types = array();
@@ -40,7 +40,7 @@ class ITE_Payment_Token extends ModelWithMeta {
 	/**
 	 * Make this the primary payment token for the customer.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -74,7 +74,7 @@ class ITE_Payment_Token extends ModelWithMeta {
 	/**
 	 * Make this a non-primary payment token.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 *
@@ -103,7 +103,7 @@ class ITE_Payment_Token extends ModelWithMeta {
 	 *
 	 * This should fallback to a default value if a user-provided value is not available.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -117,6 +117,21 @@ class ITE_Payment_Token extends ModelWithMeta {
 	public function __toString() {
 		return $this->redacted;
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_identifier() { return $this->get_ID(); }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_ID() { return $this->get_pk(); }
+
+	/**
+	 * @inheritDoc
+	 */
+	public static function get_object_type() { return it_exchange_object_type_registry()->get( 'payment-token' ); }
 
 	/**
 	 * @inheritDoc
@@ -194,7 +209,7 @@ class ITE_Payment_Token extends ModelWithMeta {
 	/**
 	 * Get all payment tokens for a customer.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \IT_Exchange_Customer $customer
 	 *
@@ -234,7 +249,7 @@ class ITE_Payment_Token extends ModelWithMeta {
 	/**
 	 * Register a token type.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $type
 	 * @param string $class

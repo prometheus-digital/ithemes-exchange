@@ -2,7 +2,7 @@
 /**
  * Purchase handler for Zero Sum Checkout.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -13,7 +13,7 @@ class ITE_Zero_Sum_Checkout_Purchase_Handler extends ITE_Purchase_Request_Handle
 	/**
 	 * @inheritDoc
 	 */
-	public function render_payment_button( ITE_Gateway_Purchase_Request $request ) {
+	public function render_payment_button( ITE_Gateway_Purchase_Request_Interface $request ) {
 
 		$total = it_exchange_get_cart_total( false, array( 'cart' => $request->get_cart() ) );
 
@@ -42,7 +42,7 @@ class ITE_Zero_Sum_Checkout_Purchase_Handler extends ITE_Purchase_Request_Handle
 	/**
 	 * @inheritDoc
 	 *
-	 * @param \ITE_Gateway_Purchase_Request $request
+	 * @param ITE_Gateway_Purchase_Request_Interface $request
 	 */
 	public function handle( $request ) {
 

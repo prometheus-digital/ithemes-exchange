@@ -2,7 +2,7 @@
 /**
  * Line Item Coercion Failed Exception.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -40,7 +40,7 @@ class ITE_Line_Item_Coercion_Failed_Exception extends Exception {
 	/**
 	 * Get the Line_Item validator.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Line_Item_Validator
 	 */
@@ -51,7 +51,7 @@ class ITE_Line_Item_Coercion_Failed_Exception extends Exception {
 	/**
 	 * Get the Line_Item that failed coercion.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Line_Item
 	 */

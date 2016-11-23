@@ -157,7 +157,7 @@ class IT_Exchange_Shipping {
 	/**
 	 * Determine if the shipping method purchase requirement is complete.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -529,7 +529,7 @@ class IT_Exchange_Shipping {
 	/**
 	 * Should the shipping totals be displayed.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -863,7 +863,7 @@ class IT_Exchange_Shipping {
 	/**
 	 * Clear cart shipping data when the cart is emptied.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Cart $cart
 	 */

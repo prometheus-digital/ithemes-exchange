@@ -2,7 +2,7 @@
 /**
  * Refund model.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 use IronBound\DB\Extensions\Meta\ModelWithMeta;
@@ -19,7 +19,7 @@ use IronBound\DB\Extensions\Meta\ModelWithMeta;
  * @property \DateTime                $created_at
  * @property \DateTime                $updated_at
  */
-class ITE_Refund extends ModelWithMeta {
+class ITE_Refund extends ModelWithMeta implements ITE_Object {
 
 	/**
 	 * @inheritDoc
@@ -34,7 +34,7 @@ class ITE_Refund extends ModelWithMeta {
 			/**
 			 * Fires when a refund has been added to a transaction.
 			 *
-			 * @since 1.36.0
+			 * @since 2.0.0
 			 *
 			 * @param \ITE_Refund              $refund
 			 * @param \IT_Exchange_Transaction $this
@@ -49,6 +49,23 @@ class ITE_Refund extends ModelWithMeta {
 	 * @inheritDoc
 	 */
 	public function get_pk() { return $this->ID; }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_ID() { return $this->get_pk(); }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function __toString() {
+		return sprintf( __( 'Refund of %s', 'it-l10n-ithemes-exchange' ), it_exchange_format_price( $this->amount ) );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public static function get_object_type() { return it_exchange_object_type_registry()->get( 'refund' ); }
 
 	/**
 	 * @inheritDoc

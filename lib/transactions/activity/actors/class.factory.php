@@ -19,7 +19,7 @@ class IT_Exchange_Txn_Activity_Actor_Factory {
 	/**
 	 * Get the actor types.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */

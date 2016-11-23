@@ -2,7 +2,7 @@
 /**
  * Discountable interface.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,7 +14,7 @@ interface ITE_Discountable_Line_Item {
 	/**
 	 * Get the amount to discount.
 	 * 
-	 * @since 1.36
+	 * @since 2.0.0
 	 * 
 	 * @return float
 	 */

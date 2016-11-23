@@ -2,7 +2,7 @@
 /**
  * Autolinker middleware.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -53,14 +53,14 @@ class Autolinker implements Middleware {
 					}
 
 					if ( $up && $route->get_parent() instanceof Getable ) {
-						$item['_links']['up'] = array(
+						$item['_links']['up'][] = array(
 							'href' => $up
 						);
 					}
 
 					if ( $current && isset( $item['id'] ) ) {
-						$item['_links']['self'] = array(
-							'href' => $current . $item['id'] . '/',
+						$item['_links']['self'][] = array(
+							'href' => rest_url( $current . $item['id'] . '/' ),
 						);
 					}
 

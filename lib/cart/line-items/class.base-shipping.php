@@ -2,7 +2,7 @@
 /**
  * Base Shipping class.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -26,7 +26,7 @@ class ITE_Base_Shipping_Line_Item extends ITE_Line_Item implements ITE_Shipping_
 	/**
 	 * Create a new base shipping line item.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \IT_Exchange_Shipping_Method   $method
 	 * @param \IT_Exchange_Shipping_Provider $provider

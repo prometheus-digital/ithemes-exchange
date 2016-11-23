@@ -2,7 +2,7 @@
 /**
  * Cart Product line item.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -44,7 +44,7 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 	/**
 	 * Create a product line item.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \IT_Exchange_Product $product
 	 * @param int                  $quantity
@@ -69,7 +69,7 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 	 *
 	 * This is only here for backwards compatibility purposes.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $cart_product
 	 *
@@ -106,7 +106,7 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 	/**
 	 * Check if certain itemized data exists.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $key
 	 *
@@ -123,7 +123,7 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 	 * For example, Variants uses this to store the variant hash so more than one variant product can be purchased in
 	 * the same transaction.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $key
 	 *
@@ -149,7 +149,7 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 	/**
 	 * Set itemized data.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $key
 	 * @param mixed  $value
@@ -174,7 +174,7 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 	 *
 	 * Will not error if the given key does not exist.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $key
 	 *
@@ -200,7 +200,7 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 	/**
 	 * Check if certain additional data exists.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $key
 	 *
@@ -213,7 +213,7 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 	 *
 	 * Additional data does not affect the cart product ID.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $key
 	 *
@@ -239,7 +239,7 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 	/**
 	 * Set additional data.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $key
 	 * @param mixed  $value
@@ -258,7 +258,7 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 	 *
 	 * Will not error if the given key does not exist.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $key
 	 *
@@ -279,7 +279,7 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 	/**
 	 * Retrieve the product being purchased.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return \IT_Exchange_Product
 	 */
@@ -288,7 +288,7 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 	/**
 	 * Set the product quantity.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param int $quantity
 	 */
@@ -503,7 +503,7 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 	/**
 	 * Get the product's subtotal.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return float
 	 */
@@ -549,7 +549,7 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 	/**
 	 * Get the base amount, before any aggregatables are applied.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return float
 	 */
@@ -581,7 +581,7 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 	/**
 	 * Generate the cart product ID.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Cart_Product $product
 	 */
@@ -592,7 +592,7 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 	/**
 	 * Back-compat representation of a cart-product.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */

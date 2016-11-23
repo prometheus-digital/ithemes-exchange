@@ -2,7 +2,7 @@
 /**
  * Session Repository class.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -111,6 +111,8 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 		$this->session->add_session_data( $type, array( $item->get_id() => $this->get_data( $item ) ) );
 
 		$this->events->on_save( $item, $old, $this );
+
+		return true;
 	}
 
 	/**
@@ -291,7 +293,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 	/**
 	 * Get the billing address for a customer.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \IT_Exchange_Customer $customer
 	 *
@@ -334,7 +336,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 	/**
 	 * Get the shipping address for a customer.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \IT_Exchange_Customer $customer
 	 *
@@ -405,7 +407,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 	/**
 	 * Get the data that will be committed.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item $item
 	 *
@@ -446,7 +448,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 	/**
 	 * Construct an item.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string|int               $id
 	 * @param array                    $data
@@ -495,7 +497,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 	/**
 	 * Back-compat filter the cart product.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $data
 	 *
@@ -506,13 +508,13 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 			$data,
 			$data['product_cart_id'],
 			array()
-		), '1.36.0' );
+		), '2.0.0' );
 	}
 
 	/**
 	 * Back-compat for cart products.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $data
 	 *
@@ -538,7 +540,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 	/**
 	 * Set the additional properties on the newly constructed item.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item           $item
 	 * @param array                    $data
@@ -555,7 +557,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 	/**
 	 * Set the aggregate on a line item if necessary.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item                $item
 	 * @param array                         $data
@@ -578,7 +580,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 	/**
 	 * Set the aggregatable line items on the given line item if necessary.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item $item
 	 * @param array          $data
@@ -610,7 +612,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 	/**
 	 * Normalize the type.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $type
 	 *
@@ -629,7 +631,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 	/**
 	 * Check if this repository is backed by the active session.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */

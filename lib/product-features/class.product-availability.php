@@ -263,6 +263,7 @@ class IT_Exchange_Product_Feature_Product_Availability {
 		$date_format = get_option('date_format');
 		$defaults['type']    = 'either';
 		$defaults['setting'] = 'availability';
+		$defaults['format']  = 'i18n';
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
 		if ( 'enabled' == $options['setting'] ) {
@@ -301,11 +302,17 @@ class IT_Exchange_Product_Feature_Product_Availability {
 		} else if ( 'availability' == $options['setting'] ) {
 			// Return availability dates
 			// Don't use either here. Only both, start, or end
-			if ( ! $value = get_post_meta( $product_id, '_it-exchange-product-availability', true ) )
+			if ( ! $value = get_post_meta( $product_id, '_it-exchange-product-availability', true ) ) {
 				return false;
+			}
 
 			foreach( (array) $value as $key => $val ) {
-				$value[$key] = date_i18n( $date_format, $val );
+
+				if ( $options['format'] === 'i18n' ) {
+					$value[ $key ] = date_i18n( $date_format, $val );
+				} elseif ( $options['format'] === 'mysql' ) {
+					$value[ $key ] = date( 'Y-m-d H:i:s', $val );
+				}
 			}
 
 			switch ( $options['type'] ) {

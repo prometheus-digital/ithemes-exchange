@@ -2,7 +2,7 @@
 /**
  * Contains middleware to auto style links.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,7 +14,7 @@ class IT_Exchange_Email_Middleware_Style_Links implements IT_Exchange_Email_Midd
 	/**
 	 * Handle a sendable object before it has been sent.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Sendable_Mutable_Wrapper $sendable
 	 *
@@ -34,7 +34,7 @@ class IT_Exchange_Email_Middleware_Style_Links implements IT_Exchange_Email_Midd
 	 *
 	 * @internal
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $match
 	 *

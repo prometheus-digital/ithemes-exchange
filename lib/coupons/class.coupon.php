@@ -11,7 +11,7 @@
  *
  * @since 0.4.0
  */
-class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
+class IT_Exchange_Coupon implements ITE_Object, ArrayAccess, Countable, Iterator {
 
 	const TYPE_PERCENT = '%';
 	const TYPE_FLAT = 'amount';
@@ -134,9 +134,14 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 	}
 
 	/**
+	 * @inheritDoc
+	 */
+	public static function get_object_type() { return it_exchange_object_type_registry()->get( 'coupon' ); }
+
+	/**
 	 * Get the type of this coupon.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -145,7 +150,7 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 	/**
 	 * Get the application method.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -156,7 +161,7 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 	 *
 	 * Either '%' or 'amount', but you should evaluate against the constants provided.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -167,7 +172,7 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 	 *
 	 * ie, the 5 in 5% or the 10 in $10 off.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return float
 	 */
@@ -340,7 +345,7 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 	/**
 	 * Validate the coupon for a given cart.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Cart|null $cart If null, default to the current cart.
 	 *
@@ -353,7 +358,7 @@ class IT_Exchange_Coupon implements ArrayAccess, Countable, Iterator {
 	/**
 	 * Whether this coupon is valid for a given product.
 	 * 
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 * 
 	 * @param \ITE_Cart_Product $product
 	 *

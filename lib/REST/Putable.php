@@ -2,7 +2,7 @@
 /**
  * Putable Route.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -18,7 +18,7 @@ interface Putable extends Route {
 	/**
 	 * Handle a PUT request.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Request $request
 	 *
@@ -29,7 +29,7 @@ interface Putable extends Route {
 	/**
 	 * Whether the user has permission to access this route.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Request $request
 	 * @param \IT_Exchange_Customer          $user

@@ -2,7 +2,7 @@
 /**
  * Quantity Modifiable Interface.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,7 +14,7 @@ interface ITE_Quantity_Modifiable_Item {
 	/**
 	 * Set the item's new quantity.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param int $quantity
 	 */
@@ -26,7 +26,7 @@ interface ITE_Quantity_Modifiable_Item {
 	 * An item type can generally have its quantity modified,
 	 * but a particular instance of it could not be.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -35,7 +35,7 @@ interface ITE_Quantity_Modifiable_Item {
 	/**
 	 * Get the maximum purchase quantity available.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return int
 	 */

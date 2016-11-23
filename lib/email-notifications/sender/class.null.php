@@ -2,7 +2,7 @@
 /**
  * Null sender class.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,7 +14,7 @@ class IT_Exchange_Email_Null_Sender implements IT_Exchange_Email_Sender {
 	/**
 	 * Send the email.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Sendable $email
 	 *
@@ -28,7 +28,7 @@ class IT_Exchange_Email_Null_Sender implements IT_Exchange_Email_Sender {
 	/**
 	 * Bulk send emails.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Sendable[] $emails
 	 *

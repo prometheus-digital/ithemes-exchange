@@ -2,7 +2,7 @@
 /**
  * Contains the middleware interface.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,7 +14,7 @@ interface IT_Exchange_Email_Middleware {
 	/**
 	 * Handle a sendable object before it has been sent.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Sendable_Mutable_Wrapper $sendable
 	 *

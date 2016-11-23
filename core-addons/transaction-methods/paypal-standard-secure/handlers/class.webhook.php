@@ -2,7 +2,7 @@
 /**
  * PayPal Standard Secure webhook handler.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -145,7 +145,9 @@ class ITE_PayPal_Standard_Secure_Webhook_Handler implements ITE_Gateway_Request_
 					break;
 
 				case 'subscr_cancel':
+					it_exchange_lock( "ppss-cancel-subscription-{$subscriber_id}", 2 );
 					it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'cancelled' );
+					it_exchange_release_lock( "ppss-cancel-subscription-{$subscriber_id}" );
 					break;
 
 				case 'subscr_eot':
@@ -196,7 +198,7 @@ class ITE_PayPal_Standard_Secure_Webhook_Handler implements ITE_Gateway_Request_
 	/**
 	 * Validate the request payload.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $webhook
 	 *

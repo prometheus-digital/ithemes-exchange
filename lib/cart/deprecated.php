@@ -2,14 +2,14 @@
 /**
  * Fire deprecated hooks an contains deprecated cart API methods.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
 /**
  * Save the billing address to the customer's profile when the address for the cart is updated.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param \ITE_Cart $cart
  */
@@ -28,7 +28,7 @@ add_action( 'it_exchange_set_cart_billing_address', 'ite_save_main_billing_addre
 /**
  * Save the shipping address to the customer's profile when the address for the cart is updated.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param \ITE_Cart $cart
  */
@@ -47,7 +47,7 @@ add_action( 'it_exchange_set_cart_shipping_address', 'ite_save_main_shipping_add
 /**
  * Fire the deprecated quantity hook.
  *
- * @since 1.36
+ * @since 2.0.0
  *
  * @param \ITE_Line_Item            $item
  * @param \ITE_Line_Item|null       $old
@@ -64,7 +64,7 @@ function ite_fire_deprecated_quantity_hook( ITE_Line_Item $item, ITE_Line_Item $
 	}
 
 	if ( $item->get_quantity() != $old->get_quantity() ) {
-		do_action_deprecated( 'it_exchange_cart_prouduct_count_updated', array( $item->get_id() ), '1.36.0' );
+		do_action_deprecated( 'it_exchange_cart_prouduct_count_updated', array( $item->get_id() ), '2.0.0' );
 	}
 }
 
@@ -73,7 +73,7 @@ add_action( 'it_exchange_save_product_item', 'ite_fire_deprecated_quantity_hook'
 /**
  * Fire the deprecated add to cart hooks.
  *
- * @since 1.36
+ * @since 2.0.0
  *
  * @param \ITE_Cart_Product $item
  * @param \ITE_Cart         $cart
@@ -84,8 +84,8 @@ function ite_fire_deprecated_add_cart_product_hook( ITE_Cart_Product $item, ITE_
 		return;
 	}
 
-	do_action_deprecated( 'it_exchange_add_cart_product', array( $item->bc() ), '1.36.0' );
-	do_action_deprecated( 'it_exchange_product_added_to_cart', array( $item->get_product()->ID ), '1.36.0' );
+	do_action_deprecated( 'it_exchange_add_cart_product', array( $item->bc() ), '2.0.0' );
+	do_action_deprecated( 'it_exchange_product_added_to_cart', array( $item->get_product()->ID ), '2.0.0' );
 }
 
 add_action( 'it_exchange_add_product_to_cart', 'ite_fire_deprecated_add_cart_product_hook', 10, 2 );
@@ -93,7 +93,7 @@ add_action( 'it_exchange_add_product_to_cart', 'ite_fire_deprecated_add_cart_pro
 /**
  * Fire the deprecated update cart product hooks.
  *
- * @since 1.36
+ * @since 2.0.0
  *
  * @param \ITE_Cart_Product         $item
  * @param \ITE_Line_Item            $old
@@ -113,7 +113,7 @@ function ite_fire_deprecated_update_cart_product_hook( ITE_Cart_Product $item, I
 		$item->get_id(),
 		$item->bc(),
 		it_exchange_get_session()->get_session_data( 'products' )
-	), '1.36.0' );
+	), '2.0.0' );
 }
 
 add_action( 'it_exchange_save_product_item', 'ite_fire_deprecated_update_cart_product_hook', 10, 3 );
@@ -121,7 +121,7 @@ add_action( 'it_exchange_save_product_item', 'ite_fire_deprecated_update_cart_pr
 /**
  * Fire deprecated delete cart product hook.
  *
- * @since 1.36
+ * @since 2.0.0
  *
  * @param \ITE_Cart_Product $product
  * @param \ITE_Cart         $cart
@@ -135,7 +135,7 @@ function ite_fire_deprecated_delete_cart_product_hook( ITE_Cart_Product $product
 	do_action_deprecated( 'it_exchange_delete_cart_product', array(
 		$product->get_id(),
 		it_exchange_get_session_data( 'products' )
-	), '1.36.0' );
+	), '2.0.0' );
 }
 
 add_action( 'it_exchange_remove_product_from_cart', 'ite_fire_deprecated_delete_cart_product_hook', 10, 2 );
@@ -143,14 +143,14 @@ add_action( 'it_exchange_remove_product_from_cart', 'ite_fire_deprecated_delete_
 /**
  * Fire deprecated empty cart hook.
  *
- * @since 1.36
+ * @since 2.0.0
  *
  * @param \ITE_Cart $cart
  */
 function ite_fire_deprecated_empty_cart_hook( ITE_Cart $cart ) {
 
 	if ( $cart->is_current() ) {
-		do_action_deprecated( 'it_exchange_before_empty_shopping_cart', array( it_exchange_get_session_data() ), '1.36.0' );
+		do_action_deprecated( 'it_exchange_before_empty_shopping_cart', array( it_exchange_get_session_data() ), '2.0.0' );
 	}
 }
 
@@ -159,14 +159,14 @@ add_action( 'it_exchange_empty_cart', 'ite_fire_deprecated_empty_cart_hook' );
 /**
  * Fire deprecated emptied cart hook.
  *
- * @since 1.36
+ * @since 2.0.0
  *
  * @param \ITE_Cart $cart
  */
 function ite_fire_deprecated_emptied_cart_hook( ITE_Cart $cart ) {
 
 	if ( $cart->is_current() ) {
-		do_action_deprecated( 'it_exchange_empty_shopping_cart', array(), '1.36.0' );
+		do_action_deprecated( 'it_exchange_empty_shopping_cart', array(), '2.0.0' );
 	}
 }
 
@@ -175,7 +175,7 @@ add_action( 'it_exchange_emptied_cart', 'ite_fire_deprecated_emptied_cart_hook' 
 /**
  * Handle deprecating the active user carts metadata.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param mixed  $value
  * @param int    $user_id
@@ -202,7 +202,7 @@ add_filter( 'get_user_metadata', 'it_exchange_handle_deprecated_active_carts_met
  *
  * @since      0.3.7
  *
- * @deprecated 1.36.0
+ * @deprecated 2.0.0
  *
  * @param  array $options
  *
@@ -226,7 +226,7 @@ function it_exchange_get_cart_products( $options = array() ) {
  *
  * @since      0.4.0
  *
- * @deprecated 1.36.0
+ * @deprecated 2.0.0
  *
  * @param string $cart_product_id
  * @param array  $product Cart product data
@@ -234,7 +234,7 @@ function it_exchange_get_cart_products( $options = array() ) {
  * @return void
  */
 function it_exchange_add_cart_product( $cart_product_id, $product ) {
-	_deprecated_function( __FUNCTION__, '1.36.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 
 	if ( $cart_product_id && $product ) {
 
@@ -256,7 +256,7 @@ function it_exchange_add_cart_product( $cart_product_id, $product ) {
 		it_exchange_get_current_cart()->add_item( $item );
 	}
 
-	do_action_deprecated( 'it_exchange_add_cart_product', array( $product ), '1.36.0' );
+	do_action_deprecated( 'it_exchange_add_cart_product', array( $product ), '2.0.0' );
 }
 
 /**
@@ -264,7 +264,7 @@ function it_exchange_add_cart_product( $cart_product_id, $product ) {
  *
  * @since      0.4.0
  *
- * @deprecated 1.36.0
+ * @deprecated 2.0.0
  *
  * @param string $cart_product_id
  * @param array  $product Cart product data. This must be the entire new data, not a partial diff.
@@ -272,7 +272,7 @@ function it_exchange_add_cart_product( $cart_product_id, $product ) {
  * @return void
  */
 function it_exchange_update_cart_product( $cart_product_id, $product ) {
-	_deprecated_function( __FUNCTION__, '1.36.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 
 	if ( ! empty( $cart_product_id ) && ! empty( $product ) ) {
 		$products = it_exchange_get_session_data( 'products' );
@@ -290,7 +290,7 @@ function it_exchange_update_cart_product( $cart_product_id, $product ) {
 			$cart_product_id,
 			$product,
 			$products
-		), '1.36.0' );
+		), '2.0.0' );
 	}
 }
 
@@ -299,21 +299,21 @@ function it_exchange_update_cart_product( $cart_product_id, $product ) {
  *
  * @since      0.4.0
  *
- * @deprecated 1.36.0
+ * @deprecated 2.0.0
  *
  * @param string $cart_product_id
  *
  * @return void
  */
 function it_exchange_delete_cart_product( $cart_product_id ) {
-	_deprecated_function( __FUNCTION__, '1.36.0', 'ITE_Cart::remove_item()' );
+	_deprecated_function( __FUNCTION__, '2.0.0', 'ITE_Cart::remove_item()' );
 
 	$products = it_exchange_get_session_data( 'products' );
 	if ( isset( $products[ $cart_product_id ] ) ) {
 		unset( $products[ $cart_product_id ] );
 		it_exchange_update_session_data( 'products', $products );
 	}
-	do_action_deprecated( 'it_exchange_delete_cart_product', array( $cart_product_id, $products ), '1.36.0' );
+	do_action_deprecated( 'it_exchange_delete_cart_product', array( $cart_product_id, $products ), '2.0.0' );
 }
 
 /**
@@ -323,7 +323,7 @@ function it_exchange_delete_cart_product( $cart_product_id ) {
  *
  * @since      0.3.7
  *
- * @deprecated 1.36.0
+ * @deprecated 2.0.0
  *
  * @param mixed  $id id for the cart's product data
  * @param  array $options
@@ -343,7 +343,7 @@ function it_exchange_get_cart_product( $id, $options = array() ) {
 		$products[ $id ],
 		$id,
 		$options
-	), '1.36.0' );
+	), '2.0.0' );
 }
 
 /**
@@ -351,14 +351,14 @@ function it_exchange_get_cart_product( $id, $options = array() ) {
  *
  * @since 1.9.0
  *
- * @deprecated 1.36.0
+ * @deprecated 2.0.0
  *
  * @param int|bool $customer_id Pass false to retrieve the current customer's ID.
  *
  * @return void|false
  */
 function it_exchange_add_current_session_to_customer_active_carts( $customer_id = false ) {
-	_deprecated_function( __FUNCTION__, '1.36.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 
 	return false;
 }
@@ -368,12 +368,12 @@ function it_exchange_add_current_session_to_customer_active_carts( $customer_id 
  *
  * @since 1.9.0
  *
- * @deprecated 1.36.0
+ * @deprecated 2.0.0
  *
  * @return void
  */
 function it_exchange_remove_current_session_from_customer_active_carts() {
-	_deprecated_function( __FUNCTION__, '1.36.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 }
 
 /**
@@ -381,12 +381,12 @@ function it_exchange_remove_current_session_from_customer_active_carts() {
  *
  * @since 1.9.0
  *
- * @deprecated 1.36.0
+ * @deprecated 2.0.0
  *
  * @return void
  */
 function it_exchange_sync_current_cart_with_all_active_customer_carts() {
-	_deprecated_function( __FUNCTION__, '1.36.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 }
 
 /**
@@ -394,12 +394,12 @@ function it_exchange_sync_current_cart_with_all_active_customer_carts() {
  *
  * @since 1.9.0
  *
- * @deprecated 1.36.0
+ * @deprecated 2.0.0
  *
  * @param int|bool $customer_id
  *
  * @return void
  */
 function it_exchange_cache_customer_cart( $customer_id = false ) {
-	_deprecated_function( __FUNCTION__, '1.36.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 }

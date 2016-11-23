@@ -2,7 +2,7 @@
 /**
  * Item Serializer.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -10,6 +10,7 @@ namespace iThemes\Exchange\REST\Route\Cart;
 
 /**
  * Class Item_Serializer
+ *
  * @package iThemes\Exchange\REST\Route\Cart
  */
 class Item_Serializer {
@@ -29,14 +30,13 @@ class Item_Serializer {
 	 * @param \ITE_Line_Item_Type $type
 	 */
 	public function __construct( \ITE_Line_Item_Type $type ) {
-		$this->type   = $type;
-		$this->schema = $this->generate_schema();
+		$this->type = $type;
 	}
 
 	/**
 	 * Extend the Item Serializer without subclassing.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \Closure $extend
 	 *
@@ -51,16 +51,23 @@ class Item_Serializer {
 	/**
 	 * Get the schema for this item serializer.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
-	public function get_schema() { return $this->schema; }
+	public function get_schema() {
+
+		if ( ! $this->schema ) {
+			$this->schema = $this->generate_schema();
+		}
+
+		return $this->schema;
+	}
 
 	/**
 	 * Serialize a line item.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item $item
 	 * @param \ITE_Cart      $cart
@@ -89,6 +96,14 @@ class Item_Serializer {
 			$data['quantity']['editable'] = \ITE_Line_Item_Types::get( $item->get_type() )->is_editable_in_rest();
 		}
 
+		if ( $item instanceof \ITE_Aggregate_Line_Item ) {
+			$data['children'] = array();
+
+			foreach ( $item->get_line_items() as $child ) {
+				$data['children'][] = \ITE_Line_Item_Types::get( $child->get_type() )->get_rest_serializer()->serialize( $child, $cart );
+			}
+		}
+
 		foreach ( $data as $key => $_ ) {
 			if ( ! isset( $schema['properties'][ $key ] ) ) {
 				unset( $data[ $key ] );
@@ -105,14 +120,14 @@ class Item_Serializer {
 	/**
 	 * Generate the schema.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
 	protected function generate_schema() {
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => "cart_item_{$this->type->get_type()}",
+			'title'      => "cart-item-{$this->type->get_type()}",
 			'type'       => 'object',
 			'properties' => array(
 				'id'          => array(
@@ -141,43 +156,65 @@ class Item_Serializer {
 				),
 				'amount'      => array(
 					'description' => __( 'The cost of this line item.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'float',
+					'type'        => 'number',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
 				'quantity'    => array(
 					'description' => __( 'The quantity purchased of this line item.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'object',
-					'context'     => array( 'view', 'edit' ),
-					'properties'  => array(
-						'selected' => array(
-							'description' => __( 'Selected quantity for the line item.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
-							'default'     => 1,
+					'oneOf'       => array(
+						array(
+							'type'       => 'object',
+							'context'    => array( 'view', 'edit' ),
+							'properties' => array(
+								'selected' => array(
+									'description' => __( 'Selected quantity for the line item.', 'it-l10n-ithemes-exchange' ),
+									'type'        => 'integer',
+									'context'     => array( 'view', 'edit' ),
+									'default'     => 1,
+								),
+								'max'      => array(
+									'description' => __( 'Maximum purchase quantity for the line item.', 'it-l10n-ithemes-exchange' ),
+									'type'        => 'integer',
+									'context'     => array( 'view', 'edit' ),
+									'readonly'    => true,
+								),
+								'editable' => array(
+									'description' => __( 'Whether the item quantity can be edited.', 'it-l10n-ithemes-exchange' ),
+									'type'        => 'boolean',
+									'context'     => array( 'view', 'edit' ),
+									'readonly'    => true,
+								),
+							)
 						),
-						'max'      => array(
-							'description' => __( 'Maximum purchase quantity for the line item.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
-						),
-						'editable' => array(
-							'description' => __( 'Whether the item quantity can be edited.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'boolean',
-							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
-						),
+						array( 'type' => 'integer' )
 					)
 				),
 				'total'       => array(
 					'description' => __( 'The total amount of this line item.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'float',
+					'type'        => 'number',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
 			),
 		);
+
+		if ( $this->type->is_aggregate() ) {
+			$schema['properties']['children'] = array(
+				'description' => __( 'Child line items of this item.', 'it-l10n-ithemes-exchange' ),
+				'type'        => 'array',
+				'items'       => array(
+					'oneOf' => array(),
+				),
+				'readonly'    => true,
+			);
+
+			foreach ( \ITE_Line_Item_Types::aggregatables() as $aggregatable ) {
+				$schema['properties']['children']['items']['oneOf'][] = array(
+					'$ref' => \iThemes\Exchange\REST\url_for_schema( "cart-item{$aggregatable->get_type()}" )
+				);
+			}
+		}
 
 		foreach ( $this->type->get_additional_schema_props() as $prop => $schema_prop ) {
 			$schema['properties'][ $prop ] = $schema_prop;

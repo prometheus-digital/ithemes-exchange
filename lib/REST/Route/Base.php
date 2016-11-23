@@ -2,7 +2,7 @@
 /**
  * Base Route class.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -44,7 +44,7 @@ abstract class Base implements Route {
 	/**
 	 * Set the parent route.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Route $route
 	 *
@@ -59,7 +59,7 @@ abstract class Base implements Route {
 	/**
 	 * Get the REST manager.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \iThemes\Exchange\REST\Manager
 	 */
@@ -70,7 +70,7 @@ abstract class Base implements Route {
 	/**
 	 * Set the REST manager.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Manager $manager
 	 *

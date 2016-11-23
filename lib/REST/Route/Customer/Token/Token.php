@@ -2,7 +2,7 @@
 /**
  * Single Token Route.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -52,7 +52,7 @@ class Token extends Base implements Getable, Putable, Deletable {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you are not allowed to view this payment token.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::FORBIDDEN )
+				array( 'status' => rest_authorization_required_code() )
 			);
 		}
 
@@ -108,7 +108,7 @@ class Token extends Base implements Getable, Putable, Deletable {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you are not allowed to edit this payment token.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::FORBIDDEN )
+				array( 'status' => rest_authorization_required_code() )
 			);
 		}
 
@@ -137,7 +137,7 @@ class Token extends Base implements Getable, Putable, Deletable {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you are not allowed to delete this payment token.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::FORBIDDEN )
+				array( 'status' => rest_authorization_required_code() )
 			);
 		}
 
@@ -147,7 +147,7 @@ class Token extends Base implements Getable, Putable, Deletable {
 	/**
 	 * Perform a permissions check.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Request $request
 	 * @param \IT_Exchange_Customer|null     $user

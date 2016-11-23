@@ -410,7 +410,7 @@ function it_exchange_get_wp_pages( $options=array() ) {
 /**
  * Is pages in compatibility mode.
  *
- * @since 1.36
+ * @since 2.0.0
  *
  * @param bool $break_cache
  *

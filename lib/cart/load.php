@@ -2,7 +2,7 @@
 /**
  * Load the cart module.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -67,6 +67,7 @@ require_once dirname( __FILE__ ) . '/class.meta-registry.php';
 
 ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'product', array(
 	'label'               => __( 'Product', 'it-l10n-ithemes-exchange' ),
+	'aggregate'           => true,
 	'show_in_rest'        => true,
 	'editable_in_rest'    => true,
 	'rest_serializer'     => function ( array $data, ITE_Cart_Product $product, array $schema, ITE_Cart $cart ) {
@@ -89,6 +90,8 @@ ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'product', array(
 				);
 			}
 		}
+
+		$data['image'] = it_exchange_get_product_cart_item_featured_image_url( $product );
 
 		return $data;
 	},
@@ -120,6 +123,13 @@ ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'product', array(
 				),
 			)
 		),
+		'image'           => array(
+			'description' => __( 'A thumbnail of the product and variation.', 'it-l10n-ithemes-exchange' ),
+			'type'        => 'string',
+			'format'      => 'uri',
+			'context'     => array( 'view', 'edit' ),
+			'readonly'    => true,
+		),
 	),
 	'create_from_request' => function ( \iThemes\Exchange\REST\Request $request ) {
 
@@ -133,10 +143,15 @@ ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'product', array(
 			);
 		}
 
-		$item = \ITE_Cart_Product::create(
-			$product,
-			$request['quantity']['selected']
-		);
+		if ( isset( $request['quantity'], $request['quantity']['selected'] ) ) {
+			$quantity = $request['quantity']['selected'];
+		} elseif ( isset( $request['quantity'] ) && is_numeric( $request['quantity'] ) ) {
+			$quantity = $request['quantity'];
+		} else {
+			$quantity = 1;
+		}
+
+		$item = \ITE_Cart_Product::create( $product, $quantity );
 
 		$cart = $request->get_cart();
 		$cart->add_item( $item );
@@ -147,10 +162,11 @@ ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'product', array(
 
 ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'coupon', array(
 	'label'               => __( 'Coupon', 'it-l10n-ithemes-exchange' ),
+	'aggregate'           => true,
+	'aggregatable'        => true,
 	'show_in_rest'        => true,
 	'editable_in_rest'    => true,
 	'rest_serializer'     => function ( array $data, ITE_Coupon_Line_Item $coupon, array $schema, ITE_Cart $cart ) {
-
 
 		if ( isset( $schema['properties']['coupon'] ) ) {
 			$data['coupon'] = array(
@@ -163,17 +179,22 @@ ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'coupon', array(
 	'schema'              => array(
 		'coupon' => array(
 			'description' => __( 'The applied coupon.', 'it-l10n-ithemes-exchange' ),
-			'type'        => 'object',
-			'context'     => array( 'view', 'edit' ),
-			'properties'  => array(
-				'code' => array(
-					'description' => __( 'The coupon code.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
-					'required'    => true,
-					'readonly'    => true,
+			'oneOf'       => array(
+				array(
+					'type'       => 'object',
+					'context'    => array( 'view', 'edit' ),
+					'properties' => array(
+						'code' => array(
+							'description' => __( 'The coupon code.', 'it-l10n-ithemes-exchange' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+							'required'    => true,
+							'readonly'    => true,
+						),
+					),
 				),
-			),
+				array( 'type' => 'string' )
+			)
 		)
 	),
 	'create_from_request' => function ( \iThemes\Exchange\REST\Request $request ) {
@@ -205,8 +226,19 @@ ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'coupon', array(
 
 ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'fee', array(
 	'label'            => __( 'Fee', 'it-l10n-ithemes-exchange' ),
+	'aggregate'        => true,
+	'aggregatable'     => true,
 	'show_in_rest'     => true,
 	'editable_in_rest' => false,
 ) ) );
-ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'tax', array( 'label' => __( 'Tax', 'it-l10n-ithemes-exchange' ) ) ) );
-ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'shipping', array( 'label' => __( 'Shipping', 'it-l10n-ithemes-exchange' ) ) ) );
+
+ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'tax', array(
+	'label'        => __( 'Tax', 'it-l10n-ithemes-exchange' ),
+	'aggregatable' => true,
+) ) );
+
+ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'shipping', array(
+	'label'        => __( 'Shipping', 'it-l10n-ithemes-exchange' ),
+	'aggregate'    => true,
+	'aggregatable' => true,
+) ) );

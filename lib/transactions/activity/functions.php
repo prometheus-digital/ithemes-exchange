@@ -121,7 +121,7 @@ add_action( 'it_exchange_update_transaction_status', 'it_exchange_add_note_on_st
 /**
  * Add activity item when a refund is processed.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param ITE_Refund               $refund
  * @param \IT_Exchange_Transaction $transaction
@@ -172,24 +172,12 @@ add_action( 'it_exchange_add_child_transaction_success', 'it_exchange_add_activi
  *
  * @since 1.35.3
  *
- * @param int    $mid
- * @param int    $object_id
- * @param string $meta_key
- * @param mixed  $meta_value
+ * @param \IT_Exchange_Transaction $transaction
+ * @param string                   $prev
  */
-function it_exchange_add_activity_on_method_id_change( $mid, $object_id, $meta_key, $meta_value ) {
+function it_exchange_add_activity_on_method_id_change( $transaction, $prev ) {
 
-	if ( $meta_key !== '_it_exchange_transaction_method_id' ) {
-		return;
-	}
-
-	$txn  = it_exchange_get_transaction( $object_id );
-	$prev = it_exchange_get_transaction_method_id( $object_id );
-
-	if ( ! $txn ) {
-		return;
-	}
-
+	$meta_value = $transaction->get_method_id();
 	$meta_value = "<code>$meta_value</code>";
 
 	if ( ! $prev ) {
@@ -199,7 +187,7 @@ function it_exchange_add_activity_on_method_id_change( $mid, $object_id, $meta_k
 		$message = sprintf( __( 'Method ID updated to %s from %s.', 'it-l10n-ithemes-exchange' ), $meta_value, $prev );
 	}
 
-	$builder = new IT_Exchange_Txn_Activity_Builder( $txn, 'note' );
+	$builder = new IT_Exchange_Txn_Activity_Builder( $transaction, 'note' );
 	$builder->set_description( $message );
 
 	if ( is_user_logged_in() ) {
@@ -214,7 +202,7 @@ function it_exchange_add_activity_on_method_id_change( $mid, $object_id, $meta_k
 	$builder->build( it_exchange_get_txn_activity_factory() );
 }
 
-add_action( 'update_post_meta', 'it_exchange_add_activity_on_method_id_change', 10, 4 );
+add_action( 'it_exchange_update_transaction_method_id', 'it_exchange_add_activity_on_method_id_change', 10, 2 );
 
 /**
  * Get the txn activity factory.

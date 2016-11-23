@@ -2,7 +2,7 @@
 /**
  * Guest Customer class.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -62,7 +62,7 @@ class IT_Exchange_Guest_Customer extends IT_Exchange_Customer {
 	/**
 	 * Create a guest customer from a transaction.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \IT_Exchange_Transaction $transaction
 	 *

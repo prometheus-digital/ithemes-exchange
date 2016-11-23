@@ -13,7 +13,7 @@
  *
  * This is cached in a static variable.
  *
- * @since 1.36
+ * @since 2.0.0
  *
  * @param bool $create_if_not_started
  *
@@ -43,7 +43,7 @@ function it_exchange_get_current_cart( $create_if_not_started = true ) {
 /**
  * Get a cart by id.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param string $cart_id
  *
@@ -319,7 +319,7 @@ function it_exchange_empty_shopping_cart() {
  * Get a customer's cached cart if they are logged in
  *
  * @since 1.9.0
- * @since 1.36.0 Introduce `$session_only` parameter.
+ * @since 2.0.0 Introduce `$session_only` parameter.
  *
  * @param int|bool $customer_id The id of an exchange customer
  * @param bool $session_only    Only return the session data not an \ITE_Cart object.
@@ -600,7 +600,7 @@ function it_exchange_get_cart_weight( ITE_Cart $cart = null ) {
 /**
  * Get the shipping method for any line item.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param \ITE_Line_Item $item
  *
@@ -624,7 +624,7 @@ function it_exchange_get_shipping_method_for_item( ITE_Line_Item $item ) {
 /**
  * Determine if a cart is eligible for using multiple shipping methods.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param \ITE_Cart|null $cart
  *
@@ -664,7 +664,7 @@ function it_exchange_cart_is_eligible_for_multiple_shipping_methods( ITE_Cart $c
  *
  * @since 0.3.7
  *
- * @deprecated 1.36.0
+ * @deprecated 2.0.0
  *
  * @param array $product cart product
  * @param bool $format
@@ -741,20 +741,7 @@ function it_exchange_get_cart_subtotal( $format = true, $options = array() ) {
 		return $format ? it_exchange_format_price( 0 ) : 0;
 	}
 
-	$subtotal = 0;
-	$items    = $cart->get_items()->non_summary_only();
-
-	if ( ! $items->count() ) {
-		return $format ? it_exchange_format_price( 0 ) : 0;
-	}
-
-	foreach( $items as $item ) {
-		if ( ! $item instanceof ITE_Cart_Product || empty( $options['feature'] ) || $item->get_product()->get_feature( $options['feature'] ) ) {
-			$subtotal += $item->get_total();
-		}
-	}
-
-	$subtotal = apply_filters( 'it_exchange_get_cart_subtotal', $subtotal, $options, $cart );
+	$subtotal = $cart->get_subtotal( $options );
 
 	return $format ? it_exchange_format_price( $subtotal ) : $subtotal;
 }
@@ -793,11 +780,7 @@ function it_exchange_get_cart_total( $format = true, $options = array() ) {
 		return 0;
 	}
 
-	$total = it_exchange_get_cart_subtotal( false, $options );
-	$total += $cart->get_items( '', true )->without( 'product' )->summary_only()->total();
-
-	$total = apply_filters( 'it_exchange_get_cart_total', $total );
-	$total = max( 0, $total );
+	$total = $cart->get_total();
 
 	return $format ? it_exchange_format_price( $total ) : $total;
 }
@@ -855,7 +838,7 @@ function it_exchange_get_cart_description( $options = array() ) {
 		/**
 		 * Filter the description for an item.
 		 *
-		 * @since 1.36.0
+		 * @since 2.0.0
 		 *
 		 * @param string         $string
 		 * @param \ITE_Line_Item $item
@@ -936,7 +919,7 @@ function it_exchange_get_cart_billing_address() {
 /**
  * Get the available transaction methods for a cart.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param ITE_Cart|null $cart
  *
@@ -953,24 +936,16 @@ function it_exchange_get_available_transaction_methods_for_cart( ITE_Cart $cart 
 			return false;
 		}
 
-		$product = $item->get_product();
+		$fees = $item->get_line_items()->with_only( 'fee' )->filter( function( ITE_Fee_Line_Item $fee ) {
+			return $fee->has_param( 'is_free_trial' ) || $fee->has_param( 'is_prorate_days' );
+		} );
 
-		if ( ! $product->has_feature( 'recurring-payments' ) ) {
-			return false;
-		}
-
-		if ( ! $product->get_feature( 'recurring-payments', array( 'setting' => 'trial-enabled' ) ) ) {
-			return false;
-		}
-
-		if (
-			function_exists( 'it_exchange_is_customer_eligible_for_trial' ) &&
-			! it_exchange_is_customer_eligible_for_trial( $product, $cart->get_customer() )
-		) {
+		if ( $fees->count() === 0 ) {
 			return false;
 		}
 
 		return true;
+
 	} )->count() > 0;
 
 	$methods = array();
@@ -978,13 +953,17 @@ function it_exchange_get_available_transaction_methods_for_cart( ITE_Cart $cart 
 	if ( $total <= 0 && ! $contains_free_trial ) {
 		$methods[] = ITE_Gateways::get( 'zero-sum-checkout' );
 	} elseif ( $contains_free_trial || $total > 0 ) {
-		$methods = ITE_Gateways::all();
+		foreach ( ITE_Gateways::accepting() as $gateway ) {
+			if ( ! $gateway instanceof ITE_Zero_Sum_Checkout_Gateway ) {
+				$methods[] = $gateway;
+			}
+		}
 	}
 
 	/**
 	 * Filter the available transaction methods for a given cart.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Gateway[] $methods
 	 * @param \ITE_Cart      $cart
@@ -1070,4 +1049,82 @@ function it_exchange_remove_cart_id() {
 function it_exchange_doing_guest_checkout() {
 	$data = it_exchange_get_cart_data( 'guest-checkout' );
 	return ! empty( $data[0] );
+}
+
+/**
+ * Get the featured image for a product cart item.
+ *
+ * @since 1.36.0
+ *
+ * @param ITE_Cart_Product $item
+ * @param string|array     $size
+ *
+ * @return string
+ */
+function it_exchange_get_product_cart_item_featured_image_url( ITE_Cart_Product $item, $size = 'thumbnail' ) {
+
+	$product = $item->get_product();
+
+	if ( ! $product ) {
+		return '';
+	}
+
+	$product_id = $product->ID;
+	$itemized   = $item->get_itemized_data();
+
+	if ( ( it_exchange_product_supports_feature( $product_id, 'product-images' ) && it_exchange_product_has_feature( $product_id, 'product-images' ) ) ) {
+
+		if ( ! empty( $itemized['it_variant_combo_hash'] ) ) {
+			$combo_hash = $itemized['it_variant_combo_hash'];
+		}
+
+		$images_located = false;
+
+		if ( isset( $combo_hash ) && function_exists( 'it_exchange_variants_addon_get_product_feature_controller' ) ) {
+
+			$variant_combos_data = it_exchange_get_variant_combo_attributes_from_hash( $product_id, $combo_hash );
+			$combos_array        = empty( $variant_combos_data['combo'] ) ? array() : $variant_combos_data['combo'];
+			$alt_hashes          = it_exchange_addon_get_selected_variant_alts( $combos_array, $product_id );
+
+			$controller = it_exchange_variants_addon_get_product_feature_controller( $product_id, 'product-images', array( 'setting' => 'variants' ) );
+
+			if ( $variant_combos_data['hash'] == $combo_hash ) {
+				if ( ! empty( $controller->post_meta[ $combo_hash ]['value'] ) ) {
+					$product_images = $controller->post_meta[ $combo_hash ]['value'];
+					$images_located = true;
+				}
+			}
+			// Look for alt hashes if direct match was not found
+			if ( ! $images_located && ! empty( $alt_hashes ) ) {
+				foreach ( $alt_hashes as $alt_hash ) {
+					if ( ! empty( $controller->post_meta[ $alt_hash ]['value'] ) ) {
+						$product_images = $controller->post_meta[ $alt_hash ]['value'];
+						$images_located = true;
+					}
+				}
+			}
+		}
+
+		if ( ! $images_located || ! isset( $product_images ) ) {
+			$product_images = it_exchange_get_product_feature( $product_id, 'product-images' );
+		}
+
+		$feature_image = array(
+			'id'    => $product_images[0],
+			'thumb' => wp_get_attachment_thumb_url( $product_images[0] ),
+			'large' => wp_get_attachment_url( $product_images[0] ),
+		);
+
+		if ( is_array( $size ) ) {
+			$img_src = wp_get_attachment_image_url( $product_images[0], $options['size'] );
+		} elseif ( 'thumb' === $size ) {
+			$img_src = $feature_image['thumb'];
+		} else {
+			$img_src = $feature_image['large'];
+		}
+
+		return $img_src;
+	}
+
+	return '';
 }

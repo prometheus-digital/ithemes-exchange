@@ -85,7 +85,7 @@ function it_exchange_print_paypal_standard_wizard_settings( $form ) {
 	<?php
 }
 
-add_action( 'it_exchange_print_paypal-standard_wizard_settings', 'it_exchange_print_paypal_standard_wizard_settings' );
+//add_action( 'it_exchange_print_paypal-standard_wizard_settings', 'it_exchange_print_paypal_standard_wizard_settings' );
 
 /**
  * Stripe URL to perform refunds
@@ -462,7 +462,7 @@ function it_exchange_save_paypal_standard_wizard_settings( $errors ) {
 	return $IT_Exchange_PayPal_Standard_Add_On->paypal_standard_save_wizard_settings();
 }
 
-add_action( 'it_exchange_save_paypal-standard_wizard_settings', 'it_exchange_save_paypal_standard_wizard_settings' );
+//add_action( 'it_exchange_save_paypal-standard_wizard_settings', 'it_exchange_save_paypal_standard_wizard_settings' );
 
 /**
  * Default settings for paypal_standard
@@ -518,7 +518,7 @@ function it_exchange_paypal_standard_addon_make_payment_button( $options ) {
 /**
  * Override the payment method button name.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param string $name
  *

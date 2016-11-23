@@ -39,7 +39,7 @@ class IT_Exchange_Admin_Settings_Form {
 	/** @var array|false */
 	public $country_states_js = false;
 
-	/** @public ITForm */
+	/** @var ITForm */
 	public $form;
 
 	/** @var array */
@@ -75,7 +75,7 @@ class IT_Exchange_Admin_Settings_Form {
 		$options = ITUtility::merge_defaults( $args, $defaults );
 
 		// If no prefix or form fields, return
-		if ( empty( $options['prefix'] ) || empty( $options['form-fields'] ) ) {
+		if ( empty( $options['form-fields'] ) || empty( $options['form'] ) && empty( $options['prefix'] ) ) {
 			return;
 		}
 
@@ -100,6 +100,10 @@ class IT_Exchange_Admin_Settings_Form {
 
 		// Do we want to include the country states JS?
 		$this->set_country_states_js( $options['country-states-js'] );
+
+		if ( ! empty( $options['form'] ) && $options['form'] instanceof ITForm ) {
+			$this->form = $options['form'];
+		}
 	}
 
 	/**
@@ -216,7 +220,11 @@ class IT_Exchange_Admin_Settings_Form {
 	public function print_form() {
 		$this->print_messages();
 		$this->set_field_values();
-		$this->init_form();
+
+		if ( ! $this->form ) {
+			$this->init_form();
+		}
+
 		$this->start_form();
 		$this->print_fields();
 		$this->print_actions();
@@ -385,7 +393,7 @@ class IT_Exchange_Admin_Settings_Form {
 	/**
 	 * Print a preamble row.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $preamble
 	 */
@@ -465,7 +473,7 @@ class IT_Exchange_Admin_Settings_Form {
 	/**
 	 * Whether a field should be displayed based on the `show_if` rules.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $field
      * @param array $settings
@@ -528,6 +536,29 @@ class IT_Exchange_Admin_Settings_Form {
 		$values = ITForm::get_post_data();
 		unset( $values['it-exchange-saving-settings'] );
 
+		$values_or_error = $this->validate_settings( $values );
+
+		if ( is_wp_error( $values_or_error ) ) {
+			it_exchange_add_message( 'error', implode( ', ', $values_or_error->get_error_messages() ) );
+
+			return;
+		}
+
+		it_exchange_save_option( $this->prefix, $values_or_error );
+		it_exchange_add_message( 'notice', __( 'Settings updated', 'it-l10n-ithemes-exchange' ) );
+	}
+
+	/**
+	 * Validate settings.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param array $values
+     *
+	 * @return array|WP_Error
+     */
+	public function validate_settings( $values ) {
+
 		$values = apply_filters( 'it_exchange_save_admin_form_settings_for_' . $this->prefix, $values );
 
 		$missing = array();
@@ -558,13 +589,10 @@ class IT_Exchange_Admin_Settings_Form {
 		$errors = apply_filters( 'it_exchange_validate_admin_form_settings_for_' . $this->prefix, $errors, $values );
 
 		if ( is_wp_error( $errors ) ) {
-			it_exchange_add_message( 'error', implode( ', ', $errors->get_error_messages() ) );
-
-			return;
+			return $errors;
+		} else {
+			return $values;
 		}
-
-		it_exchange_save_option( $this->prefix, $values );
-		it_exchange_add_message( 'notice', __( 'Settings updated', 'it-l10n-ithemes-exchange' ) );
 	}
 
 	/**
@@ -622,7 +650,7 @@ class IT_Exchange_Admin_Settings_Form {
 	/**
 	 * Generate show if JS.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 */
 	protected function generate_show_if_js() {
 

@@ -2,7 +2,7 @@
 /**
  * Load the email notifications component.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -40,10 +40,7 @@ require_once dirname( __FILE__ ) . '/middleware/interface.php';
 require_once dirname( __FILE__ ) . '/middleware/class.formatter.php';
 require_once dirname( __FILE__ ) . '/middleware/class.contextualizer.php';
 require_once dirname( __FILE__ ) . '/middleware/class.style-links.php';
-
-if ( version_compare( PHP_VERSION, '5.3', '>=' ) ) {
-	require_once dirname( __FILE__ ) . '/middleware/class.auto-linker.php';
-}
+require_once dirname( __FILE__ ) . '/middleware/class.auto-linker.php';
 
 require_once dirname( __FILE__ ) . '/tag-replacers/interface.php';
 require_once dirname( __FILE__ ) . '/tag-replacers/class.base.php';
@@ -62,7 +59,7 @@ if ( IT_Exchange_Email_Customizer::is_available() ) {
 /**
  * Retrieve the email notifications object.
  *
- * @since 1.36
+ * @since 2.0.0
  *
  * @return IT_Exchange_Email_Notifications
  */
@@ -79,7 +76,7 @@ function it_exchange_email_notifications() {
 		 *
 		 * The return value must implement IT_Exchange_Email_Tag_Replacer.
 		 *
-		 * @since 1.36
+		 * @since 2.0.0
 		 *
 		 * @param IT_Exchange_Email_Tag_Replacer $replacer
 		 */
@@ -92,7 +89,7 @@ function it_exchange_email_notifications() {
 		/**
 		 * Fires when replacement tags should be registered.
 		 *
-		 * @since 1.36
+		 * @since 2.0.0
 		 *
 		 * @param IT_Exchange_Email_Tag_Replacer $replacer
 		 */
@@ -108,7 +105,7 @@ function it_exchange_email_notifications() {
 		/**
 		 * Fires when add-ons should register additional middleware.
 		 *
-		 * @since 1.36
+		 * @since 2.0.0
 		 *
 		 * @param IT_Exchange_Email_Middleware_Handler
 		 */
@@ -157,7 +154,7 @@ function it_exchange_email_notifications() {
 		 *
 		 * The return value must implement IT_Exchange_Email_Sender
 		 *
-		 * @since 1.36
+		 * @since 2.0.0
 		 *
 		 * @param IT_Exchange_Email_Sender             $sender
 		 * @param IT_Exchange_Email_Middleware_Handler $middleware
@@ -178,7 +175,7 @@ function it_exchange_email_notifications() {
 /**
  * Register email notifications.
  *
- * @since 1.36
+ * @since 2.0.0
  */
 function it_exchange_register_email_notifications() {
 
@@ -230,7 +227,7 @@ function it_exchange_register_email_notifications() {
 	/**
 	 * Fires when add-ons should register additional email notifications.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Email_Notifications $notifications
 	 */

@@ -2,7 +2,7 @@
 /**
  * Contains the mutable sendable wrapper class.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -53,7 +53,7 @@ class IT_Exchange_Sendable_Mutable_Wrapper implements IT_Exchange_Sendable {
 	/**
 	 * Get the subject line.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -69,7 +69,7 @@ class IT_Exchange_Sendable_Mutable_Wrapper implements IT_Exchange_Sendable {
 	/**
 	 * Override the subject of this email.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $subject
 	 *
@@ -84,7 +84,7 @@ class IT_Exchange_Sendable_Mutable_Wrapper implements IT_Exchange_Sendable {
 	/**
 	 * Get the body.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -100,7 +100,7 @@ class IT_Exchange_Sendable_Mutable_Wrapper implements IT_Exchange_Sendable {
 	/**
 	 * Override the body of this email.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $body
 	 *
@@ -115,7 +115,7 @@ class IT_Exchange_Sendable_Mutable_Wrapper implements IT_Exchange_Sendable {
 	/**
 	 * Get the email template.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return IT_Exchange_Email_Template
 	 */
@@ -126,7 +126,7 @@ class IT_Exchange_Sendable_Mutable_Wrapper implements IT_Exchange_Sendable {
 	/**
 	 * Get the recipient for this email.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return IT_Exchange_Email_Recipient
 	 */
@@ -137,7 +137,7 @@ class IT_Exchange_Sendable_Mutable_Wrapper implements IT_Exchange_Sendable {
 	/**
 	 * Get the CCs for this email.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return IT_Exchange_Email_Recipient[]
 	 */
@@ -148,7 +148,7 @@ class IT_Exchange_Sendable_Mutable_Wrapper implements IT_Exchange_Sendable {
 	/**
 	 * Add a Cc to this email.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Email_Recipient $recipient
 	 *
@@ -163,7 +163,7 @@ class IT_Exchange_Sendable_Mutable_Wrapper implements IT_Exchange_Sendable {
 	/**
 	 * Get the BCCs for this email.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return IT_Exchange_Email_Recipient[]
 	 */
@@ -174,7 +174,7 @@ class IT_Exchange_Sendable_Mutable_Wrapper implements IT_Exchange_Sendable {
 	/**
 	 * Add a Bcc to this email.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param IT_Exchange_Email_Recipient $recipient
 	 *
@@ -189,7 +189,7 @@ class IT_Exchange_Sendable_Mutable_Wrapper implements IT_Exchange_Sendable {
 	/**
 	 * Get the context for this email.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -200,7 +200,7 @@ class IT_Exchange_Sendable_Mutable_Wrapper implements IT_Exchange_Sendable {
 	/**
 	 * Add additional context.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $key
 	 * @param mixed  $context
@@ -223,7 +223,7 @@ class IT_Exchange_Sendable_Mutable_Wrapper implements IT_Exchange_Sendable {
 	/**
 	 * Get the original sendable object.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return IT_Exchange_Sendable
 	 */

@@ -2,7 +2,7 @@
 /**
  * Fee line item.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -23,7 +23,7 @@ class ITE_Fee_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Line_I
 	/**
 	 * Create a new Fee.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $name
 	 * @param float  $amount
@@ -159,7 +159,7 @@ class ITE_Fee_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Line_I
 	/**
 	 * @inheritDoc
 	 */
-	public function get_taxable_amount() { return $this->get_taxable_amount(); }
+	public function get_taxable_amount() { return $this->get_amount(); }
 
 	/**
 	 * @inheritDoc

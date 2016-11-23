@@ -152,6 +152,7 @@
 #it-exchange-transaction-details .item.spacing-wrapper {
 	padding-bottom: 0;
 }
+
 #it-exchange-transaction-details .cart-items div.item:last-of-type {
 	padding-bottom: 2em;
 }
@@ -247,11 +248,13 @@
 	line-height: 1.6em;
 	width: 60%;
 }
+
 #it-exchange-transaction-details .line-item-children {
 	list-style-type: square;
 	padding-left: 30px;
 	margin-bottom: 0;
 }
+
 #it-exchange-transaction-details .summary-item .left {
 	line-height: 1.6em;
 	width: 60%;
@@ -260,10 +263,6 @@
 #it-exchange-transaction-details .summary-item .summary-item-cost-label {
 	font-size: .8em;
 	font-weight: bold;
-}
-#it-exchange-transaction-details .payment-method .payment-method-token {
-	line-height: 1.4em;
-	font-size: 13px;
 }
 
 #it-exchange-transaction-details .summary-item .right {
@@ -293,6 +292,11 @@
 
 #it-exchange-transaction-details .payment-method .payment-method-name code {
 	font-size: .6em;
+}
+
+#it-exchange-transaction-details .payment-method .payment-method-source {
+	line-height: 1.4em;
+	font-size: 13px;
 }
 
 #it-exchange-transaction-details .payment-original-total-label,
@@ -392,8 +396,8 @@
     text-transform: uppercase;
     color: green;
     text-align: center;
-    
-}	
+
+}
 
 #it-exchange-update-transaction-status-failed {
 	background: url(/wp-content/plugins/ithemes-exchange/lib/admin/images/failed.png) center no-repeat rgb(255, 249, 242);

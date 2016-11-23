@@ -2,7 +2,7 @@
 /**
  * Payment Token Table.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 use IronBound\DB\Extensions\Trash\TrashTable;
@@ -15,6 +15,9 @@ use IronBound\DB\Table\Column\StringBased;
  * Class ITE_Payment_Tokens_Table
  */
 class ITE_Payment_Tokens_Table extends \IronBound\DB\Table\BaseTable implements TrashTable {
+
+	/** @var array */
+	private $columns = array();
 
 	/**
 	 * @inheritDoc
@@ -30,7 +33,12 @@ class ITE_Payment_Tokens_Table extends \IronBound\DB\Table\BaseTable implements 
 	 * @inheritDoc
 	 */
 	public function get_columns() {
-		return array(
+
+		if ( $this->columns ) {
+			return $this->columns;
+		}
+
+		$this->columns = array(
 			'ID'       =>
 				new IntegerBased( 'BIGINT', 'ID', array( 'unsigned', 'NOT NULL', 'auto_increment' ), array( 20 ) ),
 			'customer' => new ForeignUser( 'customer' ),
@@ -42,6 +50,8 @@ class ITE_Payment_Tokens_Table extends \IronBound\DB\Table\BaseTable implements 
 			'deleted'  => new DateTime( 'deleted' ),
 			'type'     => new StringBased( 'VARCHAR', 'type', array(), array( 32 ) ),
 		);
+
+		return $this->columns;
 	}
 
 	/**
@@ -55,7 +65,7 @@ class ITE_Payment_Tokens_Table extends \IronBound\DB\Table\BaseTable implements 
 			'label'    => '',
 			'redacted' => '',
 			'primary'  => false,
-			'deleted'  => '',
+			'deleted'  => null,
 			'type'     => 'cc',
 		);
 	}

@@ -232,7 +232,7 @@ class IT_Exchange_Product_Post_Type {
 		// Grab the iThemes Exchange Product object from the WP $post object
 		$product = it_exchange_get_product( $post );
 
-		// Set the value of the visibility for this product
+		// Get the value of the visibility for this product
 		$product_visibility = get_post_meta( $post->ID, '_it-exchange-visibility', true );
 		$product_visibility = apply_filters( 'it_exchange_add_ediit_product_visibility', $product_visibility, $post->ID );
 		?>

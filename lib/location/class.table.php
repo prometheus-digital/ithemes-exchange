@@ -2,7 +2,7 @@
 /**
  * Saved Address Table.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 use IronBound\DB\Table\Column\Enum;
@@ -14,6 +14,10 @@ use IronBound\DB\Table\Column\StringBased;
  * Class ITE_Saved_Address_Table
  */
 class ITE_Saved_Address_Table extends \IronBound\DB\Table\BaseTable {
+
+	/** @var array */
+	private $columns = array();
+
 	/**
 	 * @inheritDoc
 	 */
@@ -32,9 +36,14 @@ class ITE_Saved_Address_Table extends \IronBound\DB\Table\BaseTable {
 	 * @inheritDoc
 	 */
 	public function get_columns() {
-		return array(
-			'pk'           =>
-				new IntegerBased( 'BIGINT', 'pk', array( 'unsigned', 'NOT NULL', 'auto_increment' ), array( 20 ) ),
+
+		if ( $this->columns ) {
+			return $this->columns;
+		}
+
+		$this->columns = array(
+			'ID'           =>
+				new IntegerBased( 'BIGINT', 'ID', array( 'unsigned', 'NOT NULL', 'auto_increment' ), array( 20 ) ),
 			'customer'     => new ForeignUser( 'customer' ),
 			'label'        => new StringBased( 'VARCHAR', 'label', array( 'NOT NULL' ), array( '191' ) ),
 			'primary'      => new IntegerBased( 'TINYINT', 'primary', array( 'NOT NULL' ), array( 1 ) ),
@@ -51,6 +60,8 @@ class ITE_Saved_Address_Table extends \IronBound\DB\Table\BaseTable {
 			'phone'        => new StringBased( 'VARCHAR', 'phone', array( 'NOT NULL' ), array( '25' ) ),
 			'type'         => new Enum( array( 'billing', 'shipping' ), 'type', 'billing', false ),
 		);
+
+		return $this->columns;
 	}
 
 	/**
@@ -58,7 +69,7 @@ class ITE_Saved_Address_Table extends \IronBound\DB\Table\BaseTable {
 	 */
 	public function get_column_defaults() {
 		return array(
-			'pk'           => null,
+			'ID'           => null,
 			'customer'     => 0,
 			'label'        => '',
 			'primary'      => false,
@@ -81,7 +92,7 @@ class ITE_Saved_Address_Table extends \IronBound\DB\Table\BaseTable {
 	 * @inheritDoc
 	 */
 	public function get_primary_key() {
-		return 'pk';
+		return 'ID';
 	}
 
 	/**

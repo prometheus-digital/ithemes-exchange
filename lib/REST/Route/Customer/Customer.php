@@ -2,7 +2,7 @@
 /**
  * Single Customer Route.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -55,7 +55,7 @@ class Customer extends Route\Base implements Getable {
 	/**
 	 * Linkify the response.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \WP_REST_Response     $response
 	 * @param \IT_Exchange_Customer $customer
@@ -94,7 +94,7 @@ class Customer extends Route\Base implements Getable {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you are not allowed to access this customer.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::UNAUTHORIZED )
+				array( 'status' => rest_authorization_required_code() )
 			);
 		}
 
@@ -112,7 +112,7 @@ class Customer extends Route\Base implements Getable {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you are not allowed to access this customer.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::UNAUTHORIZED )
+				array( 'status' => rest_authorization_required_code() )
 			);
 		}
 
@@ -316,7 +316,7 @@ class Customer extends Route\Base implements Getable {
 				),
 				'total_spent'       => array(
 					'description' => __( 'The total amount the customer has spent in the store.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'float',
+					'type'        => 'number',
 					'context'     => array( 'stats' ),
 				),
 				'transaction_count' => array(

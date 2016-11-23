@@ -2,7 +2,7 @@
 /**
  * Parameter bag interface.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,7 +14,7 @@ interface ITE_Parameter_Bag {
 	/**
 	 * Get all parameters in this bag.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -23,7 +23,7 @@ interface ITE_Parameter_Bag {
 	/**
 	 * Check if a parameter exists.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $param
 	 *
@@ -34,7 +34,7 @@ interface ITE_Parameter_Bag {
 	/**
 	 * Get a parameter's value.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $param
 	 *
@@ -47,7 +47,7 @@ interface ITE_Parameter_Bag {
 	/**
 	 * Set a parameter's value.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $param
 	 * @param mixed  $value
@@ -61,7 +61,7 @@ interface ITE_Parameter_Bag {
 	 *
 	 * Should not error if the given $param does not exist.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $param
 	 *

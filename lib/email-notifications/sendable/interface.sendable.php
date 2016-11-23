@@ -2,7 +2,7 @@
 /**
  * Contains the sendable interface.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,7 +14,7 @@ interface IT_Exchange_Sendable extends Serializable {
 	/**
 	 * Get the subject line.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -23,7 +23,7 @@ interface IT_Exchange_Sendable extends Serializable {
 	/**
 	 * Get the body.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -32,7 +32,7 @@ interface IT_Exchange_Sendable extends Serializable {
 	/**
 	 * Get the email template.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return IT_Exchange_Email_Template
 	 */
@@ -41,7 +41,7 @@ interface IT_Exchange_Sendable extends Serializable {
 	/**
 	 * Get the recipient for this email.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return IT_Exchange_Email_Recipient
 	 */
@@ -50,7 +50,7 @@ interface IT_Exchange_Sendable extends Serializable {
 	/**
 	 * Get the CCs for this email.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return IT_Exchange_Email_Recipient[]
 	 */
@@ -59,7 +59,7 @@ interface IT_Exchange_Sendable extends Serializable {
 	/**
 	 * Get the BCCs for this email.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return IT_Exchange_Email_Recipient[]
 	 */
@@ -68,7 +68,7 @@ interface IT_Exchange_Sendable extends Serializable {
 	/**
 	 * Get the context for this email.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */

@@ -2,7 +2,7 @@
 /**
  * Contains the simple email recipient class.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -33,7 +33,7 @@ class IT_Exchange_Email_Recipient_Email implements IT_Exchange_Email_Recipient {
 	/**
 	 * Get the recipient's email address.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -44,7 +44,7 @@ class IT_Exchange_Email_Recipient_Email implements IT_Exchange_Email_Recipient {
 	/**
 	 * Get the recipient's first name.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -58,7 +58,7 @@ class IT_Exchange_Email_Recipient_Email implements IT_Exchange_Email_Recipient {
 	/**
 	 * Get the recipient's last name.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -69,7 +69,7 @@ class IT_Exchange_Email_Recipient_Email implements IT_Exchange_Email_Recipient {
 	/**
 	 * Get the recipient's full name.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -80,7 +80,7 @@ class IT_Exchange_Email_Recipient_Email implements IT_Exchange_Email_Recipient {
 	/**
 	 * Get the recipient's username, if one exists.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */

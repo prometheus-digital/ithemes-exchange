@@ -22,3 +22,4 @@ require_once dirname( __FILE__ ) . '/handlers/class.ajax.php';
 // load routines
 require_once dirname( __FILE__ ) . '/routines/class.coupons.php';
 require_once dirname( __FILE__ ) . '/routines/class.txn-activity.php';
+require_once dirname( __FILE__ ) . '/routines/class.txn-table.php';

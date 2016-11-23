@@ -2,7 +2,7 @@
 /**
  * Email Form for the confirmation page.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 $email  = isset( $_POST['it-exchange-guest-email'] ) ? $_POST['it-exchange-guest-email'] : '';

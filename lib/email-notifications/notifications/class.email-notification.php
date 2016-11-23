@@ -2,7 +2,7 @@
 /**
  * Single email notification class.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -88,6 +88,22 @@ abstract class IT_Exchange_Email_Notification {
 
 		$this->setup_properties( $data );
 
+		if ( empty( $data['upgraded'] ) && ! empty( $data['previous'] ) ) {
+			$this->set_body( $this->convert_to_curly( $data['previous'] ) );
+
+			$emails = it_exchange_get_option( 'emails', true );
+
+			if ( ! is_array( $emails ) ) {
+				$emails = array();
+			}
+
+			$emails[ $this->get_slug() ] = $this->get_data_to_save();
+
+			$emails[ $this->get_slug() ]['upgraded'] = true;
+
+			it_exchange_save_option( 'emails', $emails, true );
+		}
+
 		if ( ! empty( $args['description'] ) ) {
 			$this->description = $args['description'];
 		}
@@ -106,7 +122,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Setup this object's properties.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param array $data
 	 */
@@ -119,7 +135,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Get the email slug.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -130,7 +146,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Get the email name.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -141,7 +157,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Get the notification type.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param bool $label
 	 *
@@ -152,7 +168,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Get the subject line of the notification.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -163,7 +179,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Set the subject line of the notification.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $subject
 	 *
@@ -178,7 +194,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Get the notification body.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -189,7 +205,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Set the notification body.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $body
 	 *
@@ -204,7 +220,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Check if this notification is active.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return boolean
 	 */
@@ -215,7 +231,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Set the active state of the email notification.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param boolean $active
 	 *
@@ -235,7 +251,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Get the template for this notification.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return IT_Exchange_Email_Template
 	 */
@@ -246,7 +262,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Get the notification description.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -257,7 +273,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Check if the notification has a description.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -268,7 +284,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Get the previous email contents.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -279,7 +295,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Check if this notification has a previous value.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -290,7 +306,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Get the group this notification belongs to.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -300,20 +316,20 @@ abstract class IT_Exchange_Email_Notification {
 
 	/**
 	 * Check if the notification values are not at their default settings.
-	 * 
-	 * @since 1.36
-	 * 
+	 *
+	 * @since 2.0.0
+	 *
 	 * @return bool
 	 */
 	public function is_non_default() {
 
 		$defaults = isset( $this->args['defaults'] ) ? $this->args['defaults'] : array();
 
-		if ( ! isset( $defaults['subject'] ) || preg_replace('/\s+/', '', $this->subject ) !== preg_replace('/\s+/', '', $defaults['subject'] ) ) {
+		if ( ! isset( $defaults['subject'] ) || preg_replace( '/\s+/', '', $this->subject ) !== preg_replace( '/\s+/', '', $defaults['subject'] ) ) {
 			return true;
 		}
 
-		if ( ! isset( $defaults['body'] ) || preg_replace('/\s+/', '', $this->body ) !== preg_replace('/\s+/', '', $defaults['body'] ) ) {
+		if ( ! isset( $defaults['body'] ) || preg_replace( '/\s+/', '', $this->body ) !== preg_replace( '/\s+/', '', $defaults['body'] ) ) {
 			return true;
 		}
 
@@ -323,7 +339,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Get the data to save.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -338,7 +354,7 @@ abstract class IT_Exchange_Email_Notification {
 	/**
 	 * Save the email notification.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
@@ -346,8 +362,45 @@ abstract class IT_Exchange_Email_Notification {
 
 		$emails = it_exchange_get_option( 'emails', true );
 
-		$emails[ $this->get_slug() ] = $this->get_data_to_save();
+		if ( ! is_array( $emails ) ) {
+			$emails = array();
+		}
+
+		$existing = isset( $emails[ $this->get_slug() ] ) ? $emails[ $this->get_slug() ] : array();
+
+		$emails[ $this->get_slug() ] = ITUtility::merge_defaults( $this->get_data_to_save(), $existing, true );
 
 		return it_exchange_save_option( 'emails', $emails, true );
+	}
+
+	/**
+	 * Convert content to curly tags instead of shortcodes.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $content
+	 *
+	 * @return string
+	 */
+	protected function convert_to_curly( $content ) {
+
+		$backup = $GLOBALS['shortcode_tags'];
+
+		$GLOBALS['shortcode_tags'] = array();
+
+		add_shortcode( 'it_exchange_email', function ( $atts ) {
+
+			if ( empty( $atts['show'] ) ) {
+				return '';
+			}
+
+			return '{{' . $atts['show'] . '}}';
+		} );
+
+		$converted = do_shortcode( $content );
+
+		$GLOBALS['shortcode_tags'] = $backup;
+
+		return $converted;
 	}
 }

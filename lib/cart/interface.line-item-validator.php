@@ -2,7 +2,7 @@
 /**
  * Line Item Validator interface.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,7 +14,7 @@ interface ITE_Line_Item_Validator {
 	/**
 	 * Get the name of this validator.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -23,7 +23,7 @@ interface ITE_Line_Item_Validator {
 	/**
 	 * Does this validator accept items of the given type.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $type
 	 *
@@ -34,7 +34,7 @@ interface ITE_Line_Item_Validator {
 	/**
 	 * Perform validation on the cart.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item     $item
 	 * @param \ITE_Cart          $cart
@@ -47,7 +47,7 @@ interface ITE_Line_Item_Validator {
 	/**
 	 * Coerce a cart to be valid.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item     $item
 	 * @param \ITE_Cart          $cart

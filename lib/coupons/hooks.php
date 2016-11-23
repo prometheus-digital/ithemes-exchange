@@ -42,7 +42,7 @@ add_action( 'it_exchange_update_transaction_status', 'it_exchange_revert_coupon_
 /**
  * Reapply coupons to the cart if an item is added to the cart.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param \ITE_Line_Item $item
  * @param \ITE_Cart      $cart
@@ -70,7 +70,7 @@ add_action( 'it_exchange_add_line_item_to_cart', 'it_exchange_reapply_coupons_on
 /**
  * Reapply coupons to the cart if an item is removed from the cart.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param \ITE_Line_Item $item
  * @param \ITE_Cart      $cart

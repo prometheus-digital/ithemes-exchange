@@ -2,7 +2,7 @@
 /**
  * Payment Gateway Request Factory.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,18 +14,20 @@ class ITE_Gateway_Request_Factory {
 	/**
 	 * Construct a request object.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
-	 * @param string $request
+	 * @param string $type
 	 * @param array  $args
 	 *
 	 * @return ITE_Gateway_Request|null
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	public function make( $request, array $args = array() ) {
+	public function make( $type, array $args = array() ) {
 
-		switch ( $request ) {
+		$is_custom = false;
+
+		switch ( $type ) {
 			case ITE_Gateway_Purchase_Request::get_name():
 				$cart  = empty( $args['cart'] ) ? it_exchange_get_current_cart() : $args['cart'];
 				$nonce = empty( $args['nonce'] ) ? '' : $args['nonce'];
@@ -79,9 +81,24 @@ class ITE_Gateway_Request_Factory {
 					$request->set_tokenize( $tokenize );
 				}
 
-				return $request;
+				if ( ! empty( $args['child_of'] ) ) {
+					$child_of = it_exchange_get_transaction( $args['child_of'] );
+
+					if ( ! $child_of instanceof IT_Exchange_Transaction ) {
+						throw new InvalidArgumentException( 'Invalid `child_of` option.' );
+					}
+
+					$request->set_child_of( $child_of );
+				}
+
+				if ( ! empty( $args['redirect_to'] ) ) {
+					$request->set_redirect_to( $args['redirect_to'] );
+				}
+
+				break;
 			case ITE_Webhook_Gateway_Request::get_name():
-				return new ITE_Webhook_Gateway_Request( $args['webhook_data'] );
+				$request = new ITE_Webhook_Gateway_Request( $args['webhook_data'] );
+				break;
 			case ITE_Gateway_Tokenize_Request::get_name():
 
 				if ( empty( $args['customer'] ) ) {
@@ -113,7 +130,8 @@ class ITE_Gateway_Request_Factory {
 					throw new InvalidArgumentException( 'Invalid `source` option.' );
 				}
 
-				return new ITE_Gateway_Tokenize_Request( $customer, $source, $label, $primary );
+				$request = new ITE_Gateway_Tokenize_Request( $customer, $source, $label, $primary );
+				break;
 			case ITE_Gateway_Refund_Request::get_name():
 
 				if ( empty( $args['transaction'] ) || ! $txn = it_exchange_get_transaction( $args['transaction'] ) ) {
@@ -126,7 +144,7 @@ class ITE_Gateway_Request_Factory {
 
 				$reason = empty( $args['reason'] ) ? '' : $args['reason'];
 
-				$refund = new ITE_Gateway_Refund_Request( $txn, $args['amount'], $reason );
+				$request = new ITE_Gateway_Refund_Request( $txn, $args['amount'], $reason );
 
 				if ( ! empty( $args['issued_by'] ) ) {
 					$issued_by = $args['issued_by'];
@@ -139,27 +157,86 @@ class ITE_Gateway_Request_Factory {
 						throw new InvalidArgumentException( 'Invalid `issued_by` option.' );
 					}
 
-					$refund->set_issued_by( $issued_by );
+					$request->set_issued_by( $issued_by );
 				} elseif ( is_user_logged_in() ) {
-					$refund->set_issued_by( wp_get_current_user() );
+					$request->set_issued_by( wp_get_current_user() );
 				}
 
-				return $refund;
+				break;
 			default:
-				return null;
+
+				/**
+				 * Filter the gateway request for an unknown request type.
+				 *
+				 * @since 2.0.0
+				 *
+				 * @param ITE_Gateway_Request          $request
+				 * @param array                        $args
+				 * @param string                       $type
+				 * @param \ITE_Gateway_Request_Factory $this
+				 */
+				$request = apply_filters( "it_exchange_make_{$type}_gateway_request", null, $args, $type, $this );
+
+				if ( $request && ( ! $request instanceof ITE_Gateway_Request || $request->get_name() !== $type ) ) {
+					throw new UnexpectedValueException( "Unable to construct {$type} request." );
+				}
+
+				if ( ! $request ) {
+					return null;
+				}
+
+				$is_custom = true;
+
+				break;
 		}
+
+		if ( ! $is_custom ) {
+			/**
+			 * Filter the created gateway request.
+			 *
+			 * @since 2.0.0
+			 *
+			 * @param ITE_Gateway_Request          $request
+			 * @param array                        $args
+			 * @param string                       $type
+			 * @param \ITE_Gateway_Request_Factory $this
+			 */
+			$filtered = apply_filters( "it_exchange_make_{$type}_gateway_request", $request, $args, $type, $this );
+
+			if ( $filtered instanceof $request ) {
+				$request = $filtered;
+			}
+		}
+
+		/**
+		 * Filter the created gateway request.
+		 *
+		 * @since 2.0.0
+		 *
+		 * @param \ITE_Gateway_Request         $request
+		 * @param array                        $args
+		 * @param string                       $type
+		 * @param \ITE_Gateway_Request_Factory $this
+		 */
+		$filtered = apply_filters( 'it_exchange_make_gateway_request', $request, $args, $type, $this );
+
+		if ( $filtered instanceof $request ) {
+			$request = $filtered;
+		}
+
+		return $request;
 	}
 
 	/**
 	 * Build a card from an array.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $card
 	 *
 	 * @return \ITE_Gateway_Card|null
 	 */
-	protected function build_card( array $card ) {
+	public function build_card( array $card ) {
 		if ( isset( $card['number'], $card['year'], $card['month'], $card['cvc'] ) ) {
 			$name = empty( $card['name'] ) ? '' : $card['name'];
 
@@ -172,7 +249,7 @@ class ITE_Gateway_Request_Factory {
 	/**
 	 * Build a bank account from an array.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param array $account
 	 *
@@ -180,7 +257,7 @@ class ITE_Gateway_Request_Factory {
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	protected function build_bank_account( array $account ) {
+	public function build_bank_account( array $account ) {
 
 		if ( isset( $account['name'], $account['number'], $account['type'] ) ) {
 			$routing = empty( $account['routing'] ) ? '' : $account['routing'];

@@ -2,7 +2,7 @@
 /**
  * Test Deprecated Meta handler.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -28,7 +28,7 @@ class Test_IT_Exchange_Deprecated_Meta extends IT_Exchange_UnitTestCase {
 		add_post_meta( self::$post->ID, 'new_key', 'my_value' );
 
 		$deprecated = new IT_Exchange_Deprecated_Meta();
-		$deprecated->add( 'old_key', 'new_key', '1.36.0' );
+		$deprecated->add( 'old_key', 'new_key', '2.0.0' );
 
 		$query = new WP_Query( array(
 			'meta_key'   => 'old_key',
@@ -50,7 +50,7 @@ class Test_IT_Exchange_Deprecated_Meta extends IT_Exchange_UnitTestCase {
 		add_post_meta( self::$post->ID, 'new_key', 'my_value' );
 
 		$deprecated = new IT_Exchange_Deprecated_Meta();
-		$deprecated->add( 'old_key', 'new_key', '1.36.0' );
+		$deprecated->add( 'old_key', 'new_key', '2.0.0' );
 
 		$query = new WP_Query( array(
 			'meta_query' => array(
@@ -78,7 +78,7 @@ class Test_IT_Exchange_Deprecated_Meta extends IT_Exchange_UnitTestCase {
 		add_post_meta( $other->ID, 'custom', 'value' );
 
 		$deprecated = new IT_Exchange_Deprecated_Meta();
-		$deprecated->add( 'old_key', 'new_key', '1.36.0' );
+		$deprecated->add( 'old_key', 'new_key', '2.0.0' );
 
 		$query = new WP_Query( array(
 			'meta_query' => array(
@@ -106,7 +106,7 @@ class Test_IT_Exchange_Deprecated_Meta extends IT_Exchange_UnitTestCase {
 		add_post_meta( self::factory()->post->create(), 'favorite_day', 'Monday' );
 
 		$deprecated = new IT_Exchange_Deprecated_Meta();
-		$deprecated->add( 'old_key', 'new_key', '1.36.0' );
+		$deprecated->add( 'old_key', 'new_key', '2.0.0' );
 
 		$query = new WP_Query( array(
 			'meta_query' => array(
@@ -150,7 +150,7 @@ class Test_IT_Exchange_Deprecated_Meta extends IT_Exchange_UnitTestCase {
 		add_post_meta( self::$post->ID, 'new_key', 'my_value' );
 
 		$deprecated = new IT_Exchange_Deprecated_Meta();
-		$deprecated->add( 'old_key', 'new_key', '1.36.0', true );
+		$deprecated->add( 'old_key', 'new_key', '2.0.0', true );
 
 		$query = new WP_Query( array(
 			'meta_key'   => 'old_key',
@@ -169,7 +169,7 @@ class Test_IT_Exchange_Deprecated_Meta extends IT_Exchange_UnitTestCase {
 		add_post_meta( self::$post->ID, 'new_key', 'my_value' );
 
 		$deprecated = new IT_Exchange_Deprecated_Meta();
-		$deprecated->add( 'old_key', 'new_key', '1.36.0', true );
+		$deprecated->add( 'old_key', 'new_key', '2.0.0', true );
 
 		$query = new WP_Query( array(
 			'meta_query' => array(
@@ -189,7 +189,7 @@ class Test_IT_Exchange_Deprecated_Meta extends IT_Exchange_UnitTestCase {
 	public function test_add_meta() {
 
 		$deprecated = new IT_Exchange_Deprecated_Meta();
-		$deprecated->add( 'old_key', 'new_key', '1.36.0', true );
+		$deprecated->add( 'old_key', 'new_key', '2.0.0', true );
 
 		add_post_meta( self::$post->ID, 'old_key', 'my_value' );
 
@@ -202,7 +202,7 @@ class Test_IT_Exchange_Deprecated_Meta extends IT_Exchange_UnitTestCase {
 	public function test_update_meta() {
 
 		$deprecated = new IT_Exchange_Deprecated_Meta();
-		$deprecated->add( 'old_key', 'new_key', '1.36.0', true );
+		$deprecated->add( 'old_key', 'new_key', '2.0.0', true );
 
 		update_post_meta( self::$post->ID, 'old_key', 'my_value' );
 
@@ -215,7 +215,7 @@ class Test_IT_Exchange_Deprecated_Meta extends IT_Exchange_UnitTestCase {
 	public function test_delete_meta() {
 
 		$deprecated = new IT_Exchange_Deprecated_Meta();
-		$deprecated->add( 'old_key', 'new_key', '1.36.0', true );
+		$deprecated->add( 'old_key', 'new_key', '2.0.0', true );
 
 		delete_post_meta( self::$post->ID, 'old_key' );
 
@@ -228,7 +228,7 @@ class Test_IT_Exchange_Deprecated_Meta extends IT_Exchange_UnitTestCase {
 	public function test_get_meta() {
 
 		$deprecated = new IT_Exchange_Deprecated_Meta();
-		$deprecated->add( 'old_key', 'new_key', '1.36.0', true );
+		$deprecated->add( 'old_key', 'new_key', '2.0.0', true );
 
 		add_post_meta( self::$post->ID, 'new_key', 'my_value' );
 

@@ -2,7 +2,7 @@
 /**
  * Test the mutable wrapper.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 

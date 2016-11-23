@@ -2,7 +2,7 @@
 /**
  * Single Activity Item Endpoint.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -15,6 +15,7 @@ use iThemes\Exchange\REST\Route\Base;
 
 /**
  * Class Item
+ *
  * @package iThemes\Exchange\REST\Route\Transaction\Activity
  */
 class Item extends Base implements Getable, Deletable {
@@ -58,7 +59,7 @@ class Item extends Base implements Getable, Deletable {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you are not allowed to access this activity item.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::UNAUTHORIZED )
+				array( 'status' => rest_authorization_required_code() )
 			);
 		}
 
@@ -95,7 +96,7 @@ class Item extends Base implements Getable, Deletable {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you are not allowed to delete this activity item.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::UNAUTHORIZED )
+				array( 'status' => rest_authorization_required_code() )
 			);
 		}
 
@@ -118,13 +119,11 @@ class Item extends Base implements Getable, Deletable {
 	public function get_query_args() {
 		return array(
 			'icon_size' => array(
-				'description'       => __( 'The size of the activity icons.', 'it-l10n-ithemes-exchange' ),
-				'type'              => 'integer',
-				'default'           => 96,
-				'minimum'           => 64,
-				'maximum'           => 256,
-				'sanitize_callback' => 'absint',
-				'validate_callback' => 'rest_validate_request_arg',
+				'description' => __( 'The size of the activity icons.', 'it-l10n-ithemes-exchange' ),
+				'type'        => 'integer',
+				'default'     => 96,
+				'minimum'     => 64,
+				'maximum'     => 256,
 			),
 		);
 	}

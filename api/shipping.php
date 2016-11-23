@@ -146,7 +146,7 @@ function it_exchange_get_registered_shipping_method( $slug, $product_id=false ) 
 /**
  * Get the registered shipping method class.
  * 
- * @since 1.36
+ * @since 2.0.0
  * 
  * @param string $slug
  *
@@ -165,7 +165,7 @@ function it_exchange_get_registered_shipping_method_class( $slug ) {
 /**
  * Get the registered shipping method class.
  *
- * @since 1.36
+ * @since 2.0.0
  *
  * @param string $slug
  *
@@ -328,7 +328,7 @@ function it_exchange_get_enabled_shipping_methods_for_product( $product, $return
 */
 function it_exchange_is_shipping_address_valid() {
 
-	_deprecated_function( __FUNCTION__, '1.36.0' );
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 
 	$cart_address  = it_exchange_get_cart_data( 'shipping-address' );
 	$cart_customer = empty( $cart_address['customer'] ) ? 0 : $cart_address['customer'];
@@ -391,7 +391,7 @@ function it_exchange_get_cart_shipping_method() {
 /**
  * Check if the cart contains any shippable products.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param \ITE_Cart|null $cart
  *
@@ -500,7 +500,7 @@ function it_exchange_get_available_shipping_methods_for_cart_products( ITE_Cart 
 /**
  * Determine if a cart requires shipping.
  *
- * @since 1.36.0
+ * @since 2.0.0
  *
  * @param \ITE_Cart $cart
  *

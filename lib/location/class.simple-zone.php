@@ -2,7 +2,7 @@
 /**
  * Simple Zone class.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -86,7 +86,7 @@ class ITE_Simple_Zone implements ITE_Zone, IteratorAggregate, ArrayAccess {
 	/**
 	 * Check two fields for equality.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param mixed $value
 	 * @param mixed $other

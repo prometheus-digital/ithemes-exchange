@@ -2,7 +2,7 @@
 /**
  * PayPal Standard Secure Gateway.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -13,6 +13,9 @@ class ITE_PayPal_Standard_Secure_Gateway extends ITE_Gateway {
 
 	/** @var ITE_Gateway_Request_Handler[] */
 	private $handlers = array();
+
+	/** @var array */
+	private $fields = array();
 
 	/**
 	 * @inheritDoc
@@ -25,6 +28,7 @@ class ITE_PayPal_Standard_Secure_Gateway extends ITE_Gateway {
 		$this->handlers[] = new ITE_PayPal_Standard_Secure_Purchase_Handler( $this, $factory );
 		$this->handlers[] = new ITE_PayPal_Standard_Secure_Webhook_Handler();
 		$this->handlers[] = new ITE_PayPal_Standard_Secure_Refund_Request_Handler( $this );
+		$this->handlers[] = new ITE_PayPal_Standard_Secure_Cancel_Subscription_Handler();
 	}
 
 	/**
@@ -46,6 +50,11 @@ class ITE_PayPal_Standard_Secure_Gateway extends ITE_Gateway {
 	 * @inheritDoc
 	 */
 	public function get_handlers() { return $this->handlers; }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function requires_cart_after_purchase() { return true; }
 
 	/**
 	 * @inheritDoc
@@ -106,8 +115,45 @@ class ITE_PayPal_Standard_Secure_Gateway extends ITE_Gateway {
 	/**
 	 * @inheritDoc
 	 */
+	public function get_ssl_mode() { return self::SSL_SUGGESTED; }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_wizard_settings() {
+
+		$fields = array(
+			'preamble',
+			'step1',
+			'live-email-address',
+			'step2',
+			'live-api-username',
+			'live-api-password',
+			'live-api-signature',
+
+		);
+
+		$wizard = array();
+
+		foreach ( $this->get_settings_fields() as $field ) {
+			if ( in_array( $field['slug'], $fields ) ) {
+				$wizard[] = $field;
+			}
+		}
+
+		return $wizard;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function get_settings_fields() {
-		return array(
+
+		if ( $this->fields ) {
+			return $this->fields;
+		}
+
+		$this->fields = array(
 			array(
 				'type' => 'html',
 				'slug' => 'preamble',
@@ -128,7 +174,7 @@ class ITE_PayPal_Standard_Secure_Gateway extends ITE_Gateway {
 			array(
 				'type' => 'html',
 				'slug' => 'step1',
-				'html' => '<h3>' . __( 'Step 1. Fill out your PayPal email address', 'it-l10n-ithemes-exchange' ) . '</h3>'
+				'html' => '<h4>' . __( 'Step 1. Fill out your PayPal email address', 'it-l10n-ithemes-exchange' ) . '</h4>'
 			),
 			array(
 				'type'     => 'email',
@@ -140,7 +186,7 @@ class ITE_PayPal_Standard_Secure_Gateway extends ITE_Gateway {
 			array(
 				'type' => 'html',
 				'slug' => 'step2',
-				'html' => '<h3>' . __( 'Step 2. Fill out your PayPal API credentials', 'it-l10n-ithemes-exchange' ) . '</h3>'
+				'html' => '<h4>' . __( 'Step 2. Fill out your PayPal API credentials', 'it-l10n-ithemes-exchange' ) . '</h4>'
 			),
 			array(
 				'type'     => 'text_box',
@@ -212,6 +258,8 @@ class ITE_PayPal_Standard_Secure_Gateway extends ITE_Gateway {
 				'required' => true,
 			),
 		);
+
+		return $this->fields;
 	}
 
 	/**
@@ -222,21 +270,21 @@ class ITE_PayPal_Standard_Secure_Gateway extends ITE_Gateway {
 	/**
 	 * Get Step 3-5 HTML.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
 	private function get_step_3_to_5() {
 		ob_start();
 		?>
-		<h3><?php _e( 'Step 3. Setup PayPal Auto Return', 'it-l10n-ithemes-exchange' ); ?></h3>
+		<h4><?php _e( 'Step 3. Setup PayPal Auto Return', 'it-l10n-ithemes-exchange' ); ?></h4>
 		<p><?php _e( 'PayPal Auto Return must be configured in Account Profile &rarr; Website Payment Preferences in your PayPal Account', 'it-l10n-ithemes-exchange' ); ?></p>
 		<p><?php _e( 'Please log into your account, set Auto Return to ON and add this URL to your Return URL Settings so your customers are redirected to your site to complete the transactions.', 'it-l10n-ithemes-exchange' ); ?></p>
 		<code><?php echo it_exchange_get_page_url( 'transaction' ); ?></code>
 
-		<h3><?php _e( 'Step 4. Setup PayPal Payment Data Transfer (PDT)', 'it-l10n-ithemes-exchange' ); ?></h3>
+		<h4><?php _e( 'Step 4. Setup PayPal Payment Data Transfer (PDT)', 'it-l10n-ithemes-exchange' ); ?></h4>
 		<p><?php _e( 'PayPal PDT must be turned <strong>ON</strong> in Account Profile &rarr; Website Payment Preferences in your PayPal Account', 'it-l10n-ithemes-exchange' ); ?></p>
-		<h3><?php _e( 'Step 5. Optional Configuration', 'it-l10n-ithemes-exchange' ); ?></h3>
+		<h4><?php _e( 'Step 5. Optional Configuration', 'it-l10n-ithemes-exchange' ); ?></h4>
 		<?php
 
 		return ob_get_clean();

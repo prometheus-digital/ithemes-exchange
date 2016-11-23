@@ -1,0 +1,91 @@
+.it-exchange-transaction-card-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.it-exchange-transaction-card {
+    background: #ffffff;
+    width: 300px;
+    min-height: 140px;
+    position: relative;
+    margin: 10px 20px 10px 0;
+    border: 1px solid #dddddd;
+}
+
+.it-exchange-transaction-card header {
+    border-bottom: 1px solid #dddddd;
+    width: 100%;
+    padding: 7px;
+    box-sizing: border-box;
+}
+
+.it-exchange-transaction-card--order-number::before {
+    content: '–';
+    margin: 0 2px 0 3px;
+}
+
+.it-exchange-transaction-card--order-date {
+    float: right;
+}
+
+.it-exchange-transaction-card--description {
+    padding: 7px 7px 47px 7px;
+    margin: 0;
+}
+
+.it-exchange-transaction-card--no-description {
+    opacity: .5;
+    font-style: oblique;
+}
+
+.it-exchange-transaction-card footer {
+    background: #F5F5F5;
+    border-top: 1px solid #dddddd;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 40px;
+    padding-right: 7px;
+    box-sizing: border-box;
+}
+
+.it-exchange-transaction-card--customer-avatar {
+    width: 100%;
+    max-width: 40px;
+}
+
+.it-exchange-transaction-card--customer-name {
+    display: inline-block;
+    vertical-align: top;
+    padding-top: 11px;
+}
+
+.it-exchange-transaction-card--tags {
+    list-style-type: none;
+    display: inline-block;
+    float: right;
+    margin: 10px 0 0 0;
+}
+
+.it-exchange-transaction-card--tags li {
+    border-radius: 20px;
+    padding: 3px;
+    margin: -3px 0 0 5px;
+    overflow: hidden;
+    width: 18px;
+    height: 18px;
+    float: right;
+    text-align: center;
+    border: 1px solid #b7b7b7;
+    -webkit-transition: width 1s, color 1s;
+    -moz-transition: width 1s, color 1s;
+    -ms-transition: width 1s, color 1s;
+    -o-transition: width 1s, color 1s;
+    transition: width 1s, color 1s;
+    -webkit-transition-timing-function: ease;
+    -moz-transition-timing-function: ease;
+    -ms-transition-timing-function: ease;
+    -o-transition-timing-function: ease;
+    transition-timing-function: ease;
+}

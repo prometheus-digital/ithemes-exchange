@@ -113,14 +113,19 @@ function it_exchange_get_product( $post ) {
  * @since 0.3.3
  *
  * @param array $args
+ * @param int   $total
  *
  * @return IT_Exchange_Product[]  an array of IT_Exchange_Product objects
 */
-function it_exchange_get_products( $args=array() ) {
+function it_exchange_get_products( $args = array(), &$total = null ) {
 	$defaults = array(
-		'post_type'     => 'it_exchange_prod',
-		'show_hidden'   => false,
-		'only_on_sale'  => false // set to true to only return products that are on sale
+		'numberposts' => 5, 'orderby' => 'date',
+		'order' => 'DESC', 'include' => array(),
+		'exclude' => array(), 'meta_key' => '',
+		'meta_value' =>'', 'post_type' => 'it_exchange_prod',
+		'suppress_filters' => true,
+		'show_hidden' => false,
+		'only_on_sale' => false,
 	);
 	$args = wp_parse_args( $args, $defaults );
 	$args['meta_query'] = empty( $args['meta_query'] ) ? array() : $args['meta_query'];
@@ -156,18 +161,49 @@ function it_exchange_get_products( $args=array() ) {
 			'compare'   => 'EXISTS'
 		);
 	}
+	if ( empty( $args['post_status'] ) ) {
+		$args['post_status'] = 'publish';
+	}
 
-	if ( $products = get_posts( $args ) ) {
-		foreach( $products as $key => $product ) {
+	if ( ! empty( $args['numberposts'] ) && empty( $args['posts_per_page'] ) ) {
+		$args['posts_per_page'] = $args['numberposts'];
+	}
 
-			$product = it_exchange_get_product( $product );
+	if ( ! empty( $args['include'] ) ) {
+		$incposts = wp_parse_id_list( $args['include'] );
+		$args['posts_per_page'] = count( $incposts );  // only the number of posts included
+		$args['post__in'] = $incposts;
+	} elseif ( ! empty( $args['exclude'] ) ) {
+		$args['post__not_in'] = wp_parse_id_list( $args['exclude'] );
+	}
 
-			$products[$key] = $product;
+	$args['ignore_sticky_posts'] = true;
+	$args['no_found_rows'] = true;
 
-			if ( ! it_exchange_is_product_sale_active( $product ) && $args['only_on_sale'] ) {
-				unset( $products[$key] );
-			}
+	if ( isset( $args['paged'] ) ) {
+		unset( $args['no_found_rows'] );
+	}
+
+	if ( func_num_args() === 2 ) {
+		unset( $args['no_found_rows'] );
+	}
+
+	$query    = new WP_Query( $args );
+	$products = array();
+
+	foreach( $query->get_posts() as $key => $product ) {
+
+		$product = it_exchange_get_product( $product );
+
+		$products[ $key ] = $product;
+
+		if ( ! it_exchange_is_product_sale_active( $product ) && $args['only_on_sale'] ) {
+			unset( $products[$key] );
 		}
+	}
+
+	if ( func_num_args() === 2 ) {
+		$total = $query->found_posts;
 	}
 
 	return apply_filters( 'it_exchange_get_products', $products, $args );

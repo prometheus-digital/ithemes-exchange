@@ -15,8 +15,9 @@ class IT_Exchange_Shopping_Cart {
 	 * @since 0.3.8
 	 */
 	public function __construct() {
+		add_action( 'init', array( $this, 'check_requested_cart_auth' ), 0 );
 		add_action( 'template_redirect', array( $this, 'handle_it_exchange_cart_function' ) );
-		add_filter( 'it_exchange_process_transaction', array( $this, 'handle_purchase_cart_request' ) );
+		add_filter( 'it_exchange_process_transaction', array( $this, 'handle_purchase_cart_request' ), 10, 2 );
 		add_action( 'template_redirect', array( $this, 'prepare_for_purchase' ) );
 		add_action( 'template_redirect', array( $this, 'convert_feedback_to_notices' ) );
 		add_action( 'it_exchange_add_transaction_success', array(
@@ -39,6 +40,25 @@ class IT_Exchange_Shopping_Cart {
 		self::__construct();
 
 		_deprecated_constructor( __CLASS__, '1.24.0' );
+	}
+
+	/**
+	 * Check that the requested cart auth is valid.
+	 *
+	 * If not, redirect to the store with an error.
+	 *
+	 * @since 2.0.0
+	 */
+	public function check_requested_cart_auth() {
+
+		try {
+			it_exchange_get_requested_cart_and_check_auth();
+		} catch ( UnexpectedValueException $e ) {
+			it_exchange_add_message( 'error', $e->getMessage() );
+
+			it_exchange_redirect( it_exchange_get_page_url( 'store' ), 'fail-requested-cart-auth-check' );
+			die();
+		}
 	}
 
 	/**
@@ -546,14 +566,14 @@ class IT_Exchange_Shopping_Cart {
 	 *
 	 * @since 0.3.8
 	 *
-	 * @param bool $status
+	 * @param bool           $status
+	 * @param \ITE_Cart|null $cart
 	 *
 	 * @return boolean
 	 */
-	public function handle_purchase_cart_request( $status ) {
+	public function handle_purchase_cart_request( $status, $cart = null ) {
 
-		if ( $status ) //if this has been modified as true already, return.
-		{
+		if ( $status ) {
 			return $status;
 		}
 
@@ -568,7 +588,7 @@ class IT_Exchange_Shopping_Cart {
 			return false;
 		}
 
-		$transaction_object = it_exchange_generate_transaction_object();
+		$transaction_object = it_exchange_generate_transaction_object( $cart );
 		if ( empty( $transaction_object ) && false !== ( $transaction_id = apply_filters( 'handle_purchase_cart_request_already_processed_for_' . $requested_transaction_method, false ) ) ) {
 
 			it_exchange_clear_messages( 'error' ); //we really need a way to only remove certain errors
@@ -621,7 +641,7 @@ class IT_Exchange_Shopping_Cart {
 	/**
 	 * Prepare the cart for purchase on the checkout page.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 */
 	public function prepare_for_purchase() {
 
@@ -633,7 +653,7 @@ class IT_Exchange_Shopping_Cart {
 	/**
 	 * Convert feedback to notices.
 	 *
-	 * @sicne 1.36.0
+	 * @sicne 2.0.0
 	 */
 	public function convert_feedback_to_notices() {
 
@@ -659,7 +679,7 @@ class IT_Exchange_Shopping_Cart {
 	/**
 	 * Clear the cart meta session data when a transaction is completed.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param int            $transaction_id
 	 * @param \ITE_Cart|null $cart
@@ -673,7 +693,7 @@ class IT_Exchange_Shopping_Cart {
 	/**
 	 * Clear cart meta when the cart is emptied.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Cart $cart
 	 */
@@ -690,15 +710,17 @@ class IT_Exchange_Shopping_Cart {
 	 * @return void
 	 */
 	public function redirect_checkout_if_empty_cart() {
-		$cart     = it_exchange_get_page_url( 'cart' );
+
 		$checkout = it_exchange_get_page_url( 'checkout' );
 
 		if ( empty( $checkout ) || ! it_exchange_is_page( 'checkout' ) ) {
 			return;
 		}
 
-		if ( ! it_exchange_get_current_cart()->get_items()->count() ) {
-			it_exchange_redirect( $cart, 'checkout-empty-send-to-cart' );
+		$cart = it_exchange_get_requested_cart_and_check_auth() ?: it_exchange_get_current_cart();
+
+		if ( ! $cart->get_items()->count() ) {
+			it_exchange_redirect( it_exchange_get_page_url( 'cart' ), 'checkout-empty-send-to-cart' );
 			die();
 		}
 	}
@@ -741,7 +763,7 @@ class IT_Exchange_Shopping_Cart {
 	/**
 	 * Merge sessions on user login.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string  $user_login
 	 * @param WP_User $user
@@ -774,12 +796,12 @@ class IT_Exchange_Shopping_Cart {
 	 *
 	 * @since      1.9.0
 	 *
-	 * @deprecated 1.36.0
+	 * @deprecated 2.0.0
 	 *
 	 * @return void
 	 */
 	public function sync_customer_active_carts() {
-		_deprecated_function( __FUNCTION__, '1.36.0' );
+		_deprecated_function( __FUNCTION__, '2.0.0' );
 	}
 }
 

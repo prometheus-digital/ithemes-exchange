@@ -41,7 +41,7 @@ function it_exchange_get_option( $key, $break_cache=false, $merge_defaults=true 
  * Save options
  *
  * @since 0.3.6
- * @since 1.36.0 Add $flush_cache parameter
+ * @since 2.0.0 Add $flush_cache parameter
  *        
  * @param string $key the options key
  * @param mixed $value the values to save to the options key

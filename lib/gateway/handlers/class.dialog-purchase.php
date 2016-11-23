@@ -2,7 +2,7 @@
 /**
  * Dialog Purchase Request Handler.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -14,16 +14,16 @@ abstract class ITE_Dialog_Purchase_Request_Handler extends ITE_Purchase_Request_
 	/**
 	 * @inheritDoc
 	 */
-	public function render_payment_button( ITE_Gateway_Purchase_Request $request ) {
+	public function render_payment_button( ITE_Gateway_Purchase_Request_Interface $request ) {
 		return it_exchange_generate_purchase_dialog(
-			$this->get_gateway()->get_slug(), $this->get_dialog_options()
+			       $this->get_gateway()->get_slug(), $this->get_dialog_options()
 		       ) . $this->get_html_before_form_end( $request );
 	}
 
 	/**
 	 * Get the purchase dialog options.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return array
 	 */
@@ -40,7 +40,7 @@ abstract class ITE_Dialog_Purchase_Request_Handler extends ITE_Purchase_Request_
 	/**
 	 * Get a purchase dialog controller.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \IT_Exchange_Purchase_Dialog
 	 */
@@ -52,6 +52,10 @@ abstract class ITE_Dialog_Purchase_Request_Handler extends ITE_Purchase_Request_
 	 * @inheritDoc
 	 */
 	public function build_factory_args_from_global_state( ITE_Cart $cart, $state ) {
+
+		if ( ! $this->get_dialog_controller()->is_submitted_form_valid() ) {
+			throw new InvalidArgumentException( __( 'Credit Card is invalid.', 'LION' ) );
+		}
 
 		$factory_args = parent::build_factory_args_from_global_state( $cart, $state );
 
@@ -71,7 +75,7 @@ abstract class ITE_Dialog_Purchase_Request_Handler extends ITE_Purchase_Request_
 	/**
 	 * @inheritDoc
 	 */
-	public function get_data_for_REST( ITE_Gateway_Purchase_Request $request ) {
+	public function get_data_for_REST( ITE_Gateway_Purchase_Request_Interface $request ) {
 		return array(
 			'method'  => 'dialog',
 			'accepts' => array( 'card' )

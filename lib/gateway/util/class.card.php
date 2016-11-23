@@ -2,14 +2,14 @@
 /**
  * Credit Cart Util.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
 /**
  * Class ITE_Gateway_Card
  */
-class ITE_Gateway_Card {
+class ITE_Gateway_Card implements ITE_Gateway_Payment_Source {
 
 	/** @var string */
 	private $holder_name;
@@ -51,7 +51,7 @@ class ITE_Gateway_Card {
 	/**
 	 * Get the card holder's name.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -62,7 +62,7 @@ class ITE_Gateway_Card {
 	/**
 	 * Get the card number.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -71,9 +71,26 @@ class ITE_Gateway_Card {
 	}
 
 	/**
+	 * Get the redacted card number.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return string
+	 */
+	public function get_redacted_number() {
+		$n = $this->get_number();
+
+		if ( strlen( $n ) <= 4 ) {
+			return $n;
+		}
+
+		return substr( $n, - 4 );
+	}
+
+	/**
 	 * Get the card expiration month as two digits.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return int
 	 */
@@ -84,7 +101,7 @@ class ITE_Gateway_Card {
 	/**
 	 * Get the card expiration year as four digits.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return int
 	 */
@@ -95,12 +112,36 @@ class ITE_Gateway_Card {
 	/**
 	 * Get the card's cvc.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return int
 	 */
 	public function get_cvc() {
 		return $this->cvc;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_label() {
+		return sprintf(
+			__( 'Card ending in %s %s/%s', 'it-l10n-ithemes-exchange' ),
+			$this->get_redacted_number(),
+			$this->get_expiration_month(),
+			$this->get_expiration_year()
+		);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_identifier() {
+		return md5(
+			substr( $this->get_number(), - 4 ) .
+			$this->get_expiration_month() .
+			$this->get_expiration_year() .
+			$this->get_holder_name()
+		);
 	}
 
 	/**
@@ -113,7 +154,7 @@ class ITE_Gateway_Card {
 			'holder_name'      => $this->holder_name,
 			'expiration_month' => $this->expiration_month,
 			'expiration_year'  => $this->expiration_year,
-			'number'           => substr( $this->number, - 4 ),
+			'number'           => $this->get_redacted_number(),
 		);
 	}
 }

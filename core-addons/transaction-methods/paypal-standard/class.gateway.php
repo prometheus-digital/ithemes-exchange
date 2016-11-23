@@ -2,7 +2,7 @@
 /**
  * PayPal Standard Gateway.
  *
- * @since   1.36.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -13,6 +13,9 @@ class ITE_PayPal_Standard_Gateway extends ITE_Gateway {
 
 	/** @var ITE_Gateway_Request_Handler[] */
 	private $handlers;
+
+	/** @var array */
+	private $fields = array();
 
 	/**
 	 * ITE_PayPal_Standard_Gateway constructor.
@@ -54,6 +57,11 @@ class ITE_PayPal_Standard_Gateway extends ITE_Gateway {
 	/**
 	 * @inheritDoc
 	 */
+	public function requires_cart_after_purchase() { return true; }
+
+	/**
+	 * @inheritDoc
+	 */
 	public function get_webhook_param() {
 
 		/**
@@ -69,8 +77,40 @@ class ITE_PayPal_Standard_Gateway extends ITE_Gateway {
 	/**
 	 * @inheritDoc
 	 */
+	public function get_ssl_mode() { return self::SSL_SUGGESTED; }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_wizard_settings() {
+
+		$fields = array(
+			'preamble',
+			'purchase-button-label',
+			'live-email-address',
+		);
+
+		$wizard = array();
+
+		foreach ( $this->get_settings_fields() as $field ) {
+			if ( in_array( $field['slug'], $fields ) ) {
+				$wizard[] = $field;
+			}
+		}
+
+		return $wizard;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function get_settings_fields() {
-		return array(
+
+		if ( $this->fields ) {
+			return $this->fields;
+		}
+
+		$this->fields = array(
 			array(
 				'type' => 'html',
 				'slug' => 'preamble',
@@ -113,6 +153,8 @@ class ITE_PayPal_Standard_Gateway extends ITE_Gateway {
 				'show_if' => array( 'field' => 'sandbox-mode', 'value' => true, 'compare' => '=' ),
 			),
 		);
+
+		return $this->fields;
 	}
 
 	/**

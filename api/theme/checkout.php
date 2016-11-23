@@ -65,9 +65,11 @@ class IT_Theme_API_Checkout implements IT_Theme_API {
 	*/
 	function transaction_methods( $options=array() ) {
 
+		$cart = it_exchange_get_requested_cart_and_check_auth() ?: it_exchange_get_current_cart();
+
 		$methods = array_map(
 			function( ITE_Gateway $gateway ) { return $gateway->get_addon(); },
-			it_exchange_get_available_transaction_methods_for_cart()
+			it_exchange_get_available_transaction_methods_for_cart( $cart )
 		);
 
 		foreach ( it_exchange_get_enabled_addons( array( 'category' => 'transaction-methods' ) ) as $addon ) {
@@ -120,6 +122,10 @@ class IT_Theme_API_Checkout implements IT_Theme_API {
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
 		$class = empty( $options['class'] ) ? 'it-exchange-cancel-checkout' : 'it-exchange-cancel-checkout ' . $options['class'];
+
+		if ( it_exchange_get_requested_cart_and_check_auth() ) {
+			return '';
+		}
 
 		// Set URL
 		if ( it_exchange_in_superwidget() && 2 > it_exchange_get_cart_products_count() ) {

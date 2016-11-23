@@ -2,7 +2,7 @@
 /**
  * Abstract purchase request handler class.
  *
- * @since   1.36
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -35,14 +35,20 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 
 		add_filter(
 			"it_exchange_get_{$gateway->get_slug()}_make_payment_button",
-			function () use ( $self, $factory ) {
+			function ( $_, $options ) use ( $self, $factory ) {
 				try {
-					return $self->render_payment_button( $factory->make( 'purchase' ) );
-				}
-				catch ( Exception $e ) {
+
+					$factory_opts = array();
+
+					if ( isset( $options['cart'] ) ) {
+						$factory_opts['cart'] = $options['cart'];
+					}
+
+					return $self->render_payment_button( $factory->make( 'purchase', $factory_opts ) );
+				} catch ( Exception $e ) {
 					return '';
 				}
-			}
+			}, 10, 2
 		);
 
 		add_filter(
@@ -58,11 +64,17 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 					return $_;
 				}
 
-				/** @noinspection ExceptionsAnnotatingAndHandlingInspection */
-				$txn = $self->handle( $factory->make(
-					'purchase',
-					$self->build_factory_args_from_global_state( $cart, $_REQUEST )
-				) );
+				try {
+					$request = $factory->make(
+						'purchase',
+						$self->build_factory_args_from_global_state( $cart, $_REQUEST )
+					);
+					$txn     = $self->handle( $request );
+				} catch ( Exception $e ) {
+					$cart->get_feedback()->add_error( $e->getMessage() );
+
+					return null;
+				}
 
 				return $txn ? $txn->ID : false;
 			},
@@ -76,7 +88,7 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 	 * This is used to build the intermediary layer between the Gateway Request framework
 	 * and the legacy cart system.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param \ITE_Cart $cart
 	 * @param array     $state
@@ -108,7 +120,7 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 	/**
 	 * Get the gateway for this handler.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return \ITE_Gateway
 	 */
@@ -119,11 +131,11 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 	/**
 	 * Render a payment button.
 	 *
-	 * @param \ITE_Gateway_Purchase_Request $request
+	 * @param ITE_Gateway_Purchase_Request_Interface $request
 	 *
 	 * @return string
 	 */
-	public function render_payment_button( ITE_Gateway_Purchase_Request $request ) {
+	public function render_payment_button( ITE_Gateway_Purchase_Request_Interface $request ) {
 
 		$action     = esc_attr( $this->get_form_action() );
 		$label      = esc_attr( $this->get_payment_button_label() );
@@ -143,7 +155,7 @@ HTML;
 	/**
 	 * Get the label for the payment button.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -154,7 +166,7 @@ HTML;
 	/**
 	 * Get the form action URL.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -163,7 +175,7 @@ HTML;
 	/**
 	 * Get the action of the nonce.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -172,7 +184,7 @@ HTML;
 	/**
 	 * Get a nonce.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -181,7 +193,7 @@ HTML;
 	/**
 	 * Output the payment button nonce.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
@@ -190,24 +202,39 @@ HTML;
 	/**
 	 * Get HTML to be rendered before the form is closed.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
-	 * @param \ITE_Gateway_Purchase_Request $request
+	 * @param ITE_Gateway_Purchase_Request_Interface $request
 	 *
 	 * @return string
 	 */
-	protected function get_html_before_form_end( ITE_Gateway_Purchase_Request $request ) { return ''; }
+	protected function get_html_before_form_end( ITE_Gateway_Purchase_Request_Interface $request ) {
+
+		$html = '';
+
+		if ( ! $request->get_cart()->is_current() && ( it_exchange_in_superwidget() || it_exchange_is_page( 'checkout' ) ) ) {
+			$html .= "<input type='hidden' name='cart_id' value='{$request->get_cart()->get_id()}'>";
+			$html .= "<input type='hidden' name='cart_auth' value='{$request->get_cart()->generate_auth_secret( 3600 )}'>";
+		}
+
+		if ( $request->get_redirect_to() ) {
+			$to = esc_url( $request->get_redirect_to() );
+			$html .= "<input type='hidden' name='redirect_to' value='{$to}'>";
+		}
+
+		return $html;
+	}
 
 	/**
 	 * Get the data for REST API Purchase endpoint.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
-	 * @param \ITE_Gateway_Purchase_Request $request
+	 * @param ITE_Gateway_Purchase_Request_Interface $request
 	 *
 	 * @return array
 	 */
-	public function get_data_for_REST( ITE_Gateway_Purchase_Request $request ) {
+	public function get_data_for_REST( ITE_Gateway_Purchase_Request_Interface $request ) {
 		return array( 'method' => 'REST' );
 	}
 }

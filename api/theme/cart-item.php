@@ -14,6 +14,9 @@ class IT_Theme_API_Cart_Item extends IT_Theme_API_Line_Item {
 	 */
 	private $_context = 'cart-item';
 
+	/** @var ITE_Cart|null */
+	private $cart;
+
 	/**
 	 * The current cart item
 	 * @var array
@@ -30,10 +33,11 @@ class IT_Theme_API_Cart_Item extends IT_Theme_API_Line_Item {
 
 		parent::__construct();
 
+		$this->cart       = it_exchange_get_requested_cart_and_check_auth() ?: it_exchange_get_current_cart();
 		$this->_cart_item = empty( $GLOBALS['it_exchange']['cart-item'] ) ? false : $GLOBALS['it_exchange']['cart-item'];
 
 		if ( $this->_cart_item ) {
-			$this->item = it_exchange_get_current_cart()->get_item( 'product', $this->_cart_item['product_cart_id'] );
+			$this->item = $this->cart->get_item( 'product', $this->_cart_item['product_cart_id'] );
 		} else {
 			$this->item = null;
 		}
@@ -91,6 +95,10 @@ class IT_Theme_API_Cart_Item extends IT_Theme_API_Line_Item {
 			'label'  => _x( '&times;', 'html representation for multiplication symbol (x)', 'it-l10n-ithemes-exchange' ),
 		);
 		$options  = ITUtility::merge_defaults( $options, $defaults );
+
+		if ( $this->cart && ! $this->cart->is_current() ) {
+			return '';
+		}
 
 		// Force link in SuperWidget
 		$options['format'] = it_exchange_in_superwidget() ? 'link' : $options['format'];
@@ -171,7 +179,7 @@ class IT_Theme_API_Cart_Item extends IT_Theme_API_Line_Item {
 		$var_key   = it_exchange_get_field_name( 'product_purchase_quantity' );
 		$var_value = $this->item->get_quantity();
 
-		if ( $this->item instanceof ITE_Quantity_Modifiable_Item && $this->item->is_quantity_modifiable() ) {
+		if ( $this->item instanceof ITE_Quantity_Modifiable_Item && $this->item->is_quantity_modifiable() && $this->cart && ! $this->cart->is_current() ) {
 
 			switch ( $options['format'] ) {
 				case 'var_key' :
@@ -221,7 +229,18 @@ class IT_Theme_API_Cart_Item extends IT_Theme_API_Line_Item {
 	 * @return string
 	 */
 	public function sub_total( $options = array() ) {
-		return apply_filters( 'it_exchange_api_theme_cart_item_sub_total', it_exchange_format_price( $this->item->get_total() ), $this->_cart_item, $this->item );
+
+		$total = $this->item->get_total();
+
+		if ( $this->item instanceof ITE_Aggregate_Line_Item ) {
+			$total_negative = $this->item->get_line_items()->filter( function ( ITE_Line_Item $item ) {
+				return ! $item->is_summary_only() && $item->get_total() < 0;
+			} )->total();
+
+			$total += $total_negative * -1;
+		}
+
+		return apply_filters( 'it_exchange_api_theme_cart_item_sub_total', it_exchange_format_price( $total ), $this->_cart_item, $this->item );
 	}
 
 	/**

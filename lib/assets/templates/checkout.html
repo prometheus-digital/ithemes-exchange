@@ -1,0 +1,40 @@
+<script type="text/template" id="tmpl-it-exchange-checkout">
+
+    <# if ( data.showLineItems ) { #>
+        <div class="it-exchange-checkout-line-items-container"></div>
+    <# } #>
+
+    <# if ( data.showLineItemTotals ) { #>
+        <div class="it-exchange-checkout-line-item-totals-container">
+        </div>
+    <# } #>
+
+    <ul class="it-exchange-checkout-purchase-methods"></ul>
+
+    <div class="it-exchange-checkout-additional-info-container"></div>
+
+</script>
+
+<script type="text/template" id="tmpl-it-exchange-checkout-line-item">
+    <span class="it-exchange-checkout-line-item--item-name">{{ data.name }}</span>
+    <span class="it-exchange-checkout-line-item--item-quantity">{{ data.quantity.selected }}</span>
+    <span class="it-exchange-checkout-line-item--item-total">{{ data.total }}</span>
+</script>
+
+<script type="text/template" id="tmpl-it-exchange-checkout-line-item--product">
+    <# if ( data.image ) { #>
+        <img src="{{ data.image }}" class="it-exchange-checkout-line-item--product-image">
+    <# } #>
+    <span class="it-exchange-checkout-line-item--item-name">{{ data.name }}</span>
+    <span class="it-exchange-checkout-line-item--item-quantity">{{ data.quantity.selected }}</span>
+    <span class="it-exchange-checkout-line-item--item-total">{{ data.totalFormatted }}</span>
+</script>
+
+<script type="text/template" id="tmpl-it-exchange-checkout-line-items-total">
+    <span class="it-exchange-checkout-line-items-total--label">{{data.label}}</span>
+    <span class="it-exchange-checkout-line-items-total--total">{{data.totalFormatted}}</span>
+</script>
+
+<script type="text/template" id="tmpl-it-exchange-checkout-purchase-method-button">
+    <button class="it-exchange-checkout-purchase-method-button btn button">{{ data.label }}</button>
+</script>
