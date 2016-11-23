@@ -44,7 +44,7 @@ class Serializer {
 			'method_id'            => $t->get_method_id(),
 			'status'               => array( 'slug' => $t->get_status(), 'label' => $t->get_status( true ) ),
 			'cleared_for_delivery' => $t->is_cleared_for_delivery(),
-			'order_date'           => mysql_to_rfc3339( $t->get_date() ),
+			'order_date'           => \iThemes\Exchange\REST\format_rfc339( $t->get_date() ),
 			'payment_token'        => $t->payment_token ? $t->payment_token->ID : 0,
 			'purchase_mode'        => $t->purchase_mode,
 			'parent'               => $t->has_parent() ? $t->get_parent()->get_ID() : 0,

@@ -49,7 +49,7 @@ class Serializer {
 				'raw'      => $p->get_feature( 'description' ),
 				'rendered' => apply_filters( 'the_content', $p->get_feature( 'description' ) )
 			),
-			'date'           => mysql_to_rfc3339( $p->post_date_gmt ),
+			'date'           => \iThemes\Exchange\REST\format_rfc339( $p->post_date_gmt ),
 			'type'           => it_exchange_get_product_type( $p ),
 			'visible'        => get_post_meta( $p->ID, '_it-exchange-visibility', true ) !== 'hidden',
 			'price'          => $p->get_feature( $on_sale ? 'sale-price' : 'base-price' ),
@@ -63,8 +63,8 @@ class Serializer {
 			),
 			'available'      => array(
 				'now'   => $has_availability ? it_exchange_is_product_available( $p ) : true,
-				'start' => $has_start ? mysql_to_rfc3339( $start ) : '',
-				'end'   => $has_end ? mysql_to_rfc3339( $end ) : '',
+				'start' => $has_start ? \iThemes\Exchange\REST\format_rfc339( $start ) : '',
+				'end'   => $has_end ? \iThemes\Exchange\REST\format_rfc339( $end ) : '',
 			),
 			'featured_media' => 0,
 			'attachments'    => array(),

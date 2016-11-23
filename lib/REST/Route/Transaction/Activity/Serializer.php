@@ -35,7 +35,7 @@ class Serializer {
 			'id'          => $activity->get_ID(),
 			'description' => $activity->get_description(),
 			'type'        => array( 'slug' => $activity->get_type(), 'label' => $label ),
-			'time'        => mysql_to_rfc3339( $activity->get_time()->format( 'Y-m-d H:i:s' ) ),
+			'time'        => \iThemes\Exchange\REST\format_rfc339( $activity->get_time()->format( 'Y-m-d H:i:s' ) ),
 			'is_public'   => $activity->is_public(),
 			'actor'       => null,
 		);

@@ -35,7 +35,7 @@ class Serializer {
 			'amount'     => $refund->amount,
 			'reason'     => $refund->reason,
 			'issued_by'  => $refund->issued_by ? $refund->issued_by->ID : 0,
-			'created_at' => mysql_to_rfc3339( $refund->created_at->format( 'Y-m-d H:i:s' ) ),
+			'created_at' => \iThemes\Exchange\REST\format_rfc339( $refund->created_at->format( 'Y-m-d H:i:s' ) ),
 		);
 
 		if ( user_can( $user->wp_user, 'edit_it_transaction', $refund->transaction->ID ) ) {

@@ -8,6 +8,7 @@
 
 namespace iThemes\Exchange\REST;
 
+use IronBound\DB\Table\Column\DateTime;
 use iThemes\Exchange\REST\Middleware\Auth_Error_Code;
 use iThemes\Exchange\REST\Middleware\Autolinker;
 use iThemes\Exchange\REST\Middleware\Cart_Decorator;
@@ -221,4 +222,28 @@ function response_to_array( \WP_REST_Response $response ) {
  */
 function url_for_schema( $title ) {
 	return "https://api.ithemes.com/exchange/schemas/$title";
+}
+
+/**
+ * Format a date to follow RFC339.
+ *
+ * @since 2.0.0
+ *
+ * @param \DateTime|string|int $date
+ *
+ * @return string
+ */
+function format_rfc339( $date ) {
+
+	if ( is_string( $date ) ) {
+		$datetime = new \DateTime( $date, new \DateTimeZone( 'UTC' ) );
+	} elseif ( is_numeric( $date ) ) {
+		$datetime = new \DateTime( "@{$date}", new \DateTimeZone( 'UTC' ) );
+	} elseif ( $date instanceof \DateTime ) {
+		$datetime = $date;
+	} else {
+		throw new \InvalidArgumentException();
+	}
+
+	return $datetime->format( \DateTime::RFC3339 );
 }
