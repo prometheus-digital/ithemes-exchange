@@ -47,7 +47,6 @@ class Carts extends Base implements Postable {
 			$repo = \ITE_Line_Item_Cached_Session_Repository::from_session_id( $user, $session->ID );
 
 			$cart = \ITE_Cart::create( $repo, $user );
-			$cart->set_meta( 'guest-email', $user->get_email() );
 			$session = \ITE_Session_Model::get( $session->ID );
 		} elseif ( $request['is_main'] === true ) {
 			try {

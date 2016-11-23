@@ -261,7 +261,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 		}
 
 		if ( $customer_email && ! empty( $cart_details->is_guest_checkout ) ) {
-			$transaction->cart()->set_meta( 'guest-email', $customer_email );
+			$transaction->cart()->set_guest( new IT_Exchange_Guest_Customer( $customer_email ) );
 		}
 
 		return $transaction;

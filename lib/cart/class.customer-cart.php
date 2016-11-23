@@ -113,6 +113,10 @@ class ITE_Cart {
 
 		$cart = new self( $repository, $cart_id, $customer );
 
+		if ( $customer instanceof IT_Exchange_Guest_Customer ) {
+			$cart->set_guest( $customer );
+		}
+
 		if ( $cart->get_billing_address() ) {
 			$compare = new ITE_In_Memory_Address( $cart->get_billing_address()->to_array() );
 			$address = $cart->get_billing_address();
@@ -213,6 +217,18 @@ class ITE_Cart {
 	 */
 	public function is_doing_merge() {
 		return $this->doing_merge;
+	}
+
+	/**
+	 * Set the guest customer for this cart.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param IT_Exchange_Guest_Customer $customer
+	 */
+	public function set_guest( IT_Exchange_Guest_Customer $customer ) {
+		$this->customer = $customer;
+		$this->set_meta( 'guest-email', $customer->get_email() );
 	}
 
 	/**
