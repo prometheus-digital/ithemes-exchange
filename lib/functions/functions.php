@@ -271,6 +271,13 @@ function it_exchange_register_scripts() {
 			'visualCC' => array(
 				'name'   => _x( 'Name', 'Credit Card Holder Name', 'it-l10n-ithemes-exchange' ),
 				'number' => _x( 'Number', 'Credit Card Number', 'it-l10n-ithemes-exchange' ),
+			),
+			'checkout' => array(
+				'completePurchase' => __( 'Complete Purchase', 'it-l10n-ithemes-exchange' ),
+				'purchased'        => __( 'Purchased!', 'it-l10n-ithemes-exchange' )
+			),
+			'paymentToken' => array(
+				'addNew' => _x( 'Add New', 'Add new payment source, like a credit card.', 'it-l10n-ithemes-exchange' )
 			)
 		)
 	);
