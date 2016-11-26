@@ -264,22 +264,35 @@ function it_exchange_register_scripts() {
 		)
 	);
 
-	wp_localize_script(
-		'it-exchange-rest',
-		'ITExchangeRESTi18n',
-		array(
+	$config = array(
+		'i18n' => array(
 			'visualCC' => array(
 				'name'   => _x( 'Name', 'Credit Card Holder Name', 'it-l10n-ithemes-exchange' ),
 				'number' => _x( 'Number', 'Credit Card Number', 'it-l10n-ithemes-exchange' ),
 			),
 			'checkout' => array(
 				'completePurchase' => __( 'Complete Purchase', 'it-l10n-ithemes-exchange' ),
-				'purchased'        => __( 'Purchased!', 'it-l10n-ithemes-exchange' )
+				'purchased'        => __( 'Purchased!', 'it-l10n-ithemes-exchange' ),
+				'cancel'           => __( 'Cancel', 'it-l10n-ithemes-exchange' ),
 			),
 			'paymentToken' => array(
 				'addNew' => _x( 'Add New', 'Add new payment source, like a credit card.', 'it-l10n-ithemes-exchange' )
 			)
 		)
+	);
+
+	if ( apply_filters( 'it_exchange_preload_cart_item_types', it_exchange_is_page( 'checkout' ) ) ) {
+		$serializer = new \iThemes\Exchange\REST\Route\Cart\TypeSerializer();
+
+		foreach ( ITE_Line_Item_Types::shows_in_rest() as $type ) {
+			$config['cartItemTypes'][] = $serializer->serialize( $type );
+		}
+	}
+
+	wp_localize_script(
+		'it-exchange-rest',
+		'ITExchangeRESTConfig',
+		$config
 	);
 
 	$js_tokenizers = array();
