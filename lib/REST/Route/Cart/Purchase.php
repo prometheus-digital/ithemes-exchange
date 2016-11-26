@@ -24,13 +24,18 @@ class Purchase extends Base implements Getable, Postable {
 	/** @var \ITE_Gateway_Request_Factory */
 	private $request_factory;
 
+	/** @var PurchaseSerializer */
+	private $serializer;
+
 	/**
 	 * Purchase constructor.
 	 *
 	 * @param \ITE_Gateway_Request_Factory $request_factory
+	 * @param PurchaseSerializer           $serializer
 	 */
-	public function __construct( \ITE_Gateway_Request_Factory $request_factory ) {
+	public function __construct( \ITE_Gateway_Request_Factory $request_factory, PurchaseSerializer $serializer ) {
 		$this->request_factory = $request_factory;
+		$this->serializer      = $serializer;
 	}
 
 	/**
@@ -48,34 +53,11 @@ class Purchase extends Base implements Getable, Postable {
 
 		foreach ( it_exchange_get_available_transaction_methods_for_cart( $cart ) as $gateway ) {
 			if ( $handler = $gateway->get_handler_for( $purchase_request ) ) {
-				$data[] = $this->get_data_for_handler( $handler, $purchase_request );
+				$data[] = $this->serializer->serialize( $handler, $purchase_request );
 			}
 		}
 
 		return new \WP_REST_Response( $data );
-	}
-
-	/**
-	 * Get the data for a handler.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @param \ITE_Purchase_Request_Handler          $handler
-	 * @param ITE_Gateway_Purchase_Request_Interface $request
-	 *
-	 * @return array
-	 */
-	protected function get_data_for_handler( \ITE_Purchase_Request_Handler $handler, ITE_Gateway_Purchase_Request_Interface $request ) {
-
-		$data = array(
-			'id'     => $handler->get_gateway()->get_slug(),
-			'name'   => $handler->get_gateway()->get_name(),
-			'label'  => $handler->get_payment_button_label(),
-			'nonce'  => $handler->get_nonce(),
-			'method' => $handler->get_data_for_REST( $request ),
-		);
-
-		return $data;
 	}
 
 	/**
@@ -179,12 +161,5 @@ class Purchase extends Base implements Getable, Postable {
 	/**
 	 * @inheritDoc
 	 */
-	public function get_schema() {
-		return array(
-			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => 'cart-purchase',
-			'type'       => 'object',
-			'properties' => array()
-		);
-	}
+	public function get_schema() { return $this->serializer->get_schema(); }
 }

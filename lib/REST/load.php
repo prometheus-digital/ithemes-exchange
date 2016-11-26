@@ -54,7 +54,7 @@ add_action( 'rest_api_init', function () {
 
 add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 
-	$cart  = new Route\Cart\Cart();
+	$cart  = new Route\Cart\Cart( new Route\Cart\Serializer() );
 	$carts = new Carts( $cart );
 
 	$manager->register_route( $cart );
@@ -72,7 +72,7 @@ add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 	}
 
 	$shipping_methods = new Route\Cart\Shipping_Methods();
-	$purchase         = new Route\Cart\Purchase( new \ITE_Gateway_Request_Factory() );
+	$purchase         = new Route\Cart\Purchase( new \ITE_Gateway_Request_Factory(), new Route\Cart\PurchaseSerializer() );
 	$meta             = new Route\Cart\Meta();
 
 	$manager->register_route( $shipping_methods->set_parent( $cart ) );
