@@ -36,5 +36,16 @@
 </script>
 
 <script type="text/template" id="tmpl-it-exchange-checkout-purchase-method-button">
-    <button class="it-exchange-checkout-purchase-method-button btn button">{{ data.label }}</button>
+    <button class="it-exchange-purchase-button it-exchange-purchase-button-{{ data.id }} it-exchange-checkout-purchase-method-button btn button">
+        {{ data.label }}
+    </button>
+</script>
+
+<script type="text/template" id="tmpl-it-exchange-checkout-complete-purchase-method-button">
+    <button class="it-exchange-checkout-complete-purchase-method-button btn button">
+        {{ data.completePurchase }}
+    </button>
+    <button class="it-exchange-checkout-cancel-purchase-method btn button">
+        {{ data.cancel }}
+    </button>
 </script>
