@@ -474,7 +474,7 @@ class IT_Exchange_Customer implements ITE_Object {
 	public function get_tokens( $gateway = '' ) {
 
 		if ( ! $gateway ) {
-			return ITE_Payment_Token::query()->where( 'customer', '=', $this->ID )->results();
+			return ITE_Payment_Token::query()->and_where( 'customer', '=', $this->ID )->results();
 		}
 
 		return ITE_Payment_Token::without_global_scopes( array( 'active' ) )
