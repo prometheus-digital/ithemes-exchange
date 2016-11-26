@@ -702,7 +702,8 @@ a.it-exchange-button {
 }
 
 /** -----------------------------------------------------:[ transaction methods ]:---------- */
-.it-exchange-checkout .it-exchange-checkout-transaction-methods form {
+.it-exchange-checkout .it-exchange-checkout-transaction-methods form,
+.it-exchange-checkout .it-exchange-checkout-transaction-methods button {
     margin-top: .5em;
 }
 

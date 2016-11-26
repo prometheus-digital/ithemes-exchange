@@ -59,9 +59,6 @@ class IT_Exchange_Purchase_Dialog{
 	*/
 	public $cancel_label;
 
-	/** @var bool */
-	private $show_saved = false;
-
 	/**
 	 * Class Constructor
 	 *
@@ -90,7 +87,6 @@ class IT_Exchange_Purchase_Dialog{
 			'purchase-label'   => __( 'Purchase', 'it-l10n-ithemes-exchange' ),
 			'submit-label'     => __( 'Complete Purchase', 'it-l10n-ithemes-exchange' ),
 			'cancel-label'     => __( 'Cancel', 'it-l10n-ithemes-exchange' ),
-			'show-saved-cards' => true,
 		);
 		$options = ITUtility::merge_defaults( $options, $defaults );
 
@@ -105,7 +101,6 @@ class IT_Exchange_Purchase_Dialog{
 		$this->purchase_label     = $options['purchase-label'];
 		$this->submit_label       = $options['submit-label'];
 		$this->cancel_label       = $options['cancel-label'];
-		$this->show_saved         = (bool) $options['show-saved-cards'];
 	}
 
 	/**
@@ -180,7 +175,6 @@ class IT_Exchange_Purchase_Dialog{
 
 		$form_open          = $this->get_form_open();
 		$form_hidden_fields = $this->get_form_hidden_fields();
-		$saved_cards        = $this->get_saved_cards();
 		$form_fields        = $this->get_form_fields();
 		$form_actions       = $this->get_form_actions();
 		$form_close         = $this->get_form_close();
@@ -290,51 +284,6 @@ class IT_Exchange_Purchase_Dialog{
 		$classes = esc_attr( implode( ' ', $classes ) );
 
 		return '<input type="submit" class="' . $classes . '" value="' . esc_attr( $this->purchase_label ) . '" data-addon-slug="' . esc_attr( $this->addon_slug ) . '" />';
-	}
-
-	/**
-	 * Get saved cards selector.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @return string
-	 */
-	public function get_saved_cards() {
-
-		if ( ! $this->show_saved ) {
-			return '';
-		}
-
-		$customer = it_exchange_get_current_customer();
-
-		if ( ! $customer ) {
-			return '';
-		}
-
-		$cards = $customer->get_tokens( $this->addon_slug );
-
-		if ( ! $cards->count() ) {
-			return '';
-		}
-
-		$html = '<div class="it-exchange-credit-card-selector">';
-
-		foreach ( $cards as $card ) {
-
-			$label = $card->get_label();
-
-			$selected = checked( $card->primary, true, false );
-
-			$html .= "<label><input type='radio' name='purchase_token' value='{$card->ID}' {$selected}>&nbsp;{$label}</label><br>";
-		}
-
-		$new_method = __( 'New Payment Method', 'it-l10n-ithemes-exchange' );
-
-		$html .= "<label><input type='radio' name='purchase_token' value='new_method' id='new-method-{$this->addon_slug}'>";
-		$html .= ' ' . $new_method . '</label>';
-		$html .= '</div>';
-
-		return $html;
 	}
 
 	/**

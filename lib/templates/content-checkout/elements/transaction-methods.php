@@ -25,4 +25,5 @@
 		<?php endwhile; ?>
 	<?php endif; ?>
 </div>
+<div id="it-exchange-checkout-transaction-methods-additional-info-container"></div>
 <?php do_action( 'it_exchange_content_checkout_actions_after_transaction_methods_element' ); ?>

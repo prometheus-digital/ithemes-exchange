@@ -185,6 +185,52 @@ function it_exchange_load_public_scripts( $current_view ) {
 			array( 'jquery', 'jquery-ui-autocomplete', 'jquery-select-to-autocomplete' ), false, true
 		);
 
+		wp_enqueue_script( 'it-exchange-rest' );
+
+		it_exchange_add_inline_script(
+			'it-exchange-rest',
+			include IT_Exchange::$dir . '/lib/assets/templates/token-selector.html'
+		);
+
+		it_exchange_add_inline_script(
+			'it-exchange-rest',
+			include IT_Exchange::$dir . '/lib/assets/templates/visual-cc.html'
+		);
+
+		it_exchange_add_inline_script(
+			'it-exchange-rest',
+			include IT_Exchange::$dir . '/lib/assets/templates/checkout.html'
+		);
+
+		$cart_serializer     = new \iThemes\Exchange\REST\Route\Cart\Serializer();
+		$purchase_serializer = new iThemes\Exchange\REST\Route\Cart\PurchaseSerializer();
+		$factory             = new ITE_Gateway_Request_Factory();
+
+		$cart    = $cart_serializer->serialize( it_exchange_get_current_cart() );
+		$request = $factory->make( 'purchase' );
+		$methods = array();
+
+		foreach( it_exchange_get_available_transaction_methods_for_cart() as $method ) {
+			if ( $handler = $method->get_handler_for( $request ) ) {
+				$methods[] = $purchase_serializer->serialize( $handler, $request );
+			}
+		}
+
+		wp_localize_script( 'it-exchange-checkout-page', 'ITExchangeRESTCheckoutConfig', array(
+			'cart'      => $cart,
+			'methods'   => $methods,
+		) );
+
+		add_filter( 'it_exchange_preload_schemas', function( $schemas ) {
+			$schemas = is_array( $schemas ) ? $schemas : array();
+
+			return array_merge( $schemas, array(
+				'cart',
+				'cart-purchase',
+				'payment-token',
+			) );
+		} );
+
 	} // ****** END CHECKOUT SPECIFIC SCRIPTS *******
 
 	// Frontend Style
