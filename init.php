@@ -79,16 +79,10 @@ class IT_Exchange {
 			include( self::$dir . 'vendor/autoload.php' );
 		}
 
-		if ( version_compare( $GLOBALS['wp_version'], $this->_wp_minimum, '<' ) ) {
-			add_action( 'admin_notices', array( $this, 'minimum_wp_notice' ) );
-		} else {
-			return;
-		}
-
 		// Load supporting libraries
 		require( self::$dir . 'lib/load.php' );
 		require( self::$dir . 'api/load.php' );
-		require( self::$dir. 'core-addons/load.php' );
+		require( self::$dir . 'core-addons/load.php' );
 
 		// Set version
 		$GLOBALS['it_exchange']['version'] = $this->_version;
