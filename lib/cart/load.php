@@ -50,6 +50,7 @@ require_once dirname( __FILE__ ) . '/line-items/class.collection.php';
 require_once dirname( __FILE__ ) . '/validators/class.inventory.php';
 require_once dirname( __FILE__ ) . '/validators/class.multi-item-cart.php';
 require_once dirname( __FILE__ ) . '/validators/class.multi-item-product.php';
+require_once dirname( __FILE__ ) . '/validators/class.availability.php';
 
 require_once dirname( __FILE__ ) . '/exceptions/class.cart-coercion-failed.php';
 require_once dirname( __FILE__ ) . '/exceptions/class.line-item-coercion-failed.php';

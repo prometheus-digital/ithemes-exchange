@@ -1422,7 +1422,8 @@ class ITE_Cart {
 		$validators = array(
 			new ITE_Multi_Item_Cart_Validator(),
 			new ITE_Multi_Item_Product_Validator(),
-			new ITE_Product_Inventory_Validator()
+			new ITE_Product_Inventory_Validator(),
+			new ITE_Product_Availability_Validator(),
 		);
 
 		/**
