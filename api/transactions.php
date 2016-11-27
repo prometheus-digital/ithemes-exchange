@@ -142,7 +142,7 @@ function it_exchange_get_transactions( $args=array(), &$total = null ) {
 	$args['ignore_sticky_posts'] = true;
 	$args['no_found_rows'] = true;
 
-	if ( isset( $args['paged'] ) ) {
+	if ( isset( $args['paged'] ) || isset( $args['posts_per_page'] ) ) {
 		unset( $args['no_found_rows'] );
 	}
 

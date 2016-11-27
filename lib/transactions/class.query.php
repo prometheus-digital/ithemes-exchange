@@ -212,6 +212,10 @@ class ITE_Transaction_Query {
 			$this->query->offset( $this->args['items_per_page'] * ( $this->args['page'] - 1 ) );
 		}
 
+		if ( $this->args['calc_found_rows'] ) {
+			$this->query->calc_found_rows();
+		}
+
 		$in_or_not_in = array(
 			'ID',
 			'customer',
@@ -422,6 +426,10 @@ class ITE_Transaction_Query {
 		);
 
 		$args = array();
+
+		if ( ! empty( $wp_args['no_found_rows'] ) ) {
+			$wp_args['calc_found_rows'] = false;
+		}
 
 		if ( ! empty( $wp_args['fields'] ) && $wp_args['fields'] === 'ids' ) {
 			$args['return_value'] = 'ID';
