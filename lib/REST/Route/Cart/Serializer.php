@@ -2,7 +2,7 @@
 /**
  * Cart Serializer.
  *
- * @since 2.0.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -266,7 +266,8 @@ class Serializer {
 					)
 				),
 				'items'            => array(
-					'oneOf' => $item_references,
+					'context' => array( 'view', 'edit' ),
+					'oneOf'   => $item_references,
 				),
 				'subtotal'         => array(
 					'description' => __( 'The subtotal of the cart.', 'it-l10n-ithemes-exchange' ),

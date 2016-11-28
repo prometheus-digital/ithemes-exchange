@@ -162,6 +162,7 @@ class Item_Serializer {
 				),
 				'quantity'    => array(
 					'description' => __( 'The quantity purchased of this line item.', 'it-l10n-ithemes-exchange' ),
+					'context'    => array( 'view', 'edit' ),
 					'oneOf'       => array(
 						array(
 							'type'       => 'object',
@@ -207,6 +208,7 @@ class Item_Serializer {
 					'oneOf' => array(),
 				),
 				'readonly'    => true,
+				'context'     => array( 'view', 'edit' ),
 			);
 
 			foreach ( \ITE_Line_Item_Types::aggregatables() as $aggregatable ) {
