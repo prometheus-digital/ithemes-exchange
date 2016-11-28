@@ -673,6 +673,12 @@ function it_exchange_basic_coupons_remove_coupon_from_cart( $result, $options=ar
 		return false;
 	}
 
+	$cart = empty( $options['cart'] ) ? it_exchange_get_current_cart() : $options['cart'];
+
+	if ( ! $cart->is_current() ) {
+		return true;
+	}
+
 	$coupons = it_exchange_get_cart_data( 'basic_coupons' );
 
 	if ( isset( $coupons[ $coupon_code ] ) ) {
