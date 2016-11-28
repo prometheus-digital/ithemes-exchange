@@ -66,6 +66,7 @@ class Serializer {
 				),
 				'label'    => array(
 					'description' => __( 'The user-provided label for this token.', 'it-l10n-ithemes-exchange' ),
+					'context'     => array( 'view', 'edit', 'embed' ),
 					'oneOf'       => array(
 						array(
 							'type'       => 'object',
