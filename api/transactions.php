@@ -68,6 +68,10 @@ function it_exchange_get_transaction( $post ) {
 		return false;
 	}
 
+	if ( ! $transaction ) {
+		return false;
+	}
+
 	return apply_filters( 'it_exchange_get_transaction', $transaction );
 }
 
@@ -714,7 +718,7 @@ function it_exchange_add_child_transaction( $method, $method_id, $status = 'pend
 			'order_date'    => current_time( 'mysql', true ),
 			'parent'        => $parent_tx_id,
 			'hash'          => it_exchange_generate_transaction_hash( $transaction_id, $customer_id ),
-			'mode'          => $mode,
+			'purchase_mode' => $mode,
 		);
 
 		if ( $customer instanceof IT_Exchange_Guest_Customer ) {
