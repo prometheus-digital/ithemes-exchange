@@ -116,16 +116,25 @@ add_filter( 'it_exchange_get_cart_coupon_from_code', 'it_exchange_get_cart_coupo
  *
  * @since 0.4.0
  *
- * @return IT_Exchange_Coupon[]|false
-*/
-function it_exchange_basic_coupons_applied_cart_coupons() {
+ * @param array    $_
+ * @param ITE_Cart $cart
+ *
+ * @return false|IT_Exchange_Coupon[]
+ */
+function it_exchange_basic_coupons_applied_cart_coupons( $_ = array(), ITE_Cart $cart = null ) {
 
-	$cart_data = it_exchange_get_cart_data( 'basic_coupons' );
+	$cart = $cart ?: it_exchange_get_current_cart();
+
+	$items = $cart->get_items( 'coupon', true )->filter( function( ITE_Coupon_Line_Item $item ) {
+		return $item->get_coupon() && $item->get_coupon()->get_type() === 'cart';
+	} )->unique( function( ITE_Coupon_Line_Item $item ) {
+		return $item->get_coupon()->get_code();
+	} );
 
 	$coupons = array();
 
-	foreach ( $cart_data as $code => $coupon ) {
-		$coupons[] = it_exchange_get_coupon_from_code( $code, 'cart' );
+	foreach ( $items as $item ) {
+		$coupons[] = $item->get_coupon();
 	}
 
 	return empty( $coupons ) ? false : $coupons;
@@ -195,7 +204,7 @@ add_action( 'it_exchange_update_cart', 'it_exchange_basic_coupons_handle_coupon_
  *
  * @return boolean
 */
-function it_exchange_basic_coupons_apply_to_cart( $result, $options=array(), ITE_Cart $cart = null ) {
+function it_exchange_basic_coupons_apply_to_cart( $result, $options = array(), ITE_Cart $cart = null ) {
 
 	$cart = $cart ?: it_exchange_get_current_cart();
 
@@ -206,6 +215,10 @@ function it_exchange_basic_coupons_apply_to_cart( $result, $options=array(), ITE
 	if ( ! $coupon ) {
 		$cart->get_feedback()->add_error( __( 'Invalid coupon', 'it-l10n-ithemes-exchange' ) );
 
+		return false;
+	}
+
+	if ( ! doing_action( 'it_exchange_apply_coupon_to_cart' ) ) {
 		return false;
 	}
 

@@ -79,9 +79,11 @@ class IT_Exchange_Addons_Basic_Coupons_API_Test extends IT_Exchange_UnitTestCase
 		/** @var IT_Exchange_Cart_Coupon $coupon */
 		$coupon = $this->coupon_factory->create_and_get();
 
-		$this->assertTrue( it_exchange_basic_coupons_apply_to_cart( false, array( 'code' => $coupon->get_code() ) ) );
+		$this->assertTrue( it_exchange_apply_coupon( 'cart', $coupon->get_code() ) );
 
 		$applied = it_exchange_basic_coupons_applied_cart_coupons();
+
+		$this->assertInternalType( 'array', $applied );
 
 		foreach ( $applied as $applied_coupon ) {
 			if ( $applied_coupon->get_code() === $coupon->get_code() ) {
