@@ -35,8 +35,9 @@ class ITE_Upgrade_Skin_File implements IT_Exchange_Upgrade_SkinInterface {
 	 */
 	public static function auto_create_file( IT_Exchange_UpgradeInterface $upgrade ) {
 
+		it_classes_load( 'it-file-utility.php' );
+
 		$directory = ITFileUtility::get_writable_directory( array(
-			'random' => true,
 			'name'   => 'it-exchange-upgrade'
 		) );
 
@@ -44,7 +45,7 @@ class ITE_Upgrade_Skin_File implements IT_Exchange_Upgrade_SkinInterface {
 			throw new UnexpectedValueException( $directory->get_error_message() );
 		}
 
-		$path = trailingslashit( $directory ) . $upgrade->get_slug() . '.txt';
+		$path = trailingslashit( $directory ) . $upgrade->get_slug() . '-' . wp_generate_password( 16 ) . '.txt';
 
 		if ( ! ITFileUtility::is_file_writable( $path ) ) {
 			throw new UnexpectedValueException( 'Unable to create writable log file.' );
@@ -89,7 +90,7 @@ class ITE_Upgrade_Skin_File implements IT_Exchange_Upgrade_SkinInterface {
 			$this->fh = fopen( $this->get_file(), 'a' );
 		}
 
-		fwrite( $this->fh, $message . '\r\n' );
+		fwrite( $this->fh, $message . PHP_EOL );
 	}
 
 	/**

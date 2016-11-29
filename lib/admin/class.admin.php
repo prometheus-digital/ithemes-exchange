@@ -118,6 +118,7 @@ class IT_Exchange_Admin {
 		add_action( 'it_exchange_print_tools_tab_links', array( $this, 'sysinfo_tab' ) );
 		add_action( 'it_exchange_print_tools_tab_links', array( $this, 'upgrades_tab' ) );
 		add_action( 'admin_init', array( $this, 'upgrades_tab_permissions_check' ) );
+		add_action( 'admin_init', array( $this, 'serve_upgrade_file' ) );
 
 		// Add-on Page Filters
 		add_action( 'it_exchange_print_add_ons_page_tab_links', array( $this, 'print_enabled_add_ons_tab_link' ) );
@@ -770,6 +771,56 @@ class IT_Exchange_Admin {
 		if ( ! current_user_can( 'it_perform_upgrades' ) ) {
 			wp_die( __( "You don't have permission to perform upgrades.", 'it-l10n-ithemes-exchange' ) );
 		}
+	}
+
+	public function serve_upgrade_file() {
+		if ( ! isset( $_GET['it-exchange-serve-upgrade-log'] ) ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'it_perform_upgrades' ) ) {
+			wp_die( __( "You don't have permission to view the upgrade log file.", 'it-l10n-ithemes-exchange') );
+		}
+
+		$upgrade  = $_GET['it-exchange-serve-upgrade-log'];
+		$upgrader = it_exchange_make_upgrader();
+
+		if ( ! $upgrade = $upgrader->get_upgrade( $upgrade ) ) {
+			wp_die( __( 'Invalid upgrade.', 'it-l10n-ithemes-exchange' ) );
+		}
+
+		if ( ! $upgrader->is_upgrade_completed( $upgrade ) ) {
+			wp_die( __( 'This upgrade has not yet completed.', 'it-10n-ithemes-exchange' ) );
+		}
+
+		it_classes_load( 'it-file-utility.php' );
+
+		$files = ITFileUtility::locate_file( "it-exchange-upgrade/{$upgrade->get_slug()}*" );
+
+		if ( is_wp_error( $files ) ) {
+			wp_die( $files->get_error_message() );
+		}
+
+		if ( ! is_array( $files ) ) {
+			$files = array( $files );
+		}
+
+		$out = '';
+
+		foreach ( $files as $file ) {
+			$out .= file_get_contents( $file ) . PHP_EOL;
+		}
+
+		header( 'Content-Description: File Transfer' );
+		header( 'Content-Type: text/plain' );
+		header( 'Content-Disposition: attachment; filename="' . $upgrade->get_slug() . '.txt"' );
+		header( 'Expires: 0' );
+		header( 'Cache-Control: must-revalidate' );
+		header( 'Pragma: public' );
+		header( 'Content-Length: ' . strlen( $out ) );
+
+		echo $out;
+		die();
 	}
 
 	/**

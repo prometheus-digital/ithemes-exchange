@@ -49,6 +49,10 @@ $upgrader = it_exchange_make_upgrader();
 						<progress value="0" max="100"></progress>
 					</div>
 
+					<p class="upgrade-file hidden">
+						<?php _e( 'Download Log File:', 'it-l10n-ithemes-exchange' ); ?>
+					</p>
+
 					<div class="upgrade-feedback">
 						<label for="upgrade-feedback-<?php echo $upgrade->get_slug(); ?>" class="screen-reader-text">
 							<?php _e( 'Upgrade Feedback', 'it-l10n-ithemes-exchange' ); ?>
