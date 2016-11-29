@@ -19,6 +19,11 @@ require_once dirname( __FILE__ ) . '/functions.php';
 require_once dirname( __FILE__ ) . '/skins/class.multi.php';
 require_once dirname( __FILE__ ) . '/skins/class.file.php';
 require_once dirname( __FILE__ ) . '/skins/class.ajax.php';
+
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
+	require_once dirname( __FILE__ ) . '/skins/class.cli.php';
+}
+
 require_once dirname( __FILE__ ) . '/handlers/class.ajax.php';
 
 // load routines

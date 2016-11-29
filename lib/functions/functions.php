@@ -2332,11 +2332,11 @@ function it_exchange_get_host() {
 		$host = 'Rackspace Cloud';
 	} elseif ( strpos( DB_HOST, '.sysfix.eu' ) !== false ) {
 		$host = 'SysFix.eu Power Hosting';
-	} elseif ( strpos( $_SERVER['SERVER_NAME'], 'Flywheel' ) !== false ) {
+	} elseif ( isset( $_SERVER['SERVER_NAME'] ) && strpos( $_SERVER['SERVER_NAME'], 'Flywheel' ) !== false ) {
 		$host = 'Flywheel';
 	} else {
 		// Adding a general fallback for data gathering
-		$host = 'DBH/' . DB_HOST . ', SRV/' . $_SERVER['SERVER_NAME'];
+		$host = 'DBH/' . DB_HOST . ', SRV/' . isset( $_SERVER['SERVER_NAME'] ) ? $_SERVER['SERVER_NAME'] : '';
 	}
 
 	return $host;

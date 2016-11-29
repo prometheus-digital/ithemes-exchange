@@ -99,3 +99,7 @@ require_once dirname( __FILE__ ) . '/settings/class.form.php';
 require_once dirname( __FILE__ ) . '/settings/class.controller.php';
 
 require_once dirname( __FILE__ ) . '/REST/load.php';
+
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
+	require_once dirname( __FILE__ ) . '/cli/load.php';
+}

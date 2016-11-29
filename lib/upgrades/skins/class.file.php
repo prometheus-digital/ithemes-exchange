@@ -45,7 +45,7 @@ class ITE_Upgrade_Skin_File implements IT_Exchange_Upgrade_SkinInterface {
 			throw new UnexpectedValueException( $directory->get_error_message() );
 		}
 
-		$path = trailingslashit( $directory ) . $upgrade->get_slug() . '-' . wp_generate_password( 16 ) . '.txt';
+		$path = trailingslashit( $directory ) . $upgrade->get_slug() . '-' . wp_generate_password( 24, false ) . '.txt';
 
 		if ( ! ITFileUtility::is_file_writable( $path ) ) {
 			throw new UnexpectedValueException( 'Unable to create writable log file.' );
