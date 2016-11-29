@@ -96,7 +96,6 @@ class IT_Exchange_Admin {
 		// Email settings callback
 		add_filter( 'it_exchange_general_settings_tab_callback_email', array( $this, 'register_email_settings_tab_callback' ) );
 		add_action( 'it_exchange_print_general_settings_tab_links', array( $this, 'print_email_settings_tab_link' ) );
-		add_action( 'current_screen', array( $this, 'add_email_help_tabs' ) );
 
 		// Page settings callback
 		add_filter( 'it_exchange_general_settings_tab_callback_pages', array( $this, 'register_pages_settings_tab_callback' ) );
@@ -946,40 +945,6 @@ class IT_Exchange_Admin {
 		if ( ! empty( $this->error_message ) )
 			ITUtility::show_error_message( $this->error_message );
 		include( 'views/settings/email.php' );
-	}
-
-	/**
-	 * Add help tabs to the email screen.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @param WP_Screen $screen
-	 */
-	public function add_email_help_tabs( WP_Screen $screen ) {
-
-		if ( $screen->base !== 'exchange_page_it-exchange-settings' || ! isset( $_GET['tab'] ) || $_GET['tab'] !== 'email' ) {
-			return;
-		}
-
-		$versions         = get_option( 'it-exchange-versions', array() );
-		$previous_version = empty( $versions['previous'] ) ? false : $versions['previous'];
-
-		if ( ! $previous_version || version_compare( $previous_version, '2.0.0', '>=' ) ) {
-			return;
-		}
-
-		$screen->add_help_tab( array(
-			'title' => __( 'New Email Templates', 'it-l10n-ithemes-exchange' ),
-			'id'    => 'new-email-templates',
-			'content' =>
-				'<p>' .
-	             __( 'Version 2.0.0 of Exchange now includes rich email templates that allow you to create specific branding and styling in your Exchange emails to match your site.', 'it-l10n-ithemes-exchange' ) . ' ' .
-	             __('Some templates already include the important information, such as the products ordered, price and shipping address.', 'it-l10n-ithemes-exchange' ) .
-                 '</p><p>' .
-	             __( 'To use this new system, we’ve made some changes to how you create your Exchange emails which we think will make email creation simpler and faster.', 'it-l10n-ithemes-exchange' ) . ' ' .
-	             __( 'For reference, please see your legacy email template alongside the new templates.', 'it-l10n-ithemes-exchange' ) .
-	             '</p>'
-		) );
 	}
 
 	/**
