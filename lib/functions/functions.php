@@ -1997,6 +1997,10 @@ function it_exchange_transient_transactions_garbage_collection() {
 	if ( ! wp_next_scheduled( 'it_exchange_trans_txn_garbage_collection' ) ) {
 		wp_schedule_event( time(), 'twicedaily', 'it_exchange_trans_txn_garbage_collection' );
 	}
+
+	if ( ! wp_next_scheduled( 'it_exchange_delete_upgrade_logs' ) ) {
+		wp_schedule_event( time() + DAY_IN_SECONDS, 'daily', 'it_exchange_delete_upgrade_logs' );
+	}
 }
 add_action( 'wp', 'it_exchange_transient_transactions_garbage_collection' );
 
@@ -2045,6 +2049,48 @@ function it_exchange_trans_txn_cleanup() {
 	do_action( 'it_exchange_trans_txn_cleanup' );
 }
 add_action( 'it_exchange_trans_txn_garbage_collection', 'it_exchange_trans_txn_cleanup' );
+
+/**
+ * Delete upgrade logs older than 7 days.
+ *
+ * @since 2.0.0
+ *
+ * @param int $days_old
+ */
+function it_exchange_delete_upgrade_logs( $days_old = 7 ) {
+
+	it_classes_load( 'it-file-utility.php' );
+
+	$dir = ITFileUtility::get_writable_directory( array(
+		'name'             => 'it-exchange-upgrade',
+		'require_existing' => true,
+	) );
+
+	if ( is_wp_error( $dir ) ) {
+		return;
+	}
+
+	$files = ITFileUtility::get_flat_file_listing( $dir, true );
+
+	if ( is_wp_error( $files ) || empty( $files ) ) {
+		return;
+	}
+
+	foreach ( $files as $file ) {
+		$modified = filemtime( $file );
+
+		if ( $modified === false ) {
+			continue;
+		}
+
+		if ( time() - $modified > DAY_IN_SECONDS * $days_old ) {
+			@unlink( $file );
+		}
+	}
+
+}
+
+add_action( 'it_exchange_delete_upgrade_logs', 'it_exchange_delete_upgrade_logs' );
 
 /**
  * Mark a filter as deprecated and inform when it has been used.
