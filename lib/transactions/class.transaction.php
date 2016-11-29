@@ -227,6 +227,12 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 		}
 
 		$method_id = get_post_meta( $post_id, '_it_exchange_transaction_method_id', true );
+		$hash      = get_post_meta( $post_id, '_it_exchange_transaction_hash', true );
+
+		if ( ! $hash || ! trim( $hash ) ) {
+			$hash = it_exchange_create_unique_hash();
+			update_post_meta( $post_id, '_it_exchange_transaction_hash', $hash );
+		}
 
 		$data = array(
 			'ID'             => $post_id,
@@ -235,7 +241,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 			'status'         => get_post_meta( $post_id, '_it_exchange_transaction_status', true ),
 			'method'         => get_post_meta( $post_id, '_it_exchange_transaction_method', true ),
 			'method_id'      => $method_id ? $method_id : uniqid( 'RAND', true ),
-			'hash'           => get_post_meta( $post_id, '_it_exchange_transaction_hash', true ),
+			'hash'           => $hash,
 			'cart_id'        => get_post_meta( $post_id, '_it_exchange_cart_id', true ),
 			'total'          => isset( $cart_details->total ) ? $cart_details->total : 0,
 			'subtotal'       => isset( $cart_details->sub_total ) ? $cart_details->sub_total : 0,
