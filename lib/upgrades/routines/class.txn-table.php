@@ -150,16 +150,36 @@ class IT_Exchange_Upgrade_Routine_Txn_Table implements IT_Exchange_UpgradeInterf
 			$skin->debug( 'Upgrading Txn: ' . $transaction_id );
 		}
 
-		try {
-			$transaction = it_exchange_get_transaction( $transaction_id );
-		} catch ( Exception $e ) {
-			$skin->error( "Error upgrading table for #{$transaction_id}: {$e->getMessage()}" );
+		$post = get_post( $transaction_id );
+
+		if ( ! $post instanceof WP_Post ) {
+			$skin->warn( "Unable to retrieve post for #{$transaction_id}" );
 
 			return;
 		}
 
-		if ( $verbose ) {
-			$skin->debug( 'Upgraded table.' );
+		if ( $transaction = IT_Exchange_Transaction::get( $transaction_id ) ) {
+			if ( $verbose ) {
+				$skin->debug( "Transaction #{$transaction_id} already had table converted." );
+			}
+		} else {
+			try {
+				$transaction = IT_Exchange_Transaction::upgrade( $post );
+			} catch ( Exception $e ) {
+				$skin->error( "Error upgrading table for #{$transaction_id}: {$e->getMessage()}" );
+
+				return;
+			}
+
+			if ( ! $transaction ) {
+				$skin->error( "Unable to upgrade transaction #{$transaction_id} table." );
+
+				return;
+			}
+
+			if ( $verbose ) {
+				$skin->debug( 'Upgraded table.' );
+			}
 		}
 
 		$transaction->convert_cart_object();
