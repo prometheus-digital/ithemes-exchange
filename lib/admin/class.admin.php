@@ -510,7 +510,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Registers the callback for the gateway tab.
 	 *
-	 * @since 2.0.0
+	 * @since 1.36.0
 	 *
 	 * @param string $default
 	 *
@@ -547,7 +547,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Prints the gateway tab for general settings.
 	 *
-	 * @since 2.0.0
+	 * @since 1.36.0
 	 *
 	 * @param string $current_tab the current tab
 	 *
@@ -687,7 +687,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Print the tools tabs.
 	 * 
-	 * @since 2.0.0
+	 * @since 1.36
 	 */
 	public function print_tools_tab() {
 
@@ -708,7 +708,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Print the system info tab.
 	 * 
-	 * @since 2.0.0
+	 * @since 1.36
 	 * 
 	 * @param string $current_tab
 	 */
@@ -725,7 +725,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Print the upgrades tab.
 	 *
-	 * @since 2.0.0
+	 * @since 1.36
 	 *
 	 * @param string $current_tab
 	 */
@@ -755,7 +755,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Check if the user has permission to perform upgrades if on the upgrades tab.
 	 * 
-	 * @since 2.0.0
+	 * @since 1.36
 	 */
 	public function upgrades_tab_permissions_check() {
 		
@@ -900,7 +900,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Add help tabs to the email screen.
 	 *
-	 * @since 2.0.0
+	 * @since 1.36
 	 *
 	 * @param WP_Screen $screen
 	 */
@@ -913,7 +913,7 @@ class IT_Exchange_Admin {
 		$versions         = get_option( 'it-exchange-versions', array() );
 		$previous_version = empty( $versions['previous'] ) ? false : $versions['previous'];
 
-		if ( ! $previous_version || version_compare( $previous_version, '2.0.0', '>=' ) ) {
+		if ( ! $previous_version || version_compare( $previous_version, '1.36.0', '>=' ) ) {
 			return;
 		}
 
@@ -922,7 +922,7 @@ class IT_Exchange_Admin {
 			'id'    => 'new-email-templates',
 			'content' =>
 				'<p>' .
-	             __( 'Version 2.0.0 of Exchange now includes rich email templates that allow you to create specific branding and styling in your Exchange emails to match your site.', 'it-l10n-ithemes-exchange' ) . ' ' .
+	             __( 'Version 1.36.0 of Exchange now includes rich email templates that allow you to create specific branding and styling in your Exchange emails to match your site.', 'it-l10n-ithemes-exchange' ) . ' ' .
 	             __('Some templates already include the important information, such as the products ordered, price and shipping address.', 'it-l10n-ithemes-exchange' ) .
                  '</p><p>' .
 	             __( 'To use this new system, we’ve made some changes to how you create your Exchange emails which we think will make email creation simpler and faster.', 'it-l10n-ithemes-exchange' ) . ' ' .
@@ -1520,7 +1520,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Save core gateway settings.
 	 *
-	 * @since 2.0.0
+	 * @since 1.36.0
 	 */
 	public function save_core_gateway_settings() {
 
@@ -1734,7 +1734,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Auto create WordPress pages with Exchange shortcodes.
 	 *
-	 * @since 2.0.0
+	 * @since 1.36
 	 */
 	protected function auto_create_wordpress_pages() {
 
@@ -1822,6 +1822,7 @@ class IT_Exchange_Admin {
 		wp_register_script( 'it-exchange-dialog', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/tips.js', array( 'jquery-ui-dialog', 'jquery' ) );
 		wp_register_script( 'ithemes-chartjs', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/Chart.min.js', array( 'jquery' ), '0.2', true );
 		wp_register_script( 'it-exchange-select2', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/select2.min.js', array( 'jquery' ), '4.0.1', true );
+		wp_register_script( 'ithemes-momentjs', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/moment.min.js', array(), '2.11.0', true );
 		wp_register_script( 'it-exchange-if-visible', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/ifvisible.min.js', array(), '1.0.6', true );
 
 		if ( isset( $post_type ) && 'it_exchange_prod' === $post_type ) {
@@ -1855,12 +1856,10 @@ class IT_Exchange_Admin {
 			}
 
 			$dtf = $df . ' ' . $tf;
-
+			
+			
 			wp_enqueue_script( 'it-exchange-jquery-toastr', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/toastr.js' );
-			wp_localize_script( 'it-exchange-jquery-toastr', 'EXCHANGE', array(
-				'success' => _x( 'Reciept Sent!', 'it-l10n-ithemes-exchange' ),
-				'error' => _x( 'Failed!', 'Resending receipt failed', 'it-l10n-ithemes-exchange' ),
-			) );
+		
 			wp_enqueue_script( 'it-exchange-transaction-details', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/transaction-details.js', $deps );
 			wp_localize_script( 'it-exchange-transaction-details', 'EXCHANGE', array(
 				'nonce' => wp_create_nonce( 'it-exchange-add-note' ),
@@ -1868,7 +1867,11 @@ class IT_Exchange_Admin {
 				'items' => array_map( create_function( '$a', 'return $a->to_array();' ), $collection->get_activity() ),
 				'sent' => _x( 'Sent!', 'Notice when an email receipt has been successfully sent.', 'it-l10n-ithemes-exchange' ),
 				'failed' => _x( 'Failed!', 'Notice when an email receipt has failed to be sent.', 'it-l10n-ithemes-exchange' ),
-				'format' => it_exchange_convert_php_to_moment( $dtf )
+				'format' => it_exchange_convert_php_to_moment( $dtf ),
+				'success' => _x( 'Reciept Sent!', 'it-l10n-ithemes-exchange' ),
+				'error' => _x( 'Failed!', 'Resending receipt failed', 'it-l10n-ithemes-exchange' ), 
+				'statusChangeSuccess' => __( 'Status changed from %1$s to %2$s.', 'it-l10n-ithemes-exchange' ),
+				'statusChangeError' => _x( 'Failed!', 'Resending receipt failed', 'it-l10n-ithemes-exchange' )
 			) );
 			wp_dequeue_script( 'autosave' );
 		} else if ( 'exchange_page_it-exchange-addons' === $hook_suffix ) {
