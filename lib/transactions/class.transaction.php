@@ -235,6 +235,10 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 			update_post_meta( $post_id, '_it_exchange_transaction_hash', $hash );
 		}
 
+		if ( ! $method_id ) {
+			$method_id = $_method_id = uniqid( 'RAND', true );
+		}
+
 		$c = 1;
 
 		while ( it_exchange_get_transaction_by_method_id( $method, $method_id ) ) {
@@ -247,7 +251,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 			'customer_email' => $customer_email,
 			'status'         => get_post_meta( $post_id, '_it_exchange_transaction_status', true ),
 			'method'         => $method,
-			'method_id'      => $method_id ? $method_id : uniqid( 'RAND', true ),
+			'method_id'      => $method_id,
 			'hash'           => $hash,
 			'cart_id'        => get_post_meta( $post_id, '_it_exchange_cart_id', true ),
 			'total'          => isset( $cart_details->total ) ? $cart_details->total : 0,
