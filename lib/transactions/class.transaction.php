@@ -226,7 +226,8 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 			$shipping = $shipping ? $shipping->get_pk() : 0;
 		}
 
-		$method_id = get_post_meta( $post_id, '_it_exchange_transaction_method_id', true );
+		$method    = get_post_meta( $post_id, '_it_exchange_transaction_method', true );
+		$method_id = $_method_id = get_post_meta( $post_id, '_it_exchange_transaction_method_id', true );
 		$hash      = get_post_meta( $post_id, '_it_exchange_transaction_hash', true );
 
 		if ( ! $hash || ! trim( $hash ) ) {
@@ -234,12 +235,18 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 			update_post_meta( $post_id, '_it_exchange_transaction_hash', $hash );
 		}
 
+		$c = 1;
+
+		while ( it_exchange_get_transaction_by_method_id( $method, $method_id ) ) {
+			$method_id = $_method_id . "_c{$c}";
+		}
+
 		$data = array(
 			'ID'             => $post_id,
 			'customer_id'    => $customer_id,
 			'customer_email' => $customer_email,
 			'status'         => get_post_meta( $post_id, '_it_exchange_transaction_status', true ),
-			'method'         => get_post_meta( $post_id, '_it_exchange_transaction_method', true ),
+			'method'         => $method,
 			'method_id'      => $method_id ? $method_id : uniqid( 'RAND', true ),
 			'hash'           => $hash,
 			'cart_id'        => get_post_meta( $post_id, '_it_exchange_cart_id', true ),
