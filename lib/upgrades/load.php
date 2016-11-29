@@ -16,6 +16,8 @@ require_once dirname( __FILE__ ) . '/class.upgrader.php';
 require_once dirname( __FILE__ ) . '/functions.php';
 
 // load skins and handlers
+require_once dirname( __FILE__ ) . '/skins/class.multi.php';
+require_once dirname( __FILE__ ) . '/skins/class.file.php';
 require_once dirname( __FILE__ ) . '/skins/class.ajax.php';
 require_once dirname( __FILE__ ) . '/handlers/class.ajax.php';
 
