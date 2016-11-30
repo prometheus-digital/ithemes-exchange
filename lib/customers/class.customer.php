@@ -60,6 +60,15 @@ class IT_Exchange_Customer implements ITE_Object {
 	 */
 	public function __construct( $user ) {
 
+		if ( is_string( $user ) && is_email( $user ) ) {
+			_doing_it_wrong(
+				'IT_Exchange_Customer::__construct()',
+				"Don't instantiate customer directly. Use it_exchange_get_customer()",
+				'2.0.0'
+			);
+			return new IT_Exchange_Guest_Customer( $user );
+		}
+
 		if ( $user instanceof WP_User ) {
 			$this->id      = $user->ID;
 			$this->wp_user = $user;
