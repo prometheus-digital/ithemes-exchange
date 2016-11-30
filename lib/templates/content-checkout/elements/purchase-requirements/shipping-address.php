@@ -14,12 +14,12 @@
  * located in your theme.
 */
 
-$editing_shipping = ( ( ! empty( $_REQUEST['it-exchange-update-shipping-address'] ) && ! empty( $GLOBALS['it_exchange']['shipping-address-error'] ) ) || ! it_exchange_get_cart_billing_address() ) ? true : false;
+$editing_shipping = ( ( ! empty( $_REQUEST['it-exchange-update-shipping-address'] ) && ! empty( $GLOBALS['it_exchange']['shipping-address-error'] ) ) || ! it_exchange_get_cart_shipping_address() ) ? true : false;
 ?>
 <?php do_action( 'it_exchange_content_checkout_shipping_address_purchase_requirement_before_element' ); ?>
 <div class="it-exchange-checkout-shipping-address-purchase-requirement">
 	<h3><?php _e( 'Shipping Address', 'it-l10n-ithemes-exchange' ); ?></h3>
-	<?php if ( false !== ( $shipping_address = it_exchange_get_cart_billing_address() ) && empty( $editing_shipping ) ) : ?>
+	<?php if ( false !== ( $shipping_address = it_exchange_get_cart_shipping_address() ) && empty( $editing_shipping ) ) : ?>
 		<div class="checkout-purchase-requirement-shipping-address-options">
 			<div class="existing-shipping-address">
 				<?php echo it_exchange_get_formatted_shipping_address(); ?>
