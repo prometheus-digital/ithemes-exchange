@@ -316,29 +316,3 @@ function it_exchange_register_sync_verbs( $api ) {
 }
 
 add_action( 'ithemes_sync_register_verbs', 'it_exchange_register_sync_verbs' );
-
-if ( ! function_exists( '_deprecated_constructor' ) ) {
-	function _deprecated_constructor( $class, $version ) {
-
-		do_action( 'deprecated_constructor_run', $class, $version );
-
-		if ( WP_DEBUG && apply_filters( 'deprecated_constructor_trigger_error', true ) ) {
-			if ( function_exists( '__' ) ) {
-				trigger_error( sprintf(
-					__( 'The called constructor method for %1$s is <strong>deprecated</strong> since version %2$s! Use %3$s instead.' ),
-					$class,
-					$version,
-					'<pre>__construct()</pre>'
-				) );
-			} else {
-				trigger_error( sprintf(
-					'The called constructor method for %1$s is <strong>deprecated</strong> since version %2$s! Use %3$s instead.',
-					$class,
-					$version,
-					'<pre>__construct()</pre>'
-				) );
-			}
-		}
-
-	}
-}
