@@ -85,7 +85,7 @@ class IT_Exchange {
 		require( self::$dir . 'core-addons/load.php' );
 
 		// Set version
-		$GLOBALS['it_exchange']['version'] = $this->_version;
+		$GLOBALS['it_exchange']['version'] = self::VERSION;
 		if ( is_admin() ) {
 			$versions        = get_option( 'it-exchange-versions', false );
 			$current_version = empty( $versions['current'] ) ? false : $versions['current'];

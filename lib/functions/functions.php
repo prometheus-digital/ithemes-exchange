@@ -2203,7 +2203,7 @@ function it_exchange_get_system_info() {
 	}
 
 	$info['iThemes Exchange'] = array(
-		'Version'               => $IT_Exchange->_version,
+		'Version'               => IT_Exchange::VERSION,
 		'Previous'              => empty( $versions ) || empty( $versions['previous'] ) ? '' : $versions['previous'],
 		'Currency Code'         => $settings['default-currency'],
 		'Currency Symbol'       => it_exchange_get_currency_symbol( $settings['default-currency'] ),
