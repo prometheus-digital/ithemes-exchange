@@ -632,7 +632,6 @@ function it_exchange_is_checkout_mode( $mode, $context = 'content' ) {
 /**
  * Formats the Billing Address for display
  *
- * @todo  this function sucks. Lets make a function for formatting any address. ^gta
  * @since 1.3.0
  *
  * @param array|bool $billing_address

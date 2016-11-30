@@ -1187,11 +1187,13 @@ add_action( 'init', 'it_exchange_register_default_purchase_requirements' );
 function it_exchange_billing_address_purchase_requirement_complete() {
 	$cart = it_exchange_get_current_cart();
 
-	if ( ! $cart->get_billing_address() ) {
+	$billing = $cart->get_billing_address();
+
+	if ( ! $billing ) {
 		return false;
 	}
 
-	if ( ! $cart->get_billing_address()->offsetGet( 'address1' ) ) {
+	if ( ! $billing['address1'] ) {
 		return false;
 	}
 
