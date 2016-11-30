@@ -313,7 +313,7 @@ class IT_Exchange_Purchase_Dialog{
 
 		$cards = $customer->get_tokens( $this->addon_slug );
 
-		if ( ! $cards->count() ) {
+		if ( ! $cards || ! $cards->count() ) {
 			return '';
 		}
 

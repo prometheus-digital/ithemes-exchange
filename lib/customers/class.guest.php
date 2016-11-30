@@ -176,6 +176,6 @@ class IT_Exchange_Guest_Customer extends IT_Exchange_Customer {
 	 * @inheritDoc
 	 */
 	public function get_tokens( $gateway = '' ) {
-		return array();
+		return new \IronBound\DB\Collection( array(), false, new \IronBound\DB\Saver\ModelSaver( 'ITE_Payment_Token' ) );
 	}
 }
