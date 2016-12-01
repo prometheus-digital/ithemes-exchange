@@ -54,6 +54,8 @@ add_action( 'rest_api_init', function () {
 
 add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 
+	$manager->register_route( new Route\Info() );
+
 	$cart  = new Route\Cart\Cart( new Route\Cart\Serializer() );
 	$carts = new Carts( $cart );
 
