@@ -367,7 +367,7 @@ class IT_Exchange_Transaction_Post_Type {
 				echo it_exchange_get_transaction_status_label( $transaction );
 				break;
 			case 'it_exchange_transaction_customer_column' :
-				echo it_exchange_get_transaction_customer_display_name( $transaction );
+				echo esc_html( it_exchange_get_transaction_customer_display_name( $transaction ) );
 				break;
 			case 'it_exchange_transaction_total_column' :
 				echo it_exchange_get_transaction_total( $transaction );

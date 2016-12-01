@@ -153,12 +153,15 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 			case 'field-id':
 				$output = $field_id;
 
+				break;
 			case 'field-name':
 				$output = $field_name;
 
+				break;
 			case 'label':
 				$output = esc_attr( $options['label'] );
 
+				break;
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id. '">' . esc_attr( $options['label'] ) . '<span class="it-exchange-required-star">*</span></label>';
@@ -239,12 +242,15 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 			case 'field-id':
 				$output = $field_id;
 
+				break;
 			case 'field-name':
 				$output = $field_name;
 
+				break;
 			case 'label':
 				$output = $options['label'];
 
+				break;
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id . '">' . $options['label'] . '</label>';
@@ -282,12 +288,15 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 			case 'field-id':
 				$output = $field_id;
 
+				break;
 			case 'field-name':
 				$output = $field_name;
 
+				break;
 			case 'label':
 				$output = esc_attr( $options['label'] );
 
+				break;
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id . '">' . esc_attr( $options['label'] ) . '<span class="it-exchange-required-star">*</span></label>';
@@ -319,12 +328,15 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 			case 'field-id':
 				$output = $field_id;
 
+				break;
 			case 'field-name':
 				$output = $field_name;
 
+				break;
 			case 'label':
 				$output = esc_attr( $options['label'] );
 
+				break;
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id. '">' . esc_attr( $options['label'] ) . '<span class="it-exchange-required-star">*</span></label>';
@@ -356,12 +368,15 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 			case 'field-id':
 				$output = $field_id;
 
+				break;
 			case 'field-name':
 				$output = $field_name;
 
+				break;
 			case 'label':
 				$output = esc_attr( $options['label'] );
 
+				break;
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id . '">' . $options['label'] . '<span class="it-exchange-required-star">*</span></label>';
@@ -393,12 +408,15 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 			case 'field-id':
 				$output = $field_id;
 
+				break;
 			case 'field-name':
 				$output = $field_name;
 
+				break;
 			case 'label':
 				$output = esc_attr( $options['label'] );
 
+				break;
 			case 'html':
 			default:
 				$output = '<input type="submit" id="' . $field_id . '" name="' . $field_name . '" value="' . esc_attr( $options['label'] ) . '" />';
@@ -430,9 +448,11 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 			case 'url':
 				$output = it_exchange_get_page_url( 'login' );
 
+				break;
 			case 'label':
 				$output = esc_attr( $options['label'] );
 
+				break;
 			case 'html':
 			default:
 				$output = '<a class="' . esc_attr( $class ) . '" href="' . it_exchange_get_page_url( 'login' ) . '">' .esc_attr( $options['label'] ) . '</a>';
@@ -468,6 +488,7 @@ class IT_Theme_API_Registration implements IT_Theme_API {
 
 			case 'label':
 				$output = esc_attr( $options['label'] );
+				break;
 
 			case 'html':
 			default:
