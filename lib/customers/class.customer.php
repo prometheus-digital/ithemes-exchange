@@ -18,6 +18,7 @@ class IT_Exchange_Customer implements ITE_Object {
 	 * @since 0.3.8
 	 */
 	public $id;
+	public $ID;
 
 	/**
 	 * @var object $wp_user the wp_user or false
@@ -54,7 +55,7 @@ class IT_Exchange_Customer implements ITE_Object {
 	 *
 	 * @since 0.3.8
 	 *
-	 * @param  mixed $user customer id or WP User object
+	 * @param  mixed $user customer id or WP User objectm
 	 *
 	 * @throws InvalidArgumentException
 	 */
@@ -66,7 +67,6 @@ class IT_Exchange_Customer implements ITE_Object {
 				"Don't instantiate customer directly. Use it_exchange_get_customer()",
 				'2.0.0'
 			);
-			return new IT_Exchange_Guest_Customer( $user );
 		}
 
 		if ( $user instanceof WP_User ) {

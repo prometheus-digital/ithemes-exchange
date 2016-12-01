@@ -112,4 +112,36 @@ class IT_Exchange_API_Customers_Test extends IT_Exchange_UnitTestCase {
 		$this->assertEquals( 'John', $saved['first-name'] );
 		$this->assertEquals( 'Doe', $saved['last-name'] );
 	}
+
+	public function test_get_customer_with_numeric_string() {
+
+		$customer = it_exchange_get_customer( '1' );
+
+		$this->assertInstanceOf( 'IT_Exchange_Customer', $customer );
+		$this->assertEquals( 1, $customer->get_ID() );
+		$this->assertNotInstanceOf( 'IT_Exchange_Guest_Customer', $customer );
+	}
+
+	public function test_get_guest_customer() {
+
+		$email    = 'example@example.org';
+		$customer = it_exchange_get_customer( $email );
+
+		$this->assertInstanceOf( 'IT_Exchange_Guest_Customer', $customer );
+		$this->assertEquals( $email, $customer->get_email() );
+	}
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function test_instantiating_customer_with_email() {
+
+		$this->setExpectedIncorrectUsage( 'IT_Exchange_Customer::__construct()' );
+
+		$email    = 'example@example.org';
+		$customer = new IT_Exchange_Customer( $email );
+
+		$this->assertInstanceOf( 'IT_Exchange_Guest_Customer', $customer );
+		$this->assertEquals( $email, $customer->get_email() );
+	}
 }

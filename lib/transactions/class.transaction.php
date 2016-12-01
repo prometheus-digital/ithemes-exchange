@@ -147,7 +147,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 		update_post_meta( $txn->ID, '_it_exchange_transaction_method', $txn->get_method() );
 		update_post_meta( $txn->ID, '_it_exchange_transaction_method_id', $txn->get_method_id() );
 		update_post_meta( $txn->ID, '_it_exchange_transaction_status', $txn->get_status() );
-		update_post_meta( $txn->ID, '_it_exchange_customer_id', $txn->customer_id );
+		update_post_meta( $txn->ID, '_it_exchange_customer_id', $txn->customer_id ? $txn->customer_id : $txn->customer_email );
 		update_post_meta( $txn->ID, '_it_exchange_cart_id', $txn->cart_id );
 		update_post_meta( $txn->ID, '_it_exchange_transaction_hash', $txn->hash );
 
