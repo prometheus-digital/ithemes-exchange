@@ -31,6 +31,10 @@ class ITE_Gateways {
 
 		static::$gateways[ $gateway->get_slug() ] = $gateway;
 
+		if ( $webhook_param = $gateway->get_webhook_param() ) {
+			it_exchange_register_webhook( $gateway->get_slug(), $webhook_param );
+		}
+
 		if (
 			empty( $GLOBALS['it_exchange']['add_ons']['registered'][ $gateway->get_slug() ]['options']['settings-callback'] ) &&
 			$gateway->get_settings_form()
@@ -182,10 +186,6 @@ class ITE_Gateways {
 
 				$controller->save();
 			} );
-		}
-
-		if ( $webhook_param = $gateway->get_webhook_param() ) {
-			it_exchange_register_webhook( $gateway->get_slug(), $webhook_param );
 		}
 
 		if ( $gateway->can_handle( 'webhook' ) ) {
