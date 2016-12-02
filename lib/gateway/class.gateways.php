@@ -52,7 +52,7 @@ class ITE_Gateways {
 
 					$general_settings = it_exchange_get_option( 'settings_general' );
 
-					if ( array_key_exists( $general_settings['default-currency'], $gateway->get_supported_currencies() ) ) {
+					if ( in_array( $general_settings['default-currency'], $gateway->get_supported_currencies(), true ) ) {
 						return;
 					}
 
