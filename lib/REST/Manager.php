@@ -473,7 +473,11 @@ class Manager {
 	 */
 	protected function generate_endpoint_args_for_server( Route $route, $verb ) {
 
-		$schema = $route->get_schema();
+		if ( $route instanceof VariableSchema && in_array( $verb, $route->schema_varies_on(), true ) ) {
+			$schema = $route->get_schema_for_method( $verb );
+		} else {
+			$schema = $route->get_schema();
+		}
 
 		$schema_properties = ! empty( $schema['properties'] ) ? $schema['properties'] : array();
 		$endpoint_args     = array();

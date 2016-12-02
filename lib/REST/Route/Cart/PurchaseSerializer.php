@@ -2,7 +2,7 @@
 /**
  * Purchase Request Serializer.
  *
- * @since 2.0.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -47,7 +47,47 @@ class PurchaseSerializer {
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'cart-purchase',
 			'type'       => 'object',
-			'properties' => array()
+			'properties' => array(
+				'id'     => array(
+					'type'        => 'string',
+					'description' => __( 'The slug of the gateway.', 'it-l10n-ithemes-exchange' ),
+					'required'    => true,
+				),
+				'name'   => array(
+					'type'        => 'string',
+					'description' => __( 'The name of the gateway.', 'it-l10n-ithemes-exchange' ),
+					'example'     => 'Stripe',
+				),
+				'label'  => array(
+					'type'        => 'string',
+					'description' => __( 'The label to be used for the purchase button.', 'it-l10n-ithemes-exchange' ),
+					'example'     => 'Pay by Card',
+				),
+				'nonce'  => array(
+					'type'        => 'string',
+					'description' => __( 'A token unique to this gateway that is required to complete the purchase.', 'it-l10n-ithemes-exchange' )
+				),
+				'method' => array(
+					'type'                 => 'object',
+					'description'          => __( 'Additional data specific to this gateway.', 'it-l10n-ithemes-exchange' ),
+					'additionalProperties' => true,
+					'properties'           => array(
+						'accepts' => array(
+							'type'  => 'array',
+							'anyOf' => array(
+								array( 'type' => 'string', 'enum' => array( 'card' ) ),
+								array( 'type' => 'string', 'enum' => array( 'token' ) ),
+								array( 'type' => 'string', 'enum' => array( 'tokenize' ) ),
+							),
+						),
+						'method'  => array(
+							'type'     => 'string',
+							'enum'     => array( 'REST', 'dialog', 'iframe', 'redirect' ),
+							'required' => true,
+						),
+					)
+				)
+			)
 		);
 	}
 }
