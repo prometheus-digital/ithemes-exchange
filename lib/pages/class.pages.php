@@ -427,12 +427,15 @@ class IT_Exchange_Pages {
 			}
 
 			if ( is_user_logged_in() || $cart ) {
+
+				$cart = $cart ?: it_exchange_get_current_cart();
+
 				$transaction_id = apply_filters( 'it_exchange_process_transaction', false, $cart );
 
 				// If we made a transaction
 				if ( $transaction_id ) {
 
-					if ( ! $cart ) {
+					if ( $cart->is_current() ) {
 						// Clear the cart
 						it_exchange_empty_shopping_cart();
 					}
