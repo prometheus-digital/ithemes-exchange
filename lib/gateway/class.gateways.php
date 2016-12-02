@@ -60,7 +60,7 @@ class ITE_Gateways {
 					printf(
 						__( 'You are currently using a currency that is not supported by %1$s. %2$sPlease update your currency settings%3$s.', 'LION' ),
 						$gateway->get_name(),
-						'<a>' . admin_url( 'admin.php?page=it-exchange-settings' ),
+						'<a href="' . admin_url( 'admin.php?page=it-exchange-settings' ) . '">',
 						'</a>'
 					);
 					echo '</p></div>';
