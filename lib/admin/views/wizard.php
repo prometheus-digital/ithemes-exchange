@@ -191,6 +191,9 @@ $flat_rate_cost = it_exchange_format_price( it_exchange_convert_from_database_nu
 						<?php
 							$addons = it_exchange_get_addons( array( 'category' => 'transaction-methods', 'show_required' => false ) );
 							it_exchange_temporarily_load_addons( $addons );
+
+							// This action is documented in lib/gateways/load.php
+							do_action( 'it_exchange_register_gateways', new ITE_Gateways() );
 							foreach( (array) $addons as $addon ) {
 								if ( ! empty( $addon['options']['wizard-icon'] ) )
 									$name = '<img src="' . $addon['options']['wizard-icon'] . '" alt="' . $addon['name'] . '" />';
