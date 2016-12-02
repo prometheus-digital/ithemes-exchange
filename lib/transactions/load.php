@@ -16,7 +16,6 @@ require_once dirname( __FILE__ ) . '/class.meta-sync.php';
 require_once dirname( __FILE__ ) . '/activity/load.php';
 
 \IronBound\DB\Manager::register( new ITE_Transactions_Table(), '', '\IT_Exchange_Transaction' );
-\IronBound\DB\Manager::maybe_install_table( \IronBound\DB\Manager::get( 'ite-transactions' ) );
 
 $meta_sync = new ITE_Transaction_Meta_Sync();
 $meta_sync->add_pair( '_it_exchange_customer_id', 'customer_id' );

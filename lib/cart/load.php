@@ -63,9 +63,6 @@ require_once dirname( __FILE__ ) . '/class.meta-registry.php';
 	'primary_id_column' => 'line_item'
 ) ) );
 
-\IronBound\DB\Manager::maybe_install_table( \IronBound\DB\Manager::get( 'ite-line-items' ) );
-\IronBound\DB\Manager::maybe_install_table( \IronBound\DB\Manager::get( 'ite-line-items-meta' ) );
-
 ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'product', array(
 	'label'               => __( 'Product', 'it-l10n-ithemes-exchange' ),
 	'aggregate'           => true,

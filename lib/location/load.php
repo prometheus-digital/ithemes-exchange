@@ -23,4 +23,3 @@ add_filter( 'it_exchange_cart_validators', function ( $validators ) {
 } );
 
 \IronBound\DB\Manager::register( new ITE_Saved_Address_Table() );
-\IronBound\DB\Manager::maybe_install_table( new ITE_Saved_Address_Table() );

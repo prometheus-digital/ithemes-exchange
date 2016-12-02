@@ -1577,6 +1577,27 @@ function it_exchange_get_requested_cart_and_check_auth( $cart_var = 'cart_id', $
 }
 
 /**
+ * Get all core tables.
+ *
+ * @since 2.0.0
+ *
+ * @return \IronBound\DB\Table\Table[]
+ */
+function it_exchange_get_tables() {
+	return array(
+		\IronBound\DB\Manager::get( 'ite-transactions' ),
+		\IronBound\DB\Manager::get( 'ite-address' ),
+		\IronBound\DB\Manager::get( 'ite-line-items' ),
+		\IronBound\DB\Manager::get( 'ite-line-items-meta' ),
+		\IronBound\DB\Manager::get( 'ite-refunds' ),
+		\IronBound\DB\Manager::get( 'ite-refunds-meta' ),
+		\IronBound\DB\Manager::get( 'ite-payment-tokens' ),
+		\IronBound\DB\Manager::get( 'ite-payment-tokens-meta' ),
+		\IronBound\DB\Manager::get( 'ite-sessions' ),
+	);
+}
+
+/**
  * Blocks access to Download iThemes Exchange attachments
  *
  * @since 1.7.18

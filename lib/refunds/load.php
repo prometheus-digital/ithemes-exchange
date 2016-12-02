@@ -18,9 +18,6 @@ Manager::register( new BaseMetaTable( Manager::get( 'ite-refunds' ), array(
 	'primary_id_column' => 'refund_id'
 ) ) );
 
-Manager::maybe_install_table( Manager::get( 'ite-refunds' ) );
-Manager::maybe_install_table( Manager::get( 'ite-refunds-meta' ) );
-
 add_action( 'it_exchange_register_object_types', function ( ITE_Object_Type_Registry $registry ) {
 	$registry->register( new ITE_Refund_Object_Type() );
 } );

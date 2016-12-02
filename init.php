@@ -270,11 +270,20 @@ register_activation_hook( __FILE__, 'it_exchange_activation_hook' );
  * @return void
  */
 function it_exchange_register_activation_hook() {
+
+	$do_activation = get_option( '_it-exchange-register-activation-hook', false );
+
+	if ( ! $do_activation ) {
+		return;
+	}
+
+	foreach ( it_exchange_get_tables() as $table ) {
+		\IronBound\DB\Manager::maybe_install_table( $table );
+	}
+
 	if ( ! is_network_admin() ) {
-		if ( false !== get_option( '_it-exchange-register-activation-hook', false ) ) {
-			delete_option( '_it-exchange-register-activation-hook' );
-			wp_safe_redirect( 'admin.php?page=it-exchange-setup' );
-		}
+		delete_option( '_it-exchange-register-activation-hook' );
+		wp_safe_redirect( 'admin.php?page=it-exchange-setup' );
 	}
 }
 

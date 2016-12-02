@@ -17,4 +17,3 @@ if ( ! isset( $GLOBALS['it_exchange']['session'] ) ) {
 }
 
 \IronBound\DB\Manager::register( new ITE_Sessions_Table(), '', 'ITE_Session_Model' );
-\IronBound\DB\Manager::maybe_install_table( new ITE_Sessions_Table() );
