@@ -210,7 +210,11 @@ function it_exchange_minimum_wp_notice() {
 	$upgrade_url = admin_url( 'update-core.php' );
 
 	echo '<div class="notice notice-error"><p>';
-	echo sprintf( __( 'iThemes Exchange requires version %s of WordPress or greater. You are running version %s.', 'it-l10n-ithemes-exchange' ), $required, $running );
+	printf(
+		__( 'iThemes Exchange requires version %s of WordPress or greater. You are running version %s.', 'it-l10n-ithemes-exchange' ),
+		$required,
+		$running
+	);
 	echo ' ' . sprintf( __( '%sUpgrade Now%s.', 'it-l10n-ithemes-exchange' ), "<a href=\"$upgrade_url\">", '</a>' );
 	echo '</p></div>';
 }
