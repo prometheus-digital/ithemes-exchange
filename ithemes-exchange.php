@@ -265,10 +265,6 @@ function it_exchange_register_activation_hook() {
 		return;
 	}
 
-	foreach ( it_exchange_get_tables() as $table ) {
-		\IronBound\DB\Manager::maybe_install_table( $table );
-	}
-
 	if ( ! is_network_admin() ) {
 		delete_option( '_it-exchange-register-activation-hook' );
 		wp_safe_redirect( 'admin.php?page=it-exchange-setup' );
@@ -276,6 +272,25 @@ function it_exchange_register_activation_hook() {
 }
 
 add_action( 'admin_init', 'it_exchange_register_activation_hook' );
+
+/**
+ * Install Tables.
+ *
+ * @since 2.0.0
+ */
+function it_exchange_install_tables() {
+	$do_activation = get_option( '_it-exchange-register-activation-hook', false );
+
+	if ( ! $do_activation ) {
+		return;
+	}
+
+	foreach ( it_exchange_get_tables() as $table ) {
+		\IronBound\DB\Manager::maybe_install_table( $table );
+	}
+}
+
+add_action( 'init', 'it_exchange_install_tables', -10 );
 
 /**
  * This flushes the rewrite rules for us on activation
