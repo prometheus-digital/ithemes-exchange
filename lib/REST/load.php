@@ -184,7 +184,43 @@ function get_rest_manager() {
 		$stack->push( new Filter_By_Context(), 'filter-by-context' );
 		$stack->push( new Cart_Feedback(), 'cart-feedback' );
 
-		$manager = new Manager( 'it_exchange', $stack );
+		$manager = new Manager( 'it_exchange', $stack, array(
+			'card' => array(
+				'title'                => 'card',
+				'type'                 => 'object',
+				'additionalProperties' => false,
+				'properties'           => array(
+					'number' => array(
+						'type'        => 'string',
+						'description' => __( 'Card number.', 'it-l10n-ithemes-exchange' ),
+						'required'    => true,
+					),
+					'year'   => array(
+						'type'        => 'integer',
+						'description' => __( 'Card expiration year', 'it-l10n-ithemes-exchange' ),
+						'required'    => true,
+					),
+					'month'  => array(
+						'type'        => 'integer',
+						'description' => __( 'Card expiration month', 'it-l10n-ithemes-exchange' ),
+						'required'    => true,
+						'min'         => 1,
+						'max'         => 12,
+					),
+					'cvc'    => array(
+						'type'        => 'string',
+						'description' => __( 'Card security code.', 'it-l10n-ithemes-exchange' ),
+						'required'    => true,
+						'min'         => 3,
+						'max'         => 4,
+					),
+					'name'   => array(
+						'type'        => 'string',
+						'description' => __( 'Card holder name.', 'it-l10n-ithemes-exchange' ),
+					),
+				),
+			)
+		) );
 	}
 
 	return $manager;

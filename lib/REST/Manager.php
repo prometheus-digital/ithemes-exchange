@@ -47,6 +47,9 @@ class Manager {
 	private $initialized = false;
 
 	/** @var array */
+	private $shared_schemas;
+
+	/** @var array */
 	private static $interfaces = array(
 		'GET'    => 'Getable',
 		'POST'   => 'Postable',
@@ -59,10 +62,12 @@ class Manager {
 	 *
 	 * @param string                                  $namespace No forward or trailing slashes.
 	 * @param \iThemes\Exchange\REST\Middleware\Stack $stack
+	 * @param array                                   $shared_schemas
 	 */
-	public function __construct( $namespace, Stack $stack ) {
-		$this->namespace  = $namespace;
-		$this->middleware = $stack;
+	public function __construct( $namespace, Stack $stack, array $shared_schemas = array() ) {
+		$this->namespace      = $namespace;
+		$this->middleware     = $stack;
+		$this->shared_schemas = $shared_schemas;
 	}
 
 	/**
@@ -167,6 +172,10 @@ class Manager {
 		$modified = array();
 
 		foreach ( $this->schemas as $id => $schema ) {
+			$modified[ url_for_schema( $id ) ] = $schema;
+		}
+
+		foreach ( $this->shared_schemas as $id => $schema ) {
 			$modified[ url_for_schema( $id ) ] = $schema;
 		}
 

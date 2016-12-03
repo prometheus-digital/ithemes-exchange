@@ -193,7 +193,7 @@ class Purchase extends Base implements Getable, Postable, VariableSchema {
 						},
 					)
 				),
-				'card'        => array( '$ref' => '#/definitions/card' ),
+				'card'        => array( '$ref' => \iThemes\Exchange\REST\url_for_schema( 'card' ) ),
 				'token'       => array(
 					'type'        => 'integer',
 					'min'         => 1,
@@ -206,7 +206,7 @@ class Purchase extends Base implements Getable, Postable, VariableSchema {
 							'type'        => 'string',
 							'description' => __( 'Token provided by the payment processor. For example, a Stripe.js token.', 'it-l10n-ithemes-exchange' )
 						),
-						array( '$ref' => '#/definitions/card' ),
+						array( '$ref' => \iThemes\Exchange\REST\url_for_schema( 'card' ) ),
 					),
 				)
 			),
@@ -218,42 +218,6 @@ class Purchase extends Base implements Getable, Postable, VariableSchema {
 				array( 'required' => array( 'id', 'nonce', 'tokenize' ) ),
 				array( 'required' => array( 'id', 'nonce' ) ),
 			),
-			'definitions' => array(
-				'card' => array(
-					'type'                 => 'object',
-					'additionalProperties' => false,
-					'properties'           => array(
-						'number' => array(
-							'type'        => 'string',
-							'description' => __( 'Card number.', 'it-l10n-ithemes-exchange' ),
-							'required'    => true,
-						),
-						'year'   => array(
-							'type'        => 'integer',
-							'description' => __( 'Card expiration year', 'it-l10n-ithemes-exchange' ),
-							'required'    => true,
-						),
-						'month'  => array(
-							'type'        => 'integer',
-							'description' => __( 'Card expiration month', 'it-l10n-ithemes-exchange' ),
-							'required'    => true,
-							'min'         => 1,
-							'max'         => 12,
-						),
-						'cvc'    => array(
-							'type'        => 'string',
-							'description' => __( 'Card security code.', 'it-l10n-ithemes-exchange' ),
-							'required'    => true,
-							'min'         => 3,
-							'max'         => 4,
-						),
-						'name'   => array(
-							'type'        => 'string',
-							'description' => __( 'Card holder name.', 'it-l10n-ithemes-exchange' ),
-						),
-					),
-				),
-			)
 		);
 	}
 }
