@@ -258,13 +258,15 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 			$location = self::validate_location( $location, $type, $filter ? $cid : false );
 		}
 
+		$fields = array_intersect_key( $location->to_array(), ITE_Saved_Address::table()->get_column_defaults() );
+
 		if ( $current && $location instanceof ITE_Saved_Address ) {
 
 			// This is an update to an address that is shared amongst
 			// multiple transactions. So as not to affect those other
 			// transactions we split this into a new record.
 			if ( $location->is_address_shared() ) {
-				return ITE_Saved_Address::create( $location->to_array() );
+				return ITE_Saved_Address::create( $fields );
 			}
 
 			if ( $current instanceof ITE_Saved_Address && $current->get_pk() === $location->get_pk() ) {
@@ -296,12 +298,12 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 
 		if ( $cid ) {
 			/** @noinspection PhpIncompatibleReturnTypeInspection */
-			return ITE_Saved_Address::query()->first_or_create( array_merge( $location->to_array(), array(
+			return ITE_Saved_Address::query()->first_or_create( array_merge( $fields, array(
 				'customer' => $cid,
 				'type'     => $type,
 			) ) );
 		} else { // We don't want to share addresses amongst guest customers.
-			return ITE_Saved_Address::create( array_merge( $location->to_array(), array(
+			return ITE_Saved_Address::create( array_merge( $fields, array(
 				'type' => $type
 			) ) );
 		}
