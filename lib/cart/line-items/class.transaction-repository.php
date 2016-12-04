@@ -29,7 +29,7 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 	public function __construct( ITE_Line_Item_Repository_Events $events, IT_Exchange_Transaction $transaction ) {
 		$this->events      = $events;
 		$this->transaction = $transaction;
-		$this->bag         = new ITE_Meta_Parameter_Bag( $transaction->ID, 'post', '_it_exchange_cart_' );
+		$this->bag         = new ITE_Meta_Parameter_Bag( $transaction->get_ID(), 'post', '_it_exchange_cart_' );
 	}
 
 	/**

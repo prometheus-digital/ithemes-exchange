@@ -41,7 +41,7 @@ class ITE_Meta_Parameter_Bag implements ITE_Parameter_Bag {
 	 */
 	public function __construct( $ID, $type, $prefix = '' ) {
 
-		if ( ! is_int( $ID ) || $ID <= 0 ) {
+		if ( ! is_numeric( $ID ) || $ID <= 0 ) {
 			throw new InvalidArgumentException( '$ID >= 0' );
 		}
 
