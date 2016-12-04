@@ -176,7 +176,7 @@ class Manager {
 		}
 
 		foreach ( $this->shared_schemas as $id => $schema ) {
-			$modified[ url_for_schema( $id ) ] = $schema;
+			$modified[ url_for_schema( $id ) ] = json_encode( $schema );
 		}
 
 		$strategy            = new PredefinedArray( $modified );
