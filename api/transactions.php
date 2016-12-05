@@ -282,7 +282,7 @@ function it_exchange_generate_transaction_object( ITE_Cart $cart = null ) {
 	$transaction_object->total                  = $cart_total;
 	$transaction_object->sub_total              = $cart_sub_total;
 	$transaction_object->currency               = $currency;
-	$transaction_object->description            = it_exchange_get_cart_description();
+	$transaction_object->description            = it_exchange_get_cart_description( array( 'cart' => $cart ) );
 	$transaction_object->products               = $products;
 
 	$coupons = array();
