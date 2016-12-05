@@ -278,7 +278,7 @@ add_action( 'admin_init', 'it_exchange_register_activation_hook' );
  *
  * @since 2.0.0
  */
-function it_exchange_install_tables() {
+function it_exchange_install_tables_on_activate() {
 	$do_activation = get_option( '_it-exchange-register-activation-hook', false );
 
 	if ( ! $do_activation ) {
@@ -290,7 +290,21 @@ function it_exchange_install_tables() {
 	}
 }
 
-add_action( 'init', 'it_exchange_install_tables', -10 );
+add_action( 'init', 'it_exchange_install_tables_on_activate', -10 );
+
+/**
+ * Install tables on updating Exchange.
+ *
+ * @since 2.0.0
+ */
+function it_exchange_install_tables_on_update() {
+
+	foreach ( it_exchange_get_tables() as $table ) {
+		\IronBound\DB\Manager::maybe_install_table( $table );
+	}
+}
+
+add_action( 'it_exchange_version_updated', 'it_exchange_install_tables_on_update' );
 
 /**
  * This flushes the rewrite rules for us on activation
