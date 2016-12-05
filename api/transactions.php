@@ -272,7 +272,7 @@ function it_exchange_generate_transaction_object( ITE_Cart $cart = null ) {
 	}
 
 	foreach( $products as $key => $product ) {
-		$products = apply_filters( 'it_exchange_generate_transaction_object_products', $products, $key, $product );
+		$products = apply_filters( 'it_exchange_generate_transaction_object_products', $products, $key, $product, $cart );
 	}
 
 	// Package it up and send it to the transaction method add-on
