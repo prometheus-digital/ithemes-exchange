@@ -16,16 +16,16 @@ abstract class ITE_POST_Redirect_Purchase_Request_Handler extends ITE_Redirect_P
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param ITE_Gateway_Purchase_Request_Interface $request
+	 * @param ITE_Gateway_Purchase_Request $request
 	 *
 	 * @return array
 	 */
-	protected abstract function get_vars_to_post( ITE_Gateway_Purchase_Request_Interface $request );
+	protected abstract function get_vars_to_post( ITE_Gateway_Purchase_Request $request );
 
 	/**
 	 * @inheritDoc
 	 */
-	protected function redirect( ITE_Gateway_Purchase_Request_Interface $request ) {
+	protected function redirect( ITE_Gateway_Purchase_Request $request ) {
 		it_exchange_set_global( 'purchase_interstitial', array(
 			'gateway' => $this->get_gateway()->get_slug(),
 			'url'     => $this->get_redirect_url( $request ),

@@ -14,7 +14,7 @@ abstract class ITE_Dialog_Purchase_Request_Handler extends ITE_Purchase_Request_
 	/**
 	 * @inheritDoc
 	 */
-	public function render_payment_button( ITE_Gateway_Purchase_Request_Interface $request ) {
+	public function render_payment_button( ITE_Gateway_Purchase_Request $request ) {
 		return it_exchange_generate_purchase_dialog(
 			       $this->get_gateway()->get_slug(), $this->get_dialog_options()
 		       ) . $this->get_html_before_form_end( $request );
@@ -75,7 +75,7 @@ abstract class ITE_Dialog_Purchase_Request_Handler extends ITE_Purchase_Request_
 	/**
 	 * @inheritDoc
 	 */
-	public function get_data_for_REST( ITE_Gateway_Purchase_Request_Interface $request ) {
+	public function get_data_for_REST( ITE_Gateway_Purchase_Request $request ) {
 		return array(
 			'method'  => 'dialog',
 			'accepts' => array( 'card' )

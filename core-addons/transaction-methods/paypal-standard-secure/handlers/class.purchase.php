@@ -14,7 +14,7 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 	/**
 	 * @inheritDoc
 	 */
-	protected function get_vars_to_post( ITE_Gateway_Purchase_Request_Interface $request ) {
+	protected function get_vars_to_post( ITE_Gateway_Purchase_Request $request ) {
 		return array(
 			'cmd'       => '_s-xclick',
 			'encrypted' => $this->generate_encrypted_id( $request ),
@@ -24,7 +24,7 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 	/**
 	 * @inheritDoc
 	 */
-	public function get_redirect_url( ITE_Gateway_Purchase_Request_Interface $request ) {
+	public function get_redirect_url( ITE_Gateway_Purchase_Request $request ) {
 		return $this->get_gateway()->is_sandbox_mode() ? PAYPAL_PAYMENT_SANDBOX_URL : PAYPAL_PAYMENT_LIVE_URL;
 	}
 
@@ -33,11 +33,11 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param ITE_Gateway_Purchase_Request_Interface $request
+	 * @param ITE_Gateway_Purchase_Request $request
 	 *
 	 * @return string|false
 	 */
-	protected function generate_encrypted_id( ITE_Gateway_Purchase_Request_Interface $request ) {
+	protected function generate_encrypted_id( ITE_Gateway_Purchase_Request $request ) {
 
 		$general_settings = it_exchange_get_option( 'settings_general' );
 
@@ -118,7 +118,7 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 		 * @since 2.0.0
 		 *
 		 * @param array                                  $button_vars
-		 * @param ITE_Gateway_Purchase_Request_Interface $request
+		 * @param ITE_Gateway_Purchase_Request $request
 		 */
 		$button_vars = apply_filters( 'it_exchange_paypal_standard_secure_get_button_vars', $button_vars, $request );
 
@@ -153,7 +153,7 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 		 * @since 2.0.0 Added the `$request` parameter.
 		 *
 		 * @param array                                  $button_request
-		 * @param ITE_Gateway_Purchase_Request_Interface $request
+		 * @param ITE_Gateway_Purchase_Request $request
 		 */
 		$button_request = apply_filters( 'it_exchange_paypal_standard_secure_button_request', $button_request, $request );
 
@@ -192,11 +192,11 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param ITE_Gateway_Purchase_Request_Interface $request
+	 * @param ITE_Gateway_Purchase_Request $request
 	 *
 	 * @return array
 	 */
-	protected function get_subscription_button_vars( ITE_Gateway_Purchase_Request_Interface $request ) {
+	protected function get_subscription_button_vars( ITE_Gateway_Purchase_Request $request ) {
 
 		$cart = $request->get_cart();
 
@@ -377,7 +377,7 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 	/**
 	 * @inheritDoc
 	 *
-	 * @param ITE_Gateway_Purchase_Request_Interface $request
+	 * @param ITE_Gateway_Purchase_Request $request
 	 *
 	 * @throws \IT_Exchange_Locking_Exception
 	 */
@@ -548,14 +548,14 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param ITE_Gateway_Purchase_Request_Interface $request
+	 * @param ITE_Gateway_Purchase_Request $request
 	 * @param string                                 $method_id
 	 * @param string                                 $status
 	 * @param array                                  $args
 	 *
 	 * @return int|false
 	 */
-	protected function add_transaction( ITE_Gateway_Purchase_Request_Interface $request, $method_id, $status, $args = array() ) {
+	protected function add_transaction( ITE_Gateway_Purchase_Request $request, $method_id, $status, $args = array() ) {
 
 		if ( $p = $request->get_child_of() ) {
 			return it_exchange_add_child_transaction( 'paypal-standard-secure', $method_id, $status, $request->get_cart(), $p->get_ID(), $args );

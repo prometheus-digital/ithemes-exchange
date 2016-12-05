@@ -8,7 +8,7 @@
 
 namespace iThemes\Exchange\REST\Route\Cart;
 
-use ITE_Gateway_Purchase_Request_Interface;
+use ITE_Gateway_Purchase_Request;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Postable;
 use iThemes\Exchange\REST\Request;

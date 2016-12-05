@@ -131,11 +131,11 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 	/**
 	 * Render a payment button.
 	 *
-	 * @param ITE_Gateway_Purchase_Request_Interface $request
+	 * @param ITE_Gateway_Purchase_Request $request
 	 *
 	 * @return string
 	 */
-	public function render_payment_button( ITE_Gateway_Purchase_Request_Interface $request ) {
+	public function render_payment_button( ITE_Gateway_Purchase_Request $request ) {
 
 		$action     = esc_attr( $this->get_form_action() );
 		$label      = esc_attr( $this->get_payment_button_label() );
@@ -204,11 +204,11 @@ HTML;
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param ITE_Gateway_Purchase_Request_Interface $request
+	 * @param ITE_Gateway_Purchase_Request $request
 	 *
 	 * @return string
 	 */
-	protected function get_html_before_form_end( ITE_Gateway_Purchase_Request_Interface $request ) {
+	protected function get_html_before_form_end( ITE_Gateway_Purchase_Request $request ) {
 
 		$html = '';
 
@@ -230,11 +230,11 @@ HTML;
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param ITE_Gateway_Purchase_Request_Interface $request
+	 * @param ITE_Gateway_Purchase_Request $request
 	 *
 	 * @return array
 	 */
-	public function get_data_for_REST( ITE_Gateway_Purchase_Request_Interface $request ) {
+	public function get_data_for_REST( ITE_Gateway_Purchase_Request $request ) {
 		return array( 'method' => 'REST' );
 	}
 }

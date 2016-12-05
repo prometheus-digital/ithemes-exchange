@@ -21,11 +21,11 @@ class PurchaseSerializer {
 	 * @since 2.0.0
 	 *
 	 * @param \ITE_Purchase_Request_Handler           $handler
-	 * @param \ITE_Gateway_Purchase_Request_Interface $request
+	 * @param \ITE_Gateway_Purchase_Request $request
 	 *
 	 * @return array
 	 */
-	public function serialize( \ITE_Purchase_Request_Handler $handler, \ITE_Gateway_Purchase_Request_Interface $request ) {
+	public function serialize( \ITE_Purchase_Request_Handler $handler, \ITE_Gateway_Purchase_Request $request ) {
 		return array(
 			'id'     => $handler->get_gateway()->get_slug(),
 			'name'   => $handler->get_gateway()->get_name(),

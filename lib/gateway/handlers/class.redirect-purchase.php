@@ -61,9 +61,9 @@ abstract class ITE_Redirect_Purchase_Request_Handler extends ITE_Purchase_Reques
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param ITE_Gateway_Purchase_Request_Interface $request
+	 * @param ITE_Gateway_Purchase_Request $request
 	 */
-	protected function redirect( ITE_Gateway_Purchase_Request_Interface $request ) {
+	protected function redirect( ITE_Gateway_Purchase_Request $request ) {
 		$url = $this->get_redirect_url( $request );
 
 		if ( ! $url ) {
@@ -77,7 +77,7 @@ abstract class ITE_Redirect_Purchase_Request_Handler extends ITE_Purchase_Reques
 	/**
 	 * @inheritDoc
 	 */
-	public function get_data_for_REST( ITE_Gateway_Purchase_Request_Interface $request ) {
+	public function get_data_for_REST( ITE_Gateway_Purchase_Request $request ) {
 
 		$query_args = array(
 			"{$this->gateway->get_slug()}_purchase" => 1,
@@ -103,9 +103,9 @@ abstract class ITE_Redirect_Purchase_Request_Handler extends ITE_Purchase_Reques
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param ITE_Gateway_Purchase_Request_Interface $request
+	 * @param ITE_Gateway_Purchase_Request $request
 	 *
 	 * @return string
 	 */
-	public abstract function get_redirect_url( ITE_Gateway_Purchase_Request_Interface $request );
+	public abstract function get_redirect_url( ITE_Gateway_Purchase_Request $request );
 }

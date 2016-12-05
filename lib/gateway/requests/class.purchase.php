@@ -9,7 +9,7 @@
 /**
  * Class ITE_Gateway_Purchase_Request
  */
-class ITE_Gateway_Purchase_Request implements ITE_Gateway_Purchase_Request_Interface {
+class ITE_Gateway_Purchase_Request implements ITE_Gateway_Request {
 
 	/** @var ITE_Cart */
 	protected $cart;

@@ -14,7 +14,7 @@ class ITE_Offline_Payments_Purchase_Request_Handler extends ITE_Purchase_Request
 	/**
 	 * @inheritDoc
 	 *
-	 * @param ITE_Gateway_Purchase_Request_Interface $request
+	 * @param ITE_Gateway_Purchase_Request $request
 	 */
 	public function handle( $request ) {
 
