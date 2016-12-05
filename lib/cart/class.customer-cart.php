@@ -556,6 +556,22 @@ class ITE_Cart {
 	}
 
 	/**
+	 * Get the currency code the cart is being purchased in.
+	 *
+	 * For example, USD, EUR.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return string
+	 */
+	public function get_currency_code() {
+
+		$general = it_exchange_get_option( 'settings_general' );
+
+		return $general['default-currency'];
+	}
+
+	/**
 	 * Check if the cart contains items of a given type. Either as child line items or top-level line items.
 	 *
 	 * @since 2.0.0
