@@ -92,6 +92,22 @@ class ITE_Gateway_Bank_Account implements ITE_Gateway_Payment_Source {
 		return $this->routing_number;
 	}
 
+	/**
+	 * Get the redacted account number.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return string
+	 */
+	public function get_redacted_account_number() {
+		$n = $this->get_account_number();
+
+		if ( strlen( $n ) <= 4 ) {
+			return $n;
+		}
+
+		return substr( $n, - 4 );
+	}
 
 	/**
 	 * @inheritDoc
@@ -99,7 +115,7 @@ class ITE_Gateway_Bank_Account implements ITE_Gateway_Payment_Source {
 	public function get_label() {
 		return sprintf(
 			__( 'Bank account ending in %s', 'it-l10n-ithemes-exchange' ),
-			substr( $this->get_account_number(), - 4 )
+			$this->get_redacted_account_number()
 		);
 	}
 
@@ -108,7 +124,7 @@ class ITE_Gateway_Bank_Account implements ITE_Gateway_Payment_Source {
 	 */
 	public function get_identifier() {
 		return md5(
-			substr( $this->get_account_number(), - 4 ) .
+			$this->get_redacted_account_number() .
 			$this->get_routing_number() .
 			$this->get_type() .
 			$this->get_holder_name()
@@ -123,7 +139,7 @@ class ITE_Gateway_Bank_Account implements ITE_Gateway_Payment_Source {
 	public function __debugInfo() {
 		return array(
 			'holder_name'    => $this->holder_name,
-			'account_number' => substr( $this->account_number, - 4 ),
+			'account_number' => $this->get_redacted_account_number(),
 			'routing_number' => $this->routing_number,
 			'type'           => $this->type
 		);
