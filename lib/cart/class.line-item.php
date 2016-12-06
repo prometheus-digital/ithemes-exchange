@@ -41,6 +41,19 @@ abstract class ITE_Line_Item implements ITE_Parameter_Bag {
 	}
 
 	/**
+	 * Clone this line item with a new ID.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param bool $include_frozen
+	 *
+	 * @return \ITE_Line_Item
+	 */
+	public function clone_with_new_id( $include_frozen = true ) {
+		return new static( $this->get_id(), $this->bag, $include_frozen ? $this->frozen : new ITE_Array_Parameter_Bag() );
+	}
+
+	/**
 	 * Get the ID of this line item.
 	 *
 	 * This need only be unique across line items of the same type.

@@ -33,7 +33,7 @@ class ITE_Fee_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Line_I
 	 */
 	public static function create( $name, $amount, $tax_exempt = false ) {
 
-		$id = md5( uniqid( 'FEE', true ) );
+		$id = self::generate_id();
 
 		$bag = new ITE_Array_Parameter_Bag( array(
 			'name'       => $name,
@@ -42,6 +42,28 @@ class ITE_Fee_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Line_I
 		) );
 
 		return new self( $id, $bag, new ITE_Array_Parameter_Bag() );
+	}
+
+	/**
+	 * Generate the ID.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return string
+	 */
+	protected final static function generate_id() {
+		return md5( uniqid( 'FEE', true ) );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function clone_with_new_id( $include_frozen = true ) {
+		return new self(
+			self::generate_id(),
+			$this->bag,
+			$include_frozen ? $this->frozen : new ITE_Array_Parameter_Bag()
+		);
 	}
 
 	/**
@@ -121,7 +143,7 @@ class ITE_Fee_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Line_I
 	/**
 	 * @inheritDoc
 	 */
-	public function get_amount() { return (float) $this->get_param( 'amount' );	}
+	public function get_amount() { return (float) $this->get_param( 'amount' ); }
 
 	/**
 	 * @inheritDoc
