@@ -751,18 +751,9 @@ function it_exchange_offline_payments_add_child_transaction( $parent_txn ) {
 		$total += $fee->get_total() * -1;
 	}
 
-	$uniqid                    = it_exchange_get_offline_transaction_uniqid();
-	$transaction_object        = new stdClass;
-	$transaction_object->total = $total;
+	$uniqid = it_exchange_get_offline_transaction_uniqid();
 
-	it_exchange_add_child_transaction(
-		'offline-payments',
-		$uniqid,
-		it_exchange_offline_payments_default_status(),
-		$customer_id,
-		$parent_txn->ID,
-		$transaction_object
-	);
+	it_exchange_add_subscription_renewal_payment( $parent_txn, $uniqid, it_exchange_offline_payments_default_status(), $total );
 
 	return true;
 }
