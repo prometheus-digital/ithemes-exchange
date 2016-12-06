@@ -667,9 +667,9 @@ function it_exchange_add_child_transaction( $method, $method_id, $status = 'pend
 	$args = wp_parse_args( $args, $defaults );
 
 	if ( $customer_or_cart instanceof ITE_Cart ) {
-		$cart        = $customer_or_cart;
-		$customer    = $customer_or_cart->get_customer();
-		$txn_object_or_args = it_exchange_generate_transaction_object( $customer_or_cart );
+		$cart               = $customer_or_cart;
+		$customer           = $customer_or_cart->get_customer();
+		$txn_object_or_args = is_object( $txn_object_or_args ) ?: it_exchange_generate_transaction_object( $customer_or_cart );
 	} else {
 		$customer = it_exchange_get_customer( $customer_or_cart );
 		$cart     = null;
