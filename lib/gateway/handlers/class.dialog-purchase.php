@@ -53,11 +53,15 @@ abstract class ITE_Dialog_Purchase_Request_Handler extends ITE_Purchase_Request_
 	 */
 	public function build_factory_args_from_global_state( ITE_Cart $cart, $state ) {
 
+		$factory_args = parent::build_factory_args_from_global_state( $cart, $state );
+
+		if ( ! empty( $factory_args['token'] ) && $this->get_gateway()->can_handle( 'tokenize' ) ) {
+			return $factory_args;
+		}
+
 		if ( ! $this->get_dialog_controller()->is_submitted_form_valid() ) {
 			throw new InvalidArgumentException( __( 'Credit Card is invalid.', 'LION' ) );
 		}
-
-		$factory_args = parent::build_factory_args_from_global_state( $cart, $state );
 
 		if ( $this->get_gateway()->can_handle( 'tokenize' ) ) {
 			if ( empty( $factory_args['tokenize'] ) ) {

@@ -65,7 +65,7 @@ class ITE_Gateway_Request_Factory {
 
 				if ( ! empty( $args['tokenize'] ) ) {
 
-					if ( ! is_object( $args['tokenize'] ) ) {
+					if ( ! is_object( $args['tokenize'] ) || ! $args['tokenize'] instanceof ITE_Gateway_Tokenize_Request ) {
 						$tokenize = $this->make( 'tokenize', array(
 							'source'   => $args['tokenize'],
 							'customer' => $cart->get_customer()
@@ -126,7 +126,7 @@ class ITE_Gateway_Request_Factory {
 					throw new InvalidArgumentException( 'Invalid `customer` option.' );
 				}
 
-				if ( ! $source ) {
+				if ( ! is_string( $source ) && ! $source instanceof ITE_Gateway_Payment_Source && ! $source instanceof ITE_Payment_Token ) {
 					throw new InvalidArgumentException( 'Invalid `source` option.' );
 				}
 

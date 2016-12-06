@@ -32,7 +32,7 @@ class ITE_Cart_Feedback_Item {
 	 * @inheritdoc
 	 */
 	public function __toString() {
-		return $this->message;
+		return (string) $this->message;
 	}
 
 	/**
