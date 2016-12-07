@@ -48,7 +48,10 @@ class Purchase extends Base implements Getable, Postable, VariableSchema {
 
 		$cart->prepare_for_purchase();
 
-		$purchase_request = $this->request_factory->make( 'purchase', array( 'cart' => $cart ) );
+		$purchase_request = $this->request_factory->make( 'purchase', array(
+			'cart'        => $cart,
+			'redirect_to' => $request['redirect_to'],
+		) );
 
 		$data = array();
 
@@ -149,7 +152,21 @@ class Purchase extends Base implements Getable, Postable, VariableSchema {
 	/**
 	 * @inheritDoc
 	 */
-	public function get_query_args() { return array(); }
+	public function get_query_args() {
+		return array(
+			'redirect_to' => array(
+				'type'        => 'string',
+				'format'      => 'uri',
+				'description' => __( 'A location to redirect the customer to after purchase. Useful for redirect methods.', 'it-l10n-ithemes-exchange' ),
+				'arg_options' => array(
+					'sanitize_callback' => 'wp_sanitize_redirect',
+					'validate_callback' => function ( $param ) {
+						return wp_validate_redirect( $param );
+					},
+				),
+			),
+		);
+	}
 
 	/**
 	 * @inheritDoc
@@ -170,10 +187,10 @@ class Purchase extends Base implements Getable, Postable, VariableSchema {
 		}
 
 		return array(
-			'$schema'     => 'http://json-schema.org/draft-04/schema#',
-			'title'       => 'cart-purchase',
-			'type'        => 'object',
-			'properties'  => array(
+			'$schema'    => 'http://json-schema.org/draft-04/schema#',
+			'title'      => 'cart-purchase',
+			'type'       => 'object',
+			'properties' => array(
 				'id'          => array(
 					'type'        => 'string',
 					'description' => __( 'Purchase gateway slug.', 'it-l10n-ithemes-exchange' ),
@@ -191,7 +208,7 @@ class Purchase extends Base implements Getable, Postable, VariableSchema {
 						'validate_callback' => function ( $param ) {
 							return wp_validate_redirect( $param );
 						},
-					)
+					),
 				),
 				'card'        => array( '$ref' => \iThemes\Exchange\REST\url_for_schema( 'card' ) ),
 				'token'       => array(
@@ -210,7 +227,7 @@ class Purchase extends Base implements Getable, Postable, VariableSchema {
 					),
 				)
 			),
-			'oneOf'       => array(
+			'oneOf'      => array(
 				// Set it up so that only one card, token, or tokenize option may be used in conjunction.
 				// May also pass none, for things like Offline Payments
 				array( 'required' => array( 'id', 'nonce', 'card' ) ),
