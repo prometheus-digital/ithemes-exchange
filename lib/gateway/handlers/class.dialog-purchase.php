@@ -59,8 +59,8 @@ abstract class ITE_Dialog_Purchase_Request_Handler extends ITE_Purchase_Request_
 			return $factory_args;
 		}
 
-		if ( ! $this->get_dialog_controller()->is_submitted_form_valid() ) {
-			throw new InvalidArgumentException( __( 'Credit Card is invalid.', 'LION' ) );
+		if ( $error_message = $this->get_dialog_controller()->is_submitted_form_valid( false ) ) {
+			throw new InvalidArgumentException( $error_message );
 		}
 
 		if ( $this->get_gateway()->can_handle( 'tokenize' ) ) {

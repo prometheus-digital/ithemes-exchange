@@ -429,21 +429,32 @@ class IT_Exchange_Purchase_Dialog{
 	 * @since 1.3.0
 	 *
 	 * @todo this method could use some TLC
-	 * @return boolean
+	 *
+	 * @param bool $add_message Whether to add the error as a message. Defaults to true.
+	 *
+	 * @return bool|string Error message if $add_message is false.
 	*/
-	public function is_submitted_form_valid() {
+	public function is_submitted_form_valid( $add_message = true ) {
 		// Grab the values
 		$values = $this->get_submitted_form_values();
 
 		// Validate nonce
 		$nonce = empty( $_POST[ $this->form_attributes['nonce-field'] ] ) ? false : $_POST[ $this->form_attributes['nonce-field'] ];
+
 		if ( ! wp_verify_nonce( $nonce, $this->form_attributes['nonce-action'] ) ) {
-			it_exchange_add_message( 'error', __( 'Transaction Failed, unable to verify security token.', 'it-l10n-ithemes-exchange' ) );
+
+			$message = __( 'Transaction Failed, unable to verify security token.', 'it-l10n-ithemes-exchange' );
+
+			if ( $add_message ) {
+				it_exchange_add_message( 'error', $message );
+			}
+
 			it_exchange_flag_purchase_dialog_error( $this->addon_slug );
-			return false;
+
+			return $add_message ? false : $message;
 		}
 
-		foreach( (array) $values as $key => $value ) {
+		foreach ( (array) $values as $key => $value ) {
 			$invalid  = false;
 			$required = in_array( $key, $this->required_cc_fields );
 
@@ -457,13 +468,19 @@ class IT_Exchange_Purchase_Dialog{
 
 			// Filter makes it possible for add-on to make something valid that would be invalid otherwise.
 			$invalid = apply_filters( 'it_exchange_validate_' . $key . '_credit_cart_field', $invalid, $value, $this->addon_slug );
+
 			if ( $invalid ) {
-				it_exchange_add_message( 'error', $invalid );
+
+				if ( $add_message ) {
+					it_exchange_add_message( 'error', $invalid );
+				}
+
 				it_exchange_flag_purchase_dialog_error( $this->addon_slug );
-				return false;
+
+				return $add_message ? false : $invalid;
 			}
 		}
 
-		return true;
+		return $add_message ? true : '';
 	}
 }
