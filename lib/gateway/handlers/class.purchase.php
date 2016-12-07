@@ -235,6 +235,14 @@ HTML;
 	 * @return array
 	 */
 	public function get_data_for_REST( ITE_Gateway_Purchase_Request $request ) {
-		return array( 'method' => 'REST' );
+
+		$accepts = array();
+
+		if ( $this->get_gateway()->can_handle( 'tokenize' ) ) {
+			$accepts[] = 'token';
+			$accepts[] = 'tokenize';
+		}
+
+		return array( 'method' => 'REST', 'accepts' => $accepts );
 	}
 }
