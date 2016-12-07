@@ -157,17 +157,23 @@ class IT_Exchange_Admin_Settings_Form {
 
 			if ( isset( $field['show_if'] ) ) {
 
-				$show_if = $field['show_if'];
+				$show_ifs = $field['show_if'];
 
-				if ( ! is_array( $show_if ) ) {
+				if ( ! is_array( $show_ifs ) ) {
 					throw new InvalidArgumentException( "`show_if` must be an array for {$field['slug']}." );
 				}
 
-				if ( ! isset( $show_if['field'], $show_if['compare'], $show_if['value'] ) ) {
-					throw new InvalidArgumentException( "Invalid `show_if` value for {$field['slug']}." );
+				if ( ! isset ( $show_ifs[0] ) ) {
+					$show_ifs = array( $show_ifs );
 				}
 
-				$this->show_if[ $field['slug'] ] = $show_if;
+				foreach ( $show_ifs as $show_if ) {
+					if ( ! isset( $show_if['field'], $show_if['compare'], $show_if['value'] ) ) {
+						throw new InvalidArgumentException( "Invalid `show_if` value for {$field['slug']}." );
+					}
+				}
+
+				$this->show_if[ $field['slug'] ] = $show_ifs;
 			}
 
 			if ( $field['type'] === 'file_upload' ) {
@@ -490,27 +496,42 @@ class IT_Exchange_Admin_Settings_Form {
 			return true;
 		}
 
-		$required_field = $this->show_if[ $field ]['field'];
-		$compare        = $this->show_if[ $field ]['compare'];
-		$required_value = $this->show_if[ $field ]['value'];
-		$actual_value   = $settings[ $required_field ];
+		$show_ifs = $this->show_if[ $field ];
 
-		switch ( $compare ) {
-			case '=':
-				return $actual_value == $required_value;
-			case '!=':
-				return $actual_value != $required_value;
-			case '<':
-				return $actual_value < $required_value;
-			case '<=':
-				return $actual_value <= $required_value;
-			case '>':
-				return $actual_value > $required_value;
-			case '>=':
-				return $actual_value >= $required_value;
+		$show = true;
+
+		foreach ( $show_ifs as $show_if ) {
+
+			$required_field = $show_if['field'];
+			$compare        = $show_if['compare'];
+			$required_value = $show_if['value'];
+			$actual_value   = $settings[ $required_field ];
+
+			switch ( $compare ) {
+				case '=':
+					$show = $show && ( $actual_value == $required_value );
+					break;
+				case '!=':
+					$show = $show && ( $actual_value != $required_value );
+					break;
+				case '<':
+					$show = $show && ( $actual_value < $required_value );
+					break;
+				case '<=':
+					$show = $show && ( $actual_value <= $required_value );
+					break;
+				case '>':
+					$show = $show && ( $actual_value > $required_value );
+					break;
+				case '>=':
+					$show = $show && ( $actual_value >= $required_value );
+					break;
+				default:
+					throw new UnexpectedValueException( 'Invalid field operator.' );
+			}
 		}
 
-		throw new UnexpectedValueException( 'Invalid field operator.' );
+		return $show;
 	}
 
 	/**
@@ -659,31 +680,93 @@ class IT_Exchange_Admin_Settings_Form {
 		<script type="text/javascript">
 
 			jQuery(document).ready( function( $ ) {
-				<?php foreach ( $this->show_if as $field => $show_if ):
-					$id       = $field . '-' . $this->prefix;
-				    $other_id = $show_if['field'] . '-' . $this->prefix;
-				    $compare  = $show_if['compare'] === '=' ? '==' : $show_if['compare'];
-					?>
 
-					$("#<?php echo esc_js( $other_id ); ?>").change( function() {
+				var showIfsConfig = <?php echo wp_json_encode( $this->show_if ); ?>;
+				var prefix   = '<?php echo esc_js( $this->prefix ); ?>';
 
-						var thisVal,
-						 requiredVal = <?php echo esc_js( $show_if['value'] ); ?>,
-						 $container = $("#<?php echo esc_js( $id . '-container' ); ?>");
+				<?php foreach ( $this->show_if as $field => $show_ifs ):
 
-						if ( $( this ).is( 'input:checkbox' ) ) {
-							thisVal = $( this ).is(':checked');
-						} else {
-							thisVal = $( this ).val();
-						}
+					foreach ( $show_ifs as $show_if ) :
+						$id       = $field . '-' . $this->prefix;
+					    $other_id = $show_if['field'] . '-' . $this->prefix;
+						?>
 
-						if ( thisVal <?php echo $compare; ?> requiredVal ) {
-							$container.removeClass( 'hidden' );
-						} else {
-							$container.addClass( 'hidden' );
-						}
-					} );
+						$("#<?php echo esc_js( $other_id ); ?>").change( function() {
+
+							var $container = $("#<?php echo esc_js( $id . '-container' ); ?>");
+
+							if ( shouldShowField( '<?php echo esc_js( $field ); ?>' ) ) {
+								$container.removeClass( 'hidden' );
+							} else {
+								$container.addClass( 'hidden' );
+							}
+						} );
+					<?php endforeach; ?>
 				<?php endforeach; ?>
+
+				/**
+				 * Should a field be shown.
+				 *
+				 * @since 2.0.0
+				 *
+				 * @param {String} field
+				 *
+				 * @return {Boolean}
+				 */
+				function shouldShowField( field ) {
+
+					var showIfs = showIfsConfig[ field ];
+
+					if ( ! showIfs ) {
+						return true;
+					}
+
+					var show = true;
+
+					for ( var i = 0; i < showIfs.length; i++ ) {
+						var showIf = showIfs[i], $field = $("#" + showIf.field + '-' + prefix ), value;
+
+						if ( $field.is('input:checkbox' ) ) {
+							value = $field.is( ':checked' );
+						} else {
+							value = $field.val();
+						}
+
+						show = show && compareValues( value, showIf.value, showIf.compare );
+					}
+
+					return show;
+				}
+
+				/**
+				 * Compare two values.
+				 *
+				 * @since 2.0.0
+				 *
+				 * @param actual_value
+				 * @param required_value
+				 * @param compare
+				 * @returns {boolean}
+				 */
+				function compareValues( actual_value, required_value, compare ) {
+
+					switch ( compare ) {
+						case '=':
+							return ( actual_value == required_value );
+						case '!=':
+							return ( actual_value != required_value );
+						case '<':
+							return ( actual_value < required_value );
+						case '<=':
+							return ( actual_value <= required_value );
+						case '>':
+							return ( actual_value > required_value );
+						case '>=':
+							return ( actual_value >= required_value );
+						default:
+							throw new Error( 'Invalid field operator.' );
+					}
+				}
 			});
 		</script>
 
