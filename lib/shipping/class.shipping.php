@@ -113,7 +113,11 @@ class IT_Exchange_Shipping {
 	public static function register_shipping_address_purchase_requirement() {
 		// User must have a shipping address to purchase
 		$properties = array(
-			'requirement-met'        => 'it_exchange_get_cart_shipping_address', // This is a PHP callback
+			'requirement-met'        => function() {
+				$address = it_exchange_get_cart_shipping_address();
+
+				return $address && ! empty( $address['address1'] );
+			},
 			'sw-template-part'       => 'shipping-address',
 			'checkout-template-part' => 'shipping-address',
 			'notification'           => __( 'You must enter a shipping address before you can checkout', 'it-l10n-ithemes-exchange' ),
