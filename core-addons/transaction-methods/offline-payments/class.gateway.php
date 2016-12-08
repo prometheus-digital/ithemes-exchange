@@ -116,6 +116,7 @@ class ITE_Gateway_Offline_Payments extends ITE_Gateway {
 				'slug'    => 'offline-payments-title',
 				'options' => array( 'class' => 'normal-text' ),
 				'tooltip' => __( 'What would you like to title this payment option? eg: Check', 'it-l10n-ithemes-exchange' ),
+				'default' => __( 'Pay with check', 'it-l10n-ithemes-exchange' ),
 			),
 			array(
 				'type'    => 'text_area',
@@ -127,6 +128,7 @@ class ITE_Gateway_Offline_Payments extends ITE_Gateway {
 					'class' => 'normal-text'
 				),
 				'tooltip' => __( 'This will be the notification customers see after using this method of payment.', 'it-l10n-ithemes-exchange' ),
+				'default' => __( 'Thank you for your order. We will contact you shortly for payment.', 'it-l10n-ithemes-exchange' ),
 			),
 			array(
 				'type'    => 'drop_down',
