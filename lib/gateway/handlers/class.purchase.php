@@ -245,4 +245,17 @@ HTML;
 
 		return array( 'method' => 'REST', 'accepts' => $accepts );
 	}
+
+	/**
+	 * Can this purchase handler handle a given cart.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param ITE_Cart $cart
+	 *
+	 * @return bool
+	 */
+	public function can_handle_cart( ITE_Cart $cart ) {
+		return true;
+	}
 }

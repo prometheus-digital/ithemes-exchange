@@ -745,7 +745,7 @@ function it_exchange_offline_payments_add_child_transaction( $parent_txn ) {
 
 	$total = $parent_txn->get_total( false );
 	$fee   = $parent_txn->get_items()->flatten()->with_only( 'fee' )
-	                    ->having_param( 'is_free_trial', 'is_prorate_days' )->first();
+	                    ->filter( function( ITE_Fee_Line_Item $fee ) { return ! $fee->is_recurring(); } )->first();
 
 	if ( $fee ) {
 		$total += $fee->get_total() * -1;

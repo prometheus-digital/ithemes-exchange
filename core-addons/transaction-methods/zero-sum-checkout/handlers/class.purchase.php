@@ -63,4 +63,20 @@ class ITE_Zero_Sum_Checkout_Purchase_Handler extends ITE_Purchase_Request_Handle
 
 		return it_exchange_get_transaction( $txn_id ) ?: null;
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function can_handle_cart( ITE_Cart $cart ) {
+
+		if ( $cart->get_total() > 0 ) {
+			return false;
+		}
+
+		if ( $cart->contains_non_recurring_fee() ) {
+			return false;
+		}
+
+		return true;
+	}
 }

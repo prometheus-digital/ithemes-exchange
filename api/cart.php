@@ -929,34 +929,12 @@ function it_exchange_get_available_transaction_methods_for_cart( ITE_Cart $cart 
 
 	$cart = $cart ?: it_exchange_get_current_cart();
 
-	$total               = it_exchange_get_cart_total( false, array( 'cart' => $cart ) );
-	$contains_free_trial = $cart->get_items( 'product' )->filter( function ( ITE_Cart_Product $item ) use ( $cart ) {
-
-		if ( $item->get_total() > 0 ) {
-			return false;
-		}
-
-		$fees = $item->get_line_items()->with_only( 'fee' )->filter( function( ITE_Fee_Line_Item $fee ) {
-			return $fee->has_param( 'is_free_trial' ) || $fee->has_param( 'is_prorate_days' );
-		} );
-
-		if ( $fees->count() === 0 ) {
-			return false;
-		}
-
-		return true;
-
-	} )->count() > 0;
-
 	$methods = array();
 
-	if ( $total <= 0 && ! $contains_free_trial ) {
-		$methods[] = ITE_Gateways::get( 'zero-sum-checkout' );
-	} elseif ( $contains_free_trial || $total > 0 ) {
-		foreach ( ITE_Gateways::accepting() as $gateway ) {
-			if ( ! $gateway instanceof ITE_Zero_Sum_Checkout_Gateway ) {
-				$methods[] = $gateway;
-			}
+	foreach ( ITE_Gateways::accepting() as $gateway ) {
+		/** @var ITE_Purchase_Request_Handler $handler */
+		if ( ( $handler = $gateway->get_handler_by_request_name( 'purchase' ) ) && $handler->can_handle_cart( $cart ) ) {
+			$methods[] = $gateway;
 		}
 	}
 

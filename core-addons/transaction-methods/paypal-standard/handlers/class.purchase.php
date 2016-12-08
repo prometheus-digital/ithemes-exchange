@@ -205,8 +205,9 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 		}
 
 		$total = $cart->get_total();
-		$fee   = $cart_product->get_line_items()->with_only( 'fee' )
-		                      ->having_param( 'is_free_trial', 'is_prorate_days' )->first();
+		$fee = $cart_product->get_line_items()->with_only( 'fee' )
+		                    ->filter( function ( ITE_Fee_Line_Item $fee ) { return ! $fee->is_recurring(); } )
+		                    ->first();
 
 		if ( $fee ) {
 			$total += $fee->get_total() * - 1;

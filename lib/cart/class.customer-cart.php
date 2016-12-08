@@ -617,6 +617,54 @@ class ITE_Cart {
 	}
 
 	/**
+	 * Does the cart contain a recurring fee.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return bool Returns false if no fees or if only non-recurring fees.
+	 */
+	public function contains_recurring_fee() {
+		$fees = $this->get_items()->flatten()->with_only( 'fee' );
+
+		if ( ! $fees->count() ) {
+			return false;
+		}
+
+		/** @var ITE_Fee_Line_Item $fee */
+		foreach ( $fees as $fee ) {
+			if ( $fee->is_recurring() ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Does the cart contain a non-recurring fee.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return bool Returns false if no fees or if only recurring fees.
+	 */
+	public function contains_non_recurring_fee() {
+		$fees = $this->get_items()->flatten()->with_only( 'fee' );
+
+		if ( ! $fees->count() ) {
+			return false;
+		}
+
+		/** @var ITE_Fee_Line_Item $fee */
+		foreach ( $fees as $fee ) {
+			if ( ! $fee->is_recurring() ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Callback to perform custom processing when a cart product line item is added to the cart.
 	 *
 	 * @since 2.0.0
