@@ -54,13 +54,30 @@ class ITE_Simple_Tax_Line_Item extends ITE_Line_Item implements ITE_Tax_Line_Ite
 	 * @inheritdoc
 	 */
 	public function create_scoped_for_taxable( ITE_Taxable_Line_Item $item ) {
-		return self::create( $this->get_rate(), $this->get_param( 'codes' ), $item );
+		return self::create( $this->get_rate(), $this->get_codes(), $item );
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	public function get_provider() { return new ITE_Simple_Taxes_Provider(); }
+
+	/**
+	 * Get tax codes.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return array
+	 */
+	public function get_codes() {
+		$codes = $this->has_param( 'codes' ) ? $this->get_param( 'codes' ) : array();
+
+		if ( ! is_array( $codes ) ) {
+			$codes = array();
+		}
+
+		return $codes;
+	}
 
 	/**
 	 * @inheritdoc
@@ -82,7 +99,7 @@ class ITE_Simple_Tax_Line_Item extends ITE_Line_Item implements ITE_Tax_Line_Ite
 			}
 		}
 
-		$codes = $this->get_param( 'codes' );
+		$codes = $this->get_codes();
 
 		if ( count( $codes ) !== 0 && ! in_array( $item->get_tax_code( $this->get_provider() ), $codes ) ) {
 			return false;
