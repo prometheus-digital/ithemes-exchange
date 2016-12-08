@@ -256,6 +256,6 @@ HTML;
 	 * @return bool
 	 */
 	public function can_handle_cart( ITE_Cart $cart ) {
-		return true;
+		return $cart->get_total() > 0 || $cart->contains_non_recurring_fee();
 	}
 }
