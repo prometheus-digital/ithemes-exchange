@@ -356,7 +356,16 @@ function it_exchange_generate_transaction_object( ITE_Cart $cart = null ) {
 	$transaction_object->shipping_method_multi = $multiple_methods;
 	$transaction_object->shipping_total        = it_exchange_convert_to_database_number( $cart->calculate_total( 'shipping' ) );
 
-	$transaction_object = apply_filters( 'it_exchange_generate_transaction_object', $transaction_object );
+	/**
+	 * Filter the transaction object.
+	 *
+	 * @since 1.0.0
+	 * @since 2.0.0 Add the $cart parameter.
+	 *
+	 * @param object   $transaction_object
+	 * @param ITE_Cart $cart
+	 */
+	$transaction_object = apply_filters( 'it_exchange_generate_transaction_object', $transaction_object, $cart );
 
 	foreach ( $coupon_objects as $coupon_object ) {
 		$coupon_object->use_coupon( $transaction_object );

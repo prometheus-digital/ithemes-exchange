@@ -130,19 +130,22 @@ function it_exchange_customer_order_notes_store_current_note( $note ) {
  * @since 1.34
  *
  * @param stdClass $object
+ * @param ITE_Cart $cart
  *
  * @return stdClass
  */
-function it_exchange_customer_order_notes_txn_object( $object ) {
+function it_exchange_customer_order_notes_txn_object( $object, ITE_Cart $cart = null ) {
+
+	if ( $cart && ! $cart->is_current() ) {
+		return $object;
+	}
 
 	$object->customer_order_notes = it_exchange_customer_order_notes_get_current_note();
-
-	it_exchange_clear_session_data( 'customer-order-note' );
 
 	return $object;
 }
 
-add_filter( 'it_exchange_generate_transaction_object', 'it_exchange_customer_order_notes_txn_object' );
+add_filter( 'it_exchange_generate_transaction_object', 'it_exchange_customer_order_notes_txn_object', 10, 2 );
 
 /**
  * When the cart is emptied, clear the customer-order-note session data.
