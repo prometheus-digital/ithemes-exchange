@@ -285,7 +285,7 @@ function it_exchange_generate_transaction_object( ITE_Cart $cart = null ) {
 	$transaction_object->description            = it_exchange_get_cart_description( array( 'cart' => $cart ) );
 	$transaction_object->products               = $products;
 
-	$coupons = array();
+	$coupon_data = array();
 
 	/** @var IT_Exchange_Coupon[] $coupon_objects */
 	$coupon_objects = array();
@@ -294,14 +294,14 @@ function it_exchange_generate_transaction_object( ITE_Cart $cart = null ) {
 		foreach ( $coupons as $coupon ) {
 			if ( $coupon instanceof IT_Exchange_Coupon ) {
 				$coupon_objects[]   = $coupon;
-				$coupons[ $type ][] = $coupon->get_data_for_transaction_object();
+				$coupon_data[ $type ][] = $coupon->get_data_for_transaction_object();
 			} else {
-				$coupons[ $type ][] = $coupon;
+				$coupon_data[ $type ][] = $coupon;
 			}
 		}
 	}
 
-	$transaction_object->coupons                = $coupons;
+	$transaction_object->coupons                = $coupon_data;
 	$transaction_object->coupons_total_discount = $cart->calculate_total( 'coupon' ) * -1;
 	$transaction_object->customer_ip            = it_exchange_get_ip();
 
