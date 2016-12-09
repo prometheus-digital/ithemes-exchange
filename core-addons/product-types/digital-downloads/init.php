@@ -104,7 +104,7 @@ class IT_Exchange_Digital_Downloads_Add_On {
 			do_action( 'it_exchange_save_add_on_settings_digital_downloads' );
 		}
 
-		add_filter( 'it_storage_get_defaults_exchange_addon_digital_downloads', array( $this, 'set_default_settings' ) );
+		add_filter( 'it_storage_get_defaults_exchange_addon_digital_downloads', array( __CLASS__, 'set_default_settings' ) );
 	}
 
 	/**
@@ -223,9 +223,12 @@ class IT_Exchange_Digital_Downloads_Add_On {
 	 * Sets the default options for digital downloads payment settings
 	 *
 	 * @since 0.4.5
+	 *
+	 * @param array $defaults
+	 *
 	 * @return array settings
 	*/
-	function set_default_settings( $defaults ) {
+	public static function set_default_settings( $defaults ) {
 		$defaults['require-user-login'] = true;
 		return $defaults;
 	}
