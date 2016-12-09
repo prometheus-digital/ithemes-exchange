@@ -305,7 +305,7 @@ function it_exchange_register_scripts() {
 		}
 
 		$js_tokenizers[ $gateway->get_slug() ] = array(
-			'fn' => $handler->get_js()
+			'fn' => $handler->get_tokenize_js_function()
 		);
 	}
 

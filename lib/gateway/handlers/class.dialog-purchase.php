@@ -200,7 +200,7 @@ abstract class ITE_Dialog_Purchase_Request_Handler extends ITE_Purchase_Request_
 				jQuery,
 				'<?php echo $this->get_gateway()->get_slug(); ?>',
 				<?php echo it_exchange_in_superwidget() ? 'true' : 'false'; ?>,
-				<?php echo $tokenizer->get_js(); ?>
+				<?php echo $tokenizer->get_tokenize_js_function(); ?>
 			);
 		</script>
 
