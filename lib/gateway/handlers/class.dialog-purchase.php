@@ -117,9 +117,16 @@ abstract class ITE_Dialog_Purchase_Request_Handler extends ITE_Purchase_Request_
 						throw new Error( 'itExchange.hooks not available.' );
 					}
 
-					itExchange.hooks.addAction( 'itExchangeSW.preSubmitPurchaseDialog_' + gateway, function ( args ) {
+					itExchange.hooks.addAction( 'itExchangeSW.preSubmitPurchaseDialog_' + gateway, function ( deferred ) {
 
-						var $ = jQuery, $form = jQuery( 'form.it-exchange-purchase-dialog-' + gateway );
+						if ( !$( '#new-method-' + gateway ).is( ':checked' ) ) {
+
+							deferred.resolve( { alreadyProcessed: true } );
+
+							return;
+						}
+
+						var $form = $( 'form.it-exchange-purchase-dialog-' + gateway );
 
 						if ( $( "input[name='to_tokenize']", $form ).length ) {
 							deferred.resolve( { alreadyProcessed: true } );
@@ -127,7 +134,7 @@ abstract class ITE_Dialog_Purchase_Request_Handler extends ITE_Purchase_Request_
 							return;
 						}
 
-						tokenizeThenAddInput( args );
+						tokenizeThenAddInput( deferred );
 					} );
 				} else {
 					$( document ).on( 'submit', 'form.it-exchange-purchase-dialog-' + gateway, function ( e ) {
