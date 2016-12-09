@@ -45,7 +45,7 @@ class ITE_PayPal_Standard_Secure_Pause_Subscription_Handler implements ITE_Gatew
 			return false;
 		}
 
-		$request = array(
+		$body = array(
 			'USER'      => trim( $paypal_api_username ),
 			'PWD'       => trim( $paypal_api_password ),
 			'SIGNATURE' => trim( $paypal_api_signature ),
@@ -55,7 +55,7 @@ class ITE_PayPal_Standard_Secure_Pause_Subscription_Handler implements ITE_Gatew
 			'ACTION'    => 'Suspend',
 		);
 
-		$response = wp_remote_post( $paypal_api_url, array( 'body' => $request ) );
+		$response = wp_remote_post( $paypal_api_url, array( 'body' => $body ) );
 
 		if ( ! is_wp_error( $response ) ) {
 
