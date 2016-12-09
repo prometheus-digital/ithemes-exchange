@@ -402,7 +402,7 @@ function it_exchange_offline_payments_mark_subscriptions_as_active_on_clear( $tr
 		foreach ( $subs as $sub ) {
 			$sub_status = $sub->get_status();
 
-			if ( empty( $sub_status ) || ( $is_child && $sub_status === IT_Exchange_Subscription::STATUS_SUSPENDED ) ) {
+			if ( empty( $sub_status ) || ( $is_child && $sub_status === IT_Exchange_Subscription::STATUS_PAYMENT_FAILED ) ) {
 				add_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
 				$sub->set_status( IT_Exchange_Subscription::STATUS_ACTIVE );
 				remove_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
@@ -697,7 +697,7 @@ function it_exchange_offline_payments_handle_expired( $true, $product_id, $trans
 
 				if ( it_exchange_offline_payments_default_status() !== 'paid' ) {
 					add_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
-					$subscription->set_status( IT_Exchange_Subscription::STATUS_SUSPENDED );
+					$subscription->set_status( IT_Exchange_Subscription::STATUS_PAYMENT_FAILED );
 					remove_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
 				}
 
