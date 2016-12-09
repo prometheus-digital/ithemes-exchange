@@ -290,20 +290,19 @@ function it_exchange_generate_transaction_object( ITE_Cart $cart = null ) {
 	/** @var IT_Exchange_Coupon[] $coupon_objects */
 	$coupon_objects = array();
 
-	foreach ( $cart->get_items( 'coupon' ) as $coupon_line_item ) {
-		/** @var IT_Exchange_Coupon $coupon */
-		$coupon = $coupon_line_item->get_coupon();
-		$type   = $coupon->get_type();
-		if ( $coupon instanceof IT_Exchange_Coupon ) {
-			$coupon_objects[] = $coupon;
-			$coupons[$type][] = $coupon->get_data_for_transaction_object();
-		} else {
-			$coupons[$type][] = $coupon;
+	foreach ( it_exchange_get_applied_coupons( false, $cart ) as $type => $coupons ) {
+		foreach ( $coupons as $coupon ) {
+			if ( $coupon instanceof IT_Exchange_Coupon ) {
+				$coupon_objects[]   = $coupon;
+				$coupons[ $type ][] = $coupon->get_data_for_transaction_object();
+			} else {
+				$coupons[ $type ][] = $coupon;
+			}
 		}
 	}
 
 	$transaction_object->coupons                = $coupons;
-	$transaction_object->coupons_total_discount = $cart->calculate_total( 'coupon' );
+	$transaction_object->coupons_total_discount = $cart->calculate_total( 'coupon' ) * -1;
 	$transaction_object->customer_ip            = it_exchange_get_ip();
 
 	// Back-compat
