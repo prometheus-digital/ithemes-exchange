@@ -63,9 +63,7 @@ class ITE_PayPal_Standard_Secure_Resume_Subscription_Handler implements ITE_Gate
 
 			if ( ! empty( $response_array['ACK'] ) && $response_array['ACK'] === 'Success' ) {
 
-				if ( $request->get_resumed_by() ) {
-					$subscription->set_resumed_by( $request->get_resumed_by() );
-				}
+				$subscription->set_resumed_by( $request->get_resumed_by() );
 
 				return true;
 			}

@@ -63,9 +63,7 @@ class ITE_PayPal_Standard_Secure_Pause_Subscription_Handler implements ITE_Gatew
 
 			if ( ! empty( $response_array['ACK'] ) && $response_array['ACK'] === 'Success' ) {
 
-				if ( $request->get_paused_by() ) {
-					$subscription->set_paused_by( $request->get_paused_by() );
-				}
+				$subscription->set_paused_by( $request->get_paused_by() );
 
 				return true;
 			}
