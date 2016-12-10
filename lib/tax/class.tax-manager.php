@@ -244,7 +244,8 @@ class ITE_Tax_Manager implements ITE_Cart_Aware {
 			$new = $cart->get_billing_address();
 		}
 
-		if ( $new && $new->equals( $this->current_location ) ) {
+		// Force address updating when logging a customer in.
+		if ( $new && $new->equals( $this->current_location ) && ! doing_action( 'wp_login' ) ) {
 			return;
 		}
 
