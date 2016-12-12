@@ -1280,12 +1280,20 @@ class ITE_Cart {
 	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item_Repository $repository
+	 * @param bool                      $new_ids
 	 *
 	 * @return \ITE_Cart
 	 */
-	public function with_new_repository( ITE_Line_Item_Repository $repository ) {
+	public function with_new_repository( ITE_Line_Item_Repository $repository, $new_ids = false ) {
 
-		$repository->save_many( $this->get_items()->flatten()->to_array() );
+		if ( $new_ids ) {
+			foreach ( $this->get_items() as $item ) {
+				$repository->save( $item->clone_with_new_id() );
+			}
+		} else {
+			$repository->save_many( $this->get_items()->flatten()->to_array() );
+		}
+
 		$repository->set_billing_address( $this->get_billing_address() );
 		$repository->set_shipping_address( $this->get_shipping_address() );
 
