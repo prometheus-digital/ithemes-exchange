@@ -1868,10 +1868,10 @@ class IT_Exchange_Admin {
 				'sent' => _x( 'Sent!', 'Notice when an email receipt has been successfully sent.', 'it-l10n-ithemes-exchange' ),
 				'failed' => _x( 'Failed!', 'Notice when an email receipt has failed to be sent.', 'it-l10n-ithemes-exchange' ),
 				'format' => it_exchange_convert_php_to_moment( $dtf ),
-				'success' => _x( 'Receipt Sent!', 'it-l10n-ithemes-exchange' ),
-				'error' => _x( 'Resending receipt failed', 'it-l10n-ithemes-exchange' ), 
+				'receiptSuccess' => __( 'Receipt Sent!', 'it-l10n-ithemes-exchange' ),
+				'receiptFailed' => __( 'Resending receipt failed', 'it-l10n-ithemes-exchange' ), 
 				'statusChangeSuccess' => __( 'Status changed from %1$s to %2$s.', 'it-l10n-ithemes-exchange' ),
-				'statusChangeError' => _x( 'Status change failed', 'it-l10n-ithemes-exchange' )
+				'statusChangeError' => __( 'Status change failed', 'it-l10n-ithemes-exchange' )
 			) );
 			wp_dequeue_script( 'autosave' );
 		} else if ( 'exchange_page_it-exchange-addons' === $hook_suffix ) {
