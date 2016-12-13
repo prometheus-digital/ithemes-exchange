@@ -291,4 +291,38 @@ class ITE_PayPal_Standard_Secure_Gateway extends ITE_Gateway {
 
 		return ob_get_clean();
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function supports_feature( ITE_Optionally_Supported_Feature $feature ) {
+
+		switch ( $feature->get_feature_slug() ) {
+			case 'recurring-payments':
+				return true;
+		}
+
+		return parent::supports_feature( $feature );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function supports_feature_and_detail( ITE_Optionally_Supported_Feature $feature, $slug, $detail ) {
+
+		switch ( $feature->get_feature_slug() ) {
+			case 'recurring-payments':
+				switch ( $slug ) {
+					case 'auto-renew':
+					case 'profile':
+					case 'trial':
+					case 'trial-profile':
+						return true;
+					default:
+						return false;
+				}
+		}
+
+		return parent::supports_feature( $feature );
+	}
 }

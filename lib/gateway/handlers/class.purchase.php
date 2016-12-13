@@ -256,6 +256,34 @@ HTML;
 	 * @return bool
 	 */
 	public function can_handle_cart( ITE_Cart $cart ) {
-		return $cart->get_total() > 0 || $cart->contains_non_recurring_fee();
+
+		if ( $cart->get_total() <= 0 && ! $cart->contains_non_recurring_fee() ) {
+			return false;
+		}
+
+		/** @var ITE_Requires_Optionally_Supported_Features[]|ITE_Line_Item[] $items */
+		$items = $cart->get_items()->flatten()->filter( function ( ITE_Line_Item $item ) {
+			return $item instanceof ITE_Requires_Optionally_Supported_Features && $item->optional_features_required();
+		} )->unique();
+
+		$gateway = $this->get_gateway();
+
+		foreach ( $items as $item ) {
+			$requirements = $item->optional_features_required();
+
+			foreach ( $requirements as $requirement ) {
+				if ( ! $gateway->supports_feature( $requirement->get_feature() ) ) {
+					return false;
+				}
+
+				foreach ( $requirement->get_requirement_details() as $slug => $detail ) {
+					if ( ! $gateway->supports_feature_and_detail( $requirement->get_feature(), $slug, $detail ) ) {
+						return false;
+					}
+				}
+			}
+		}
+
+		return true;
 	}
 }

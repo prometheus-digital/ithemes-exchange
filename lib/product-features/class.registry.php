@@ -59,6 +59,19 @@ class ITE_Product_Feature_Registry {
 	}
 
 	/**
+	 * Get all product features that are optionally supported.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return ITE_Optionally_Supported_Product_Feature[]
+	 */
+	public static function optional() {
+		return array_filter( static::all(), function ( ITE_Product_Feature $feature ) {
+			return $feature instanceof ITE_Optionally_Supported_Product_Feature;
+		} );
+	}
+
+	/**
 	 * Register hooks.
 	 *
 	 * @since 2.0.0
