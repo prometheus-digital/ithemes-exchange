@@ -183,10 +183,39 @@ class ITE_PayPal_Standard_Gateway extends ITE_Gateway {
 		switch ( $feature->get_feature_slug() ) {
 			case 'recurring-payments':
 				switch ( $slug ) {
-					case 'auto-renew':
 					case 'profile':
-					case 'trial':
+
+						/** @var $detail IT_Exchange_Recurring_Profile */
+						switch ( $detail->get_interval_type() ) {
+							case IT_Exchange_Recurring_Profile::TYPE_DAY:
+								return $detail->get_interval_count() <= 90;
+							case IT_Exchange_Recurring_Profile::TYPE_WEEK:
+								return $detail->get_interval_count() <= 52;
+							case IT_Exchange_Recurring_Profile::TYPE_MONTH:
+								return $detail->get_interval_count() <= 24;
+							case IT_Exchange_Recurring_Profile::TYPE_YEAR:
+								return $detail->get_interval_count() <= 5;
+							default:
+								return false;
+						}
 					case 'trial-profile':
+
+						/** @var $detail IT_Exchange_Recurring_Profile */
+						switch ( $detail->get_interval_type() ) {
+							case IT_Exchange_Recurring_Profile::TYPE_DAY:
+								return $detail->get_interval_count() <= 90;
+							case IT_Exchange_Recurring_Profile::TYPE_WEEK:
+								return $detail->get_interval_count() <= 52;
+							case IT_Exchange_Recurring_Profile::TYPE_MONTH:
+								return $detail->get_interval_count() <= 24;
+							case IT_Exchange_Recurring_Profile::TYPE_YEAR:
+								return $detail->get_interval_count() <= 5;
+							default:
+								return false;
+						}
+
+					case 'auto-renew':
+					case 'trial':
 						return true;
 					default:
 						return false;
