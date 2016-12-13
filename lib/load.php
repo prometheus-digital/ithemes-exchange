@@ -10,6 +10,7 @@
 require_once dirname( __FILE__ ) . '/sessions/load.php';
 
 require_once dirname( __FILE__ ) . '/../api/contracts/load.php';
+require_once dirname( __FILE__ ) . '/optional-features/load.php';
 
 // IT Classes
 require_once dirname( __FILE__ ) . '/classes/load.php';
