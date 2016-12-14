@@ -460,7 +460,11 @@ class Manager {
 				$required[] = $property;
 			}
 
-			unset( $config['required'] );
+			unset( $schema['properties'][$property]['required'] );
+
+			if ( isset( $config['type'] ) && $config['type'] === 'object' ) {
+				$schema['properties'][ $property ] = $this->transform_schema( $config );
+			}
 		}
 
 		if ( $required ) {

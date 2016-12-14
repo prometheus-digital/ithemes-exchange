@@ -241,7 +241,8 @@ class Serializer {
 						'label' => array(
 							'description' => __( 'The transaction method name.', 'it-l10n-ithemes-exchange' ),
 							'type'        => 'string',
-							'context'     => array( 'view', 'edit' )
+							'context'     => array( 'view', 'edit' ),
+							'readonly'    => true,
 						),
 					),
 				),
@@ -258,7 +259,8 @@ class Serializer {
 						'slug'  => array(
 							'description' => __( 'The transaction status slug.', 'it-l10n-ithemes-exchange' ),
 							'type'        => 'string',
-							'context'     => array( 'edit' )
+							'context'     => array( 'edit' ),
+							'required'    => true,
 						),
 						'label' => array(
 							'description' => __( 'The transaction status label.', 'it-l10n-ithemes-exchange' ),
@@ -266,6 +268,7 @@ class Serializer {
 							'context'     => array( 'view', 'edit', 'embed' )
 						),
 					),
+					'required'    => true,
 				),
 				'cleared_for_delivery' => array(
 					'description' => __( 'The cleared for delivery status of the transaction.', 'it-l10n-ithemes-exchange' ),
