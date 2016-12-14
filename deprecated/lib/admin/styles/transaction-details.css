@@ -1,0 +1,492 @@
+/** -----------------------------------------------------:[ reset & locals ]:---------- */
+.handlediv,
+.hndle {
+	display: none;
+}
+
+#post-body-content {
+	margin-bottom: 0 !important;
+	max-width: 760px;
+}
+
+#post-body {
+	margin-right: 280px;
+}
+
+#post-body.columns-2 #postbox-container-1 {
+	margin-right: -280px;
+	float: left;
+}
+
+#poststuff #post-body.columns-2 #side-sortables {
+	width: 100%;
+}
+
+#it-exchange-transaction-details {
+	background: none;
+}
+
+#it-exchange-transaction-details .inside {
+	margin: 0;
+	padding: 0;
+	background: #FFF;
+}
+
+#it-exchange-transaction-details * {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+#it-exchange-transaction-details .left {
+	float: left;
+}
+
+#it-exchange-transaction-details .right {
+	float: right;
+	text-align: right;
+}
+
+#it-exchange-transaction-details .clearfix:after {
+	visibility: hidden;
+	display: block;
+	font-size: 0;
+	content: " ";
+	clear: both;
+	height: 0;
+}
+
+#it-exchange-transaction-details .spacing-wrapper {
+	overflow: hidden;
+	padding: 2em;
+}
+
+#it-exchange-transaction-details .bottom-border {
+	border-bottom: 1px solid #DFDFDF;
+}
+
+#it-exchange-transaction-details .bottom-top {
+	border-top: 1px solid #DFDFDF;
+}
+
+.metabox-holder .postbox-container .empty-container {
+	border: none !important;
+}
+
+/** -----------------------------------------------------:[ transaction details ]:---------- */
+#it-exchange-transaction-details {
+	max-width: 760px;
+	float: left;
+	width: 100%;
+}
+
+#it-exchange-transaction-details .parent-txn-link {
+	padding: 1.3em
+}
+
+#it-exchange-transaction-details .customer-avatar img {
+	border-radius: 3px;
+}
+
+#it-exchange-transaction-details .customer-display-name {
+	display: inline;
+	margin-top: 0;
+	padding-left: 0;
+	line-height: 1;
+}
+
+#it-exchange-transaction-details .customer-info {
+	margin-left: 95px;
+}
+
+#it-exchange-transaction-details .customer-profile {
+	margin-top: 1.4em;
+}
+
+#it-exchange-transaction-details .customer-profile a {
+	text-decoration: none;
+}
+
+#it-exchange-transaction-details .transaction-order-number {
+	font-weight: bold;
+	font-size: 1.8em;
+	letter-spacing: 2px;
+	margin-bottom: 5px;
+	margin-top: 2px;
+}
+
+#it-exchange-transaction-details .transaction-status {
+	margin-top: 1em;
+	font-size: 1.2em;
+}
+
+#it-exchange-transaction-details .transaction-status.paid {
+	color: #7EB03B;
+}
+
+#it-exchange-transaction-details .billing-shipping-wrapper .address-label {
+	font-weight: bold;
+}
+
+#it-exchange-transaction-details .billing-shipping-wrapper .column-inner {
+	padding: 0 2em 1em;
+}
+
+#it-exchange-transaction-details .products {
+	padding-bottom: 2em;
+}
+
+#it-exchange-transaction-details .products-header {
+	padding-bottom: 1em;
+	padding-top: 1em;
+	font-weight: bold;
+}
+
+#it-exchange-transaction-details .product.spacing-wrapper {
+	padding-bottom: 0;
+}
+
+#it-exchange-transaction-details .product-header {
+	font-size: 1.3em;
+	line-height: 2;
+}
+
+#it-exchange-transaction-details .product-header .product-title {
+	font-weight: bold;
+}
+
+#it-exchange-transaction-details .product-details {
+	margin-left: 1em;
+}
+
+#it-exchange-transaction-details .product-details .download-hashes {
+	padding-left: 1.5em;
+}
+
+#it-exchange-transaction-details .product-details .hash {
+	font-family: Consolas, Monaco, monospace;
+}
+
+#it-exchange-transaction-details .product-details .limit,
+#it-exchange-transaction-details .product-details .expires {
+	font-size: .8em;
+	font-weight: bold;
+	margin-left: 1.5em;
+}
+
+#it-exchange-transaction-details .product-details li p {
+	margin-left: 1em;
+}
+
+#it-exchange-transaction-details .transaction-shipping-summary .right {
+	font-size: 1.2em;
+	width: 100%;
+	max-width: 250px;
+}
+
+#it-exchange-transaction-details .transaction-shipping-summary .left {
+	font-size: .8em;
+	font-weight: bold;
+	line-height: 1.6em;
+	width: 60%;
+}
+
+#it-exchange-transaction-details .transaction-shipping-summary .left div {
+	font-size: 1.2em;
+}
+
+#it-exchange-transaction-details .transaction-shipping-summary .left .payment-shipping-name {
+	font-size: 1.4em;
+	font-weight: normal;
+}
+
+#it-exchange-transaction-details .transaction-costs .right {
+	font-size: 1.2em;
+	width: 100%;
+	max-width: 250px;
+}
+
+#it-exchange-transaction-details .transaction-costs .left {
+	font-size: .8em;
+	font-weight: bold;
+	line-height: 1.6em;
+	width: 60%;
+}
+
+#it-exchange-transaction-details .transaction-costs .transaction-costs-coupons,
+#it-exchange-transaction-details .transaction-costs .transaction-costs-refunds {
+	clear: right;
+}
+
+#it-exchange-transaction-details .transaction-costs .transaction-refunds-list {
+	margin-top: 1em;
+}
+
+#it-exchange-transaction-details .transaction-summary .right {
+	width: 100%;
+	max-width: 250px;
+}
+
+#it-exchange-transaction-details .transaction-summary div {
+	font-size: 1.2em;
+}
+
+#it-exchange-transaction-details .transaction-summary .right .left {
+	font-size: .8em;
+	font-weight: bold;
+	line-height: 1.6em;
+	width: 60%;
+}
+
+#it-exchange-transaction-details .payment-total-amount {
+	color: #7EB03B;
+	font-weight: 100;
+}
+
+#it-exchange-transaction-details .payment-method .payment-method-label {
+	font-size: .8em;
+	font-weight: bold;
+	padding-bottom: 6px;
+}
+
+#it-exchange-transaction-details .payment-method .payment-method-name code {
+	font-size: .6em;
+}
+
+#it-exchange-transaction-details .payment-original-total-label,
+#it-exchange-transaction-details .payment-original-total-amount {
+	margin-top: 1em;
+	color: #999;
+}
+
+#it-exchange-transaction-details .payment-original-total-label {
+	margin-top: 1.416666667em;
+}
+
+#it-exchange-transaction-details .transaction-status-update {
+	position: relative;
+}
+
+#it-exchange-transaction-details .update-status-label {
+	font-weight: bold;
+}
+
+#it-exchange-transaction-details .update-status-setting {
+	position: relative;
+	width: auto;
+}
+
+#it-exchange-update-transaction-status-failed,
+#it-exchange-update-transaction-status-success {
+	position: absolute;
+	top: 3px;
+	right: 95px;
+	padding: 2px 4px;
+	background: #407D28;
+	border-radius: 2px;
+	color: #FFF;
+	font-weight: 100;
+	opacity: 0;
+}
+
+#it-exchange-update-transaction-status-failed {
+	background: #D72E3A;
+}
+
+/** -----------------------------------------------------:[ transaction activity ]:---------- */
+#it-exchange-transaction-activity {
+	width: 250px;
+	float: right;
+	margin: 1px -280px 0 0;
+	overflow-y: scroll;
+}
+
+#exchange-no-activity-found {
+	background: #dbdbdb;
+	padding: 20px;
+	border-radius: 20px;
+	text-align: center;
+	font-weight: bold;
+}
+
+.exchange-activity-stream-header {
+	padding: 20px;
+	position: absolute;
+	z-index: 5;
+	background: white;
+	border: #ccc solid 1px;
+	border-radius: 0 0 10px 10px;
+	width: 250px;
+	box-sizing: border-box;
+	box-shadow: none;
+	-webkit-transition: boxshadow .2s ease-in-out;
+	-moz-transition: boxshadow .2s ease-in-out;
+	-ms-transition: boxshadow .2s ease-in-out;
+	-o-transition: boxshadow .2s ease-in-out;
+	transition: boxshadow .2s ease-in-out;
+}
+
+.exchange-activity-stream-header.exchange-shadowed {
+	box-shadow: 0 0 10px #dddddd;
+}
+
+#exchange-activity-filter {
+	max-width: 120px;
+}
+
+#exchange-close-note {
+	position: absolute;
+	top: 3px;
+	left: 3px;
+	cursor: pointer;
+	background: none repeat scroll 0 0 transparent;
+	border: medium none;
+	border-spacing: 0;
+	margin: 0;
+	padding: 0;
+	text-align: left;
+	text-decoration: none;
+	text-indent: 0;
+	opacity: .5;
+}
+
+#exchange-close-note::-moz-focus-inner {
+	border: 0;
+	padding: 0;
+}
+
+#exchange-close-note:hover {
+	opacity: .8;
+}
+
+.exchange-filter-action-container {
+	text-align: center;
+}
+
+.exchange-note-writing-container {
+	display: none;
+}
+
+.exchange-note-writing-container textarea {
+	width: 100%;
+}
+
+label[for="exchange-notify-customer"] {
+	margin-right: 4px;
+	height: 28px;
+	line-height: 28px;
+}
+
+.exchange-note-writing-container textarea.exchange-new-note-public,
+#activity-stream li.is-public article {
+	background: #F1FFDE;
+}
+
+.exchange-note-writing-meta {
+	width: 100%;
+	display: inline-block;
+	text-align: right;
+}
+
+#activity-stream {
+	list-style: disc;
+	margin: 65px 0 0 0;
+	padding: 0 0 0 5px;
+}
+
+#activity-stream p {
+	margin: 0;
+	padding: 0;
+}
+
+#activity-stream li {
+	color: #909090;
+	font-size: 24px;
+	padding: 5px 0 0 15px;
+	margin-bottom: 0;
+	list-style-type: none;
+	position: relative;
+	border-left: 2px solid #909090;
+}
+
+#activity-stream li:before {
+	content: '';
+	width: 10px;
+	height: 10px;
+	background: #909090;
+	position: absolute;
+	top: 10px;
+	left: -6px;
+	border-radius: 100%;
+}
+
+#activity-stream li:first-of-type {
+	padding-top: 30px;
+}
+
+#activity-stream li:first-of-type:before {
+	top: 35px;
+}
+
+#activity-stream li header {
+	color: #565656;
+	padding-bottom: 10px;
+	font-size: 13px;
+}
+
+#activity-stream li article {
+	background: white;
+	border: #ccc solid 1px;
+	color: #444;
+	padding: 15px;
+	font-size: 13px;
+}
+
+#activity-stream li article footer {
+	border-top: #ccc solid 1px;
+	padding: 15px 15px 0 15px;
+	margin: 15px -15px 0 -15px;
+	vertical-align: middle;
+}
+
+#activity-stream li article footer img {
+	height: 24px;
+	vertical-align: middle;
+	padding-right: 5px;
+}
+
+#activity-stream .exchange-delete-activity {
+	font-size: 12px;
+	text-align: right;
+	width: 100%;
+	display: inline-block;
+	color: #c46857;
+}
+
+#activity-stream li article code {
+	word-wrap: break-word;
+	word-break: break-all;
+}
+
+/** -----------------------------------------------------:[ responsive ]:---------- */
+
+@media screen and (max-width: 850px) {
+
+	#post-body {
+		margin-right: 280px;
+	}
+
+	#it-exchange-transaction-details {
+		width: 100% !important;
+	}
+
+	#it-exchange-transaction-activity {
+		width: 100% !important;
+		margin: 1px 0 0 0;
+		float: left;
+	}
+
+	#activity-stream {
+		height: 100% !important;
+	}
+}

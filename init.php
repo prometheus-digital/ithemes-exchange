@@ -16,6 +16,20 @@
  *
 */
 
-if ( version_compare( PHP_VERSION, '5.3', '>=' ) ) {
+/**
+ * Whether to load deprecated code.
+ *
+ * @since 2.0.0
+ *
+ * @return bool
+ */
+function it_exchange_load_deprecated() {
+	return version_compare( PHP_VERSION, '5.3', '<' ) || get_option( 'it_exchange_load_deprecated', false ) ||
+	       ( defined( 'IT_EXCHANGE_LOAD_DEPRECATED' ) && IT_EXCHANGE_LOAD_DEPRECATED );
+}
+
+if ( it_exchange_load_deprecated() ) {
+	require_once dirname( __FILE__ ) . '/deprecated/init.php';
+} else {
 	require_once dirname( __FILE__ ) . '/ithemes-exchange.php';
 }
