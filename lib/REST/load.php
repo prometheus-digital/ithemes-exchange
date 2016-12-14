@@ -14,6 +14,7 @@ use iThemes\Exchange\REST\Middleware\Cart_Feedback;
 use iThemes\Exchange\REST\Middleware\Error_Handler;
 use iThemes\Exchange\REST\Middleware\Filter_By_Context;
 use iThemes\Exchange\REST\Middleware\Stack;
+use iThemes\Exchange\REST\Helpers\ContextFilterer;
 use iThemes\Exchange\REST\Route\Cart\Carts;
 use iThemes\Exchange\REST\Route\Cart\Item;
 use iThemes\Exchange\REST\Route\Cart\Meta;
@@ -181,7 +182,7 @@ function get_rest_manager() {
 		$stack->push( new Error_Handler( defined( 'WP_DEBUG' ) && WP_DEBUG ), 'error-handler' );
 		$stack->push( new Cart_Decorator(), 'cart-decorator' );
 		$stack->push( new Autolinker(), 'autolinker' );
-		$stack->push( new Filter_By_Context(), 'filter-by-context' );
+		$stack->push( new Filter_By_Context( new ContextFilterer() ), 'filter-by-context' );
 		$stack->push( new Cart_Feedback(), 'cart-feedback' );
 
 		$manager = new Manager( 'it_exchange', $stack, array(
