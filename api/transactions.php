@@ -315,7 +315,11 @@ function it_exchange_generate_transaction_object( ITE_Cart $cart = null ) {
 	$transaction_object->taxes_raw              = $taxes;
 
 	// Tack on Shipping and Billing address
-	$transaction_object->shipping_address = $cart->get_shipping_address() ? $cart->get_shipping_address()->to_array() : array();
+	if ( $cart->get_shipping_address() && $cart->get_shipping_address()->offsetGet( 'address1' ) ) {
+		$transaction_object->shipping_address = $cart->get_shipping_address()->to_array();
+	} else {
+		$transaction_object->shipping_address = array();
+	}
 
 	if ( apply_filters( 'it_exchange_billing_address_purchase_requirement_enabled', false ) ) {
 		$transaction_object->billing_address = $cart->get_billing_address()->to_array();

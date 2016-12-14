@@ -389,7 +389,7 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 	 */
 	public function set_billing_address( ITE_Location $location = null ) {
 
-		if ( $location === null ) {
+		if ( $location === null || ! $location->offsetGet( 'address1' ) ) {
 			$this->get_transaction()->billing = 0;
 
 			return $this->get_transaction()->save();
@@ -414,7 +414,7 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 	 */
 	public function set_shipping_address( ITE_Location $location = null ) {
 
-		if ( $location === null ) {
+		if ( $location === null || ! $location->offsetGet( 'address1' ) ) {
 			$this->get_transaction()->shipping = 0;
 
 			return $this->get_transaction()->save();
