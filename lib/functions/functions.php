@@ -1868,7 +1868,7 @@ function it_exchange_show_ithemes_sync_integration_nag() {
 	if ( ! current_user_can( 'manage_options' ) )
 		$show_nag = false;
 
-    if ( ! empty( $show_nag ) ) {
+    if ( ! empty( $show_nag ) && ! empty( $_GET ) ) {
         $more_info_url   = 'http://ithemes.com/2014/06/24/track-sales-sync-new-ithemes-exchange-integration/';
         $dismiss_url = add_query_arg( array( 'it-exchange-dismiss-sync-integration-nag' => 1 ) ); // escaped before printed
         include( dirname( dirname( __FILE__ ) ) . '/admin/views/notices/ithemes-sync-integration.php' );
