@@ -71,8 +71,9 @@ class IT_Theme_API_Line_Item implements IT_Theme_API {
 		}
 
 		$before = $options['before'] . "<{$options['wrap']} class=\"{$options['class']}\">";
+		$name = apply_filters( 'it_theme_api_line_item_name', $this->item->get_name(), $this->item );
 
-		return $before . $this->item->get_name() . $options['after'];
+		return $before . $name . "</{$options['wrap']}>" . $options['after'];
 	}
 
 	/**
@@ -100,7 +101,7 @@ class IT_Theme_API_Line_Item implements IT_Theme_API {
 
 		$before = $options['before'] . "<{$options['wrap']} class=\"{$options['class']}\">";
 
-		return $before . $this->item->get_description() . $options['after'];
+		return $before . $this->item->get_description() . "</{$options['wrap']}>" .  $options['after'];
 	}
 
 	/**

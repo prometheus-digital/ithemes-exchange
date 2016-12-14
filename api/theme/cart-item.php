@@ -155,7 +155,7 @@ class IT_Theme_API_Cart_Item extends IT_Theme_API_Line_Item {
 		);
 		$options  = ITUtility::merge_defaults( $options, $defaults );
 
-		return $options['before'] . $this->item->get_name() . $options['after'];
+		return $options['before'] . apply_filters( 'it_exchange_api_theme_cart_item_title', $this->item->get_name(), $this->item ) . $options['after'];
 	}
 
 	/**
