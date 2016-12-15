@@ -366,14 +366,14 @@ $dtf      = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 					<?php do_action( 'it_exchange_transaction_print_metabox_after_transaction_shipping_name', $post ); ?>
 				</div>
 			</div>
-		</div>
 
-		<div class="payment-shipping-total right clearfix">
-			<div class="payment-shipping-total-label left"><?php _e( 'Shipping', 'it-l10n-ithemes-exchange' ); ?></div>
-			<div class="payment-shipping-total-amount">
-				<?php do_action( 'it_exchange_transaction_print_metabox_before_shipping_total', $post ); ?>
-				<?php echo it_exchange_format_price( it_exchange_get_transaction_shipping_total( $post ) ); ?>
-				<?php do_action( 'it_exchange_transaction_print_metabox_after_shipping_total', $post ); ?>
+			<div class="payment-shipping-total right clearfix">
+				<div class="payment-shipping-total-label left"><?php _e( 'Shipping', 'it-l10n-ithemes-exchange' ); ?></div>
+				<div class="payment-shipping-total-amount">
+					<?php do_action( 'it_exchange_transaction_print_metabox_before_shipping_total', $post ); ?>
+					<?php echo it_exchange_format_price( it_exchange_get_transaction_shipping_total( $post ) ); ?>
+					<?php do_action( 'it_exchange_transaction_print_metabox_after_shipping_total', $post ); ?>
+				</div>
 			</div>
 		</div>
 	<?php endif; ?>
