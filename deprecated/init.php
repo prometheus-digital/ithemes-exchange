@@ -286,13 +286,35 @@ function it_exchange_pre_set_update_plugins_transient( $value ) {
 	$data        = $value->response['ithemes-exchange/init.php'];
 	$new_version = $data->new_version;
 
-	// This update is available for deprecated users. Allow it.
-	if ( count( explode( '.', $new_version ) ) >= 4 ) {
+	$response = wp_safe_remote_get( "https://plugins.svn.wordpress.org/ithemes-exchange/tags/$new_version/readme.txt" );
+
+	if ( is_wp_error( $response ) ) {
+		return $value;
+	}
+
+	if ( ! $response ) {
+		return $value;
+	}
+
+	$readme = wp_remote_retrieve_body( $response );
+
+	preg_match( '/Deprecated: ((\d|.)+)/', $readme, $matches );
+
+	if ( ! $matches || ! isset( $matches[1] ) ) {
+		return $value;
+	}
+
+	$current_version    = $GLOBALS['IT_Exchange']->_version;
+	$new_deprecated_version = $matches[1];
+
+	if ( version_compare( $current_version, $new_deprecated_version, '<' ) ) {
+		$value->response['ithemes-exchange/init.php']->new_version = $new_deprecated_version;
+
 		return $value;
 	}
 
 	// This is an update for the main package. Move it to the no_update list.
-	$data->new_version = $GLOBALS['IT_Exchange']->_version;
+	$data->new_version = $current_version;
 	unset( $value->response['ithemes-exchange/init.php'] );
 	$value->no_update['ithemes-exchange/init.php'] = $data;
 
