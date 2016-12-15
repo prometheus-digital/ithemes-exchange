@@ -467,6 +467,10 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			);
 		} else {
 			$address = it_exchange_get_transaction_shipping_address( $this->_transaction );
+
+			if ( ! $address && $this->_transaction->parent ) {
+				$address = it_exchange_get_transaction_shipping_address( $this->_transaction->parent );
+			}
 		}
 
 		if ( ! empty( $options['has'] ) ) {
@@ -508,6 +512,10 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			);
 		} else {
 			$address = it_exchange_get_transaction_billing_address( $this->_transaction );
+
+			if ( ! $address && $this->_transaction->parent ) {
+				$address = it_exchange_get_transaction_billing_address( $this->_transaction->parent );
+			}
 		}
 
 		if ( ! empty( $options['has'] ) ) {
@@ -539,7 +547,20 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	public function products( $options = array() ) {
 
 		if ( $options['has'] ) {
-			return $this->demo || count( it_exchange_get_transaction_products( $this->_transaction ) ) > 0;
+
+			if ( $this->demo ) {
+				return true;
+			}
+
+			if ( count( it_exchange_get_transaction_products( $this->_transaction ) ) > 0 ) {
+				return true;
+			}
+
+			if ( ! empty( $this->_transaction->parent ) && count( it_exchange_get_transaction_products( $this->_transaction->parent ) ) > 0 ) {
+				return true;
+			}
+
+			return false;
 		}
 
 		// If we made it here, we're doing a loop of transaction_products for the current query.
@@ -560,9 +581,19 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 				$GLOBALS['it_exchange']['transaction_product']  = reset( $GLOBALS['it_exchange']['transaction_products'] );
 
 				if ( $this->_transaction ) {
-					$GLOBALS['it_exchange']['line-item'] = $this->_transaction->get_item(
+					$item = $this->_transaction->get_item(
 						'product', $GLOBALS['it_exchange']['transaction_product']['product_cart_id']
 					);
+
+					if ( ! $item && $this->_transaction->parent ) {
+						$item = $this->_transaction->parent->get_item(
+							'product', $GLOBALS['it_exchange']['transaction_product']['product_cart_id']
+						);
+					}
+
+					if ( $item ) {
+						$GLOBALS['it_exchange']['line-item'] = $item;
+					}
 				}
 			}
 
