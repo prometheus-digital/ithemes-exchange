@@ -266,12 +266,14 @@ function it_exchange_override_plugin_version( $plugins ) {
 add_filter( 'all_plugins', 'it_exchange_override_plugin_version' );
 
 /**
- * Override the update plugins transient to remove updates that aren't four part.
+ * Override the update plugins transient to remove updates that aren't for the deprecated version.
  *
- * For example:
+ * This works be checking the latest copy of the readme.txt for the plugin. It looks for a string like
+ * Deprecated: 1.36.2
  *
- *      2.0.1 - This is an update to the main branch. And we don't want to show it to deprecated users.
- *      2.0.1.1 - This is an update to the main and deprecated branch. We can show it.
+ * This represents the latest version of the deprecated code. If this plugins current version is gte to the latest,
+ * then we move the update to the no updates list so the user isn't alerted to plugin updates that don't apply to them.
+ * Else if the plugins current version is lt the latest, we modify the displayed Upgrade to version to the deprecated one.
  *
  * @param object $value
  *
