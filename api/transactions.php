@@ -733,10 +733,12 @@ function it_exchange_add_child_transaction( $method, $method_id, $status = 'pend
 			'purchase_mode' => $mode,
 		);
 
-		if ( $customer instanceof IT_Exchange_Guest_Customer ) {
+		if ( $customer ) {
+			if ( is_numeric( $customer->id ) ) {
+				$purchase_args['customer_id'] = $customer->id;
+			}
+
 			$purchase_args['customer_email'] = $customer->get_email();
-		} elseif ( $customer ) {
-			$purchase_args['customer_id'] = $customer_id;
 		}
 
 		if ( $payment_token ) {
