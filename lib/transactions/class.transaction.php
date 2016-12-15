@@ -1382,6 +1382,23 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	 * @inheritDoc
 	 */
 	public function __isset( $name ) {
+
+		if ( $name === 'gateway_id_for_transaction' ) {
+			return $this->method_id !== null;
+		}
+
+		if ( $name === 'transaction_method' ) {
+			return $this->method !== null;
+		}
+
+		if ( $name === 'cart_details' ) {
+			return get_post_meta( $this->ID, '_it_exchange_cart_object', true ) !== null;
+		}
+
+		if ( in_array( $name, array( 'transaction_supports', 'transaction_data' ), true ) ) {
+			return false;
+		}
+
 		return parent::__isset( $name );
 	}
 
