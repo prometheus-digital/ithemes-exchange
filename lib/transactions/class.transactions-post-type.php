@@ -358,6 +358,10 @@ class IT_Exchange_Transaction_Post_Type {
 
 		$transaction = it_exchange_get_transaction( $post );
 
+		if ( ! $transaction ) {
+			return;
+		}
+
 		switch ( $column ) {
 			case 'it_exchange_transaction_method_column' :
 				$method_name = esc_attr( it_exchange_get_transaction_method_name( $transaction ) );
