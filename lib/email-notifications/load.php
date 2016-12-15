@@ -210,17 +210,42 @@ function it_exchange_register_email_notifications() {
 				'previous' => empty( $settings['receipt-email-template'] ) ? '' : $settings['receipt-email-template']
 			)
 		) )
-		->register_notification( new IT_Exchange_Customer_Email_Notification(
-			__( 'New Public Transaction Activity', 'it-l10n-ithemes-exchange' ), 'customer-order-note', new IT_Exchange_Email_Template( 'order-note' ), array(
-				'defaults' => array(
-					'subject' => sprintf( __( 'New note about your order %s', 'it-l10n-ithemes-exchange' ), $r->format_tag( 'receipt_id' ) ),
-					'body'    => sprintf( __( "Hello %s, \r\n\r\n A new note has been added to your order.", 'it-l10n-ithemes-exchange' ), $r->format_tag( 'first_name' ) )
+	;
+
+	/**
+	 * Filter whether child transactions are being used.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param bool $in_use
+	 */
+	if ( apply_filters( 'it_exchange_using_child_transactions', false ) ) {
+		$notifications->register_notification( new IT_Exchange_Customer_Email_Notification(
+			__( 'Renewal Purchase Receipt', 'it-l10n-ithemes-exchange' ), 'renewal-receipt', new IT_Exchange_Email_Template( 'receipt' ), array(
+				'defaults'    => array(
+					'subject' => sprintf( __( 'Receipt for renewal payment: %s', 'it-l10n-ithemes-exchange' ), $r->format_tag( 'receipt_id' ) ),
+					'body'    => sprintf( __( "Hello %s, \r\n\r\n Thank you for your renewal. Your order's details are below.", 'it-l10n-ithemes-exchange' ), $r->format_tag( 'first_name' ) ),
 				),
-				'group'    => __( 'Core', 'it-l10n-ithemes-exchange' ),
+				'group'       => __( 'Core', 'it-l10n-ithemes-exchange' ),
 				'description' =>
-					__( "The order note and cart details are already included in the template.", 'it-l10n-ithemes-exchange' ),
+					__( "The customer's shipping and billing address, as well as the cart details, payment method, download links, total and purchase date are already included in the template.",
+						'it-l10n-ithemes-exchange' ),
+				'previous'    => empty( $settings['receipt-email-template'] ) ? '' : $settings['receipt-email-template']
 			)
 		) );
+	}
+
+	$notifications->register_notification( new IT_Exchange_Customer_Email_Notification(
+		__( 'New Public Transaction Activity', 'it-l10n-ithemes-exchange' ), 'customer-order-note', new IT_Exchange_Email_Template( 'order-note' ), array(
+			'defaults' => array(
+				'subject' => sprintf( __( 'New note about your order %s', 'it-l10n-ithemes-exchange' ), $r->format_tag( 'receipt_id' ) ),
+				'body'    => sprintf( __( "Hello %s, \r\n\r\n A new note has been added to your order.", 'it-l10n-ithemes-exchange' ), $r->format_tag( 'first_name' ) )
+			),
+			'group'    => __( 'Core', 'it-l10n-ithemes-exchange' ),
+			'description' =>
+				__( "The order note and cart details are already included in the template.", 'it-l10n-ithemes-exchange' ),
+		)
+	) );
 
 	/**
 	 * Fires when add-ons should register additional email notifications.

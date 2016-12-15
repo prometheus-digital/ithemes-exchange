@@ -53,6 +53,7 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 
 		// Send emails on successfull transaction
 		add_action( 'it_exchange_add_transaction_success', array( $this, 'send_purchase_emails' ), 20 );
+		add_action( 'it_exchange_add_child_transaction_success', array( $this, 'send_purchase_emails' ), 20 );
 
 		// Send emails when admin requests a resend
 		add_action( 'admin_init', array( $this, 'handle_resend_confirmation_email_requests' ) );
@@ -277,7 +278,7 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 		 */
 		if ( apply_filters( 'it_exchange_send_purchase_email_to_customer', true, $this ) ) {
 
-			$notification = $this->get_notification( 'receipt' );
+			$notification = $this->get_notification( $transaction->has_parent() ? 'renewal-receipt' : 'receipt' );
 
 			if ( $notification && $notification->is_active() ) {
 				$recipient = new IT_Exchange_Email_Recipient_Transaction( $transaction );
