@@ -60,8 +60,13 @@
 
 								<?php do_action( 'it_exchange_email_template_receipt_meta-top_begin_order_number' ); ?>
 								<strong><?php _e( 'Order Number', 'it-l10n-ithemes-exchange' ); ?></strong><br>
-								<?php it_exchange( 'transaction', 'order-number', array( 'label' => '%s' ) ); ?><br>
+								<?php it_exchange( 'transaction', 'order-number', array( 'label' => '%s' ) ); ?><br><br>
 								<?php do_action( 'it_exchange_email_template_receipt_meta-top_end_order_number' ); ?>
+
+								<?php do_action( 'it_exchange_email_template_receipt_meta-top_begin_parent_order' ); ?>
+								<strong><?php _e( 'Parent Order', 'it-l10n-ithemes-exchange' ); ?></strong><br>
+								<?php it_exchange( 'transaction', 'parent', 'label=%s' ); ?><br>
+								<?php do_action( 'it_exchange_email_template_receipt_meta-top_end_parent_order' ); ?>
 							</td>
 							<?php do_action( 'it_exchange_email_template_receipt_meta-top_after_third_block' ); ?>
 

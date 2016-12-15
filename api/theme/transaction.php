@@ -77,6 +77,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		'clearedfordelivery'    => 'cleared_for_delivery',
 		'featuredimage'         => 'featured_image',
 		'thankyoumessage'       => 'thank_you_message',
+		'parent'                => 'parent',
 		'cartobject'            => 'cart_object',
 	);
 
@@ -1458,6 +1459,52 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			case 'html':
 			default:
 				$output = sprintf( $options['label'], $this->_transaction->get_customer_email() );
+				break;
+
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Get the parent transaction.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param array $options
+	 *
+	 * @return bool|int|string
+	 */
+	public function parent( $options = array() ) {
+
+		if ( ! $this->_transaction ) {
+			return false;
+		}
+
+		$defaults = array(
+			'format' => 'html',
+			'before' => '',
+			'after'  => '',
+			'label' => __( 'Parent %s', 'it-l10n-ithemes-exchange' ),
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+
+		if ( $options['has'] ) {
+			return (bool) $this->_transaction->parent;
+		}
+
+		if ( ! $this->_transaction->parent ) {
+			return '';
+		}
+
+		switch( $options['format'] ) {
+
+			case 'raw':
+				$output = $this->_transaction->parent->get_ID();
+				break;
+			case 'html':
+			default:
+				$output = sprintf( $options['label'], $this->_transaction->parent->get_order_number() );
 				break;
 
 		}
