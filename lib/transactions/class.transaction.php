@@ -579,7 +579,18 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	 * @return string
 	 */
 	public function get_customer_email() {
-		return apply_filters( 'it_exchange_get_transaction_customer_email', $this->customer_email, $this );
+
+		$email = $this->customer_email;
+
+		if ( ! $email ) {
+			$customer = $this->get_customer();
+
+			if ( $customer ) {
+				$email = $customer->get_email();
+			}
+		}
+
+		return apply_filters( 'it_exchange_get_transaction_customer_email', $email, $this );
 	}
 
 	/**

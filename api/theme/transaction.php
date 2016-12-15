@@ -639,6 +639,10 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			$items = $this->get_demo_items();
 		} elseif ( $transaction ) {
 			$items = $transaction->get_items()->non_summary_only();
+
+			if ( ! $items->count() && $transaction->parent ) {
+				$items = $transaction->parent->get_items()->non_summary_only();
+			}
 		} else {
 			return false;
 		}
