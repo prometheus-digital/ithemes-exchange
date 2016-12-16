@@ -22,10 +22,12 @@
 </script>
 
 <script type="text/template" id="tmpl-it-exchange-checkout-line-item--product">
-    <# if ( data.image ) { #>
-        <img src="{{ data.image }}" class="it-exchange-checkout-line-item--product-image">
-    <# } #>
-    <span class="it-exchange-checkout-line-item--item-name">{{ data.name }}</span>
+    <span class="it-exchange-checkout-line-item--item-name">
+         <# if ( data.image && data.showImage ) { #>
+            <img src="{{ data.image }}" class="it-exchange-checkout-line-item--product-image">
+        <# } #>
+        {{ data.name }}
+    </span>
     <span class="it-exchange-checkout-line-item--item-quantity">{{ data.quantity.selected }}</span>
     <span class="it-exchange-checkout-line-item--item-total">{{ data.totalFormatted }}</span>
 </script>

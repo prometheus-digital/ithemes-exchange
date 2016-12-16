@@ -1039,7 +1039,7 @@ function it_exchange_doing_guest_checkout() {
  *
  * @return string
  */
-function it_exchange_get_product_cart_item_featured_image_url( ITE_Cart_Product $item, $size = 'thumbnail' ) {
+function it_exchange_get_product_cart_item_featured_image_url( ITE_Cart_Product $item, $size = 'thumb' ) {
 
 	$product = $item->get_product();
 
@@ -1094,7 +1094,7 @@ function it_exchange_get_product_cart_item_featured_image_url( ITE_Cart_Product 
 		);
 
 		if ( is_array( $size ) ) {
-			$img_src = wp_get_attachment_image_url( $product_images[0], $options['size'] );
+			$img_src = wp_get_attachment_image_url( $product_images[0], $size );
 		} elseif ( 'thumb' === $size ) {
 			$img_src = $feature_image['thumb'];
 		} else {

@@ -1526,12 +1526,17 @@ a.it-exchange-button {
     display: inline-block;
 }
 
+.it-exchange-checkout-line-items .it-exchange-checkout-line-item--product-image {
+    height: 2em;
+    margin-right: 5px;
+}
+
 .it-exchange-checkout-line-items li .it-exchange-checkout-line-item--item-name {
-    width: 60%;
+    width: 65%;
 }
 
 .it-exchange-checkout-line-items li .it-exchange-checkout-line-item--item-quantity {
-    width: 15%;
+    width: 10%;
     position: relative;
     text-align: right;
 }
