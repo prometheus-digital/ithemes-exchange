@@ -1593,6 +1593,41 @@ a.it-exchange-button {
     text-align: right;
 }
 
+.it-exchange-checkout-coupon-container {
+    margin-bottom: 15px;
+    max-width: 400px;
+}
+
+.it-exchange-checkout-coupon-input-container label {
+    display: inline-block;
+    margin-top: 0;
+    margin-right: 5px;
+    width: 70%;
+}
+
+.it-exchange-checkout-coupon-input-container span {
+    display: inline-block;
+    font-size: .7em;
+    text-transform: uppercase;
+}
+
+.it-exchange-checkout-coupon-input-container .it-exchange-checkout-coupon-add {
+    width: 20%;
+}
+
+.it-exchange-checkout-coupon-input-container .it-exchange-checkout-coupon-cancel {
+    width: auto;
+    background: none;
+    border: 0;
+    padding: 0;
+    margin: 0 0 0 10px;
+    vertical-align: middle;
+    color: initial;
+    font-weight: initial;
+    font-size: 1.2em;
+    transition: .2s ease-in opacity;
+}
+
 .it-exchange-checkout-purchase-methods {
     margin-left: 0;
 }

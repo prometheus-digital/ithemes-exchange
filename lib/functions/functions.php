@@ -274,6 +274,9 @@ function it_exchange_register_scripts() {
 				'completePurchase' => __( 'Complete Purchase', 'it-l10n-ithemes-exchange' ),
 				'purchased'        => __( 'Purchased!', 'it-l10n-ithemes-exchange' ),
 				'cancel'           => __( 'Cancel', 'it-l10n-ithemes-exchange' ),
+				'haveCoupon'       => __( 'Have a coupon?', 'it-10n-ithemes-exchange' ),
+				'addCoupon'        => _x( 'Add', 'Add coupon', 'it-l10n-ithemes-exchange' ),
+				'couponCode'       => __( 'Coupon Code', 'it-l10n-ithemes-exchange' ),
 			),
 			'paymentToken' => array(
 				'addNew' => _x( 'Add New', 'Add new payment source, like a credit card.', 'it-l10n-ithemes-exchange' )

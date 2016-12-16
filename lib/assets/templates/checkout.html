@@ -5,8 +5,11 @@
     <# } #>
 
     <# if ( data.showLineItemTotals ) { #>
-        <div class="it-exchange-checkout-line-item-totals-container">
-        </div>
+        <div class="it-exchange-checkout-line-item-totals-container"></div>
+    <# } #>
+
+    <# if ( data.showCouponEntry ) { #>
+        <div class="it-exchange-checkout-coupon-container"></div>
     <# } #>
 
     <ul class="it-exchange-checkout-purchase-methods"></ul>
@@ -35,6 +38,21 @@
 <script type="text/template" id="tmpl-it-exchange-checkout-line-items-total">
     <span class="it-exchange-checkout-line-items-total--label">{{data.label}}</span>
     <span class="it-exchange-checkout-line-items-total--total">{{data.totalFormatted}}</span>
+</script>
+
+<script type="text/template" id="tmpl-it-exchange-checkout-coupon">
+    <a href="#" class="it-exchange-checkout-have-coupon-prompt"> {{ data.i18n.haveCoupon }}</a>
+    <div class="it-exchange-checkout-coupon-input-container" style="display: none">
+        <label>
+            <span> {{ data.i18n.couponCode }} </span>
+            <input type="text" class="it-exchange-checkout-coupon-input">
+        </label>
+        <button class="it-exchange-checkout-coupon-add"> {{ data.i18n.addCoupon }} </button>
+        <button class="it-exchange-checkout-coupon-cancel">
+            &times;
+            <span class="screen-reader-text"> Cancel </span>
+        </button>
+    </div>
 </script>
 
 <script type="text/template" id="tmpl-it-exchange-checkout-purchase-method-button">
