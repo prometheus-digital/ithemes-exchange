@@ -1854,9 +1854,10 @@ class IT_Exchange_Admin {
 				)
 			);
 		} else if ( isset( $post_type ) && 'it_exchange_tran' === $post_type && ! empty( $_GET['action'] ) && 'edit' == $_GET['action'] ) {
-			$deps = array( 'jquery-ui-tooltip', 'ithemes-momentjs', 'it-exchange-if-visible' );
+			$deps = array( 'jquery-ui-tooltip', 'ithemes-momentjs', 'it-exchange-if-visible', 'it-exchange-rest' );
 
-			$collection = new IT_Exchange_Txn_Activity_Collection( it_exchange_get_transaction( $GLOBALS['post'] ) );
+			$transaction = it_exchange_get_transaction( $GLOBALS['post'] );
+			$collection  = new IT_Exchange_Txn_Activity_Collection( $transaction );
 
 			$df = get_option( 'date_format' );
 			$tf = get_option( 'time_format' );
@@ -1872,14 +1873,25 @@ class IT_Exchange_Admin {
 
 			$dtf = $df . ' ' . $tf;
 
+			add_action( 'it_exchange_preload_schemas', function( $schemas ) {
+				$schemas = is_array( $schemas ) ? $schemas : array();
+
+				$schemas[] = 'transaction';
+
+				return $schemas;
+			} );
+
+			$serializer = new \iThemes\Exchange\REST\Route\Transaction\Serializer();
+
 			wp_enqueue_script( 'it-exchange-transaction-details', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/transaction-details.js', $deps );
 			wp_localize_script( 'it-exchange-transaction-details', 'EXCHANGE', array(
 				'nonce' => wp_create_nonce( 'it-exchange-add-note' ),
 				'txn'   => $GLOBALS['post']->ID,
-				'items' => array_map( create_function( '$a', 'return $a->to_array();' ), $collection->get_activity() ),
+				'items' => array_map( function( $a ) { return $a->to_array(); }, $collection->get_activity() ),
 				'sent' => _x( 'Sent!', 'Notice when an email receipt has been successfully sent.', 'it-l10n-ithemes-exchange' ),
 				'failed' => _x( 'Failed!', 'Notice when an email receipt has failed to be sent.', 'it-l10n-ithemes-exchange' ),
-				'format' => it_exchange_convert_php_to_moment( $dtf )
+				'format' => it_exchange_convert_php_to_moment( $dtf ),
+				'transaction' => $serializer->serialize( $transaction, it_exchange_get_current_customer() ),
 			) );
 			wp_dequeue_script( 'autosave' );
 		} else if ( 'exchange_page_it-exchange-addons' === $hook_suffix ) {

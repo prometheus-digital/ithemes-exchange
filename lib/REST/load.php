@@ -100,7 +100,7 @@ add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 	$transaction = new Route\Transaction\Transaction( new TransactionSerializer() );
 	$manager->register_route( $transaction->set_parent( $transactions ) );
 
-	$send_receipt = new Route\Transaction\Send_Receipt();
+	$send_receipt = new Route\Transaction\Send_Receipt( it_exchange_email_notifications() );
 	$manager->register_route( $send_receipt->set_parent( $transaction ) );
 
 	/* Activity */

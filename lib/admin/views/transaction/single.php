@@ -449,8 +449,8 @@ $dtf      = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 		<?php do_action( 'it_exchange_after_payment_update_status', $txn ); ?>
 		<?php do_action( 'it_exchange_before_payment_resend_receipt', $txn ); ?>
 
-		<button class="button button-secondary right" id="resend-receipt">
-			<?php _e( 'Resend Receipt', 'it-l10n-ithemes-exchange' ); ?>
+		<button class="button button-secondary right" id="open-receipt-manager">
+			<?php _e( 'Send Receipt', 'it-l10n-ithemes-exchange' ); ?>
 		</button>
 
 		<?php do_action( 'it_exchange_after_payment_resend_receipt', $txn ); ?>
@@ -468,6 +468,22 @@ $dtf      = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 	</div>
 
 	<?php do_action( 'it_exchange_after_payment_actions', $txn ); ?>
+
+	<div class="hidden spacing-wrapper bottom-border clearfix" id="receipt-manager"
+	     style="background: #F5F5F5;">
+
+		<button class="button button-secondary left" id="cancel-receipt">
+			<?php _e( 'Back', 'it-l10n-ithemes-exchange' ); ?>
+		</button>
+
+		<button class="button button-primary right" id="send-receipt" style="margin-left: 10px;">
+			<?php _e( 'Send', 'it-l10n-ithemes-exchange' ) ?>
+		</button>
+
+		<input type="text" placeholder="<?php echo esc_attr( $txn->get_customer_email() ); ?>"
+		       id="receipt-email"
+		       class="right" style="text-align: left;width: 250px;"/>
+	</div>
 
 	<div class="hidden spacing-wrapper bottom-border clearfix" id="refund-manager">
 
