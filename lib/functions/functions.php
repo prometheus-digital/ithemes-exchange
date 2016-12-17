@@ -253,6 +253,9 @@ function it_exchange_register_scripts() {
 		'restNonce'     => wp_create_nonce( 'wp_rest' ),
 		'restUrl'       => rest_url( 'it_exchange/v1/' ),
 		'currentUser'   => get_current_user_id(),
+		'i18n' => array(
+			'unknownError' => __( 'An unknown error occurred.', 'it-l10n-ithemes-exchange' ),
+		)
 	) );
 
 	wp_register_script(

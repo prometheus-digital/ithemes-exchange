@@ -1892,6 +1892,8 @@ class IT_Exchange_Admin {
 				'failed' => _x( 'Failed!', 'Notice when an email receipt has failed to be sent.', 'it-l10n-ithemes-exchange' ),
 				'format' => it_exchange_convert_php_to_moment( $dtf ),
 				'transaction' => $serializer->serialize( $transaction, it_exchange_get_current_customer() ),
+				/* translators: %1$s refers to the refund total, %2$s refers to the current date. */
+				'refundLabel' => __( '%1$s on %2$s', 'it-l10n-ithemes-exchange' ),
 			) );
 			wp_dequeue_script( 'autosave' );
 		} else if ( 'exchange_page_it-exchange-addons' === $hook_suffix ) {
