@@ -171,9 +171,17 @@ class Serializer {
 						),
 						'email'        => array(
 							'description' => __( 'The email address of the address.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'string',
 							'context'     => array( 'view', 'edit' ),
-							'format'      => 'email',
+							'oneOf'       => array(
+								array(
+									'type'   => 'string',
+									'format' => 'email',
+								),
+								array(
+									'type' => 'string',
+									'enum' => array( '' ),
+								),
+							)
 						),
 						'phone'        => array(
 							'description' => __( 'The phone number of the address.', 'it-l10n-ithemes-exchange' ),
