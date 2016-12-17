@@ -69,6 +69,40 @@ function it_exchange_get_cart( $cart_id ) {
 }
 
 /**
+ * Helper function to create a cart and backing session.
+ *
+ * @since 2.0.0
+ *
+ * @param IT_Exchange_Customer $user
+ * @param bool                 $is_main
+ * @param DateTime|null        $expires
+ *
+ * @return ITE_Cart|null
+ */
+function it_exchange_create_cart_and_session( IT_Exchange_Customer $user, $is_main = true, \DateTime $expires = null ) {
+
+	$session = \ITE_Session_Model::create( array(
+		'ID'         => it_exchange_create_unique_hash(),
+		'customer'   => $user->get_ID(),
+		'is_main'    => $is_main,
+		'expires_at' => $expires,
+	) );
+
+	$repo = \ITE_Line_Item_Cached_Session_Repository::from_session_id( $user, $session->ID );
+	$cart = \ITE_Cart::create( $repo, $user );
+
+	if ( ! $cart ) {
+		return null;
+	}
+
+	$session->cart_id = $cart->get_id();
+	$session->data    = array_merge( $session->data, array( 'cart_id' => $cart->get_id() ) );
+	$session->save();
+
+	return $cart;
+}
+
+/**
  * Returns an array of all data in the cart
  *
  * @since 0.3.7

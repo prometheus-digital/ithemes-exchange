@@ -220,6 +220,15 @@ class ITE_Cart {
 	}
 
 	/**
+	 * Get the time this cart expires at.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return DateTime|null
+	 */
+	public function expires_at() { return $this->get_repository()->expires_at(); }
+
+	/**
 	 * Set the guest customer for this cart.
 	 *
 	 * @since 2.0.0

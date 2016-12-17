@@ -341,6 +341,15 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	}
 
 	/**
+	 * Get the time the session expires at.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return DateTime|null
+	 */
+	public function expires_at() { return $this->model ? $this->model->expires_at : null; }
+
+	/**
 	 * Create the model.
 	 *
 	 * @since 2.0.0

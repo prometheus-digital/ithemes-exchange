@@ -37,6 +37,7 @@ class Serializer {
 			'billing_address'  => null,
 			'subtotal'         => it_exchange_get_cart_subtotal( false, array( 'cart' => $cart ) ),
 			'total'            => it_exchange_get_cart_total( false, array( 'cart' => $cart ) ),
+			'expires_at'       => $cart->expires_at() ? \iThemes\Exchange\REST\format_rfc339( $cart->expires_at() ) : '',
 		);
 
 		if ( $cart->get_billing_address() ) {
@@ -316,6 +317,21 @@ class Serializer {
 							),
 						),
 					),
+				),
+				'expires_at'       => array(
+					'description' => __( 'The time at which the cart expires. Maximum of two days in the future.', 'it-l10n-ithemes-exchange' ),
+					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
+					'oneOf'       => array(
+						array(
+							'type'   => 'string',
+							'format' => 'date-time',
+						),
+						array(
+							'type' => 'string',
+							'enum' => array( '' ),
+						),
+					)
 				),
 			),
 		);

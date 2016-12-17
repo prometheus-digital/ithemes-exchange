@@ -126,18 +126,18 @@ abstract class ITE_Line_Item_Repository {
 
 	/**
 	 * Get the customer's shipping address.
-	 * 
+	 *
 	 * @since 2.0.0
-	 * 
+	 *
 	 * @return \ITE_Location|null
 	 */
 	abstract public function get_shipping_address();
 
 	/**
 	 * Get the customer's billing address.
-	 * 
+	 *
 	 * @since 2.0.0
-	 * 
+	 *
 	 * @return \ITE_Location|null
 	 */
 	abstract public function get_billing_address();
@@ -176,4 +176,13 @@ abstract class ITE_Line_Item_Repository {
 			$item->set_line_item_repository( $this );
 		}
 	}
+
+	/**
+	 * Get the date that this cart expires at.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return \DateTime|null
+	 */
+	public function expires_at() { return null; }
 }
