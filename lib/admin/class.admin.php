@@ -1840,6 +1840,7 @@ class IT_Exchange_Admin {
 		wp_register_script( 'it-exchange-select2', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/select2.min.js', array( 'jquery' ), '4.0.1', true );
 		wp_register_script( 'ithemes-momentjs', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/moment.min.js', array(), '2.11.0', true );
 		wp_register_script( 'it-exchange-if-visible', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/ifvisible.min.js', array(), '1.0.6', true );
+		wp_register_script( 'it-exchange-jquery-toastr', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/toastr.min.js' );
 
 		if ( isset( $post_type ) && 'it_exchange_prod' === $post_type ) {
 			$deps = array( 'post', 'jquery-ui-sortable', 'jquery-ui-droppable', 'jquery-ui-tabs', 'jquery-ui-tooltip', 'jquery-ui-datepicker', 'autosave', 'it-exchange-dialog' );
@@ -1855,7 +1856,7 @@ class IT_Exchange_Admin {
 				)
 			);
 		} else if ( isset( $post_type ) && 'it_exchange_tran' === $post_type && ! empty( $_GET['action'] ) && 'edit' == $_GET['action'] ) {
-			$deps = array( 'jquery-ui-tooltip', 'ithemes-momentjs', 'it-exchange-if-visible', 'it-exchange-rest' );
+			$deps = array( 'jquery-ui-tooltip', 'ithemes-momentjs', 'it-exchange-if-visible', 'it-exchange-rest', 'it-exchange-jquery-toastr' );
 
 			$transaction = it_exchange_get_transaction( $GLOBALS['post'] );
 			$collection  = new IT_Exchange_Txn_Activity_Collection( $transaction );
@@ -1873,10 +1874,6 @@ class IT_Exchange_Admin {
 			}
 
 			$dtf = $df . ' ' . $tf;
-			
-			
-			wp_enqueue_script( 'it-exchange-jquery-toastr', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/toastr.js' );
-		
 
 			add_action( 'it_exchange_preload_schemas', function( $schemas ) {
 				$schemas = is_array( $schemas ) ? $schemas : array();
