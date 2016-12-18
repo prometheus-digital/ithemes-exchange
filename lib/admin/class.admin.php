@@ -772,6 +772,11 @@ class IT_Exchange_Admin {
 		}
 	}
 
+	/**
+	 * Serve the upgrade log file.
+	 *
+	 * @since 2.0.0
+	 */
 	public function serve_upgrade_file() {
 		if ( ! isset( $_GET['it-exchange-serve-upgrade-log'] ) ) {
 			return;
