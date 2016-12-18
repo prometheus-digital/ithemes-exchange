@@ -15,7 +15,7 @@
 */
 ?>
 
-<?php if ( it_exchange( 'transaction', 'has-shipping-total' ) ) { ?>
+<?php if ( it_exchange( 'transaction', 'has-shipping-method' ) ) { ?>
 <?php do_action( 'it_exchange_content_confirmation_before_totals_shipping_simple_element' ); ?>
 <div class="it-exchange-confirmation-totals-title it-exchange-table-column">
 	<?php do_action( 'it_exchange_content_confirmation_begin_totals_shipping_simple_element_label' ); ?>

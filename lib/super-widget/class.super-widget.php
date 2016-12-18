@@ -72,7 +72,7 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			add_action( 'template_redirect', array( $this, 'set_state' ), 11 );
 			add_action( 'dynamic_sidebar_before', array( $this, 'maybe_remove_sw_from_sidebar' ) );
 			add_action( 'dynamic_sidebar_after', array( $this, 'mark_out_of_sidebar' ) );
-			add_action('loop_start', array( $this, 'mark_loop_did_start' ) );
+			add_action( 'loop_start', array( $this, 'mark_loop_did_start' ) );
 		}
 	}
 
@@ -471,8 +471,8 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 	 *
 	 * @param \WP_Query $query
 	 */
-	public function mark_loop_did_start( WP_Query $query ) {
-		if ( $query->is_main_query() ) {
+	public function mark_loop_did_start( $query ) {
+		if ( $query instanceof WP_Query && $query->is_main_query() ) {
 			$this->did_loop_start = true;
 		}
 	}

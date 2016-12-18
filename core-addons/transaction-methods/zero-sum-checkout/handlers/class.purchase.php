@@ -13,7 +13,7 @@ class ITE_Zero_Sum_Checkout_Purchase_Handler extends ITE_Purchase_Request_Handle
 	/**
 	 * @inheritDoc
 	 */
-	public function render_payment_button( ITE_Gateway_Purchase_Request_Interface $request ) {
+	public function render_payment_button( ITE_Gateway_Purchase_Request $request ) {
 
 		$total = it_exchange_get_cart_total( false, array( 'cart' => $request->get_cart() ) );
 
@@ -42,7 +42,7 @@ class ITE_Zero_Sum_Checkout_Purchase_Handler extends ITE_Purchase_Request_Handle
 	/**
 	 * @inheritDoc
 	 *
-	 * @param ITE_Gateway_Purchase_Request_Interface $request
+	 * @param ITE_Gateway_Purchase_Request $request
 	 */
 	public function handle( $request ) {
 
@@ -62,5 +62,12 @@ class ITE_Zero_Sum_Checkout_Purchase_Handler extends ITE_Purchase_Request_Handle
 		$txn_id = it_exchange_add_transaction( 'zero-sum-checkout', $uniqid, 'Completed', $request->get_cart() );
 
 		return it_exchange_get_transaction( $txn_id ) ?: null;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function can_handle_cart( ITE_Cart $cart ) {
+		return $cart->get_total() <= 0 && ! $cart->contains_non_recurring_fee();
 	}
 }

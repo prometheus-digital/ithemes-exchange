@@ -8,29 +8,35 @@
 
 namespace iThemes\Exchange\REST\Route\Cart;
 
-use ITE_Gateway_Purchase_Request_Interface;
+use ITE_Gateway_Purchase_Request;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Postable;
 use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
+use iThemes\Exchange\REST\VariableSchema;
 
 /**
  * Class Purchase
  *
  * @package iThemes\Exchange\REST\Route\Cart
  */
-class Purchase extends Base implements Getable, Postable {
+class Purchase extends Base implements Getable, Postable, VariableSchema {
 
 	/** @var \ITE_Gateway_Request_Factory */
 	private $request_factory;
+
+	/** @var PurchaseSerializer */
+	private $serializer;
 
 	/**
 	 * Purchase constructor.
 	 *
 	 * @param \ITE_Gateway_Request_Factory $request_factory
+	 * @param PurchaseSerializer           $serializer
 	 */
-	public function __construct( \ITE_Gateway_Request_Factory $request_factory ) {
+	public function __construct( \ITE_Gateway_Request_Factory $request_factory, PurchaseSerializer $serializer ) {
 		$this->request_factory = $request_factory;
+		$this->serializer      = $serializer;
 	}
 
 	/**
@@ -42,40 +48,20 @@ class Purchase extends Base implements Getable, Postable {
 
 		$cart->prepare_for_purchase();
 
-		$purchase_request = $this->request_factory->make( 'purchase', array( 'cart' => $cart ) );
+		$purchase_request = $this->request_factory->make( 'purchase', array(
+			'cart'        => $cart,
+			'redirect_to' => $request['redirect_to'],
+		) );
 
 		$data = array();
 
 		foreach ( it_exchange_get_available_transaction_methods_for_cart( $cart ) as $gateway ) {
 			if ( $handler = $gateway->get_handler_for( $purchase_request ) ) {
-				$data[] = $this->get_data_for_handler( $handler, $purchase_request );
+				$data[] = $this->serializer->serialize( $handler, $purchase_request );
 			}
 		}
 
 		return new \WP_REST_Response( $data );
-	}
-
-	/**
-	 * Get the data for a handler.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @param \ITE_Purchase_Request_Handler          $handler
-	 * @param ITE_Gateway_Purchase_Request_Interface $request
-	 *
-	 * @return array
-	 */
-	protected function get_data_for_handler( \ITE_Purchase_Request_Handler $handler, ITE_Gateway_Purchase_Request_Interface $request ) {
-
-		$data = array(
-			'id'     => $handler->get_gateway()->get_slug(),
-			'name'   => $handler->get_gateway()->get_name(),
-			'label'  => $handler->get_payment_button_label(),
-			'nonce'  => $handler->get_nonce(),
-			'method' => $handler->get_data_for_REST( $request ),
-		);
-
-		return $data;
 	}
 
 	/**
@@ -89,14 +75,6 @@ class Purchase extends Base implements Getable, Postable {
 	public function handle_post( Request $request ) {
 
 		$cart = $request->get_cart();
-
-		if ( $request['redirect_to'] && ! wp_validate_redirect( wp_sanitize_redirect( $request['redirect_to'] ) ) ) {
-			return new \WP_Error(
-				'it_exchange_rest_invalid_redirect_to',
-				__( 'Invalid redirect to URL.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::BAD_REQUEST )
-			);
-		}
 
 		$token = (int) $request['token'];
 
@@ -174,17 +152,89 @@ class Purchase extends Base implements Getable, Postable {
 	/**
 	 * @inheritDoc
 	 */
-	public function get_query_args() { return array(); }
+	public function get_query_args() {
+		return array(
+			'redirect_to' => array(
+				'type'        => 'string',
+				'format'      => 'uri',
+				'description' => __( 'A location to redirect the customer to after purchase. Useful for redirect methods.', 'it-l10n-ithemes-exchange' ),
+				'arg_options' => array(
+					'sanitize_callback' => 'wp_sanitize_redirect',
+					'validate_callback' => function ( $param ) {
+						return wp_validate_redirect( $param );
+					},
+				),
+			),
+		);
+	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function get_schema() {
+	public function get_schema() { return $this->serializer->get_schema(); }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function schema_varies_on() { return array( 'POST' ); }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_schema_for_method( $method ) {
+		if ( $method !== 'POST' ) {
+			throw new \InvalidArgumentException( 'Invalid method.' );
+		}
+
 		return array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'cart-purchase',
 			'type'       => 'object',
-			'properties' => array()
+			'properties' => array(
+				'id'          => array(
+					'type'        => 'string',
+					'description' => __( 'Purchase gateway slug.', 'it-l10n-ithemes-exchange' ),
+				),
+				'nonce'       => array(
+					'type'        => 'string',
+					'description' => __( 'A token unique to this gateway that is required to complete the purchase.', 'it-l10n-ithemes-exchange' ),
+				),
+				'redirect_to' => array(
+					'type'        => 'string',
+					'format'      => 'uri',
+					'description' => __( 'A location to redirect the customer to after purchase. Useful for redirect methods.', 'it-l10n-ithemes-exchange' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'wp_sanitize_redirect',
+						'validate_callback' => function ( $param ) {
+							return wp_validate_redirect( $param );
+						},
+					),
+				),
+				'card'        => array( '$ref' => \iThemes\Exchange\REST\url_for_schema( 'card' ) ),
+				'token'       => array(
+					'type'        => 'integer',
+					'min'         => 1,
+					'description' => __( 'Payment token to use for payment.', 'it-l10n-ithemes-exchange' ),
+				),
+				'tokenize'    => array(
+					'description' => __( 'Payment info to auto-tokenize and then use for payment.', 'it-l10n-ithemes-exchange' ),
+					'oneOf'       => array(
+						array(
+							'type'        => 'string',
+							'description' => __( 'Token provided by the payment processor. For example, a Stripe.js token.', 'it-l10n-ithemes-exchange' )
+						),
+						array( '$ref' => \iThemes\Exchange\REST\url_for_schema( 'card' ) ),
+					),
+				)
+			),
+			'oneOf'      => array(
+				// Set it up so that only one card, token, or tokenize option may be used in conjunction.
+				// May also pass none, for things like Offline Payments
+				array( 'required' => array( 'id', 'nonce', 'card' ) ),
+				array( 'required' => array( 'id', 'nonce', 'token' ) ),
+				array( 'required' => array( 'id', 'nonce', 'tokenize' ) ),
+				array( 'required' => array( 'id', 'nonce' ) ),
+			),
 		);
 	}
 }

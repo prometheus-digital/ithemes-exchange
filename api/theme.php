@@ -193,6 +193,10 @@ function it_exchange() {
 	if ( is_bool( $result ) )
 		return $result;
 
+	if ( isset( $options['format'] ) && in_array( $options['format'], array( 'value', 'var_value', 'raw' ), true ) && empty( $options['no-esc'] ) ) {
+		$result = esc_html( $result );
+	}
+
 	// Return result without printing if requested
 	if ( $get
 			|| ( isset( $options['return'] ) && it_exchange_str_true( $options['return'] ) )

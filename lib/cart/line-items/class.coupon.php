@@ -78,6 +78,17 @@ class ITE_Coupon_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Lin
 	}
 
 	/**
+	 * @inheritDoc
+	 */
+	public function clone_with_new_id( $include_frozen = true ) {
+		return new self(
+			$this->get_id(),
+			$this->bag,
+			$include_frozen ? $this->frozen : new ITE_Array_Parameter_Bag()
+		);
+	}
+
+	/**
 	 * Create a duplicate of this coupon, scoped for a given product.
 	 *
 	 * @since 2.0.0

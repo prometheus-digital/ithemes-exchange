@@ -91,7 +91,8 @@ class IT_Exchange_Upgrade_Handler_Ajax {
 		wp_send_json_success( array(
 			'slug'      => $upgrade->get_slug(),
 			'itemCount' => $upgrade->get_total_records_to_process(),
-			'rate'      => absint( $rate )
+			'rate'      => absint( $rate ),
+			'file'      => ITE_Upgrade_Skin_File::auto_create_file( $upgrade )->get_file(),
 		) );
 	}
 
@@ -105,8 +106,9 @@ class IT_Exchange_Upgrade_Handler_Ajax {
 		$upgrade = isset( $_POST['upgrade'] ) ? $_POST['upgrade'] : '';
 		$config  = isset( $_POST['config'] ) ? (array) $_POST['config'] : array();
 		$nonce   = isset( $_POST['nonce'] ) ? $_POST['nonce'] : '';
+		$file    = isset( $_POST['file'] ) ? $_POST['file'] : '';
 
-		if ( ! $upgrade || ! $config || ! $nonce ) {
+		if ( ! $upgrade || ! $config || ! $nonce || ! $file || ! is_string( $file ) ) {
 			wp_send_json_error( array(
 				'message' => __( 'Invalid Request Format', 'it-l10n-ithemes-exchange' )
 			) );
@@ -138,19 +140,23 @@ class IT_Exchange_Upgrade_Handler_Ajax {
 			) );
 		}
 
+		$ajax = new IT_Exchange_Upgrade_Skin_Ajax();
+		$skin = new ITE_Upgrade_Skin_Multi( array(
+			$ajax,
+			new ITE_Upgrade_Skin_File( $file ),
+		) );
+
 		$config = new IT_Exchange_Upgrade_Config( $config['step'], $config['number'], $config['verbose'] );
-		$skin   = new IT_Exchange_Upgrade_Skin_Ajax();
 
 		try {
 			$upgrade->upgrade( $config, $skin );
-		}
-		catch ( IT_Exchange_Upgrade_Exception $e ) {
+		} catch ( IT_Exchange_Upgrade_Exception $e ) {
 			wp_send_json_error( array(
 				'message' => $e->getMessage()
 			) );
 		}
 
-		wp_send_json_success( $skin->out() );
+		wp_send_json_success( $ajax->out() );
 	}
 
 	/**
@@ -162,8 +168,9 @@ class IT_Exchange_Upgrade_Handler_Ajax {
 
 		$upgrade = isset( $_POST['upgrade'] ) ? $_POST['upgrade'] : '';
 		$nonce   = isset( $_POST['nonce'] ) ? $_POST['nonce'] : '';
+		$file    = isset( $_POST['file'] ) ? $_POST['file'] : '';
 
-		if ( ! $upgrade || ! $nonce ) {
+		if ( ! $upgrade || ! $nonce || ! $file ) {
 			wp_send_json_error( array(
 				'message' => __( 'Invalid Request Format', 'it-l10n-ithemes-exchange' )
 			) );
@@ -191,6 +198,12 @@ class IT_Exchange_Upgrade_Handler_Ajax {
 
 		$this->upgrader->complete( $upgrade );
 
-		wp_send_json_success();
+		wp_send_json_success( array(
+			'fileUrl' => add_query_arg(
+				'it-exchange-serve-upgrade-log',
+				$upgrade->get_slug(),
+				admin_url( 'admin.php?page=it-exchange-tools' )
+			)
+		) );
 	}
 }

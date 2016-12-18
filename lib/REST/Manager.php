@@ -47,6 +47,9 @@ class Manager {
 	private $initialized = false;
 
 	/** @var array */
+	private $shared_schemas;
+
+	/** @var array */
 	private static $interfaces = array(
 		'GET'    => 'Getable',
 		'POST'   => 'Postable',
@@ -59,10 +62,12 @@ class Manager {
 	 *
 	 * @param string                                  $namespace No forward or trailing slashes.
 	 * @param \iThemes\Exchange\REST\Middleware\Stack $stack
+	 * @param array                                   $shared_schemas
 	 */
-	public function __construct( $namespace, Stack $stack ) {
-		$this->namespace  = $namespace;
-		$this->middleware = $stack;
+	public function __construct( $namespace, Stack $stack, array $shared_schemas = array() ) {
+		$this->namespace      = $namespace;
+		$this->middleware     = $stack;
+		$this->shared_schemas = $shared_schemas;
 	}
 
 	/**
@@ -168,6 +173,10 @@ class Manager {
 
 		foreach ( $this->schemas as $id => $schema ) {
 			$modified[ url_for_schema( $id ) ] = $schema;
+		}
+
+		foreach ( $this->shared_schemas as $id => $schema ) {
+			$modified[ url_for_schema( $id ) ] = json_encode( $schema );
 		}
 
 		$strategy            = new PredefinedArray( $modified );
@@ -451,7 +460,11 @@ class Manager {
 				$required[] = $property;
 			}
 
-			unset( $config['required'] );
+			unset( $schema['properties'][$property]['required'] );
+
+			if ( isset( $config['type'] ) && $config['type'] === 'object' ) {
+				$schema['properties'][ $property ] = $this->transform_schema( $config );
+			}
 		}
 
 		if ( $required ) {
@@ -473,7 +486,11 @@ class Manager {
 	 */
 	protected function generate_endpoint_args_for_server( Route $route, $verb ) {
 
-		$schema = $route->get_schema();
+		if ( $route instanceof VariableSchema && in_array( $verb, $route->schema_varies_on(), true ) ) {
+			$schema = $route->get_schema_for_method( $verb );
+		} else {
+			$schema = $route->get_schema();
+		}
 
 		$schema_properties = ! empty( $schema['properties'] ) ? $schema['properties'] : array();
 		$endpoint_args     = array();

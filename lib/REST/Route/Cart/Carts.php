@@ -37,28 +37,50 @@ class Carts extends Base implements Postable {
 	 */
 	public function handle_post( Request $request ) {
 
-		$user = it_exchange_get_current_customer();
+		$user       = it_exchange_get_current_customer();
+		$expires_at = null;
+
+		if ( $request['expires_at'] ) {
+			$expires_at         = new \DateTime( $request['expires_at'], new \DateTimeZone( 'UTC' ) );
+			$default_expiration = time() + (int) apply_filters( 'it_exchange_db_session_expiration', 2 * DAY_IN_SECONDS );
+
+			if ( $expires_at->getTimestamp() > $default_expiration ) {
+				$expires_at = new \DateTime( "@$default_expiration", new \DateTimeZone( 'UTC' ) );
+			}
+		}
 
 		if ( $user instanceof \IT_Exchange_Guest_Customer ) {
 			$session = \ITE_Session_Model::create( array(
-				'ID' => it_exchange_create_unique_hash()
+				'ID'         => it_exchange_create_unique_hash(),
+				'expires_at' => $expires_at,
 			) );
 
 			$repo = \ITE_Line_Item_Cached_Session_Repository::from_session_id( $user, $session->ID );
 
-			$cart = \ITE_Cart::create( $repo, $user );
+			$cart    = \ITE_Cart::create( $repo, $user );
 			$session = \ITE_Session_Model::get( $session->ID );
 		} elseif ( $request['is_main'] === true ) {
 			try {
 				// Guard against multiple carts per customer.
 				$repo    = \ITE_Line_Item_Cached_Session_Repository::from_customer( $user );
 				$cart_id = $repo->get_cart_id();
+				$save    = false;
+
+				if ( $expires_at ) {
+					$save = true;
+
+					$repo->get_model()->expires_at = $expires_at;
+				}
 
 				if ( ! $cart_id ) {
+					$save    = true;
 					$cart    = \ITE_Cart::create( $repo, $user );
 					$cart_id = $cart->get_id();
 
 					$repo->get_model()->cart_id = $cart_id;
+				}
+
+				if ( $save ) {
 					$repo->get_model()->save();
 				}
 
@@ -72,17 +94,19 @@ class Carts extends Base implements Postable {
 			}
 
 			$session = \ITE_Session_Model::create( array(
-				'ID'       => it_exchange_create_unique_hash(),
-				'customer' => $user->id,
+				'ID'         => it_exchange_create_unique_hash(),
+				'customer'   => $user->id,
+				'expires_at' => $expires_at,
 			) );
 
 			$repo = \ITE_Line_Item_Cached_Session_Repository::from_session_id( $user, $session->ID );
 			$cart = \ITE_Cart::create( $repo, $user );
 		} else {
 			$session = \ITE_Session_Model::create( array(
-				'ID'       => it_exchange_create_unique_hash(),
-				'customer' => $user->id,
-				'is_main'  => false,
+				'ID'         => it_exchange_create_unique_hash(),
+				'customer'   => $user->id,
+				'is_main'    => false,
+				'expires_at' => $expires_at,
 			) );
 
 			$repo = \ITE_Line_Item_Cached_Session_Repository::from_session_id( $user, $session->ID );

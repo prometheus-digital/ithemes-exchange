@@ -304,6 +304,20 @@ class IT_Exchange_Super_Widget_Ajax {
 
 				// Return false if we didn't get a transaction_id
 				if ( ! $transaction_id ) {
+
+					$cart     = it_exchange_get_current_cart();
+					$feedback = $cart->get_feedback();
+
+					foreach ( $feedback->errors() as $error ) {
+						it_exchange_add_message( 'error', $error );
+					}
+
+					foreach ( $feedback->notices() as $notice ) {
+						it_exchange_add_message( 'notice', $notice );
+					}
+
+					$feedback->clear();
+
 					return false;
 				}
 

@@ -2,7 +2,7 @@
 /**
  * The transaction products loop.
  *
- * @since 1.1.0
+ * @since   1.1.0
  * @version 1.1.0
  * @package IT_Exchange
  *
@@ -10,7 +10,7 @@
  * this template in a theme, simply copy over this
  * file's content to the exchange/content-confirmation/loops/
  * directory located in your theme.
-*/
+ */
 ?>
 
 <?php do_action( 'it_exchange_content_confirmation_before_products_loop' ); ?>
@@ -18,8 +18,8 @@
 	<?php it_exchange_get_template_part( 'content-confirmation/elements/purchases-label' ); ?>
 	<?php do_action( 'it_exchange_content_confirmation_begin_products_loop' ); ?>
 	<div class="it-exchange-transaction-products it-exchange-table">
-		<?php while( it_exchange( 'transaction', 'products' ) ) : ?>
-			<?php foreach( it_exchange_get_template_part_elements( 'content_confirmation', 'products_loop', array( 'product' ) ) as $detail ) : ?>
+		<?php while ( it_exchange( 'transaction', 'products' ) ) : ?>
+			<?php foreach ( it_exchange_get_template_part_elements( 'content_confirmation', 'products_loop', array( 'product' ) ) as $detail ) : ?>
 				<?php it_exchange_get_template_part( 'content-confirmation/elements/' . $detail ); ?>
 			<?php endforeach; ?>
 		<?php endwhile; ?>
@@ -28,18 +28,26 @@
 	<?php it_exchange_get_template_part( 'content-confirmation/loops/line-items' ); ?>
 	<?php do_action( 'it_exchange_content_confirmation_begin_transaction_summary_loop' ); ?>
 	<div class="it-exchange-transaction-summary-loop it-exchange-table">
-		<?php foreach( it_exchange_get_template_part_elements( 'content_confirmation', 'transaction_summary', array( 'totals-subtotal', 'totals-shipping', 'totals-savings', 'totals-taxes', 'totals-total' ) ) as $total ) : ?>
+		<?php foreach (
+			it_exchange_get_template_part_elements( 'content_confirmation', 'transaction_summary', array(
+				'totals-subtotal',
+				'totals-shipping',
+				'totals-savings',
+				'totals-taxes',
+				'totals-total'
+			) ) as $total
+		) : ?>
 			<?php if ( $total !== 'totals-taxes' ): ?>
 				<div class="it-exchange-table-row it-exchange-cart-<?php echo $total; ?>">
 			<?php endif; ?>
-				<?php
-				/**
-				 * Theme and add-on devs should add code to this loop by
-				 * hooking into it_exchange_get_template_part_elements filter
-				 * and adding the appropriate template file to their theme or add-on
-				*/
-				it_exchange_get_template_part( 'content-confirmation/elements/' . $total );
-				?>
+			<?php
+			/**
+			 * Theme and add-on devs should add code to this loop by
+			 * hooking into it_exchange_get_template_part_elements filter
+			 * and adding the appropriate template file to their theme or add-on
+			 */
+			it_exchange_get_template_part( 'content-confirmation/elements/' . $total );
+			?>
 
 			<?php if ( $total !== 'totals-taxes' ): ?>
 				</div>

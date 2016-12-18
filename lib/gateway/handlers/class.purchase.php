@@ -131,11 +131,11 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 	/**
 	 * Render a payment button.
 	 *
-	 * @param ITE_Gateway_Purchase_Request_Interface $request
+	 * @param ITE_Gateway_Purchase_Request $request
 	 *
 	 * @return string
 	 */
-	public function render_payment_button( ITE_Gateway_Purchase_Request_Interface $request ) {
+	public function render_payment_button( ITE_Gateway_Purchase_Request $request ) {
 
 		$action     = esc_attr( $this->get_form_action() );
 		$label      = esc_attr( $this->get_payment_button_label() );
@@ -204,11 +204,11 @@ HTML;
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param ITE_Gateway_Purchase_Request_Interface $request
+	 * @param ITE_Gateway_Purchase_Request $request
 	 *
 	 * @return string
 	 */
-	protected function get_html_before_form_end( ITE_Gateway_Purchase_Request_Interface $request ) {
+	protected function get_html_before_form_end( ITE_Gateway_Purchase_Request $request ) {
 
 		$html = '';
 
@@ -230,11 +230,60 @@ HTML;
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param ITE_Gateway_Purchase_Request_Interface $request
+	 * @param ITE_Gateway_Purchase_Request $request
 	 *
 	 * @return array
 	 */
-	public function get_data_for_REST( ITE_Gateway_Purchase_Request_Interface $request ) {
-		return array( 'method' => 'REST' );
+	public function get_data_for_REST( ITE_Gateway_Purchase_Request $request ) {
+
+		$accepts = array();
+
+		if ( $this->get_gateway()->can_handle( 'tokenize' ) ) {
+			$accepts[] = 'token';
+			$accepts[] = 'tokenize';
+		}
+
+		return array( 'method' => 'REST', 'accepts' => $accepts );
+	}
+
+	/**
+	 * Can this purchase handler handle a given cart.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param ITE_Cart $cart
+	 *
+	 * @return bool
+	 */
+	public function can_handle_cart( ITE_Cart $cart ) {
+
+		if ( $cart->get_total() <= 0 && ! $cart->contains_non_recurring_fee() ) {
+			return false;
+		}
+
+		/** @var ITE_Requires_Optionally_Supported_Features[]|ITE_Line_Item[] $items */
+		$items = $cart->get_items()->flatten()->filter( function ( ITE_Line_Item $item ) {
+			return $item instanceof ITE_Requires_Optionally_Supported_Features && $item->optional_features_required();
+		} )->unique();
+
+		$gateway = $this->get_gateway();
+
+		foreach ( $items as $item ) {
+			$requirements = $item->optional_features_required();
+
+			foreach ( $requirements as $requirement ) {
+				if ( ! $gateway->supports_feature( $requirement->get_feature() ) ) {
+					return false;
+				}
+
+				foreach ( $requirement->get_requirement_details() as $slug => $detail ) {
+					if ( ! $gateway->supports_feature_and_detail( $requirement->get_feature(), $slug, $detail ) ) {
+						return false;
+					}
+				}
+			}
+		}
+
+		return true;
 	}
 }

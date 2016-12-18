@@ -44,9 +44,34 @@ class ITE_Base_Shipping_Line_Item extends ITE_Line_Item implements ITE_Shipping_
 		$bag->set_param( 'provider', $provider->get_slug() );
 		$bag->set_param( 'cart_wide', $cart_wide );
 
-		$id = md5( $method->slug . '-' . (string) $cart_wide . '-' . microtime() );
+		$id = self::generate_id( $method, $cart_wide );
 
 		return new self( $id, $bag, new ITE_Array_Parameter_Bag() );
+	}
+
+	/**
+	 * Generate the ID.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param IT_Exchange_Shipping_Method $method
+	 * @param bool                        $cart_wide
+	 *
+	 * @return string
+	 */
+	protected final static function generate_id( $method, $cart_wide ) {
+		return md5( $method->slug . '-' . (string) $cart_wide . '-' . microtime() );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function clone_with_new_id( $include_frozen = true ) {
+		return new self(
+			self::generate_id( $this->get_method(), $this->is_cart_wide() ),
+			$this->bag,
+			$include_frozen ? $this->frozen : new ITE_Array_Parameter_Bag()
+		);
 	}
 
 	/**

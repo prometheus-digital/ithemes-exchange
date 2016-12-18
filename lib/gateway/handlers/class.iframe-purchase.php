@@ -16,26 +16,26 @@ abstract class ITE_IFrame_Purchase_Request_Handler extends ITE_Purchase_Request_
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param ITE_Gateway_Purchase_Request_Interface $request
+	 * @param ITE_Gateway_Purchase_Request $request
 	 *
 	 * @return string
 	 */
-	protected abstract function get_inline_js( ITE_Gateway_Purchase_Request_Interface $request );
+	protected abstract function get_inline_js( ITE_Gateway_Purchase_Request $request );
 
 	/**
 	 * @inheritDoc
 	 */
-	protected function get_html_before_form_end( ITE_Gateway_Purchase_Request_Interface $request ) {
+	protected function get_html_before_form_end( ITE_Gateway_Purchase_Request $request ) {
 		return parent::get_html_before_form_end( $request ) . $this->get_inline_js( $request );
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function get_data_for_REST( ITE_Gateway_Purchase_Request_Interface $request ) {
-		return array(
+	public function get_data_for_REST( ITE_Gateway_Purchase_Request $request ) {
+		return array_merge_recursive( parent::get_data_for_REST( $request ), array(
 			'method' => 'iframe',
 			'html'   => $this->render_payment_button( $request ),
-		);
+		) );
 	}
 }

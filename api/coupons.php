@@ -248,11 +248,14 @@ function it_exchange_supports_coupon_type( $type ) {
  *
  * @since 0.4.0
  *
- * @param string|bool $type Coupon type to check for. If false, all coupons will be returned.
+ * @param string|bool    $type Coupon type to check for. If false, all coupons will be returned.
+ * @param \ITE_Cart|null $cart Cart to retrieve coupons from.
  *
  * @return IT_Exchange_Coupon[]
 */
-function it_exchange_get_applied_coupons( $type=false ) {
+function it_exchange_get_applied_coupons( $type = false, ITE_Cart $cart = null ) {
+
+	$cart = $cart ?: it_exchange_get_current_cart();
 
 	// Get all if type not set
 	if ( ! $type ) {
@@ -265,7 +268,7 @@ function it_exchange_get_applied_coupons( $type=false ) {
 	}
 
 	// If type was set, return just the applied coupons for the type
-	return apply_filters( 'it_exchange_get_applied_' . $type . '_coupons', array() );
+	return apply_filters( 'it_exchange_get_applied_' . $type . '_coupons', array(), $cart );
 }
 
 /**
@@ -372,16 +375,17 @@ function it_exchange_apply_coupon( $type, $code, $options = array() ) {
 */
 function it_exchange_remove_coupon( $type, $code, $options = array() ) {
 
+	$cart = empty( $options['cart'] ) ? it_exchange_get_current_cart() : $options['cart'];
+
 	$options['code'] = $code;
 
 	if ( ( $coupon = it_exchange_get_coupon_from_code( $code, $type ) ) && $coupon->get_type() ) {
 		try {
-			$cart = it_exchange_get_current_cart();
 			$cart->get_items( 'coupon', true )->filter( function ( ITE_Coupon_Line_Item $item ) use ( $coupon ) {
 				return $item->get_coupon()->get_code() === $coupon->get_code();
 			} )->delete();
 		} catch ( Exception $e ) {
-			it_exchange_add_message( 'error', $e->getMessage() );
+			$cart->get_feedback()->add_error( $e->getMessage() );
 
 			return false;
 		}

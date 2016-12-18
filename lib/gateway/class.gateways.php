@@ -31,6 +31,10 @@ class ITE_Gateways {
 
 		static::$gateways[ $gateway->get_slug() ] = $gateway;
 
+		if ( $webhook_param = $gateway->get_webhook_param() ) {
+			it_exchange_register_webhook( $gateway->get_slug(), $webhook_param );
+		}
+
 		if (
 			empty( $GLOBALS['it_exchange']['add_ons']['registered'][ $gateway->get_slug() ]['options']['settings-callback'] ) &&
 			$gateway->get_settings_form()
@@ -44,58 +48,6 @@ class ITE_Gateways {
 				<?php
 
 			};
-		}
-
-		if ( $gateway->is_currency_support_limited() ) {
-			if ( is_admin() ) {
-				add_action( "it_exchange_{$gateway->get_settings_name()}_top", function () use ( $gateway ) {
-
-					$general_settings = it_exchange_get_option( 'settings_general' );
-
-					if ( array_key_exists( $general_settings['default-currency'], $gateway->get_supported_currencies() ) ) {
-						return;
-					}
-
-					echo '<div class="notice notice-error"><p>';
-					printf(
-						__( 'You are currently using a currency that is not supported by %1$s. %2$sPlease update your currency settings%3$s.', 'LION' ),
-						$gateway->get_name(),
-						'<a>' . admin_url( 'admin.php?page=it-exchange-settings' ),
-						'</a>'
-					);
-					echo '</p></div>';
-				} );
-
-				add_filter( 'it_exchange_get_currencies', function ( $currencies ) use ( $gateway ) {
-
-					if ( ! is_admin() || ! function_exists( 'get_current_screen' ) ) {
-						return $currencies;
-					}
-
-					$screen = get_current_screen();
-
-					if ( empty( $screen->base ) ) {
-						return $currencies;
-					}
-
-					$screens = array(
-						'exchange_page_it-exchange-settings',
-						'exchange_page_it-exchange-setup'
-					);
-
-					if ( ! in_array( $screen->base, $screens, true ) ) {
-						return $currencies;
-					}
-
-					$supported = $gateway->get_supported_currencies();
-
-					if ( empty( $supported ) ) {
-						return $currencies;
-					}
-
-					return array_intersect_key( $currencies, array_flip( $supported ) );
-				} );
-			}
 		}
 
 		if ( $fields = $gateway->get_settings_fields() ) {
@@ -184,10 +136,6 @@ class ITE_Gateways {
 			} );
 		}
 
-		if ( $webhook_param = $gateway->get_webhook_param() ) {
-			it_exchange_register_webhook( $gateway->get_slug(), $webhook_param );
-		}
-
 		if ( $gateway->can_handle( 'webhook' ) ) {
 			add_action( "it_exchange_webhook_{$gateway->get_webhook_param()}", function ( $request ) use ( $gateway ) {
 				$factory = new ITE_Gateway_Request_Factory();
@@ -236,6 +184,58 @@ class ITE_Gateways {
 
 					return (bool) $status_opts['cleared'];
 				}, 9, 2 );
+		}
+
+		if ( $gateway->is_currency_support_limited() ) {
+			if ( is_admin() ) {
+				add_action( "it_exchange_{$gateway->get_settings_name()}_top", function () use ( $gateway ) {
+
+					$general_settings = it_exchange_get_option( 'settings_general' );
+
+					if ( in_array( $general_settings['default-currency'], $gateway->get_supported_currencies(), true ) ) {
+						return;
+					}
+
+					echo '<div class="notice notice-error"><p>';
+					printf(
+						__( 'You are currently using a currency that is not supported by %1$s. %2$sPlease update your currency settings%3$s.', 'LION' ),
+						$gateway->get_name(),
+						'<a href="' . admin_url( 'admin.php?page=it-exchange-settings' ) . '">',
+						'</a>'
+					);
+					echo '</p></div>';
+				} );
+
+				add_filter( 'it_exchange_get_currencies', function ( $currencies ) use ( $gateway ) {
+
+					if ( ! is_admin() || ! function_exists( 'get_current_screen' ) ) {
+						return $currencies;
+					}
+
+					$screen = get_current_screen();
+
+					if ( empty( $screen->base ) ) {
+						return $currencies;
+					}
+
+					$screens = array(
+						'exchange_page_it-exchange-settings',
+						'exchange_page_it-exchange-setup'
+					);
+
+					if ( ! in_array( $screen->base, $screens, true ) ) {
+						return $currencies;
+					}
+
+					$supported = $gateway->get_supported_currencies();
+
+					if ( empty( $supported ) ) {
+						return $currencies;
+					}
+
+					return array_intersect_key( $currencies, array_flip( $supported ) );
+				} );
+			}
 		}
 
 		return true;

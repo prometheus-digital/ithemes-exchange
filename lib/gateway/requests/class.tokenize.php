@@ -23,6 +23,9 @@ class ITE_Gateway_Tokenize_Request implements ITE_Gateway_Request {
 	/** @var IT_Exchange_Customer */
 	private $customer;
 
+	/** @var ITE_Location */
+	private $address;
+
 	/**
 	 * ITE_Gateway_Tokenize_Request constructor.
 	 *
@@ -73,6 +76,30 @@ class ITE_Gateway_Tokenize_Request implements ITE_Gateway_Request {
 	 */
 	public function should_set_as_primary() {
 		return $this->set_as_primary;
+	}
+
+	/**
+	 * Get the address the payment source is associated with.
+	 *
+	 * Optionally used by some gateways to improve verification.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return ITE_Location|null
+	 */
+	public function get_address() {
+		return $this->address;
+	}
+
+	/**
+	 * Set the address the payment source is associated with.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param ITE_Location $address
+	 */
+	public function set_address( ITE_Location $address ) {
+		$this->address = $address;
 	}
 
 	/**

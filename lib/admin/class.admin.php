@@ -96,8 +96,7 @@ class IT_Exchange_Admin {
 		// Email settings callback
 		add_filter( 'it_exchange_general_settings_tab_callback_email', array( $this, 'register_email_settings_tab_callback' ) );
 		add_action( 'it_exchange_print_general_settings_tab_links', array( $this, 'print_email_settings_tab_link' ) );
-		add_action( 'current_screen', array( $this, 'add_email_help_tabs' ) );
-
+		
 		// Page settings callback
 		add_filter( 'it_exchange_general_settings_tab_callback_pages', array( $this, 'register_pages_settings_tab_callback' ) );
 		add_action( 'it_exchange_print_general_settings_tab_links', array( $this, 'print_pages_settings_tab_link' ) );
@@ -118,6 +117,7 @@ class IT_Exchange_Admin {
 		add_action( 'it_exchange_print_tools_tab_links', array( $this, 'sysinfo_tab' ) );
 		add_action( 'it_exchange_print_tools_tab_links', array( $this, 'upgrades_tab' ) );
 		add_action( 'admin_init', array( $this, 'upgrades_tab_permissions_check' ) );
+		add_action( 'admin_init', array( $this, 'serve_upgrade_file' ) );
 
 		// Add-on Page Filters
 		add_action( 'it_exchange_print_add_ons_page_tab_links', array( $this, 'print_enabled_add_ons_tab_link' ) );
@@ -510,7 +510,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Registers the callback for the gateway tab.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $default
 	 *
@@ -547,7 +547,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Prints the gateway tab for general settings.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 *
 	 * @param string $current_tab the current tab
 	 *
@@ -687,7 +687,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Print the tools tabs.
 	 * 
-	 * @since 1.36
+	 * @since 2.0.0
 	 */
 	public function print_tools_tab() {
 
@@ -708,7 +708,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Print the system info tab.
 	 * 
-	 * @since 1.36
+	 * @since 2.0.0
 	 * 
 	 * @param string $current_tab
 	 */
@@ -725,7 +725,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Print the upgrades tab.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 *
 	 * @param string $current_tab
 	 */
@@ -755,7 +755,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Check if the user has permission to perform upgrades if on the upgrades tab.
 	 * 
-	 * @since 1.36
+	 * @since 2.0.0
 	 */
 	public function upgrades_tab_permissions_check() {
 		
@@ -770,6 +770,56 @@ class IT_Exchange_Admin {
 		if ( ! current_user_can( 'it_perform_upgrades' ) ) {
 			wp_die( __( "You don't have permission to perform upgrades.", 'it-l10n-ithemes-exchange' ) );
 		}
+	}
+
+	public function serve_upgrade_file() {
+		if ( ! isset( $_GET['it-exchange-serve-upgrade-log'] ) ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'it_perform_upgrades' ) ) {
+			wp_die( __( "You don't have permission to view the upgrade log file.", 'it-l10n-ithemes-exchange') );
+		}
+
+		$upgrade  = $_GET['it-exchange-serve-upgrade-log'];
+		$upgrader = it_exchange_make_upgrader();
+
+		if ( ! $upgrade = $upgrader->get_upgrade( $upgrade ) ) {
+			wp_die( __( 'Invalid upgrade.', 'it-l10n-ithemes-exchange' ) );
+		}
+
+		if ( ! $upgrader->is_upgrade_completed( $upgrade ) ) {
+			wp_die( __( 'This upgrade has not yet completed.', 'it-10n-ithemes-exchange' ) );
+		}
+
+		it_classes_load( 'it-file-utility.php' );
+
+		$files = ITFileUtility::locate_file( "it-exchange-upgrade/{$upgrade->get_slug()}*" );
+
+		if ( is_wp_error( $files ) ) {
+			wp_die( $files->get_error_message() );
+		}
+
+		if ( ! is_array( $files ) ) {
+			$files = array( $files );
+		}
+
+		$out = '';
+
+		foreach ( $files as $file ) {
+			$out .= file_get_contents( $file ) . PHP_EOL;
+		}
+
+		header( 'Content-Description: File Transfer' );
+		header( 'Content-Type: text/plain' );
+		header( 'Content-Disposition: attachment; filename="' . $upgrade->get_slug() . '.txt"' );
+		header( 'Expires: 0' );
+		header( 'Cache-Control: must-revalidate' );
+		header( 'Pragma: public' );
+		header( 'Content-Length: ' . strlen( $out ) );
+
+		echo $out;
+		die();
 	}
 
 	/**
@@ -895,40 +945,6 @@ class IT_Exchange_Admin {
 		if ( ! empty( $this->error_message ) )
 			ITUtility::show_error_message( $this->error_message );
 		include( 'views/settings/email.php' );
-	}
-
-	/**
-	 * Add help tabs to the email screen.
-	 *
-	 * @since 1.36
-	 *
-	 * @param WP_Screen $screen
-	 */
-	public function add_email_help_tabs( WP_Screen $screen ) {
-
-		if ( $screen->base !== 'exchange_page_it-exchange-settings' || ! isset( $_GET['tab'] ) || $_GET['tab'] !== 'email' ) {
-			return;
-		}
-
-		$versions         = get_option( 'it-exchange-versions', array() );
-		$previous_version = empty( $versions['previous'] ) ? false : $versions['previous'];
-
-		if ( ! $previous_version || version_compare( $previous_version, '1.36.0', '>=' ) ) {
-			return;
-		}
-
-		$screen->add_help_tab( array(
-			'title' => __( 'New Email Templates', 'it-l10n-ithemes-exchange' ),
-			'id'    => 'new-email-templates',
-			'content' =>
-				'<p>' .
-	             __( 'Version 1.36.0 of Exchange now includes rich email templates that allow you to create specific branding and styling in your Exchange emails to match your site.', 'it-l10n-ithemes-exchange' ) . ' ' .
-	             __('Some templates already include the important information, such as the products ordered, price and shipping address.', 'it-l10n-ithemes-exchange' ) .
-                 '</p><p>' .
-	             __( 'To use this new system, we’ve made some changes to how you create your Exchange emails which we think will make email creation simpler and faster.', 'it-l10n-ithemes-exchange' ) . ' ' .
-	             __( 'For reference, please see your legacy email template alongside the new templates.', 'it-l10n-ithemes-exchange' ) .
-	             '</p>'
-		) );
 	}
 
 	/**
@@ -1520,7 +1536,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Save core gateway settings.
 	 *
-	 * @since 1.36.0
+	 * @since 2.0.0
 	 */
 	public function save_core_gateway_settings() {
 
@@ -1734,7 +1750,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Auto create WordPress pages with Exchange shortcodes.
 	 *
-	 * @since 1.36
+	 * @since 2.0.0
 	 */
 	protected function auto_create_wordpress_pages() {
 
@@ -1839,9 +1855,10 @@ class IT_Exchange_Admin {
 				)
 			);
 		} else if ( isset( $post_type ) && 'it_exchange_tran' === $post_type && ! empty( $_GET['action'] ) && 'edit' == $_GET['action'] ) {
-			$deps = array( 'jquery-ui-tooltip', 'ithemes-momentjs', 'it-exchange-if-visible' );
+			$deps = array( 'jquery-ui-tooltip', 'ithemes-momentjs', 'it-exchange-if-visible', 'it-exchange-rest' );
 
-			$collection = new IT_Exchange_Txn_Activity_Collection( it_exchange_get_transaction( $GLOBALS['post'] ) );
+			$transaction = it_exchange_get_transaction( $GLOBALS['post'] );
+			$collection  = new IT_Exchange_Txn_Activity_Collection( $transaction );
 
 			$df = get_option( 'date_format' );
 			$tf = get_option( 'time_format' );
@@ -1860,11 +1877,22 @@ class IT_Exchange_Admin {
 			
 			wp_enqueue_script( 'it-exchange-jquery-toastr', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/toastr.js' );
 		
+
+			add_action( 'it_exchange_preload_schemas', function( $schemas ) {
+				$schemas = is_array( $schemas ) ? $schemas : array();
+
+				$schemas[] = 'transaction';
+
+				return $schemas;
+			} );
+
+			$serializer = new \iThemes\Exchange\REST\Route\Transaction\Serializer();
+
 			wp_enqueue_script( 'it-exchange-transaction-details', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/transaction-details.js', $deps );
 			wp_localize_script( 'it-exchange-transaction-details', 'EXCHANGE', array(
 				'nonce' => wp_create_nonce( 'it-exchange-add-note' ),
 				'txn'   => $GLOBALS['post']->ID,
-				'items' => array_map( create_function( '$a', 'return $a->to_array();' ), $collection->get_activity() ),
+				'items' => array_map( function( $a ) { return $a->to_array(); }, $collection->get_activity() ),
 				'sent' => _x( 'Sent!', 'Notice when an email receipt has been successfully sent.', 'it-l10n-ithemes-exchange' ),
 				'failed' => _x( 'Failed!', 'Notice when an email receipt has failed to be sent.', 'it-l10n-ithemes-exchange' ),
 				'format' => it_exchange_convert_php_to_moment( $dtf ),
@@ -1872,6 +1900,10 @@ class IT_Exchange_Admin {
 				'receiptFailed' => __( 'Resending receipt failed', 'it-l10n-ithemes-exchange' ), 
 				'statusChangeSuccess' => __( 'Status changed from %1$s to %2$s.', 'it-l10n-ithemes-exchange' ),
 				'statusChangeError' => __( 'Status change failed', 'it-l10n-ithemes-exchange' )
+				'format' => it_exchange_convert_php_to_moment( $dtf ),
+				'transaction' => $serializer->serialize( $transaction, it_exchange_get_current_customer() ),
+				/* translators: %1$s refers to the refund total, %2$s refers to the current date. */
+				'refundLabel' => __( '%1$s on %2$s', 'it-l10n-ithemes-exchange' ),
 			) );
 			wp_dequeue_script( 'autosave' );
 		} else if ( 'exchange_page_it-exchange-addons' === $hook_suffix ) {

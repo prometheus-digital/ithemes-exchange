@@ -9,6 +9,7 @@ class IT_Theme_API_Transactions implements IT_Theme_API {
 
 	/**
 	 * API context
+	 *
 	 * @var string $_context
 	 * @since 0.4.0
 	 */
@@ -16,6 +17,7 @@ class IT_Theme_API_Transactions implements IT_Theme_API {
 
 	/**
 	 * Maps api tags to methods
+	 *
 	 * @var array $_tag_map
 	 * @since 0.4.0
 	 */
@@ -98,7 +100,7 @@ class IT_Theme_API_Transactions implements IT_Theme_API {
 
 				return true;
 			} else {
-				self::$transactions = $GLOBALS['it_exchange']['transactions'];
+				self::$transactions                     = $GLOBALS['it_exchange']['transactions'];
 				$GLOBALS['it_exchange']['transactions'] = array();
 				end( $GLOBALS['it_exchange']['transactions'] );
 				$GLOBALS['it_exchange']['transaction'] = false;
@@ -129,6 +131,12 @@ class IT_Theme_API_Transactions implements IT_Theme_API {
 
 			if ( ! $page ) {
 				$page = 1;
+			}
+
+			if ( isset( $_GET['t'] ) && current_user_can( 'read_it_transaction', $_GET['t'] ) ) {
+				self::$total = 1;
+
+				return array( it_exchange_get_transaction( $_GET['t'] ) );
 			}
 
 			if ( $has ) {
@@ -171,11 +179,11 @@ class IT_Theme_API_Transactions implements IT_Theme_API {
 	 */
 	public function pagination() {
 		return paginate_links( array(
-			'base'    => it_exchange_get_page_url( 'purchases' ) . '%_%',
-			'format'  => it_exchange_is_pages_compat_mode() ? '?page=%#%' : '%#%/',
-			'total'   => ceil( self::$total / self::$per_page ),
-			'current' => get_query_var( 'page' ) ? (int) get_query_var( 'page' ) : 1,
-			'type'    => 'list',
+			'base'      => it_exchange_get_page_url( 'purchases' ) . '%_%',
+			'format'    => it_exchange_is_pages_compat_mode() ? '?page=%#%' : '%#%/',
+			'total'     => ceil( self::$total / self::$per_page ),
+			'current'   => get_query_var( 'page' ) ? (int) get_query_var( 'page' ) : 1,
+			'type'      => 'list',
 			'prev_text' => __( '&laquo; Newer' ),
 			'next_text' => __( 'Older &raquo;' ),
 		) );

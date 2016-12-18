@@ -116,6 +116,7 @@ class ITE_Gateway_Offline_Payments extends ITE_Gateway {
 				'slug'    => 'offline-payments-title',
 				'options' => array( 'class' => 'normal-text' ),
 				'tooltip' => __( 'What would you like to title this payment option? eg: Check', 'it-l10n-ithemes-exchange' ),
+				'default' => __( 'Pay with check', 'it-l10n-ithemes-exchange' ),
 			),
 			array(
 				'type'    => 'text_area',
@@ -127,6 +128,7 @@ class ITE_Gateway_Offline_Payments extends ITE_Gateway {
 					'class' => 'normal-text'
 				),
 				'tooltip' => __( 'This will be the notification customers see after using this method of payment.', 'it-l10n-ithemes-exchange' ),
+				'default' => __( 'Thank you for your order. We will contact you shortly for payment.', 'it-l10n-ithemes-exchange' ),
 			),
 			array(
 				'type'    => 'drop_down',
@@ -144,4 +146,38 @@ class ITE_Gateway_Offline_Payments extends ITE_Gateway {
 	 * @inheritDoc
 	 */
 	public function get_settings_name() { return 'addon_offline_payments'; }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function supports_feature( ITE_Optionally_Supported_Feature $feature ) {
+
+		switch ( $feature->get_feature_slug() ) {
+			case 'recurring-payments':
+				return true;
+		}
+
+		return parent::supports_feature( $feature );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function supports_feature_and_detail( ITE_Optionally_Supported_Feature $feature, $slug, $detail ) {
+
+		switch ( $feature->get_feature_slug() ) {
+			case 'recurring-payments':
+				switch ( $slug ) {
+					case 'auto-renew':
+					case 'profile':
+					case 'trial':
+					case 'trial-profile':
+						return true;
+					default:
+						return false;
+				}
+		}
+
+		return parent::supports_feature( $feature );
+	}
 }

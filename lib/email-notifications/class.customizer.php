@@ -1052,21 +1052,8 @@ class IT_Exchange_Email_Customizer {
 	 */
 	public static function get_link() {
 		return add_query_arg( array(
-			'url'    => urlencode( add_query_arg( 'it-exchange-customizer', 'emails', site_url() ) ),
+			'url'    => urlencode( add_query_arg( 'it-exchange-customizer', 'emails', trailingslashit( site_url() ) ) ),
 			'return' => rawurlencode( admin_url( 'admin.php?page=it-exchange-settings&tab=email' ) ),
 		), admin_url( 'customize.php' ) );
-	}
-
-	/**
-	 * Check if the email customizer is available.
-	 *
-	 * Ensures that the user is running WordPress 4.3+
-	 *
-	 * @since 2.0.0
-	 *
-	 * @return bool
-	 */
-	public static function is_available() {
-		return version_compare( $GLOBALS['wp_version'], '4.3.0', '>=' );
 	}
 }

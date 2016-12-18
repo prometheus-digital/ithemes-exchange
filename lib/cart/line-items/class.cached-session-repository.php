@@ -202,6 +202,11 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 	/**
 	 * @inheritDoc
 	 */
+	public function expires_at() { return $this->get_model()->expires_at; }
+
+	/**
+	 * @inheritDoc
+	 */
 	protected function back_compat_filter_cart_product( $data ) {
 		return apply_filters_deprecated( 'it_exchange_get_cart_product', array(
 			$data,

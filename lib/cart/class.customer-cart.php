@@ -220,6 +220,15 @@ class ITE_Cart {
 	}
 
 	/**
+	 * Get the time this cart expires at.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return DateTime|null
+	 */
+	public function expires_at() { return $this->get_repository()->expires_at(); }
+
+	/**
 	 * Set the guest customer for this cart.
 	 *
 	 * @since 2.0.0
@@ -556,6 +565,22 @@ class ITE_Cart {
 	}
 
 	/**
+	 * Get the currency code the cart is being purchased in.
+	 *
+	 * For example, USD, EUR.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return string
+	 */
+	public function get_currency_code() {
+
+		$general = it_exchange_get_option( 'settings_general' );
+
+		return $general['default-currency'];
+	}
+
+	/**
 	 * Check if the cart contains items of a given type. Either as child line items or top-level line items.
 	 *
 	 * @since 2.0.0
@@ -598,6 +623,54 @@ class ITE_Cart {
 		sort( $item_types );
 
 		return $item_types;
+	}
+
+	/**
+	 * Does the cart contain a recurring fee.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return bool Returns false if no fees or if only non-recurring fees.
+	 */
+	public function contains_recurring_fee() {
+		$fees = $this->get_items()->flatten()->with_only( 'fee' );
+
+		if ( ! $fees->count() ) {
+			return false;
+		}
+
+		/** @var ITE_Fee_Line_Item $fee */
+		foreach ( $fees as $fee ) {
+			if ( $fee->is_recurring() ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Does the cart contain a non-recurring fee.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return bool Returns false if no fees or if only recurring fees.
+	 */
+	public function contains_non_recurring_fee() {
+		$fees = $this->get_items()->flatten()->with_only( 'fee' );
+
+		if ( ! $fees->count() ) {
+			return false;
+		}
+
+		/** @var ITE_Fee_Line_Item $fee */
+		foreach ( $fees as $fee ) {
+			if ( ! $fee->is_recurring() ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -1216,12 +1289,20 @@ class ITE_Cart {
 	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item_Repository $repository
+	 * @param bool                      $new_ids
 	 *
 	 * @return \ITE_Cart
 	 */
-	public function with_new_repository( ITE_Line_Item_Repository $repository ) {
+	public function with_new_repository( ITE_Line_Item_Repository $repository, $new_ids = false ) {
 
-		$repository->save_many( $this->get_items()->flatten()->to_array() );
+		if ( $new_ids ) {
+			foreach ( $this->get_items() as $item ) {
+				$repository->save( $item->clone_with_new_id() );
+			}
+		} else {
+			$repository->save_many( $this->get_items()->flatten()->to_array() );
+		}
+
 		$repository->set_billing_address( $this->get_billing_address() );
 		$repository->set_shipping_address( $this->get_shipping_address() );
 
@@ -1422,7 +1503,8 @@ class ITE_Cart {
 		$validators = array(
 			new ITE_Multi_Item_Cart_Validator(),
 			new ITE_Multi_Item_Product_Validator(),
-			new ITE_Product_Inventory_Validator()
+			new ITE_Product_Inventory_Validator(),
+			new ITE_Product_Availability_Validator(),
 		);
 
 		/**

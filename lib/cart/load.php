@@ -50,6 +50,7 @@ require_once dirname( __FILE__ ) . '/line-items/class.collection.php';
 require_once dirname( __FILE__ ) . '/validators/class.inventory.php';
 require_once dirname( __FILE__ ) . '/validators/class.multi-item-cart.php';
 require_once dirname( __FILE__ ) . '/validators/class.multi-item-product.php';
+require_once dirname( __FILE__ ) . '/validators/class.availability.php';
 
 require_once dirname( __FILE__ ) . '/exceptions/class.cart-coercion-failed.php';
 require_once dirname( __FILE__ ) . '/exceptions/class.line-item-coercion-failed.php';
@@ -61,9 +62,6 @@ require_once dirname( __FILE__ ) . '/class.meta-registry.php';
 \IronBound\DB\Manager::register( new BaseMetaTable( new ITE_Transaction_Line_Item_Table(), array(
 	'primary_id_column' => 'line_item'
 ) ) );
-
-\IronBound\DB\Manager::maybe_install_table( \IronBound\DB\Manager::get( 'ite-line-items' ) );
-\IronBound\DB\Manager::maybe_install_table( \IronBound\DB\Manager::get( 'ite-line-items-meta' ) );
 
 ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'product', array(
 	'label'               => __( 'Product', 'it-l10n-ithemes-exchange' ),

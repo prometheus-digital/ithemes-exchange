@@ -653,7 +653,7 @@ class IT_Exchange_Shopping_Cart {
 	/**
 	 * Convert feedback to notices.
 	 *
-	 * @sicne 2.0.0
+	 * @since 2.0.0
 	 */
 	public function convert_feedback_to_notices() {
 

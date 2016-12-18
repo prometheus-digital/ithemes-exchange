@@ -121,7 +121,7 @@ class ITE_Payment_Token extends ModelWithMeta implements ITE_Object, ITE_Gateway
 	/**
 	 * @inheritDoc
 	 */
-	public function get_identifier() { return $this->get_ID(); }
+	public function get_identifier() { return (string) $this->get_ID(); }
 
 	/**
 	 * @inheritDoc

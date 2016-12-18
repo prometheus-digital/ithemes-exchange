@@ -158,13 +158,16 @@ abstract class IT_Exchange_Shipping_Method {
 	 * Get the total cost for shipping a given product with this method.
 	 *
 	 * @since 1.4.0
+	 * @since 2.0.0 Add $cart parameter.
 	 *
 	 * @param array     $cart_product
 	 * @param \ITE_Cart $cart
 	 *
 	 * @return float
 	 */
-	abstract public function get_shipping_cost_for_product( $cart_product, ITE_Cart $cart = null );
+	public function get_shipping_cost_for_product( $cart_product, ITE_Cart $cart = null ) {
+		return 0.00;
+	}
 
 	/**
 	 * Get any additional costs this method imposes on the cart as a whole, not an individual product.

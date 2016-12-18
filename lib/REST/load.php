@@ -14,6 +14,7 @@ use iThemes\Exchange\REST\Middleware\Cart_Feedback;
 use iThemes\Exchange\REST\Middleware\Error_Handler;
 use iThemes\Exchange\REST\Middleware\Filter_By_Context;
 use iThemes\Exchange\REST\Middleware\Stack;
+use iThemes\Exchange\REST\Helpers\ContextFilterer;
 use iThemes\Exchange\REST\Route\Cart\Carts;
 use iThemes\Exchange\REST\Route\Cart\Item;
 use iThemes\Exchange\REST\Route\Cart\Meta;
@@ -54,7 +55,9 @@ add_action( 'rest_api_init', function () {
 
 add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 
-	$cart  = new Route\Cart\Cart();
+	$manager->register_route( new Route\Info() );
+
+	$cart  = new Route\Cart\Cart( new Route\Cart\Serializer() );
 	$carts = new Carts( $cart );
 
 	$manager->register_route( $cart );
@@ -72,7 +75,7 @@ add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 	}
 
 	$shipping_methods = new Route\Cart\Shipping_Methods();
-	$purchase         = new Route\Cart\Purchase( new \ITE_Gateway_Request_Factory() );
+	$purchase         = new Route\Cart\Purchase( new \ITE_Gateway_Request_Factory(), new Route\Cart\PurchaseSerializer() );
 	$meta             = new Route\Cart\Meta();
 
 	$manager->register_route( $shipping_methods->set_parent( $cart ) );
@@ -97,7 +100,7 @@ add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 	$transaction = new Route\Transaction\Transaction( new TransactionSerializer() );
 	$manager->register_route( $transaction->set_parent( $transactions ) );
 
-	$send_receipt = new Route\Transaction\Send_Receipt();
+	$send_receipt = new Route\Transaction\Send_Receipt( it_exchange_email_notifications() );
 	$manager->register_route( $send_receipt->set_parent( $transaction ) );
 
 	/* Activity */
@@ -179,10 +182,46 @@ function get_rest_manager() {
 		$stack->push( new Error_Handler( defined( 'WP_DEBUG' ) && WP_DEBUG ), 'error-handler' );
 		$stack->push( new Cart_Decorator(), 'cart-decorator' );
 		$stack->push( new Autolinker(), 'autolinker' );
-		$stack->push( new Filter_By_Context(), 'filter-by-context' );
+		$stack->push( new Filter_By_Context( new ContextFilterer() ), 'filter-by-context' );
 		$stack->push( new Cart_Feedback(), 'cart-feedback' );
 
-		$manager = new Manager( 'it_exchange', $stack );
+		$manager = new Manager( 'it_exchange', $stack, array(
+			'card' => array(
+				'title'                => 'card',
+				'type'                 => 'object',
+				'additionalProperties' => false,
+				'properties'           => array(
+					'number' => array(
+						'type'        => 'string',
+						'description' => __( 'Card number.', 'it-l10n-ithemes-exchange' ),
+						'required'    => true,
+					),
+					'year'   => array(
+						'type'        => 'integer',
+						'description' => __( 'Card expiration year', 'it-l10n-ithemes-exchange' ),
+						'required'    => true,
+					),
+					'month'  => array(
+						'type'        => 'integer',
+						'description' => __( 'Card expiration month', 'it-l10n-ithemes-exchange' ),
+						'required'    => true,
+						'min'         => 1,
+						'max'         => 12,
+					),
+					'cvc'    => array(
+						'type'        => 'string',
+						'description' => __( 'Card security code.', 'it-l10n-ithemes-exchange' ),
+						'required'    => true,
+						'min'         => 3,
+						'max'         => 4,
+					),
+					'name'   => array(
+						'type'        => 'string',
+						'description' => __( 'Card holder name.', 'it-l10n-ithemes-exchange' ),
+					),
+				),
+			)
+		) );
 	}
 
 	return $manager;

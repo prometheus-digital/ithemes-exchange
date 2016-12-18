@@ -9,14 +9,17 @@
 namespace iThemes\Exchange\REST\Route\Transaction;
 
 use iThemes\Exchange\REST\Getable;
+use iThemes\Exchange\REST\Postable;
+use iThemes\Exchange\REST\Putable;
 use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
 
 /**
  * Class Transaction
+ *
  * @package iThemes\Exchange\REST\Route\Transaction
  */
-class Transaction extends Base implements Getable {
+class Transaction extends Base implements Getable, Putable {
 
 	/** @var Serializer */
 	private $serializer;
@@ -54,6 +57,44 @@ class Transaction extends Base implements Getable {
 		$cap = $request['context'] === 'view' ? 'read_it_transaction' : 'edit_it_transaction';
 
 		if ( ! $user || ! user_can( $user->wp_user, $cap, $request->get_param( 'transaction_id', 'URL' ) ) ) {
+			return new \WP_Error(
+				'it_exchange_rest_forbidden_context',
+				__( 'Sorry, you are not allowed to access this transaction.', 'it-l10n-ithemes-exchange' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
+		}
+
+		return true;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function handle_put( Request $request ) {
+
+		$t = it_exchange_get_transaction( $request->get_param( 'transaction_id', 'URL' ) );
+
+		$t->update_status( $request['status']['slug'] );
+
+		$user     = it_exchange_get_current_customer();
+		$response = new \WP_REST_Response( $this->serializer->serialize( $t, $user ) );
+
+		foreach ( $this->serializer->generate_links( $t, $this->get_manager(), $user ) as $rel => $links ) {
+			foreach ( $links as $link ) {
+				$response->add_link( $rel, $link['href'], $link );
+			}
+		}
+
+		return $response;
+
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function user_can_put( Request $request, \IT_Exchange_Customer $user = null ) {
+
+		if ( ! $user || ! user_can( $user->wp_user, 'edit_it_transaction', $request->get_param( 'transaction_id', 'URL' ) ) ) {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you are not allowed to access this transaction.', 'it-l10n-ithemes-exchange' ),

@@ -253,6 +253,9 @@ function it_exchange_register_scripts() {
 		'restNonce'     => wp_create_nonce( 'wp_rest' ),
 		'restUrl'       => rest_url( 'it_exchange/v1/' ),
 		'currentUser'   => get_current_user_id(),
+		'i18n' => array(
+			'unknownError' => __( 'An unknown error occurred.', 'it-l10n-ithemes-exchange' ),
+		)
 	) );
 
 	wp_register_script(
@@ -264,15 +267,38 @@ function it_exchange_register_scripts() {
 		)
 	);
 
-	wp_localize_script(
-		'it-exchange-rest',
-		'ITExchangeRESTi18n',
-		array(
+	$config = array(
+		'i18n' => array(
 			'visualCC' => array(
 				'name'   => _x( 'Name', 'Credit Card Holder Name', 'it-l10n-ithemes-exchange' ),
 				'number' => _x( 'Number', 'Credit Card Number', 'it-l10n-ithemes-exchange' ),
+			),
+			'checkout' => array(
+				'completePurchase' => __( 'Complete Purchase', 'it-l10n-ithemes-exchange' ),
+				'purchased'        => __( 'Purchased!', 'it-l10n-ithemes-exchange' ),
+				'cancel'           => __( 'Cancel', 'it-l10n-ithemes-exchange' ),
+				'haveCoupon'       => __( 'Have a coupon?', 'it-10n-ithemes-exchange' ),
+				'addCoupon'        => _x( 'Add', 'Add coupon', 'it-l10n-ithemes-exchange' ),
+				'couponCode'       => __( 'Coupon Code', 'it-l10n-ithemes-exchange' ),
+			),
+			'paymentToken' => array(
+				'addNew' => _x( 'Add New', 'Add new payment source, like a credit card.', 'it-l10n-ithemes-exchange' )
 			)
 		)
+	);
+
+	if ( apply_filters( 'it_exchange_preload_cart_item_types', it_exchange_is_page( 'checkout' ) ) ) {
+		$serializer = new \iThemes\Exchange\REST\Route\Cart\TypeSerializer();
+
+		foreach ( ITE_Line_Item_Types::shows_in_rest() as $type ) {
+			$config['cartItemTypes'][] = $serializer->serialize( $type );
+		}
+	}
+
+	wp_localize_script(
+		'it-exchange-rest',
+		'ITExchangeRESTConfig',
+		$config
 	);
 
 	$js_tokenizers = array();
@@ -285,7 +311,7 @@ function it_exchange_register_scripts() {
 		}
 
 		$js_tokenizers[ $gateway->get_slug() ] = array(
-			'fn' => $handler->get_js()
+			'fn' => $handler->get_tokenize_js_function()
 		);
 	}
 
@@ -1167,11 +1193,13 @@ add_action( 'init', 'it_exchange_register_default_purchase_requirements' );
 function it_exchange_billing_address_purchase_requirement_complete() {
 	$cart = it_exchange_get_current_cart();
 
-	if ( ! $cart->get_billing_address() ) {
+	$billing = $cart->get_billing_address();
+
+	if ( ! $billing ) {
 		return false;
 	}
 
-	if ( ! $cart->get_billing_address()->offsetGet( 'address1' ) ) {
+	if ( ! $billing['address1'] ) {
 		return false;
 	}
 
@@ -1555,6 +1583,27 @@ function it_exchange_get_requested_cart_and_check_auth( $cart_var = 'cart_id', $
 }
 
 /**
+ * Get all core tables.
+ *
+ * @since 2.0.0
+ *
+ * @return \IronBound\DB\Table\Table[]
+ */
+function it_exchange_get_tables() {
+	return array(
+		\IronBound\DB\Manager::get( 'ite-transactions' ),
+		\IronBound\DB\Manager::get( 'ite-address' ),
+		\IronBound\DB\Manager::get( 'ite-line-items' ),
+		\IronBound\DB\Manager::get( 'ite-line-items-meta' ),
+		\IronBound\DB\Manager::get( 'ite-refunds' ),
+		\IronBound\DB\Manager::get( 'ite-refunds-meta' ),
+		\IronBound\DB\Manager::get( 'ite-payment-tokens' ),
+		\IronBound\DB\Manager::get( 'ite-payment-tokens-meta' ),
+		\IronBound\DB\Manager::get( 'ite-sessions' ),
+	);
+}
+
+/**
  * Blocks access to Download iThemes Exchange attachments
  *
  * @since 1.7.18
@@ -1825,7 +1874,7 @@ function it_exchange_show_ithemes_sync_integration_nag() {
 	if ( ! current_user_can( 'manage_options' ) )
 		$show_nag = false;
 
-    if ( ! empty( $show_nag ) ) {
+    if ( ! empty( $show_nag ) && ! empty( $_GET ) ) {
         $more_info_url   = 'http://ithemes.com/2014/06/24/track-sales-sync-new-ithemes-exchange-integration/';
         $dismiss_url = add_query_arg( array( 'it-exchange-dismiss-sync-integration-nag' => 1 ) ); // escaped before printed
         include( dirname( dirname( __FILE__ ) ) . '/admin/views/notices/ithemes-sync-integration.php' );
@@ -1977,6 +2026,10 @@ function it_exchange_transient_transactions_garbage_collection() {
 	if ( ! wp_next_scheduled( 'it_exchange_trans_txn_garbage_collection' ) ) {
 		wp_schedule_event( time(), 'twicedaily', 'it_exchange_trans_txn_garbage_collection' );
 	}
+
+	if ( ! wp_next_scheduled( 'it_exchange_delete_upgrade_logs' ) ) {
+		wp_schedule_event( time() + DAY_IN_SECONDS, 'daily', 'it_exchange_delete_upgrade_logs' );
+	}
 }
 add_action( 'wp', 'it_exchange_transient_transactions_garbage_collection' );
 
@@ -2025,6 +2078,48 @@ function it_exchange_trans_txn_cleanup() {
 	do_action( 'it_exchange_trans_txn_cleanup' );
 }
 add_action( 'it_exchange_trans_txn_garbage_collection', 'it_exchange_trans_txn_cleanup' );
+
+/**
+ * Delete upgrade logs older than 7 days.
+ *
+ * @since 2.0.0
+ *
+ * @param int $days_old
+ */
+function it_exchange_delete_upgrade_logs( $days_old = 7 ) {
+
+	it_classes_load( 'it-file-utility.php' );
+
+	$dir = ITFileUtility::get_writable_directory( array(
+		'name'             => 'it-exchange-upgrade',
+		'require_existing' => true,
+	) );
+
+	if ( is_wp_error( $dir ) ) {
+		return;
+	}
+
+	$files = ITFileUtility::get_flat_file_listing( $dir, true );
+
+	if ( is_wp_error( $files ) || empty( $files ) ) {
+		return;
+	}
+
+	foreach ( $files as $file ) {
+		$modified = filemtime( $file );
+
+		if ( $modified === false ) {
+			continue;
+		}
+
+		if ( time() - $modified > DAY_IN_SECONDS * $days_old ) {
+			@unlink( $file );
+		}
+	}
+
+}
+
+add_action( 'it_exchange_delete_upgrade_logs', 'it_exchange_delete_upgrade_logs' );
 
 /**
  * Mark a filter as deprecated and inform when it has been used.
@@ -2137,7 +2232,7 @@ function it_exchange_get_system_info() {
 	}
 
 	$info['iThemes Exchange'] = array(
-		'Version'               => $IT_Exchange->_version,
+		'Version'               => IT_Exchange::VERSION,
 		'Previous'              => empty( $versions ) || empty( $versions['previous'] ) ? '' : $versions['previous'],
 		'Currency Code'         => $settings['default-currency'],
 		'Currency Symbol'       => it_exchange_get_currency_symbol( $settings['default-currency'] ),
@@ -2266,11 +2361,11 @@ function it_exchange_get_host() {
 		$host = 'Rackspace Cloud';
 	} elseif ( strpos( DB_HOST, '.sysfix.eu' ) !== false ) {
 		$host = 'SysFix.eu Power Hosting';
-	} elseif ( strpos( $_SERVER['SERVER_NAME'], 'Flywheel' ) !== false ) {
+	} elseif ( isset( $_SERVER['SERVER_NAME'] ) && strpos( $_SERVER['SERVER_NAME'], 'Flywheel' ) !== false ) {
 		$host = 'Flywheel';
 	} else {
 		// Adding a general fallback for data gathering
-		$host = 'DBH/' . DB_HOST . ', SRV/' . $_SERVER['SERVER_NAME'];
+		$host = 'DBH/' . DB_HOST . ', SRV/' . isset( $_SERVER['SERVER_NAME'] ) ? $_SERVER['SERVER_NAME'] : '';
 	}
 
 	return $host;

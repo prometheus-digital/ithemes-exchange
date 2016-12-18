@@ -23,7 +23,7 @@ class ITE_Gateway_Card implements ITE_Gateway_Payment_Source {
 	/** @var int */
 	private $expiration_year;
 
-	/** @var int */
+	/** @var string */
 	private $cvc;
 
 	/**
@@ -32,7 +32,7 @@ class ITE_Gateway_Card implements ITE_Gateway_Payment_Source {
 	 * @param string $number
 	 * @param int    $expiration_year
 	 * @param int    $expiration_month
-	 * @param int    $cvc
+	 * @param string $cvc
 	 * @param string $holder_name
 	 */
 	public function __construct( $number, $expiration_year, $expiration_month, $cvc, $holder_name = '' ) {
@@ -114,7 +114,7 @@ class ITE_Gateway_Card implements ITE_Gateway_Payment_Source {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @return int
+	 * @return string
 	 */
 	public function get_cvc() {
 		return $this->cvc;

@@ -176,7 +176,7 @@ class ITE_PayPal_Standard_Secure_Webhook_Handler implements ITE_Gateway_Request_
 
 				$existing = ITE_Refund::query()
 					->and_where( 'gateway_id', '=', $refund_id )
-					->and_where('transaction', '=', $transaction->ID )
+					->and_where( 'transaction', '=', $transaction->ID )
 					->first();
 
 				if ( ! $refund_id || ! $existing ) {

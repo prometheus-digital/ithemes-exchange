@@ -146,19 +146,22 @@ function it_exchange_zero_sum_checkout_handle_expired( $true, $product_id, $tran
  *
  * @since 1.3.1
  *
- * @param string $parent_txn_id Parent Transaction ID
+ * @param int $parent_txn Parent Transaction ID
+ *
  * @return bool
 */
 function it_exchange_zero_sum_checkout_add_child_transaction( $parent_txn ) {
-	$customer_id = get_post_meta( $parent_txn->ID, '_it_exchange_customer_id', true );
-	if ( $customer_id ) {
-		$uniqid = it_exchange_get_zero_sum_checkout_transaction_uniqid();
-		$transaction_object = new stdClass;
-		$transaction_object->total = 0;
-		it_exchange_add_child_transaction( 'zero-sum-checkout', $uniqid, 'Completed', $customer_id, $parent_txn->ID, $transaction_object );
-		return true;
+
+	$parent = it_exchange_get_transaction( $parent_txn );
+
+	if ( ! $parent ) {
+		return false;
 	}
-	return false;
+
+	$uniqid = it_exchange_get_zero_sum_checkout_transaction_uniqid();
+	it_exchange_add_subscription_renewal_payment( $parent, $uniqid, 'Completed', 0 );
+
+	return true;
 }
 
 /**

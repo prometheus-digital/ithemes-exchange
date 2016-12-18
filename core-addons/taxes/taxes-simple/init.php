@@ -82,8 +82,10 @@ function it_exchange_taxes_simple_settings_callback() {
  * @return array
 */
 function it_exchange_addon_taxes_simple_default_settings ( $defaults ) {
-	$defaults['tax-label-singular'] = __( 'Tax', 'it-l10n-ithemes-exchange' );
-	$defaults['tax-label-plural']   = __( 'Taxes', 'it-l10n-ithemes-exchange' );
+	$defaults['tax-label-singular']        = __( 'Tax', 'it-l10n-ithemes-exchange' );
+	$defaults['tax-label-plural']          = __( 'Taxes', 'it-l10n-ithemes-exchange' );
+	$defaults['calculate-after-discounts'] = true;
+
 	return $defaults;
 }
 add_filter( 'it_storage_get_defaults_exchange_addon_taxes_simple', 'it_exchange_addon_taxes_simple_default_settings' );

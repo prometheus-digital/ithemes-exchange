@@ -77,6 +77,9 @@ class IT_Exchange_Guest_Customer extends IT_Exchange_Customer {
 			if ( $transaction->get_billing_address() ) {
 				$props['first-name'] = $transaction->get_billing_address()->offsetGet( 'first-name' );
 				$props['last-name']  = $transaction->get_billing_address()->offsetGet( 'last-name' );
+			} elseif ( $transaction->get_shipping_address() ) {
+				$props['first-name'] = $transaction->get_shipping_address()->offsetGet( 'first-name' );
+				$props['last-name']  = $transaction->get_shipping_address()->offsetGet( 'last-name' );
 			}
 
 			$customer = new self( $transaction->customer_email, $props );
@@ -176,6 +179,6 @@ class IT_Exchange_Guest_Customer extends IT_Exchange_Customer {
 	 * @inheritDoc
 	 */
 	public function get_tokens( $gateway = '' ) {
-		return array();
+		return new \IronBound\DB\Collection( array(), false, new \IronBound\DB\Saver\ModelSaver( 'ITE_Payment_Token' ) );
 	}
 }

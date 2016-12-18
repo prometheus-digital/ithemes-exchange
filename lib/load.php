@@ -10,6 +10,7 @@
 require_once dirname( __FILE__ ) . '/sessions/load.php';
 
 require_once dirname( __FILE__ ) . '/../api/contracts/load.php';
+require_once dirname( __FILE__ ) . '/optional-features/load.php';
 
 // IT Classes
 require_once dirname( __FILE__ ) . '/classes/load.php';
@@ -99,3 +100,7 @@ require_once dirname( __FILE__ ) . '/settings/class.form.php';
 require_once dirname( __FILE__ ) . '/settings/class.controller.php';
 
 require_once dirname( __FILE__ ) . '/REST/load.php';
+
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
+	require_once dirname( __FILE__ ) . '/cli/load.php';
+}

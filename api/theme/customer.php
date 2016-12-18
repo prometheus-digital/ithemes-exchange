@@ -175,7 +175,7 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
-				$output .= '<input type="text" id="' . $field_id. '" name="' . $field_name. '" value="' . $field_value . '" />';
+				$output .= '<input type="text" id="' . $field_id. '" name="' . $field_name. '" value="' . esc_attr( $field_value ) . '" />';
 
 		}
 
@@ -217,7 +217,7 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
-				$output .= '<input type="text" id="' . $field_id. '" name="' . $field_name. '" value="' . $field_value . '" />';
+				$output .= '<input type="text" id="' . $field_id. '" name="' . $field_name. '" value="' . esc_attr( $field_value ) . '" />';
 
 		}
 
@@ -258,7 +258,7 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
-				$output .= '<input type="text" id="' . $field_id. '" name="' . $field_name. '" value="' . $field_value . '" />';
+				$output .= '<input type="text" id="' . $field_id. '" name="' . $field_name. '" value="' . esc_attr( $field_value ) . '" />';
 
 		}
 
@@ -299,7 +299,7 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
-				$output .= '<input type="text" id="' . $field_id. '" name="' . $field_name. '" value="' . $field_value . '" />';
+				$output .= '<input type="text" id="' . $field_id. '" name="' . $field_name. '" value="' . esc_attr( $field_value ) . '" />';
 
 		}
 
@@ -342,7 +342,7 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
-				$output .= '<input type="text" id="' . $field_id. '" name="' . $field_name. '" value="' . $field_value . '" />';
+				$output .= '<input type="text" id="' . $field_id. '" name="' . $field_name. '" value="' . esc_attr( $field_value ) . '" />';
 
 		}
 
@@ -383,7 +383,7 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 			case 'html':
 			default:
 				$output = '<label for="' . $field_id. '">' . $options['label'] . '</label>';
-				$output .= '<input type="text" id="' . $field_id. '" name="' . $field_name. '" value="' . $field_value . '" />';
+				$output .= '<input type="text" id="' . $field_id. '" name="' . $field_name. '" value="' . esc_attr( $field_value ) . '" />';
 
 		}
 

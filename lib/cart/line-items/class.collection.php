@@ -399,6 +399,11 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	 */
 	public function delete() {
 		foreach ( $this->items as $item ) {
+
+			if ( $item instanceof ITE_Aggregatable_Line_Item && $item->get_aggregate() ) {
+				$item->get_aggregate()->remove_item( $item->get_type(), $item->get_id() );
+			}
+
 			$this->repository->delete( $item );
 		}
 	}

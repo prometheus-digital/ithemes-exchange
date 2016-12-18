@@ -9,7 +9,8 @@
 /**
  * Class ITE_Cart_Product
  */
-class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, ITE_Discountable_Line_Item, ITE_Quantity_Modifiable_Item, ITE_Line_Item_Repository_Aware {
+class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, ITE_Discountable_Line_Item,
+	ITE_Quantity_Modifiable_Item, ITE_Line_Item_Repository_Aware, ITE_Requires_Optionally_Supported_Features {
 
 	/** @var ITE_Aggregatable_Line_Item[] */
 	private $aggregatables = array();
@@ -62,6 +63,23 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 		$self->set_quantity( $quantity );
 
 		return $self;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function optional_features_required() {
+
+		$product  = $this->get_product();
+		$required = array();
+
+		foreach ( ITE_Product_Feature_Registry::optional() as $feature ) {
+			if ( $product->has_feature( $feature->get_feature_slug() ) ) {
+				$required[] = new ITE_Optionally_Supported_Feature_Requirement( $feature, $feature->get_details_for_product( $product ) );
+			}
+		}
+
+		return $required;
 	}
 
 	/**

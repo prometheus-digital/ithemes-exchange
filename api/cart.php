@@ -69,6 +69,40 @@ function it_exchange_get_cart( $cart_id ) {
 }
 
 /**
+ * Helper function to create a cart and backing session.
+ *
+ * @since 2.0.0
+ *
+ * @param IT_Exchange_Customer $user
+ * @param bool                 $is_main
+ * @param DateTime|null        $expires
+ *
+ * @return ITE_Cart|null
+ */
+function it_exchange_create_cart_and_session( IT_Exchange_Customer $user, $is_main = true, \DateTime $expires = null ) {
+
+	$session = \ITE_Session_Model::create( array(
+		'ID'         => it_exchange_create_unique_hash(),
+		'customer'   => $user->get_ID(),
+		'is_main'    => $is_main,
+		'expires_at' => $expires,
+	) );
+
+	$repo = \ITE_Line_Item_Cached_Session_Repository::from_session_id( $user, $session->ID );
+	$cart = \ITE_Cart::create( $repo, $user );
+
+	if ( ! $cart ) {
+		return null;
+	}
+
+	$session->cart_id = $cart->get_id();
+	$session->data    = array_merge( $session->data, array( 'cart_id' => $cart->get_id() ) );
+	$session->save();
+
+	return $cart;
+}
+
+/**
  * Returns an array of all data in the cart
  *
  * @since 0.3.7
@@ -929,34 +963,12 @@ function it_exchange_get_available_transaction_methods_for_cart( ITE_Cart $cart 
 
 	$cart = $cart ?: it_exchange_get_current_cart();
 
-	$total               = it_exchange_get_cart_total( false, array( 'cart' => $cart ) );
-	$contains_free_trial = $cart->get_items( 'product' )->filter( function ( ITE_Cart_Product $item ) use ( $cart ) {
-
-		if ( $item->get_total() > 0 ) {
-			return false;
-		}
-
-		$fees = $item->get_line_items()->with_only( 'fee' )->filter( function( ITE_Fee_Line_Item $fee ) {
-			return $fee->has_param( 'is_free_trial' ) || $fee->has_param( 'is_prorate_days' );
-		} );
-
-		if ( $fees->count() === 0 ) {
-			return false;
-		}
-
-		return true;
-
-	} )->count() > 0;
-
 	$methods = array();
 
-	if ( $total <= 0 && ! $contains_free_trial ) {
-		$methods[] = ITE_Gateways::get( 'zero-sum-checkout' );
-	} elseif ( $contains_free_trial || $total > 0 ) {
-		foreach ( ITE_Gateways::accepting() as $gateway ) {
-			if ( ! $gateway instanceof ITE_Zero_Sum_Checkout_Gateway ) {
-				$methods[] = $gateway;
-			}
+	foreach ( ITE_Gateways::accepting() as $gateway ) {
+		/** @var ITE_Purchase_Request_Handler $handler */
+		if ( ( $handler = $gateway->get_handler_by_request_name( 'purchase' ) ) && $handler->can_handle_cart( $cart ) ) {
+			$methods[] = $gateway;
 		}
 	}
 
@@ -1061,7 +1073,7 @@ function it_exchange_doing_guest_checkout() {
  *
  * @return string
  */
-function it_exchange_get_product_cart_item_featured_image_url( ITE_Cart_Product $item, $size = 'thumbnail' ) {
+function it_exchange_get_product_cart_item_featured_image_url( ITE_Cart_Product $item, $size = 'thumb' ) {
 
 	$product = $item->get_product();
 
@@ -1116,7 +1128,7 @@ function it_exchange_get_product_cart_item_featured_image_url( ITE_Cart_Product 
 		);
 
 		if ( is_array( $size ) ) {
-			$img_src = wp_get_attachment_image_url( $product_images[0], $options['size'] );
+			$img_src = wp_get_attachment_image_url( $product_images[0], $size );
 		} elseif ( 'thumb' === $size ) {
 			$img_src = $feature_image['thumb'];
 		} else {

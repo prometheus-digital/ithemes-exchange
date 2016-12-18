@@ -402,7 +402,7 @@ function it_exchange_offline_payments_mark_subscriptions_as_active_on_clear( $tr
 		foreach ( $subs as $sub ) {
 			$sub_status = $sub->get_status();
 
-			if ( empty( $sub_status ) || ( $is_child && $sub_status === IT_Exchange_Subscription::STATUS_SUSPENDED ) ) {
+			if ( empty( $sub_status ) || ( $is_child && $sub_status === IT_Exchange_Subscription::STATUS_PAYMENT_FAILED ) ) {
 				add_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
 				$sub->set_status( IT_Exchange_Subscription::STATUS_ACTIVE );
 				remove_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
@@ -697,7 +697,7 @@ function it_exchange_offline_payments_handle_expired( $true, $product_id, $trans
 
 				if ( it_exchange_offline_payments_default_status() !== 'paid' ) {
 					add_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
-					$subscription->set_status( IT_Exchange_Subscription::STATUS_SUSPENDED );
+					$subscription->set_status( IT_Exchange_Subscription::STATUS_PAYMENT_FAILED );
 					remove_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
 				}
 
@@ -745,24 +745,15 @@ function it_exchange_offline_payments_add_child_transaction( $parent_txn ) {
 
 	$total = $parent_txn->get_total( false );
 	$fee   = $parent_txn->get_items()->flatten()->with_only( 'fee' )
-	                    ->having_param( 'is_free_trial', 'is_prorate_days' )->first();
+	                    ->filter( function( ITE_Fee_Line_Item $fee ) { return ! $fee->is_recurring(); } )->first();
 
 	if ( $fee ) {
 		$total += $fee->get_total() * -1;
 	}
 
-	$uniqid                    = it_exchange_get_offline_transaction_uniqid();
-	$transaction_object        = new stdClass;
-	$transaction_object->total = $total;
+	$uniqid = it_exchange_get_offline_transaction_uniqid();
 
-	it_exchange_add_child_transaction(
-		'offline-payments',
-		$uniqid,
-		it_exchange_offline_payments_default_status(),
-		$customer_id,
-		$parent_txn->ID,
-		$transaction_object
-	);
+	it_exchange_add_subscription_renewal_payment( $parent_txn, $uniqid, it_exchange_offline_payments_default_status(), $total );
 
 	return true;
 }

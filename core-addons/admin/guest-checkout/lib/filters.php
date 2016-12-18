@@ -478,6 +478,12 @@ function it_exchange_guest_checkout_maybe_remove_download_page_link_from_email( 
 		return $boolean;
 	}
 
+	$settings = it_exchange_get_option( 'addon_digital_downloads', true );
+
+	if ( empty( $settings['require-user-login'] ) ) {
+		return $boolean;
+	}
+
 	return false;
 }
 add_filter( 'it_exchange_print_downlods_page_link_in_email', 'it_exchange_guest_checkout_maybe_remove_download_page_link_from_email', 10, 2 );

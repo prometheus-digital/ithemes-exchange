@@ -68,6 +68,10 @@ function it_exchange_get_transaction( $post ) {
 		return false;
 	}
 
+	if ( ! $transaction ) {
+		return false;
+	}
+
 	return apply_filters( 'it_exchange_get_transaction', $transaction );
 }
 
@@ -142,7 +146,7 @@ function it_exchange_get_transactions( $args=array(), &$total = null ) {
 	$args['ignore_sticky_posts'] = true;
 	$args['no_found_rows'] = true;
 
-	if ( isset( $args['paged'] ) ) {
+	if ( isset( $args['paged'] ) || isset( $args['posts_per_page'] ) ) {
 		unset( $args['no_found_rows'] );
 	}
 
@@ -268,7 +272,7 @@ function it_exchange_generate_transaction_object( ITE_Cart $cart = null ) {
 	}
 
 	foreach( $products as $key => $product ) {
-		$products = apply_filters( 'it_exchange_generate_transaction_object_products', $products, $key, $product );
+		$products = apply_filters( 'it_exchange_generate_transaction_object_products', $products, $key, $product, $cart );
 	}
 
 	// Package it up and send it to the transaction method add-on
@@ -278,28 +282,27 @@ function it_exchange_generate_transaction_object( ITE_Cart $cart = null ) {
 	$transaction_object->total                  = $cart_total;
 	$transaction_object->sub_total              = $cart_sub_total;
 	$transaction_object->currency               = $currency;
-	$transaction_object->description            = it_exchange_get_cart_description();
+	$transaction_object->description            = it_exchange_get_cart_description( array( 'cart' => $cart ) );
 	$transaction_object->products               = $products;
 
-	$coupons = array();
+	$coupon_data = array();
 
 	/** @var IT_Exchange_Coupon[] $coupon_objects */
 	$coupon_objects = array();
 
-	foreach ( $cart->get_items( 'coupon' ) as $coupon_line_item ) {
-		/** @var IT_Exchange_Coupon $coupon */
-		$coupon = $coupon_line_item->get_coupon();
-		$type   = $coupon->get_type();
-		if ( $coupon instanceof IT_Exchange_Coupon ) {
-			$coupon_objects[] = $coupon;
-			$coupons[$type][] = $coupon->get_data_for_transaction_object();
-		} else {
-			$coupons[$type][] = $coupon;
+	foreach ( it_exchange_get_applied_coupons( false, $cart ) as $type => $coupons ) {
+		foreach ( $coupons as $coupon ) {
+			if ( $coupon instanceof IT_Exchange_Coupon ) {
+				$coupon_objects[]   = $coupon;
+				$coupon_data[ $type ][] = $coupon->get_data_for_transaction_object();
+			} else {
+				$coupon_data[ $type ][] = $coupon;
+			}
 		}
 	}
 
-	$transaction_object->coupons                = $coupons;
-	$transaction_object->coupons_total_discount = $cart->calculate_total( 'coupon' );
+	$transaction_object->coupons                = $coupon_data;
+	$transaction_object->coupons_total_discount = $cart->calculate_total( 'coupon' ) * -1;
 	$transaction_object->customer_ip            = it_exchange_get_ip();
 
 	// Back-compat
@@ -312,7 +315,11 @@ function it_exchange_generate_transaction_object( ITE_Cart $cart = null ) {
 	$transaction_object->taxes_raw              = $taxes;
 
 	// Tack on Shipping and Billing address
-	$transaction_object->shipping_address = $cart->get_shipping_address() ? $cart->get_shipping_address()->to_array() : array();
+	if ( $cart->get_shipping_address() && $cart->get_shipping_address()->offsetGet( 'address1' ) ) {
+		$transaction_object->shipping_address = $cart->get_shipping_address()->to_array();
+	} else {
+		$transaction_object->shipping_address = array();
+	}
 
 	if ( apply_filters( 'it_exchange_billing_address_purchase_requirement_enabled', false ) ) {
 		$transaction_object->billing_address = $cart->get_billing_address()->to_array();
@@ -352,7 +359,16 @@ function it_exchange_generate_transaction_object( ITE_Cart $cart = null ) {
 	$transaction_object->shipping_method_multi = $multiple_methods;
 	$transaction_object->shipping_total        = it_exchange_convert_to_database_number( $cart->calculate_total( 'shipping' ) );
 
-	$transaction_object = apply_filters( 'it_exchange_generate_transaction_object', $transaction_object );
+	/**
+	 * Filter the transaction object.
+	 *
+	 * @since 1.0.0
+	 * @since 2.0.0 Add the $cart parameter.
+	 *
+	 * @param object   $transaction_object
+	 * @param ITE_Cart $cart
+	 */
+	$transaction_object = apply_filters( 'it_exchange_generate_transaction_object', $transaction_object, $cart );
 
 	foreach ( $coupon_objects as $coupon_object ) {
 		$coupon_object->use_coupon( $transaction_object );
@@ -663,9 +679,9 @@ function it_exchange_add_child_transaction( $method, $method_id, $status = 'pend
 	$args = wp_parse_args( $args, $defaults );
 
 	if ( $customer_or_cart instanceof ITE_Cart ) {
-		$cart        = $customer_or_cart;
-		$customer    = $customer_or_cart->get_customer();
-		$txn_object_or_args = it_exchange_generate_transaction_object( $customer_or_cart );
+		$cart               = $customer_or_cart;
+		$customer           = $customer_or_cart->get_customer();
+		$txn_object_or_args = is_object( $txn_object_or_args ) ?: it_exchange_generate_transaction_object( $customer_or_cart );
 	} else {
 		$customer = it_exchange_get_customer( $customer_or_cart );
 		$cart     = null;
@@ -714,13 +730,15 @@ function it_exchange_add_child_transaction( $method, $method_id, $status = 'pend
 			'order_date'    => current_time( 'mysql', true ),
 			'parent'        => $parent_tx_id,
 			'hash'          => it_exchange_generate_transaction_hash( $transaction_id, $customer_id ),
-			'mode'          => $mode,
+			'purchase_mode' => $mode,
 		);
 
-		if ( $customer instanceof IT_Exchange_Guest_Customer ) {
+		if ( $customer ) {
+			if ( is_numeric( $customer->id ) ) {
+				$purchase_args['customer_id'] = $customer->id;
+			}
+
 			$purchase_args['customer_email'] = $customer->get_email();
-		} elseif ( $customer ) {
-			$purchase_args['customer_id'] = $customer_id;
 		}
 
 		if ( $payment_token ) {

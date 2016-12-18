@@ -53,7 +53,11 @@ abstract class ITE_Redirect_Purchase_Request_Handler extends ITE_Purchase_Reques
 
 		$cart = it_exchange_get_requested_cart_and_check_auth() ?: it_exchange_get_current_cart();
 
-		$this->redirect( $this->factory->make( 'purchase', array( 'cart' => $cart, 'nonce' => $nonce ) ) );
+		$this->redirect( $this->factory->make( 'purchase', array(
+			'cart'        => $cart,
+			'nonce'       => $nonce,
+			'redirect_to' => isset( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '',
+		) ) );
 	}
 
 	/**
@@ -61,9 +65,9 @@ abstract class ITE_Redirect_Purchase_Request_Handler extends ITE_Purchase_Reques
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param ITE_Gateway_Purchase_Request_Interface $request
+	 * @param ITE_Gateway_Purchase_Request $request
 	 */
-	protected function redirect( ITE_Gateway_Purchase_Request_Interface $request ) {
+	protected function redirect( ITE_Gateway_Purchase_Request $request ) {
 		$url = $this->get_redirect_url( $request );
 
 		if ( ! $url ) {
@@ -77,7 +81,7 @@ abstract class ITE_Redirect_Purchase_Request_Handler extends ITE_Purchase_Reques
 	/**
 	 * @inheritDoc
 	 */
-	public function get_data_for_REST( ITE_Gateway_Purchase_Request_Interface $request ) {
+	public function get_data_for_REST( ITE_Gateway_Purchase_Request $request ) {
 
 		$query_args = array(
 			"{$this->gateway->get_slug()}_purchase" => 1,
@@ -89,13 +93,17 @@ abstract class ITE_Redirect_Purchase_Request_Handler extends ITE_Purchase_Reques
 			$query_args['cart_auth'] = $request->get_cart()->generate_auth_secret( 3600 );
 		}
 
+		if ( $request->get_redirect_to() ) {
+			$query_args['redirect_to'] = $request->get_redirect_to();
+		}
+
 		$url = it_exchange_get_page_url( 'transaction' );
 		$url = add_query_arg( $query_args, $url );
 
-		return array(
+		return array_merge_recursive( parent::get_data_for_REST( $request ), array(
 			'method' => 'redirect',
 			'url'    => $url,
-		);
+		) );
 	}
 
 	/**
@@ -103,9 +111,9 @@ abstract class ITE_Redirect_Purchase_Request_Handler extends ITE_Purchase_Reques
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param ITE_Gateway_Purchase_Request_Interface $request
+	 * @param ITE_Gateway_Purchase_Request $request
 	 *
 	 * @return string
 	 */
-	public abstract function get_redirect_url( ITE_Gateway_Purchase_Request_Interface $request );
+	public abstract function get_redirect_url( ITE_Gateway_Purchase_Request $request );
 }

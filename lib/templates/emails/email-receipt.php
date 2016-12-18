@@ -64,7 +64,9 @@
 <?php endif; ?>
 
 <?php it_exchange_get_template_part( 'emails/receipt/meta-top' ); ?>
-<?php it_exchange_get_template_part( 'emails/receipt/cart-details' ); ?>
+<?php if ( it_exchange( 'transaction', 'has-line-items' ) ) : ?>
+	<?php it_exchange_get_template_part( 'emails/receipt/cart-details' ); ?>
+<?php endif; ?>
 <?php it_exchange_get_template_part( 'emails/receipt/cart-totals' ); ?>
 
 <?php if ( it_exchange( 'transaction', 'has-note' ) || it_exchange( 'transaction', 'has-shipping-method' ) ): ?>

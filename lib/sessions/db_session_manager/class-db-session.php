@@ -326,7 +326,7 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	 */
 	public function transfer_session( ITE_Session_Model $model = null, $migrate_data = false ) {
 
-		if ( $migrate_data && $this->container && $model ) {
+		if ( $migrate_data && $this->container && is_array( $this->container ) && $model ) {
 			$model->data = array_merge( $model->data, $this->container );
 		}
 
@@ -339,6 +339,15 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 		$this->session_id = $model ? $model->ID : null;
 		$this->container  = $model ? $model->data : array();
 	}
+
+	/**
+	 * Get the time the session expires at.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return DateTime|null
+	 */
+	public function expires_at() { return $this->model ? $this->model->expires_at : null; }
 
 	/**
 	 * Create the model.

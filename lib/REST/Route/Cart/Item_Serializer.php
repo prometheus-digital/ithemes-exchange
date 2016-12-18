@@ -79,16 +79,17 @@ class Item_Serializer {
 		$schema = $this->get_schema();
 
 		$data = array(
-			'id'          => $item->get_id(),
-			'type'        => $item->get_type(),
-			'name'        => $item->get_name(),
-			'description' => $item->get_description(),
-			'amount'      => $item->get_amount(),
-			'quantity'    => array(
+			'id'           => $item->get_id(),
+			'type'         => $item->get_type(),
+			'name'         => $item->get_name(),
+			'description'  => $item->get_description(),
+			'amount'       => $item->get_amount(),
+			'quantity'     => array(
 				'selected' => $item->get_quantity(),
 				'editable' => false,
 			),
-			'total'       => $item->get_total(),
+			'total'        => $item->get_total(),
+			'summary_only' => $item->is_summary_only(),
 		);
 
 		if ( $item instanceof \ITE_Quantity_Modifiable_Item && $item->is_quantity_modifiable() ) {
@@ -130,38 +131,39 @@ class Item_Serializer {
 			'title'      => "cart-item-{$this->type->get_type()}",
 			'type'       => 'object',
 			'properties' => array(
-				'id'          => array(
+				'id'           => array(
 					'description' => __( 'The unique id for this item.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'type'        => array(
+				'type'         => array(
 					'description' => __( 'The type of this item.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'name'        => array(
+				'name'         => array(
 					'description' => __( 'The name of this line item.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'description' => array(
+				'description'  => array(
 					'description' => __( 'The description of this line item.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'amount'      => array(
+				'amount'       => array(
 					'description' => __( 'The cost of this line item.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'number',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
-				'quantity'    => array(
+				'quantity'     => array(
 					'description' => __( 'The quantity purchased of this line item.', 'it-l10n-ithemes-exchange' ),
+					'context'     => array( 'view', 'edit' ),
 					'oneOf'       => array(
 						array(
 							'type'       => 'object',
@@ -190,9 +192,15 @@ class Item_Serializer {
 						array( 'type' => 'integer' )
 					)
 				),
-				'total'       => array(
+				'total'        => array(
 					'description' => __( 'The total amount of this line item.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'number',
+					'context'     => array( 'view', 'edit' ),
+					'readonly'    => true,
+				),
+				'summary_only' => array(
+					'description' => __( 'Should the line item only be displayed in the totals section.', 'it-l10n-ithemes-exchange' ),
+					'type'        => 'boolean',
 					'context'     => array( 'view', 'edit' ),
 					'readonly'    => true,
 				),
@@ -207,6 +215,7 @@ class Item_Serializer {
 					'oneOf' => array(),
 				),
 				'readonly'    => true,
+				'context'     => array( 'view', 'edit' ),
 			);
 
 			foreach ( \ITE_Line_Item_Types::aggregatables() as $aggregatable ) {

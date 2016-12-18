@@ -27,6 +27,8 @@ add_action( 'it_exchange_register_gateways', function( ITE_Gateways $gateways ) 
 	require_once dirname( __FILE__ ) . '/handlers/class.purchase.php';
 	require_once dirname( __FILE__ ) . '/handlers/class.webhook.php';
 	require_once dirname( __FILE__ ) . '/handlers/class.refund.php';
+	require_once dirname( __FILE__ ) . '/handlers/class.pause-subscription.php';
+	require_once dirname( __FILE__ ) . '/handlers/class.resume-subscription.php';
 	require_once dirname( __FILE__ ) . '/handlers/class.cancel-subscription.php';
 
 	$gateways::register( new ITE_PayPal_Standard_Secure_Gateway() );
@@ -1244,34 +1246,38 @@ function it_exchange_paypal_standard_secure_addon_update_transaction_status( $pa
  *
  * @since 1.3.0
  *
- * @param integer $paypal_standard_secure_id id of paypal transaction
+ * @param string $method_id id of paypal transaction
  * @param string $payment_status new status
  * @param string $subscriber_id from PayPal (optional)
+ * @param float  $amount
+ *
  * @return bool
 */
-function it_exchange_paypal_standard_secure_addon_add_child_transaction( $paypal_standard_secure_id, $payment_status, $subscriber_id=false, $amount ) {
-	$transactions = it_exchange_paypal_standard_secure_addon_get_transaction_id( $paypal_standard_secure_id );
-	if ( !empty( $transactions ) ) {
+function it_exchange_paypal_standard_secure_addon_add_child_transaction( $method_id, $payment_status, $subscriber_id = '' , $amount ) {
+
+	$transactions = it_exchange_paypal_standard_secure_addon_get_transaction_id( $method_id );
+
+	if ( ! empty( $transactions ) ) {
 		//this transaction DOES exist, don't try to create a new one, just update the status
-		it_exchange_paypal_standard_secure_addon_update_transaction_status( $paypal_standard_secure_id, $payment_status );
+		it_exchange_paypal_standard_secure_addon_update_transaction_status( $method_id, $payment_status );
 	} else {
-		$parent_tx_id = false;
-		$customer_id = false;
-		if ( !empty( $subscriber_id ) ) {
-			$transactions = it_exchange_paypal_standard_secure_addon_get_transaction_id_by_subscriber_id( $subscriber_id );
-			foreach( $transactions as $transaction ) { //really only one
-				$parent_tx_id = $transaction->ID;
-				$customer_id = get_post_meta( $transaction->ID, '_it_exchange_customer_id', true );
-			}
+
+		$parent = null;
+
+		$transactions = it_exchange_paypal_standard_secure_addon_get_transaction_id_by_subscriber_id( $subscriber_id );
+
+		foreach ( $transactions as $transaction ) { //really only one
+			$parent = $transaction;
 		}
 
-		if ( $parent_tx_id && $customer_id ) {
-			$transaction_object = new stdClass;
-			$transaction_object->total = $amount;
-			it_exchange_add_child_transaction( 'paypal-standard-secure', $paypal_standard_secure_id, $payment_status, $customer_id, $parent_tx_id, $transaction_object );
+		if ( $parent ) {
+
+			it_exchange_add_subscription_renewal_payment( $parent, $method_id, $payment_status, $amount );
+
 			return true;
 		}
 	}
+
 	return false;
 }
 

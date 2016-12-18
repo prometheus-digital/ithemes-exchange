@@ -77,6 +77,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 		'clearedfordelivery'    => 'cleared_for_delivery',
 		'featuredimage'         => 'featured_image',
 		'thankyoumessage'       => 'thank_you_message',
+		'parent'                => 'parent',
 		'cartobject'            => 'cart_object',
 	);
 
@@ -467,6 +468,10 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			);
 		} else {
 			$address = it_exchange_get_transaction_shipping_address( $this->_transaction );
+
+			if ( ! $address && $this->_transaction->parent ) {
+				$address = it_exchange_get_transaction_shipping_address( $this->_transaction->parent );
+			}
 		}
 
 		if ( ! empty( $options['has'] ) ) {
@@ -508,6 +513,10 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			);
 		} else {
 			$address = it_exchange_get_transaction_billing_address( $this->_transaction );
+
+			if ( ! $address && $this->_transaction->parent ) {
+				$address = it_exchange_get_transaction_billing_address( $this->_transaction->parent );
+			}
 		}
 
 		if ( ! empty( $options['has'] ) ) {
@@ -539,7 +548,20 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 	public function products( $options = array() ) {
 
 		if ( $options['has'] ) {
-			return $this->demo || count( it_exchange_get_transaction_products( $this->_transaction ) ) > 0;
+
+			if ( $this->demo ) {
+				return true;
+			}
+
+			if ( count( it_exchange_get_transaction_products( $this->_transaction ) ) > 0 ) {
+				return true;
+			}
+
+			if ( ! empty( $this->_transaction->parent ) && count( it_exchange_get_transaction_products( $this->_transaction->parent ) ) > 0 ) {
+				return true;
+			}
+
+			return false;
 		}
 
 		// If we made it here, we're doing a loop of transaction_products for the current query.
@@ -560,9 +582,19 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 				$GLOBALS['it_exchange']['transaction_product']  = reset( $GLOBALS['it_exchange']['transaction_products'] );
 
 				if ( $this->_transaction ) {
-					$GLOBALS['it_exchange']['line-item'] = $this->_transaction->get_item(
+					$item = $this->_transaction->get_item(
 						'product', $GLOBALS['it_exchange']['transaction_product']['product_cart_id']
 					);
+
+					if ( ! $item && $this->_transaction->parent ) {
+						$item = $this->_transaction->parent->get_item(
+							'product', $GLOBALS['it_exchange']['transaction_product']['product_cart_id']
+						);
+					}
+
+					if ( $item ) {
+						$GLOBALS['it_exchange']['line-item'] = $item;
+					}
 				}
 			}
 
@@ -608,6 +640,10 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			$items = $this->get_demo_items();
 		} elseif ( $transaction ) {
 			$items = $transaction->get_items()->non_summary_only();
+
+			if ( ! $items->count() && $transaction->parent ) {
+				$items = $transaction->parent->get_items()->non_summary_only();
+			}
 		} else {
 			return false;
 		}
@@ -1423,6 +1459,52 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 			case 'html':
 			default:
 				$output = sprintf( $options['label'], $this->_transaction->get_customer_email() );
+				break;
+
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Get the parent transaction.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param array $options
+	 *
+	 * @return bool|int|string
+	 */
+	public function parent( $options = array() ) {
+
+		if ( ! $this->_transaction ) {
+			return false;
+		}
+
+		$defaults = array(
+			'format' => 'html',
+			'before' => '',
+			'after'  => '',
+			'label' => __( 'Parent %s', 'it-l10n-ithemes-exchange' ),
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+
+		if ( $options['has'] ) {
+			return (bool) $this->_transaction->parent;
+		}
+
+		if ( ! $this->_transaction->parent ) {
+			return '';
+		}
+
+		switch( $options['format'] ) {
+
+			case 'raw':
+				$output = $this->_transaction->parent->get_ID();
+				break;
+			case 'html':
+			default:
+				$output = sprintf( $options['label'], $this->_transaction->parent->get_order_number() );
 				break;
 
 		}

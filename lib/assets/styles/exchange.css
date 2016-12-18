@@ -1526,12 +1526,17 @@ a.it-exchange-button {
     display: inline-block;
 }
 
+.it-exchange-checkout-line-items .it-exchange-checkout-line-item--product-image {
+    height: 2em;
+    margin-right: 5px;
+}
+
 .it-exchange-checkout-line-items li .it-exchange-checkout-line-item--item-name {
-    width: 60%;
+    width: 65%;
 }
 
 .it-exchange-checkout-line-items li .it-exchange-checkout-line-item--item-quantity {
-    width: 15%;
+    width: 10%;
     position: relative;
     text-align: right;
 }
@@ -1586,6 +1591,41 @@ a.it-exchange-button {
 .it-exchange-checkout-line-items-total--total {
     float: right;
     text-align: right;
+}
+
+.it-exchange-checkout-coupon-container {
+    margin-bottom: 15px;
+    max-width: 400px;
+}
+
+.it-exchange-checkout-coupon-input-container label {
+    display: inline-block;
+    margin-top: 0;
+    margin-right: 5px;
+    width: 70%;
+}
+
+.it-exchange-checkout-coupon-input-container span {
+    display: inline-block;
+    font-size: .7em;
+    text-transform: uppercase;
+}
+
+.it-exchange-checkout-coupon-input-container .it-exchange-checkout-coupon-add {
+    width: 20%;
+}
+
+.it-exchange-checkout-coupon-input-container .it-exchange-checkout-coupon-cancel {
+    width: auto;
+    background: none;
+    border: 0;
+    padding: 0;
+    margin: 0 0 0 10px;
+    vertical-align: middle;
+    color: initial;
+    font-weight: initial;
+    font-size: 1.2em;
+    transition: .2s ease-in opacity;
 }
 
 .it-exchange-checkout-purchase-methods {

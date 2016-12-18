@@ -17,6 +17,7 @@ use iThemes\Exchange\REST\Route\Base;
 
 /**
  * Class Item
+ *
  * @package iThemes\Exchange\REST\Route\Cart
  */
 class Item extends Base implements Getable, Putable, Deletable {
@@ -46,7 +47,13 @@ class Item extends Base implements Getable, Putable, Deletable {
 		$cart = $request->get_cart();
 		$item = $cart->get_item( $this->type->get_type(), $request->get_param( 'item_id', 'URL' ) );
 
-		return new \WP_REST_Response( $this->serializer->serialize( $item, $cart ) );
+		$response = new \WP_REST_Response( $this->serializer->serialize( $item, $cart ) );
+		$response->add_link( 'cart', r\get_rest_url(
+			$this->get_manager()->get_first_route( 'iThemes\Exchange\REST\Route\Cart\Cart' ),
+			array( 'cart_id' => $cart->get_id() )
+		) );
+
+		return $response;
 	}
 
 	/**

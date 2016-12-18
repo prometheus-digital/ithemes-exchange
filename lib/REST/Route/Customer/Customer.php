@@ -78,7 +78,7 @@ class Customer extends Route\Base implements Getable {
 			$response->add_link(
 				'cart',
 				\iThemes\Exchange\REST\get_rest_url(
-					new Route\Cart\Cart(),
+					$this->get_manager()->get_first_route( 'iThemes\Exchange\REST\Route\Cart\Cart' ),
 					array( 'cart_id' => $session->cart_id )
 				)
 			);

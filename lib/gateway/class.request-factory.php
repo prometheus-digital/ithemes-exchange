@@ -65,10 +65,11 @@ class ITE_Gateway_Request_Factory {
 
 				if ( ! empty( $args['tokenize'] ) ) {
 
-					if ( ! is_object( $args['tokenize'] ) ) {
+					if ( ! is_object( $args['tokenize'] ) || ! $args['tokenize'] instanceof ITE_Gateway_Tokenize_Request ) {
 						$tokenize = $this->make( 'tokenize', array(
 							'source'   => $args['tokenize'],
-							'customer' => $cart->get_customer()
+							'customer' => $cart->get_customer(),
+							'address'  => $cart->get_billing_address(),
 						) );
 					} else {
 						$tokenize = $args['tokenize'];
@@ -126,11 +127,28 @@ class ITE_Gateway_Request_Factory {
 					throw new InvalidArgumentException( 'Invalid `customer` option.' );
 				}
 
-				if ( ! $source ) {
+				if ( ! is_string( $source ) && ! $source instanceof ITE_Gateway_Payment_Source && ! $source instanceof ITE_Payment_Token ) {
 					throw new InvalidArgumentException( 'Invalid `source` option.' );
 				}
 
 				$request = new ITE_Gateway_Tokenize_Request( $customer, $source, $label, $primary );
+
+				if ( isset( $args['address'] ) ) {
+					$address = $args['address'];
+
+					if ( is_numeric( $address ) ) {
+						$address = ITE_Saved_Address::get( $address );
+					} elseif ( is_array( $address ) ) {
+						$address = new ITE_In_Memory_Address( $address );
+					}
+
+					if ( ! $address instanceof ITE_Location ) {
+						throw new InvalidArgumentException( 'Invalid `address` option.' );
+					}
+
+					$request->set_address( $address );
+				}
+
 				break;
 			case ITE_Gateway_Refund_Request::get_name():
 

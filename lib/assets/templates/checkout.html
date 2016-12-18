@@ -5,8 +5,11 @@
     <# } #>
 
     <# if ( data.showLineItemTotals ) { #>
-        <div class="it-exchange-checkout-line-item-totals-container">
-        </div>
+        <div class="it-exchange-checkout-line-item-totals-container"></div>
+    <# } #>
+
+    <# if ( data.showCouponEntry ) { #>
+        <div class="it-exchange-checkout-coupon-container"></div>
     <# } #>
 
     <ul class="it-exchange-checkout-purchase-methods"></ul>
@@ -22,10 +25,12 @@
 </script>
 
 <script type="text/template" id="tmpl-it-exchange-checkout-line-item--product">
-    <# if ( data.image ) { #>
-        <img src="{{ data.image }}" class="it-exchange-checkout-line-item--product-image">
-    <# } #>
-    <span class="it-exchange-checkout-line-item--item-name">{{ data.name }}</span>
+    <span class="it-exchange-checkout-line-item--item-name">
+         <# if ( data.image && data.showImage ) { #>
+            <img src="{{ data.image }}" class="it-exchange-checkout-line-item--product-image">
+        <# } #>
+        {{ data.name }}
+    </span>
     <span class="it-exchange-checkout-line-item--item-quantity">{{ data.quantity.selected }}</span>
     <span class="it-exchange-checkout-line-item--item-total">{{ data.totalFormatted }}</span>
 </script>
@@ -35,6 +40,32 @@
     <span class="it-exchange-checkout-line-items-total--total">{{data.totalFormatted}}</span>
 </script>
 
+<script type="text/template" id="tmpl-it-exchange-checkout-coupon">
+    <a href="#" class="it-exchange-checkout-have-coupon-prompt"> {{ data.i18n.haveCoupon }}</a>
+    <div class="it-exchange-checkout-coupon-input-container" style="display: none">
+        <label>
+            <span> {{ data.i18n.couponCode }} </span>
+            <input type="text" class="it-exchange-checkout-coupon-input">
+        </label>
+        <button class="it-exchange-checkout-coupon-add"> {{ data.i18n.addCoupon }} </button>
+        <button class="it-exchange-checkout-coupon-cancel">
+            &times;
+            <span class="screen-reader-text"> Cancel </span>
+        </button>
+    </div>
+</script>
+
 <script type="text/template" id="tmpl-it-exchange-checkout-purchase-method-button">
-    <button class="it-exchange-checkout-purchase-method-button btn button">{{ data.label }}</button>
+    <button class="it-exchange-purchase-button it-exchange-purchase-button-{{ data.id }} it-exchange-checkout-purchase-method-button btn button">
+        {{ data.label }}
+    </button>
+</script>
+
+<script type="text/template" id="tmpl-it-exchange-checkout-complete-purchase-method-button">
+    <button class="it-exchange-checkout-complete-purchase-method-button btn button">
+        {{ data.completePurchase }}
+    </button>
+    <button class="it-exchange-checkout-cancel-purchase-method btn button">
+        {{ data.cancel }}
+    </button>
 </script>

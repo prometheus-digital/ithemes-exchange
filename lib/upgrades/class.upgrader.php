@@ -76,6 +76,14 @@ class IT_Exchange_Upgrader {
 	 */
 	public function _sort( IT_Exchange_UpgradeInterface $a, IT_Exchange_UpgradeInterface $b ) {
 
+		if ( $this->is_upgrade_in_progress( $a ) && $this->is_upgrade_in_progress( $b ) ) {
+			return version_compare( $b->get_version(), $a->get_version() );
+		}
+
+		if ( $this->is_upgrade_in_progress( $a ) && ! $this->is_upgrade_in_progress( $b ) ) {
+			return -1;
+		}
+
 		if ( ! $this->is_upgrade_completed( $a ) XOR $this->is_upgrade_completed( $b ) ) {
 			return version_compare( $b->get_version(), $a->get_version() );
 		}
@@ -133,13 +141,16 @@ class IT_Exchange_Upgrader {
 		update_option( 'it_exchange_completed_upgrades', $completed );
 
 		$in_progress = $this->get_upgrades_in_progress();
-		$index       = array_search( $upgrade->get_slug(), $in_progress, true );
 
-		if ( $index !== false ) {
-			unset( $in_progress[ $index ] );
+		do {
+			$index = array_search( $upgrade->get_slug(), $in_progress, true );
 
-			update_option( 'it_exchange_upgrades_in_progress', $in_progress );
-		}
+			if ( $index !== false ) {
+				unset( $in_progress[ $index ] );
+
+				update_option( 'it_exchange_upgrades_in_progress', $in_progress );
+			}
+		} while ( $index !== false );
 
 		return $this;
 	}
@@ -172,7 +183,7 @@ class IT_Exchange_Upgrader {
 
 		$in_progress = $this->get_upgrades_in_progress();
 
-		if ( ! array_search( $upgrade->get_slug(), $in_progress, true ) ) {
+		if ( array_search( $upgrade->get_slug(), $in_progress, true ) === false ) {
 			$in_progress[] = $upgrade->get_slug();
 
 			update_option( 'it_exchange_upgrades_in_progress', $in_progress );

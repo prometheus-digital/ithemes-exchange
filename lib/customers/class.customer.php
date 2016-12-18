@@ -18,6 +18,7 @@ class IT_Exchange_Customer implements ITE_Object {
 	 * @since 0.3.8
 	 */
 	public $id;
+	public $ID;
 
 	/**
 	 * @var object $wp_user the wp_user or false
@@ -54,11 +55,19 @@ class IT_Exchange_Customer implements ITE_Object {
 	 *
 	 * @since 0.3.8
 	 *
-	 * @param  mixed $user customer id or WP User object
+	 * @param  mixed $user customer id or WP User objectm
 	 *
 	 * @throws InvalidArgumentException
 	 */
 	public function __construct( $user ) {
+
+		if ( is_string( $user ) && is_email( $user ) ) {
+			_doing_it_wrong(
+				'IT_Exchange_Customer::__construct()',
+				"Don't instantiate customer directly. Use it_exchange_get_customer()",
+				'2.0.0'
+			);
+		}
 
 		if ( $user instanceof WP_User ) {
 			$this->id      = $user->ID;
@@ -474,7 +483,7 @@ class IT_Exchange_Customer implements ITE_Object {
 	public function get_tokens( $gateway = '' ) {
 
 		if ( ! $gateway ) {
-			return ITE_Payment_Token::query()->where( 'customer', '=', $this->ID )->results();
+			return ITE_Payment_Token::query()->and_where( 'customer', '=', $this->ID )->results();
 		}
 
 		return ITE_Payment_Token::without_global_scopes( array( 'active' ) )

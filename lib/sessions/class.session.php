@@ -20,7 +20,7 @@
  *
  * @since 0.3.3
 */
-class IT_Exchange_Session implements IT_Exchange_SessionInterface {
+class IT_Exchange_Session implements IT_Exchange_SessionInterface, ITE_Expiring_Session {
 
 	/**
 	 * @var IT_Exchange_DB_Sessions
@@ -217,4 +217,8 @@ class IT_Exchange_Session implements IT_Exchange_SessionInterface {
 		}
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function expires_at() { return $this->_session->expires_at(); }
 }

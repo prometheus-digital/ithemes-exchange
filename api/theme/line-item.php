@@ -58,6 +58,10 @@ class IT_Theme_API_Line_Item implements IT_Theme_API {
 	 */
 	public function name( array $options = array() ) {
 
+		if ( ! $this->item ) {
+			return '';
+		}
+
 		$defaults = array(
 			'before' => '',
 			'after'  => '',
@@ -71,8 +75,9 @@ class IT_Theme_API_Line_Item implements IT_Theme_API {
 		}
 
 		$before = $options['before'] . "<{$options['wrap']} class=\"{$options['class']}\">";
+		$name   = apply_filters( 'it_theme_api_line_item_name', $this->item->get_name(), $this->item );
 
-		return $before . $this->item->get_name() . $options['after'];
+		return $before . $name . "</{$options['wrap']}>" . $options['after'];
 	}
 
 	/**
@@ -85,6 +90,10 @@ class IT_Theme_API_Line_Item implements IT_Theme_API {
 	 * @return bool|string
 	 */
 	public function description( array $options = array() ) {
+
+		if ( ! $this->item ) {
+			return '';
+		}
 
 		$defaults = array(
 			'before' => '',
@@ -100,7 +109,7 @@ class IT_Theme_API_Line_Item implements IT_Theme_API {
 
 		$before = $options['before'] . "<{$options['wrap']} class=\"{$options['class']}\">";
 
-		return $before . $this->item->get_description() . $options['after'];
+		return $before . $this->item->get_description() . "</{$options['wrap']}>" . $options['after'];
 	}
 
 	/**
@@ -113,6 +122,10 @@ class IT_Theme_API_Line_Item implements IT_Theme_API {
 	 * @return string
 	 */
 	public function amount( array $options = array() ) {
+
+		if ( ! $this->item ) {
+			return '';
+		}
 
 		$defaults = array(
 			'before' => '',
@@ -140,6 +153,10 @@ class IT_Theme_API_Line_Item implements IT_Theme_API {
 	 */
 	public function total( array $options = array() ) {
 
+		if ( ! $this->item ) {
+			return '';
+		}
+
 		$defaults = array(
 			'before' => '',
 			'after'  => '',
@@ -154,7 +171,7 @@ class IT_Theme_API_Line_Item implements IT_Theme_API {
 				return ! $item->is_summary_only() && $item->get_total() < 0;
 			} )->total();
 
-			$total += $total_negative * -1;
+			$total += $total_negative * - 1;
 		}
 
 		if ( $options['format'] ) {
@@ -174,6 +191,11 @@ class IT_Theme_API_Line_Item implements IT_Theme_API {
 	 * @return int
 	 */
 	public function quantity( $options = array() ) {
+
+		if ( ! $this->item ) {
+			return '';
+		}
+
 		// Set options
 		$defaults = array(
 			'before' => '',
@@ -236,6 +258,10 @@ class IT_Theme_API_Line_Item implements IT_Theme_API {
 	 * @return string
 	 */
 	public function type( array $options = array() ) {
+
+		if ( ! $this->item ) {
+			return '';
+		}
 
 		$defaults = array(
 			'before' => '',

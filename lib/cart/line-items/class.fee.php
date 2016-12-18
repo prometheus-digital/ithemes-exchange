@@ -25,23 +25,58 @@ class ITE_Fee_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Line_I
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param string $name
-	 * @param float  $amount
-	 * @param bool   $tax_exempt
+	 * @param string $name         The human label of the fee.
+	 * @param float  $amount       The total of the fee.
+	 * @param bool   $is_taxable   Is this fee taxable.
+	 * @param bool   $is_recurring Is this fee included in any child payments.
 	 *
 	 * @return \ITE_Fee_Line_Item
 	 */
-	public static function create( $name, $amount, $tax_exempt = false ) {
+	public static function create( $name, $amount, $is_taxable = true, $is_recurring = true ) {
 
-		$id = md5( uniqid( 'FEE', true ) );
+		$id = self::generate_id();
 
 		$bag = new ITE_Array_Parameter_Bag( array(
-			'name'       => $name,
-			'amount'     => $amount,
-			'tax_exempt' => $tax_exempt
+			'name'         => $name,
+			'amount'       => $amount,
+			'is_taxable'   => $is_taxable,
+			'is_recurring' => $is_recurring,
 		) );
 
 		return new self( $id, $bag, new ITE_Array_Parameter_Bag() );
+	}
+
+	/**
+	 * Generate the ID.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return string
+	 */
+	protected final static function generate_id() {
+		return md5( uniqid( 'FEE', true ) );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function clone_with_new_id( $include_frozen = true ) {
+		return new self(
+			self::generate_id(),
+			$this->bag,
+			$include_frozen ? $this->frozen : new ITE_Array_Parameter_Bag()
+		);
+	}
+
+	/**
+	 * Is this a recurring fee.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return bool
+	 */
+	public function is_recurring() {
+		return $this->has_param( 'is_recurring' ) && $this->get_param( 'is_recurring' );
 	}
 
 	/**
@@ -121,7 +156,7 @@ class ITE_Fee_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Line_I
 	/**
 	 * @inheritDoc
 	 */
-	public function get_amount() { return (float) $this->get_param( 'amount' );	}
+	public function get_amount() { return (float) $this->get_param( 'amount' ); }
 
 	/**
 	 * @inheritDoc
@@ -139,7 +174,18 @@ class ITE_Fee_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Line_I
 	 * @inheritDoc
 	 */
 	public function is_tax_exempt( ITE_Tax_Provider $for ) {
-		return (bool) $this->get_param( 'tax_exempt' );
+		return ! $this->is_taxable();
+	}
+
+	/**
+	 * Is this fee taxable.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return bool
+	 */
+	public function is_taxable() {
+		return (bool) $this->get_param( 'is_taxable' );
 	}
 
 	/**

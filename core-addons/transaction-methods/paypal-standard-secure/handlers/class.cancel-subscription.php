@@ -19,6 +19,7 @@ class ITE_PayPal_Standard_Secure_Cancel_Subscription_Handler implements ITE_Gate
 	public function handle( $request ) {
 
 		$subscription = $request->get_subscription();
+		$transaction  = $subscription->get_transaction();
 
 		if ( ! $subscription->get_subscriber_id() ) {
 			return false;
@@ -44,7 +45,7 @@ class ITE_PayPal_Standard_Secure_Cancel_Subscription_Handler implements ITE_Gate
 			return false;
 		}
 
-		$request = array(
+		$body = array(
 			'USER'      => trim( $paypal_api_username ),
 			'PWD'       => trim( $paypal_api_password ),
 			'SIGNATURE' => trim( $paypal_api_signature ),
@@ -58,7 +59,7 @@ class ITE_PayPal_Standard_Secure_Cancel_Subscription_Handler implements ITE_Gate
 		// Make sure we update the subscription before the webhook handler does.
 		it_exchange_lock( "ppss-cancel-subscription-{$subscription->get_subscriber_id()}", 2 );
 
-		$response = wp_remote_post( $paypal_api_url, array( 'body' => $request ) );
+		$response = wp_remote_post( $paypal_api_url, array( 'body' => $body ) );
 
 		if ( ! is_wp_error( $response ) ) {
 

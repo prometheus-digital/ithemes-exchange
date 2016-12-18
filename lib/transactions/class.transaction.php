@@ -147,7 +147,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 		update_post_meta( $txn->ID, '_it_exchange_transaction_method', $txn->get_method() );
 		update_post_meta( $txn->ID, '_it_exchange_transaction_method_id', $txn->get_method_id() );
 		update_post_meta( $txn->ID, '_it_exchange_transaction_status', $txn->get_status() );
-		update_post_meta( $txn->ID, '_it_exchange_customer_id', $txn->customer_id );
+		update_post_meta( $txn->ID, '_it_exchange_customer_id', $txn->customer_id ? $txn->customer_id : $txn->customer_email );
 		update_post_meta( $txn->ID, '_it_exchange_cart_id', $txn->cart_id );
 		update_post_meta( $txn->ID, '_it_exchange_transaction_hash', $txn->hash );
 
@@ -226,16 +226,33 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 			$shipping = $shipping ? $shipping->get_pk() : 0;
 		}
 
-		$method_id = get_post_meta( $post_id, '_it_exchange_transaction_method_id', true );
+		$method    = get_post_meta( $post_id, '_it_exchange_transaction_method', true );
+		$method_id = $_method_id = get_post_meta( $post_id, '_it_exchange_transaction_method_id', true );
+		$hash      = get_post_meta( $post_id, '_it_exchange_transaction_hash', true );
+
+		if ( ! $hash || ! trim( $hash ) ) {
+			$hash = it_exchange_create_unique_hash();
+			update_post_meta( $post_id, '_it_exchange_transaction_hash', $hash );
+		}
+
+		if ( ! $method_id ) {
+			$method_id = $_method_id = uniqid( 'RAND', true );
+		}
+
+		$c = 1;
+
+		while ( it_exchange_get_transaction_by_method_id( $method, $method_id ) ) {
+			$method_id = $_method_id . "_c{$c}";
+		}
 
 		$data = array(
 			'ID'             => $post_id,
 			'customer_id'    => $customer_id,
 			'customer_email' => $customer_email,
 			'status'         => get_post_meta( $post_id, '_it_exchange_transaction_status', true ),
-			'method'         => get_post_meta( $post_id, '_it_exchange_transaction_method', true ),
-			'method_id'      => $method_id ? $method_id : uniqid( 'RAND', true ),
-			'hash'           => get_post_meta( $post_id, '_it_exchange_transaction_hash', true ),
+			'method'         => $method,
+			'method_id'      => $method_id,
+			'hash'           => $hash,
 			'cart_id'        => get_post_meta( $post_id, '_it_exchange_cart_id', true ),
 			'total'          => isset( $cart_details->total ) ? $cart_details->total : 0,
 			'subtotal'       => isset( $cart_details->sub_total ) ? $cart_details->sub_total : 0,
@@ -562,7 +579,18 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	 * @return string
 	 */
 	public function get_customer_email() {
-		return apply_filters( 'it_exchange_get_transaction_customer_email', $this->customer_email, $this );
+
+		$email = $this->customer_email;
+
+		if ( ! $email ) {
+			$customer = $this->get_customer();
+
+			if ( $customer ) {
+				$email = $customer->get_email();
+			}
+		}
+
+		return apply_filters( 'it_exchange_get_transaction_customer_email', $email, $this );
 	}
 
 	/**
@@ -1354,6 +1382,23 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	 * @inheritDoc
 	 */
 	public function __isset( $name ) {
+
+		if ( $name === 'gateway_id_for_transaction' ) {
+			return $this->method_id !== null;
+		}
+
+		if ( $name === 'transaction_method' ) {
+			return $this->method !== null;
+		}
+
+		if ( $name === 'cart_details' ) {
+			return get_post_meta( $this->ID, '_it_exchange_cart_object', true ) !== null;
+		}
+
+		if ( in_array( $name, array( 'transaction_supports', 'transaction_data' ), true ) ) {
+			return false;
+		}
+
 		return parent::__isset( $name );
 	}
 
