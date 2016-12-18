@@ -1899,8 +1899,7 @@ class IT_Exchange_Admin {
 				'receiptSuccess' => __( 'Receipt Sent!', 'it-l10n-ithemes-exchange' ),
 				'receiptFailed' => __( 'Resending receipt failed', 'it-l10n-ithemes-exchange' ), 
 				'statusChangeSuccess' => __( 'Status changed from %1$s to %2$s.', 'it-l10n-ithemes-exchange' ),
-				'statusChangeError' => __( 'Status change failed', 'it-l10n-ithemes-exchange' )
-				'format' => it_exchange_convert_php_to_moment( $dtf ),
+				'statusChangeError' => __( 'Status change failed', 'it-l10n-ithemes-exchange' ),
 				'transaction' => $serializer->serialize( $transaction, it_exchange_get_current_customer() ),
 				/* translators: %1$s refers to the refund total, %2$s refers to the current date. */
 				'refundLabel' => __( '%1$s on %2$s', 'it-l10n-ithemes-exchange' ),

@@ -73,10 +73,6 @@
 .metabox-holder .postbox-container .empty-container {
 	border: none !important;
 }
-#it-exchange-transaction-details .button-secondary {
-	width: 120px;
-	text-align: center;
-}
 
 /** -----------------------------------------------------:[ transaction details ]:---------- */
 #it-exchange-transaction-details {
