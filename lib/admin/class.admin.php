@@ -96,7 +96,7 @@ class IT_Exchange_Admin {
 		// Email settings callback
 		add_filter( 'it_exchange_general_settings_tab_callback_email', array( $this, 'register_email_settings_tab_callback' ) );
 		add_action( 'it_exchange_print_general_settings_tab_links', array( $this, 'print_email_settings_tab_link' ) );
-
+		
 		// Page settings callback
 		add_filter( 'it_exchange_general_settings_tab_callback_pages', array( $this, 'register_pages_settings_tab_callback' ) );
 		add_action( 'it_exchange_print_general_settings_tab_links', array( $this, 'print_pages_settings_tab_link' ) );
@@ -1838,6 +1838,7 @@ class IT_Exchange_Admin {
 		wp_register_script( 'it-exchange-dialog', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/tips.js', array( 'jquery-ui-dialog', 'jquery' ) );
 		wp_register_script( 'ithemes-chartjs', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/Chart.min.js', array( 'jquery' ), '0.2', true );
 		wp_register_script( 'it-exchange-select2', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/select2.min.js', array( 'jquery' ), '4.0.1', true );
+		wp_register_script( 'ithemes-momentjs', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/moment.min.js', array(), '2.11.0', true );
 		wp_register_script( 'it-exchange-if-visible', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/ifvisible.min.js', array(), '1.0.6', true );
 
 		if ( isset( $post_type ) && 'it_exchange_prod' === $post_type ) {
@@ -1872,6 +1873,10 @@ class IT_Exchange_Admin {
 			}
 
 			$dtf = $df . ' ' . $tf;
+			
+			
+			wp_enqueue_script( 'it-exchange-jquery-toastr', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/toastr.js' );
+		
 
 			add_action( 'it_exchange_preload_schemas', function( $schemas ) {
 				$schemas = is_array( $schemas ) ? $schemas : array();
@@ -1891,6 +1896,10 @@ class IT_Exchange_Admin {
 				'sent' => _x( 'Sent!', 'Notice when an email receipt has been successfully sent.', 'it-l10n-ithemes-exchange' ),
 				'failed' => _x( 'Failed!', 'Notice when an email receipt has failed to be sent.', 'it-l10n-ithemes-exchange' ),
 				'format' => it_exchange_convert_php_to_moment( $dtf ),
+				'receiptSuccess' => __( 'Receipt Sent!', 'it-l10n-ithemes-exchange' ),
+				'receiptFailed' => __( 'Resending receipt failed', 'it-l10n-ithemes-exchange' ), 
+				'statusChangeSuccess' => __( 'Status changed from %1$s to %2$s.', 'it-l10n-ithemes-exchange' ),
+				'statusChangeError' => __( 'Status change failed', 'it-l10n-ithemes-exchange' ),
 				'transaction' => $serializer->serialize( $transaction, it_exchange_get_current_customer() ),
 				/* translators: %1$s refers to the refund total, %2$s refers to the current date. */
 				'refundLabel' => __( '%1$s on %2$s', 'it-l10n-ithemes-exchange' ),
@@ -1989,6 +1998,7 @@ class IT_Exchange_Admin {
 			wp_enqueue_style( 'it-exchange-add-edit-product', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/add-edit-product.css' );
 		} else if ( isset( $post_type ) && 'it_exchange_tran' === $post_type && ! empty( $_GET['action'] ) && 'edit' == $_GET['action'] ) {
 			wp_enqueue_style( 'it-exchange-transaction-details', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/transaction-details.css' );
+			wp_enqueue_style( 'it-exchange-css-toastr', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/toastr.css' );
 		} else if ( 'exchange_page_it-exchange-addons' === $hook_suffix ) {
 			wp_enqueue_style( 'it-exchange-add-ons', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/add-ons.css' );
 		} else if ( 'exchange_page_it-exchange-setup' === $hook_suffix ) {

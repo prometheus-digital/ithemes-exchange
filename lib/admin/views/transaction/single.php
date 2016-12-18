@@ -439,11 +439,6 @@ $dtf      = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 				__( 'The customer will be emailed if the status changes from un-cleared for delivery to a status that is cleared for delivery.',
 					'it-l10n-ithemes-exchange'
 				) ); ?>
-			<?php wp_nonce_field( 'update-transaction-status' . $post->ID, 'it-exchange-update-transaction-nonce' ); ?>
-			<input type="hidden" id="it-exchange-update-transaction-current-status" value="<?php esc_attr_e( $current_status ); ?>" />
-			<input type="hidden" id="it-exchange-update-transaction-id" value="<?php esc_attr_e( $post->ID ); ?>" />
-			<div id="it-exchange-update-transaction-status-failed"><?php _e( 'Not Saved.', 'it-l10n-ithemes-exchange' ); ?></div>
-			<div id="it-exchange-update-transaction-status-success"><?php _e( 'Saved!', 'it-l10n-ithemes-exchange' ); ?></div>
 		<?php endif; ?>
 
 		<?php do_action( 'it_exchange_after_payment_update_status', $txn ); ?>

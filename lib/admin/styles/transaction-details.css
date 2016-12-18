@@ -63,6 +63,7 @@
 
 #it-exchange-transaction-details .bottom-border {
 	border-bottom: 1px solid #DFDFDF;
+	position: relative;
 }
 
 #it-exchange-transaction-details .bottom-top {
@@ -265,6 +266,14 @@
 	width: 100%;
 	max-width: 250px;
 }
+#it-exchange-transaction-details .transaction-actions {
+	background: #F5F5F5;
+	position: relative;
+}
+
+#it-exchange-transaction-details .transaction-actions .button {
+	margin-left: 10px;
+}
 
 #it-exchange-transaction-details .payment-total-amount {
 	color: #7EB03B;
@@ -295,42 +304,6 @@
 #it-exchange-transaction-details .payment-original-total-label {
 	margin-top: 1.416666667em;
 }
-
-#it-exchange-transaction-details .transaction-actions {
-	background: #F5F5F5;
-	position: relative;
-}
-
-#it-exchange-transaction-details .transaction-actions .button {
-	margin-left: 10px;
-}
-
-#it-exchange-transaction-details .transaction-status-update {
-	position: relative;
-}
-
-#it-exchange-transaction-details .update-status-label {
-	font-weight: bold;
-}
-
-#it-exchange-transaction-details .update-status-setting {
-	position: relative;
-	width: auto;
-}
-
-#it-exchange-update-transaction-status-failed,
-#it-exchange-update-transaction-status-success {
-	position: absolute;
-	top: 3px;
-	left: 4px;
-	padding: 2px 4px;
-	background: #407D28;
-	border-radius: 2px;
-	color: #FFF;
-	font-weight: 100;
-	opacity: 0;
-}
-
 #it-exchange-update-transaction-status-failed {
 	background: #D72E3A;
 }
@@ -347,7 +320,6 @@
 #it-exchange-transaction-details #refund-manager #add-refund {
 	margin-left: 10px;
 }
-
 #it-exchange-transaction-details .ribbon {
 	opacity: .9;
 	position: absolute;
@@ -372,6 +344,68 @@
 	-webkit-transform: rotateZ(-45deg);
 	-moz-transform: rotateZ(45deg);
 	-o-transform: rotateZ(45deg);
+}
+
+#it-exchange-transaction-details .transaction-status-update {
+	position: relative;
+}
+
+#it-exchange-transaction-details .update-status-label {
+	font-weight: bold;
+}
+
+#it-exchange-transaction-details .update-status-setting {
+	position: relative;
+	width: auto;
+}
+
+#it-exchange-update-transaction-status-failed,
+#it-exchange-update-transaction-status-success {
+	position: absolute;
+	padding: 2px 4px;
+	background: #407D28;
+	border-radius: 2px;
+	color: #FFF;
+	font-weight: 100;
+	opacity: 0;
+    left: 210px;
+    top: 25px;
+    -width: auto;
+    height: 30px;
+    width: 30px;
+    padding: 0;
+}
+#it-exchange-update-transaction-status-failed p,
+#it-exchange-update-transaction-status-success p {
+	display: none;
+	margin: 0px;
+}
+
+#it-exchange-update-transaction-status-success {
+	background: url(/wp-content/plugins/ithemes-exchange/lib/admin/images/check-saved.png) top 4px left 4px no-repeat rgb(236, 255, 216);
+    background-size: 65%;
+    border: 1px solid #008000;
+    border-radius: 50px;
+    -padding: 2px 10px;
+    -padding-left: 25px;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: green;
+    text-align: center;
+
+}
+
+#it-exchange-update-transaction-status-failed {
+	background: url(/wp-content/plugins/ithemes-exchange/lib/admin/images/failed.png) center no-repeat rgb(255, 249, 242);
+    background-size: 60%;
+    border: 1px solid #D72E3A;
+    -padding: 2px 5px;
+    -padding-left: 25px;
+    border-radius: 50px;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: rgb(211, 0, 0);
+    text-align: center;
 }
 
 /** -----------------------------------------------------:[ transaction activity ]:---------- */
