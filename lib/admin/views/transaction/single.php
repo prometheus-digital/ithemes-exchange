@@ -21,13 +21,13 @@ $dtf      = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 		<div class="ribbon"><?php _e( 'Sandbox', 'it-l10n-ithemes-exchange' ); ?></div>
 	<?php endif; ?>
 
-	<?php if ( $txn->has_parent() ): ?>
+	<?php if ( $txn->parent ): ?>
 		<div class="spacing-wrapper parent-txn-link bottom-border">
 			<span class="dashicons dashicons-arrow-left-alt2"></span>
-			<a href="<?php echo esc_url( get_edit_post_link( $txn->get_parent()->ID ) ); ?>">
+			<a href="<?php echo esc_url( get_edit_post_link( $txn->parent->ID ) ); ?>">
 				<?php printf(
 					__( 'View Parent Subscription Payment %s', 'it-l10n-ithemes-exchange' ),
-					$txn->get_order_number()
+					$txn->parent->get_order_number()
 				); ?>
 			</a>
 		</div>
