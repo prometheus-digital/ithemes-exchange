@@ -1583,11 +1583,6 @@ a.it-exchange-button {
     margin-bottom: 0;
 }
 
-.it-exchange-checkout-line-item-totals li.it-exchange-checkout-line-items-total-total-line {
-    font-size: 1.2em;
-    margin-top: 4px;
-}
-
 .it-exchange-checkout-line-items-total--total {
     float: right;
     text-align: right;
@@ -1603,6 +1598,10 @@ a.it-exchange-button {
     margin-top: 0;
     margin-right: 5px;
     width: 70%;
+}
+
+.it-exchange-checkout-coupon-input-container input {
+    width: 100%;
 }
 
 .it-exchange-checkout-coupon-input-container span {
@@ -1626,6 +1625,10 @@ a.it-exchange-button {
     font-weight: initial;
     font-size: 1.2em;
     transition: .2s ease-in opacity;
+}
+
+.it-exchange-checkout-coupon-input-container .it-exchange-checkout-coupon-cancel:hover {
+    opacity: .7;
 }
 
 .it-exchange-checkout-purchase-methods {
