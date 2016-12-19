@@ -19,7 +19,7 @@ use iThemes\Exchange\REST\Request;
  *
  * @package iThemes\Exchange\REST\Route\Cart
  */
-class Cart implements Getable, Putable, Deletable {
+class Cart extends r\Route\Base implements Getable, Putable, Deletable {
 
 	/** @var Serializer */
 	private $serializer;
@@ -197,6 +197,15 @@ class Cart implements Getable, Putable, Deletable {
 				array( 'embeddable' => true )
 			);
 		}
+
+		$response->add_link(
+			'purchase-methods',
+			r\get_rest_url(
+				$this->get_manager()->get_first_route( 'iThemes\Exchange\REST\Route\Cart\Purchase' ),
+				array( 'cart_id' => $cart->get_id() )
+			),
+			array( 'embeddable' => true )
+		);
 
 		return $response;
 	}
