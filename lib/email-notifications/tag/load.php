@@ -509,6 +509,12 @@ class IT_Exchange_Email_Register_Default_Tags {
 			$purchase_message_on = true;
 		}
 
+		$products = it_exchange_get_transaction_products( $context['transaction'] );
+
+		if ( ! $products && $context['transaction']->parent ) {
+			$products = it_exchange_get_transaction_products( $context['transaction']->parent );
+		}
+
 		ob_start();
 		?>
 		<table style="text-align: left; background: #FBFBFB; margin-bottom: 1.5em;border:1px solid #DDD;border-collapse: collapse;color:#1f1f1f;">
@@ -520,7 +526,7 @@ class IT_Exchange_Email_Register_Default_Tags {
 			</tr>
 			</thead>
 			<tbody>
-			<?php if ( $products = it_exchange_get_transaction_products( $context['transaction'] ) ) : ?>
+			<?php if ( $products ) : ?>
 				<?php foreach ( $products as $product ) : ?>
 					<tr>
 						<td style="padding: 10px;border:1px solid #DDD;">
