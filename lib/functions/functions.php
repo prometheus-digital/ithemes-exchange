@@ -2231,6 +2231,16 @@ function it_exchange_get_system_info() {
 		$addons[] = $addon['name'];
 	}
 
+	$tables_installed = $tables_uninstalled = array();
+
+	foreach ( it_exchange_get_tables() as $table ) {
+		if ( \IronBound\DB\Manager::is_table_installed( $table ) ) {
+			$tables_installed[] = $table->get_slug();
+		} else {
+			$tables_uninstalled[] = $table->get_slug();
+		}
+	}
+
 	$info['iThemes Exchange'] = array(
 		'Version'               => IT_Exchange::VERSION,
 		'Previous'              => empty( $versions ) || empty( $versions['previous'] ) ? '' : $versions['previous'],
@@ -2241,6 +2251,8 @@ function it_exchange_get_system_info() {
 		'Decimals Separator'    => $settings['currency-decimals-separator'],
 		'Registration'          => $settings['site-registration'] == 'it' ? 'Exchange' : 'WordPress',
 		'Completed Upgrades'    => implode( ', ', $completed ),
+		'Installed Tables'      => implode( ', ', $tables_installed ),
+		'Missing Tables'        => $tables_uninstalled ? implode( ', ', $tables_uninstalled ) : 'None',
 		'Add-ons'               => implode( ', ', $addons )
 	);
 
