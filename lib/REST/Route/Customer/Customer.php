@@ -69,7 +69,8 @@ class Customer extends Route\Base implements Getable {
 		$tokens->set_parent( $this );
 		$response->add_link(
 			'tokens',
-			\iThemes\Exchange\REST\get_rest_url( $tokens, array( 'customer_id' => $customer->ID ) )
+			\iThemes\Exchange\REST\get_rest_url( $tokens, array( 'customer_id' => $customer->ID ) ),
+			array( 'embeddable' => true )
 		);
 
 		$session = \ITE_Session_Model::find_best_for_customer( $customer );

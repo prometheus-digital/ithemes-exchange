@@ -76,6 +76,22 @@ class Serializer {
 
 		$links = array();
 
+		$links['refunds'][] = array(
+			'href'       => r\get_rest_url(
+				$manager->get_first_route( 'iThemes\Exchange\REST\Route\Transaction\Refunds\Refunds' ),
+				array( 'transaction_id' => $transaction->get_ID() )
+			),
+			'embeddable' => true,
+		);
+
+		$links['activity'][] = array(
+			'href'       => r\get_rest_url(
+				$manager->get_first_route( 'iThemes\Exchange\REST\Route\Transaction\Activity\Activity' ),
+				array( 'transaction_id' => $transaction->get_ID() )
+			),
+			'embeddable' => false,
+		);
+
 		if ( $t->get_customer() ) {
 			$route               = $manager->get_first_route( 'iThemes\Exchange\REST\Route\Customer\Customer' );
 			$links['customer'][] = array(
