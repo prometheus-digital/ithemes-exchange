@@ -63,7 +63,7 @@ class Hooks {
 		$cart = $cart ?: it_exchange_get_current_cart( false );
 
 		if ( ! $cart ) {
-			return '';
+			return $main;
 		}
 
 		/** @var \ITE_Cart_Product $item */
