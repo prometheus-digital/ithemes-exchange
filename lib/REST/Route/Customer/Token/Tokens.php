@@ -163,12 +163,6 @@ class Tokens extends Base implements Getable, Postable {
 	 */
 	public function get_query_args() {
 		return array(
-			'context' => array(
-				'description' => __( 'Scope under which the request is made; determines fields present in response.', 'it-l10n-ithemes-exchange' ),
-				'type'        => 'string',
-				'default'     => 'view',
-				'enum'        => array( 'view', 'edit' )
-			),
 			'gateway' => array(
 				'description' => __( 'Gateway the payment token belongs to.', 'it-l10n-ithemes-exchange' ),
 				'type'        => 'string',
