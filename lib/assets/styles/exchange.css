@@ -1641,6 +1641,155 @@ a.it-exchange-button {
     margin: 0 5px 5px 0;
 }
 
+/** -----------------------------------------------------:[ Backbone Manage Tokens ]:---------- */
+
+.it-exchange-manage-tokens-list {
+    margin: 2em 0;
+    padding: 0;
+}
+
+.it-exchange-manage-tokens-list li {
+    display: block;
+    border: 1px solid #ddd;
+    padding: .5em 1em;
+    margin-bottom: .5em;
+    transition: .2s ease-in opacity;
+    position: relative;
+}
+
+.it-exchange-manage-tokens-list li:last-child {
+    margin-bottom: 0;
+}
+
+.it-exchange-manage-token-label {
+    float: left;
+}
+
+.it-exchange-manage-token-edit-container {
+    display: inline-block;
+    margin-top: -5px;
+}
+
+.it-exchange-manage-token-edit-label {
+    margin-bottom: 5px;
+}
+
+.it-exchange-manage-tokens-token-action-container {
+    display: inline-block;
+    position: absolute;
+    top: .5em;
+    right: 1em;
+}
+
+.it-exchange-manage-tokens-list li::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.it-exchange-manage-tokens-token .it-exchange-manage-token-edit-container {
+    display: inline-block;
+    margin: 0;
+}
+
+.it-exchange-manage-token-edit-container span {
+    display: inline-block;
+    font-size: .7em;
+    text-transform: uppercase;
+}
+
+button.it-exchange-manage-tokens-token-action {
+    background: none;
+    border: 0;
+    color: inherit;
+    /* cursor: default; */
+    font: inherit;
+    line-height: normal;
+    overflow: visible;
+    padding: 0;
+    -webkit-appearance: button; /* for input */
+    -webkit-user-select: none; /* for button */
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+button.it-exchange-manage-tokens-token-action:hover {
+    background-color: transparent;
+    opacity: .5
+}
+
+.it-exchange-manage-tokens-token-action--edit::before {
+    content: "\f464";
+}
+
+.it-exchange-manage-tokens-token-action--save::before {
+    content: "\f147";
+}
+
+.it-exchange-manage-tokens-token-action--cancel::before {
+    content: "\f335";
+}
+
+.it-exchange-manage-tokens-token-action--delete::before {
+    content: "\f182";
+}
+
+.it-exchange-manage-tokens-token-action--primary::before {
+    content: "\f154";
+}
+
+.it-exchange-manage-tokens-token-action--primary:hover::before {
+    content: "\f155";
+}
+
+.it-exchange-manage-tokens-token--primary .it-exchange-manage-tokens-token-action--primary::before {
+    content: "\f155";
+}
+
+button.it-exchange-manage-tokens-token-action.it-exchange-manage-tokens-token-action--primary:hover {
+    opacity: 1;
+}
+
+/** ----------------------------------------:[ Compat ]:--- */
+
+.screen-reader-text,
+.screen-reader-text span,
+.ui-helper-hidden-accessible {
+    position: absolute;
+    margin: -1px;
+    padding: 0;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    border: 0;
+    word-wrap: normal !important; /* many screen reader and browser combinations announce broken words as they would appear visually */
+}
+
+.screen-reader-shortcut {
+    position: absolute;
+    top: -1000em;
+}
+
+.screen-reader-shortcut:focus {
+    left: 6px;
+    top: -25px;
+    height: auto;
+    width: auto;
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 15px 23px 14px;
+    background: #f1f1f1;
+    color: #0073aa;
+    z-index: 100000;
+    line-height: normal;
+    -webkit-box-shadow: 0 0 2px 2px rgba(0, 0, 0, .6);
+    box-shadow: 0 0 2px 2px rgba(0, 0, 0, .6);
+    text-decoration: none;
+    outline: none;
+}
+
 /** ----------------------------------------:[ screen fixes ]:--- */
 @media screen and (max-width: 1000px) {
     .it-exchange-colorbox .it-exchange-product-images-gallery {

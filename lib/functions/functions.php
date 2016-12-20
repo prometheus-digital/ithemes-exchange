@@ -282,8 +282,15 @@ function it_exchange_register_scripts() {
 				'couponCode'       => __( 'Coupon Code', 'it-l10n-ithemes-exchange' ),
 			),
 			'paymentToken' => array(
-				'addNew' => _x( 'Add New', 'Add new payment source, like a credit card.', 'it-l10n-ithemes-exchange' )
-			)
+				'addNew'        => _x( 'Add New', 'Add new payment source, like a credit card.', 'it-l10n-ithemes-exchange' ),
+				'manageTokens'  => __( 'Manage Payment Methods', 'it-l10n-ithemes-exchange' ),
+				'noTokens'      => __( 'No saved payment methods found.', 'it-l10n-ithemes-exchange' ),
+				'edit'          => __( 'Edit', 'it-l10n-ithemes-exchange' ),
+				'save'          => __( 'Save', 'it-l10n-ithemes-exchange' ),
+				'cancel'        => __( 'Cancel', 'it-l10n-ithemes-exchange' ),
+				'makePrimary'   => __( 'Make primary payment method.', 'it-l10n-ithemes-exchange' ),
+				'label'         => __( 'Edit Label', 'it-l10n-ithemes-exchange' ),
+			),
 		)
 	);
 
@@ -2078,6 +2085,63 @@ function it_exchange_trans_txn_cleanup() {
 	do_action( 'it_exchange_trans_txn_cleanup' );
 }
 add_action( 'it_exchange_trans_txn_garbage_collection', 'it_exchange_trans_txn_cleanup' );
+
+/**
+ * Enqueue Manage Tokens JS.
+ *
+ * @since 2.0.0
+ */
+function it_exchange_enqueue_manage_tokens_js() {
+
+	if ( ! it_exchange_is_page( 'profile' ) ) {
+		return;
+	}
+
+	$customer = it_exchange_get_current_customer();
+
+	if ( ! $customer ) {
+		return;
+	}
+
+	add_filter( 'it_exchange_preload_schemas', function( $schemas ) {
+		$schemas = is_array( $schemas ) ? $schemas : array();
+		$schemas[] = 'payment-token';
+
+		return $schemas;
+	} );
+
+	wp_enqueue_script( 'it-exchange-profile', IT_Exchange::$url . '/lib/assets/js/profile.js', array( 'it-exchange-rest' ) );
+
+	it_exchange_add_inline_script( 'it-exchange-profile', include IT_Exchange::$dir . 'lib/assets/templates/manage-tokens.html' );
+
+	$serializer = new \iThemes\Exchange\REST\Route\Customer\Token\Serializer();
+	$filter     = new \iThemes\Exchange\REST\Helpers\ContextFilterer();
+	$schema     = $serializer->get_schema();
+
+	$tokens = array();
+
+	foreach ( $customer->get_tokens() as $token ) {
+		$tokens[] = $filter->filter( $serializer->serialize( $token ), 'edit', $schema );
+	}
+
+	wp_localize_script( 'it-exchange-profile', 'ITExchangeProfileConfig', array(
+		'tokens'    => $tokens,
+		'customer'  => $customer->get_ID()
+	) );
+}
+
+add_action( 'wp_enqueue_scripts', 'it_exchange_enqueue_manage_tokens_js' );
+
+/**
+ * Print manage tokens container.
+ *
+ * @since 2.0.0
+ */
+function it_exchange_print_manage_tokens_container() {
+	echo '<div class="it-exchange-manage-tokens-container"></div>';
+}
+
+add_action( 'it_exchange_content_profile_after_form', 'it_exchange_print_manage_tokens_container' );
 
 /**
  * Delete upgrade logs older than 7 days.

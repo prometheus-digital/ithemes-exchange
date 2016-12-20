@@ -1,0 +1,37 @@
+<script type="text/template" id="tmpl-it-exchange-manage-tokens">
+    <h4>{{ data.i18n.manageTokens }}</h4>
+    <div class="it-exchange-manage-tokens-list-container"></div>
+</script>
+
+<script type="text/template" id="tmpl-it-exchange-manage-tokens-token">
+    <span class="it-exchange-manage-token-label">{{ data.label.rendered }}</span>
+
+    <label class="it-exchange-manage-token-edit-container" style="display: none">
+        <span>{{ data.i18n.label }}</span>
+        <input type="text" class="it-exchange-manage-token-edit-label" value="{{ data.label.raw }}">
+    </label>
+
+    <div class="it-exchange-manage-tokens-token-action-container">
+        <button class="it-exchange-manage-tokens-token-action it-exchange-manage-tokens-token-action--edit dashicons-before">
+            <span class="screen-reader-text">{{ data.i18n.edit }}</span>
+        </button>
+
+        <button class="it-exchange-manage-tokens-token-action it-exchange-manage-tokens-token-action--save dashicons-before"
+                style="display: none;">
+            <span class="screen-reader-text">{{ data.i18n.save }}</span>
+        </button>
+
+        <button class="it-exchange-manage-tokens-token-action it-exchange-manage-tokens-token-action--cancel dashicons-before"
+                style="display: none;">
+            <span class="screen-reader-text">{{ data.i18n.cancel }}</span>
+        </button>
+
+        <button class="it-exchange-manage-tokens-token-action it-exchange-manage-tokens-token-action--primary dashicons-before">
+            <span class="screen-reader-text">{{ data.i18n.makePrimary }}</span>
+        </button>
+
+        <button class="it-exchange-manage-tokens-token-action it-exchange-manage-tokens-token-action--delete dashicons-before">
+            <span class="screen-reader-text">{{ data.i18n.delete }}</span>
+        </button>
+    </div>
+</script>

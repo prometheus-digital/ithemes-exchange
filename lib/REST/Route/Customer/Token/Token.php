@@ -16,6 +16,7 @@ use iThemes\Exchange\REST\Route\Base;
 
 /**
  * Class Token
+ *
  * @package iThemes\Exchange\REST\Route\Customer\Token
  */
 class Token extends Base implements Getable, Putable, Deletable {
@@ -66,15 +67,18 @@ class Token extends Base implements Getable, Putable, Deletable {
 
 		$token = \ITE_Payment_Token::get( $request->get_param( 'token_id', 'URL' ) );
 
-		$token->label = $request['label'];
+		$label = is_array( $request['label'] ) ? $request['label']['raw'] : $request['label'];
+
+		if ( $label ) {
+			$token->label = $label;
+		}
 
 		if ( ! $token->primary && $request['primary'] ) {
 			$saved = $token->make_primary();
 		} elseif ( $token->primary && ! $request['primary'] ) {
 			try {
 				$saved = $token->make_non_primary();
-			}
-			catch ( \InvalidArgumentException $e ) {
+			} catch ( \InvalidArgumentException $e ) {
 				return new \WP_Error(
 					'it_exchange_rest_cannot_make_token_primary',
 					__( 'The token could not be updated to primary.', 'it-l10n-ithemes-exchange' ),
