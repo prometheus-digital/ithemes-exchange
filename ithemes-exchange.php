@@ -223,6 +223,24 @@ function load_it_exchange() {
 add_action( 'plugins_loaded', 'load_it_exchange', 0 );
 
 /**
+ * Deactivate migrated plugins into core.
+ *
+ * @since 2.0.0
+ */
+function it_exchange_deactivate_migrated_plugins() {
+
+	require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+	if ( is_plugin_active( 'terms-of-service-for-ithemes-exchange/load.php' ) ) {
+		deactivate_plugins( 'terms-of-service-for-ithemes-exchange/load.php' );
+
+		it_exchange_enable_addon( 'terms-of-service' );
+	}
+}
+
+add_action( 'it_exchange_version_updated', 'it_exchange_deactivate_migrated_plugins' );
+
+/**
  * Sets up options to perform after activation
  *
  * @since 0.4.0

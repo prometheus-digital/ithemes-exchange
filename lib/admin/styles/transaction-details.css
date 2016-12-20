@@ -321,6 +321,7 @@
 	margin-left: 10px;
 }
 #it-exchange-transaction-details .ribbon {
+	z-index: 1;
 	opacity: .9;
 	position: absolute;
 	padding: 0;

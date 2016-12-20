@@ -146,6 +146,20 @@ function it_exchange_register_core_addons() {
 			'supports'          => apply_filters( 'it_exchange_register_guest_checkout_default_features', array(
 			) ),
 		),
+		'terms-of-service'      => array(
+			'name'              => __( 'Terms of Service', 'it-l10n-ithemes-exchange'),
+			'description'       => __( 'Have your customers agree to your Terms of Service when purchasing your products.', 'it-l10n-ithemes-exchange'),
+			'author'            => 'iThemes',
+			'author_url'        => 'http://ithemes.com',
+			'file'              => dirname( __FILE__ ) . '/admin/terms-of-service/init.php',
+			'icon'              => plugin_dir_url( __FILE__ ) . 'admin/terms-of-service/assets/img/icon-50.png',
+			'category'          => 'product-feature',
+			'settings-callback' => array( 'ITETOS\Settings', 'display' ),
+			'basename'          => plugin_basename( __FILE__ ),
+			'labels'            => array(
+				'singular_name' => __( 'Terms of Service', 'it-l10n-ithemes-exchange'),
+			)
+		),
 		// Page Templates
 		'page-template' => array(
 			'name'              => __( 'WordPress Page Templates', 'it-l10n-ithemes-exchange' ),

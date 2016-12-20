@@ -35,7 +35,8 @@
     "autoload": {
         "psr-4": {
             "iThemes\\Exchange\\REST\\": "lib/REST/",
-            "iThemes\\Exchange\\CLI\\": "lib/cli/"
+            "iThemes\\Exchange\\CLI\\": "lib/cli/",
+            "ITETOS\\": "core-addons/admin/terms-of-service/"
         }
     }
 }
