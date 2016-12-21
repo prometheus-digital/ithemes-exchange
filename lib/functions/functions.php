@@ -282,16 +282,18 @@ function it_exchange_register_scripts() {
 				'couponCode'       => __( 'Coupon Code', 'it-l10n-ithemes-exchange' ),
 			),
 			'paymentToken' => array(
-				'addNew'        => _x( 'Add New', 'Add new payment source, like a credit card.', 'it-l10n-ithemes-exchange' ),
-				'manageTokens'  => __( 'Manage Payment Methods', 'it-l10n-ithemes-exchange' ),
-				'noTokens'      => __( 'No saved payment methods found.', 'it-l10n-ithemes-exchange' ),
-				'edit'          => __( 'Edit', 'it-l10n-ithemes-exchange' ),
-				'save'          => __( 'Save', 'it-l10n-ithemes-exchange' ),
-				'cancel'        => __( 'Cancel', 'it-l10n-ithemes-exchange' ),
-				'makePrimary'   => __( 'Make primary payment method.', 'it-l10n-ithemes-exchange' ),
-				'label'         => __( 'Edit Label', 'it-l10n-ithemes-exchange' ),
+				'addNew'          => _x( 'Add New', 'Add new payment source, like a credit card.', 'it-l10n-ithemes-exchange' ),
+				'manageTokens'    => __( 'Manage Payment Methods', 'it-l10n-ithemes-exchange' ),
+				'noTokens'        => __( 'No saved payment methods found.', 'it-l10n-ithemes-exchange' ),
+				'edit'            => __( 'Edit', 'it-l10n-ithemes-exchange' ),
+				'save'            => __( 'Save', 'it-l10n-ithemes-exchange' ),
+				'cancel'          => __( 'Cancel', 'it-l10n-ithemes-exchange' ),
+				'makePrimary'     => __( 'Make primary payment method.', 'it-l10n-ithemes-exchange' ),
+				'labelLabel'      => __( 'Label', 'it-l10n-ithemes-exchange' ),
+				'labelExpiration' => __( 'Expiration', 'it-l10n-ithemes-exchange' ),
 			),
-		)
+		),
+		'imageRoot' => IT_Exchange::$url . '/lib/assets/styles/images/'
 	);
 
 	if ( apply_filters( 'it_exchange_preload_cart_item_types', it_exchange_is_page( 'checkout' ) ) ) {
@@ -2110,7 +2112,7 @@ function it_exchange_enqueue_manage_tokens_js() {
 		return $schemas;
 	} );
 
-	wp_enqueue_script( 'it-exchange-profile', IT_Exchange::$url . '/lib/assets/js/profile.js', array( 'it-exchange-rest' ) );
+	wp_enqueue_script( 'it-exchange-profile', IT_Exchange::$url . '/lib/assets/js/profile.js', array( 'it-exchange-rest', 'jquery.payment' ) );
 
 	it_exchange_add_inline_script( 'it-exchange-profile', include IT_Exchange::$dir . 'lib/assets/templates/manage-tokens.html' );
 

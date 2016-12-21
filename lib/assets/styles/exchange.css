@@ -1243,37 +1243,6 @@ a.it-exchange-button {
     font-family: Consolas, Monaco, Lucida Console, monospace;
 }
 
-/** -----------------------------------------------------:[ Payment Tokens ]:---------- */
-
-.it-exchange-payment-tokens-selector--list {
-    margin: 2em 0;
-    padding: 0;
-}
-
-.it-exchange-payment-tokens-selector--list li {
-    display: block;
-    border: 1px solid #ddd;
-    padding: .5em 1em;
-    margin-bottom: .5em;
-    transition: .2s ease-in opacity;
-}
-
-.it-exchange-payment-tokens-selector--list li:last-child {
-    margin-bottom: 0;
-}
-
-.it-exchange-payment-tokens-selector--list li:hover,
-.it-exchange-payment-tokens-selector--list li:focus {
-    opacity: .8;
-    cursor: pointer;
-}
-
-.it-exchange-payment-tokens-selector--list li label {
-    display: inline-block;
-    margin: 0 0 0 .5em;
-    vertical-align: middle;
-}
-
 /** -----------------------------------------------------:[ colorbox ]:---------- */
 .it-exchange-colorbox#cboxOverlay {
     position: fixed;
@@ -1505,6 +1474,42 @@ a.it-exchange-button {
     display: block;
 }
 
+/** -----------------------------------------------------:[ Payment Tokens ]:---------- */
+
+.it-exchange-payment-tokens-selector--list {
+    margin: 2em 0;
+    padding: 0;
+}
+
+.it-exchange-payment-tokens-selector--list li {
+    display: block;
+    border: 1px solid #ddd;
+    padding: .5em 1em;
+    margin-bottom: .5em;
+    transition: .2s ease-in opacity;
+}
+
+.it-exchange-payment-tokens-selector--list li:last-child {
+    margin-bottom: 0;
+}
+
+.it-exchange-payment-tokens-selector--list li:hover,
+.it-exchange-payment-tokens-selector--list li:focus {
+    opacity: .8;
+    cursor: pointer;
+}
+
+.it-exchange-payment-tokens-selector--list li label {
+    display: inline-block;
+    margin: 0 0 0 .5em;
+    vertical-align: middle;
+}
+
+.it-exchange-payment-tokens-selector--list li label img {
+    margin-bottom: 3px;
+    margin-left: 10px;
+}
+
 /** -----------------------------------------------------:[ Backbone Checkout ]:---------- */
 
 .it-exchange-checkout-line-items-container {
@@ -1661,17 +1666,60 @@ a.it-exchange-button {
     margin-bottom: 0;
 }
 
-.it-exchange-manage-token-label {
+.it-exchange-manage-tokens-list li.saving {
+    -webkit-animation: it-exchange-breathing 3.5s ease-out infinite normal;
+    animation: it-exchange-breathing 3.5s ease-out infinite normal;
+}
+
+.it-exchange-manage-token-label-container {
     float: left;
 }
 
-.it-exchange-manage-token-edit-container {
-    display: inline-block;
-    margin-top: -5px;
+.it-exchange-manage-token-label-details {
+    margin-left: 10px;
 }
 
-.it-exchange-manage-token-edit-label {
-    margin-bottom: 5px;
+.it-exchange-manage-token-label-details::before {
+    content: '|';
+    margin-right: 8px;
+}
+
+.it-exchange-manage-token-label-details img {
+    margin-bottom: 3px;
+}
+
+.it-exchange-manage-token-label-redacted {
+    margin-left: 5px;
+}
+
+.it-exchange-manage-token-label-redacted::before {
+    content: '••••';
+    margin-right: 7px;
+}
+
+.it-exchange-manage-token-label-expiration {
+    margin-left: 10px;
+}
+
+.it-exchange-manage-tokens-token-edit-container {
+    display: inline-block;
+    margin: -17px 0 5px 0;
+}
+
+.it-exchange-manage-tokens-token-edit-container .it-exchange-manage-tokens-token-edit--label {
+    display: inline-block;
+}
+
+.it-exchange-manage-tokens-token-edit-container .it-exchange-manage-tokens-token-edit--expiration {
+    display: inline-block;
+    width: 100px;
+    margin-left: 7px;
+}
+
+.it-exchange-manage-tokens-token-edit-container span {
+    display: inline-block;
+    font-size: .7em;
+    text-transform: uppercase;
 }
 
 .it-exchange-manage-tokens-token-action-container {
@@ -1685,17 +1733,6 @@ a.it-exchange-button {
     content: "";
     display: table;
     clear: both;
-}
-
-.it-exchange-manage-tokens-token .it-exchange-manage-token-edit-container {
-    display: inline-block;
-    margin: 0;
-}
-
-.it-exchange-manage-token-edit-container span {
-    display: inline-block;
-    font-size: .7em;
-    text-transform: uppercase;
 }
 
 button.it-exchange-manage-tokens-token-action {
@@ -1748,6 +1785,44 @@ button.it-exchange-manage-tokens-token-action:hover {
 
 button.it-exchange-manage-tokens-token-action.it-exchange-manage-tokens-token-action--primary:hover {
     opacity: 1;
+}
+
+/** ----------------------------------------:[ Utility ]:--- */
+
+@-webkit-keyframes it-exchange-breathing {
+    0% {
+        opacity: .4;
+    }
+
+    25% {
+        opacity: 1;
+    }
+
+    60% {
+        opacity: .4;
+    }
+
+    100% {
+        opacity: .4;
+    }
+}
+
+@keyframes it-exchange-breathing {
+    0% {
+        opacity: .4;
+    }
+
+    25% {
+        opacity: 1;
+    }
+
+    60% {
+        opacity: .4;
+    }
+
+    100% {
+        opacity: .4;
+    }
 }
 
 /** ----------------------------------------:[ Compat ]:--- */

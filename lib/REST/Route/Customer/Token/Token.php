@@ -65,7 +65,37 @@ class Token extends Base implements Getable, Putable, Deletable {
 	 */
 	public function handle_put( Request $request ) {
 
+		/** @var \ITE_Payment_Token_Card|\ITE_Payment_Token_Bank_Account $token */
 		$token = \ITE_Payment_Token::get( $request->get_param( 'token_id', 'URL' ) );
+
+		if ( $token instanceof \ITE_Payment_Token_Card && $request['expiration'] ) {
+
+			$handler = $token->gateway->get_handler_by_request_name( 'tokenize' );
+
+			if ( $handler instanceof \ITE_Update_Payment_Token_Handler ) {
+				$update = array();
+
+				if ( (int) $token->get_expiration_month() != $request['expiration']['month'] ) {
+					$update['expiration_month'] = $request['expiration']['month'];
+				}
+
+				if ( (int) $token->get_expiration_year() != $request['expiration']['year'] ) {
+					$update['expiration_year'] = $request['expiration']['year'];
+				}
+
+				if ( $update ) {
+					$token = $handler->update_token( $token, $update );
+
+					if ( ! $token ) {
+						return new \WP_Error(
+							'it_exchange_rest_cannot_update',
+							__( 'The token could not be updated.', 'it-l10n-ithemes-exchange' ),
+							array( 'status' => \WP_Http::INTERNAL_SERVER_ERROR )
+						);
+					}
+				}
+			}
+		}
 
 		$label = is_array( $request['label'] ) ? $request['label']['raw'] : $request['label'];
 
@@ -88,6 +118,7 @@ class Token extends Base implements Getable, Putable, Deletable {
 		} else {
 			$saved = $token->save();
 		}
+
 
 		if ( ! $saved ) {
 			return new \WP_Error(

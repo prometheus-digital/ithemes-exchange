@@ -10,6 +10,10 @@
     <label>
         <input type="radio" name="{{ data.inputName }}" value="{{ data.id }}">
         {{ data.label.rendered }}
+
+        <# if ( data.cardImage ) { #>
+            <img src="{{ data.cardImage }}">
+        <# } #>
     </label>
 </script>
 

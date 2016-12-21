@@ -55,11 +55,14 @@ class ITE_Payment_Token extends ModelWithMeta implements ITE_Object, ITE_Gateway
 		}
 
 		/** @var static $other */
-		$other = static::query()->where( 'customer', '=', $this->customer->ID )->and_where( 'primary', '=', true )->first();
+		$other = static::query()
+			->where( 'customer', '=', $this->customer->ID )
+			->and_where( 'primary', '=', true )
+			->and_where( 'gateway', '=', $this->get_raw_attribute( 'gateway' ) )
+			->first();
 
 		if ( $other ) {
 			$other->set_attribute( 'primary', false );
-
 
 			if ( ! $other->save() ) {
 				return false;
@@ -253,16 +256,41 @@ class ITE_Payment_Token extends ModelWithMeta implements ITE_Object, ITE_Gateway
 	 *
 	 * @param string $type
 	 * @param string $class
+	 * @param string $label
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	public static function register_token_type( $type, $class ) {
+	public static function register_token_type( $type, $class, $label = '' ) {
 
 		if ( ! is_subclass_of( $class, 'ITE_Payment_Token' ) ) {
 			throw new InvalidArgumentException( 'Class must be a subclass of ITE_Payment_Token.' );
 		}
 
-		static::$token_types[ $type ] = array( 'class' => $class );
+		static::$token_types[ $type ] = array( 'class' => $class, 'label' => $label );
+	}
+
+	/**
+	 * Get the token type label.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $type
+	 *
+	 * @return string
+	 */
+	public static function get_token_type_label( $type ) {
+
+		$data = static::$token_types[ $type ];
+
+		if ( ! $data ) {
+			return '';
+		}
+
+		if ( $data['label'] ) {
+			return $data['label'];
+		}
+
+		return ucfirst( $type );
 	}
 
 	/**

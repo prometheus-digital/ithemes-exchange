@@ -25,16 +25,43 @@ class Serializer {
 	 * @return array
 	 */
 	public function serialize( \ITE_Payment_Token $token ) {
-		return array(
+		$data = array(
 			'id'       => $token->get_pk(),
-			'gateway'  => $token->get_raw_attribute( 'gateway' ),
+			'gateway'  => array(
+				'slug'  => $token->get_raw_attribute( 'gateway' ),
+				'label' => $token->gateway ? $token->gateway->get_name() : $token->get_raw_attribute( 'gateway' ),
+			),
 			'label'    => array(
 				'raw'      => $token->label,
 				'rendered' => $token->get_label()
 			),
-			'redacted' => $token->redacted,
 			'primary'  => (bool) $token->primary,
+			'type'     => array(
+				'slug'  => $token->type,
+				'label' => $token::get_token_type_label( $token->type ),
+			),
+			'redacted' => $token->redacted,
 		);
+
+		if ( $token instanceof \ITE_Payment_Token_Card ) {
+			$data['issuer'] = $token->get_brand();
+
+			if ( (int) $token->get_expiration_month() ) {
+				$data['expiration'] = array(
+					'month'    => (int) $token->get_expiration_month(),
+					'year'     => (int) $token->get_expiration_year(),
+					'editable' => false,
+				);
+
+				if ( $token->gateway && ( $h = $token->gateway->get_handler_by_request_name( 'tokenize' ) ) ) {
+					$data['expiration']['editable'] = $h instanceof \ITE_Update_Payment_Token_Handler;
+				}
+			}
+		} elseif ( $token instanceof \ITE_Payment_Token_Bank_Account ) {
+			$data['issuer'] = $token->get_bank_name();
+		}
+
+		return $data;
 	}
 
 	/**
@@ -50,21 +77,39 @@ class Serializer {
 			'title'      => 'payment-token',
 			'type'       => 'object',
 			'properties' => array(
-				'id'       => array(
+				'id'         => array(
 					'description' => __( 'The unique id for this token.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
 				),
-				'gateway'  => array(
+				'gateway'    => array(
 					'description' => __( 'The gateway slug for this token.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'string',
-					'enum'        => array_map( function ( $gateway ) { return $gateway->get_slug(); }, \ITE_Gateways::handles( 'tokenize' ) ),
 					'context'     => array( 'view', 'edit', 'embed' ),
-					'writeonly'   => true,
 					'required'    => true,
+					'writeonly'   => true,
+					'oneOf'       => array(
+						array(
+							'type' => 'string',
+							'enum' => array_map( function ( $gateway ) { return $gateway->get_slug(); }, \ITE_Gateways::handles( 'tokenize' ) ),
+						),
+						array(
+							'type'       => 'object',
+							'properties' => array(
+								'slug'  => array(
+									'description' => __( 'The gateway slug.', 'it-l10n-ithemes-exchange' ),
+									'type'        => 'string',
+									'enum'        => array_map( function ( $gateway ) { return $gateway->get_slug(); }, \ITE_Gateways::handles( 'tokenize' ) ),
+								),
+								'label' => array(
+									'description' => __( 'The gateway label.', 'it-l10n-ithemes-exchange' ),
+									'type'        => 'string',
+								),
+							),
+						),
+					),
 				),
-				'label'    => array(
+				'label'      => array(
 					'description' => __( 'The user-provided label for this token.', 'it-l10n-ithemes-exchange' ),
 					'context'     => array( 'view', 'edit', 'embed' ),
 					'oneOf'       => array(
@@ -87,17 +132,66 @@ class Serializer {
 						array( 'type' => 'string' )
 					)
 				),
-				'redacted' => array(
+				'primary'    => array(
+					'description' => __( 'Whether this is the primary payment token for this customer.', 'it-l10n-ithemes-exchange' ),
+					'type'        => 'boolean',
+					'context'     => array( 'view', 'edit', 'embed' ),
+					'default'     => false,
+				),
+				'type'       => array(
+					'description' => __( 'The payment token type.', 'it-l10n-ithemes-exchange' ),
+					'type'        => 'object',
+					'context'     => array( 'view', 'edit', 'embed' ),
+					'properties'  => array(
+						'slug'  => array(
+							'description' => __( 'The token type slug.', 'it-l10n-ithemes-exchange' ),
+							'type'        => 'string',
+							'context'     => array( 'edit' ),
+						),
+						'label' => array(
+							'description' => __( 'The token type label.', 'it-l10n-ithemes-exchange' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit', 'embed' ),
+						),
+					)
+				),
+				'redacted'   => array(
 					'description' => __( 'The redacted form of the underlying payment source.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
 				),
-				'primary'  => array(
-					'description' => __( 'Whether this is the primary payment token for this customer.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'boolean',
+				'issuer'     => array(
+					'description' => __( 'The card issuer or bank name.', 'it-l10n-ithemes-exchange' ),
+					'type'        => 'string',
 					'context'     => array( 'view', 'edit', 'embed' ),
-					'default'     => false,
+					'readonly'    => true,
+				),
+				'expiration' => array(
+					'description' => __( 'The card expiration date.', 'it-l10n-ithemes-exchange' ),
+					'context'     => array( 'view', 'edit', 'embed' ),
+					'type'        => 'object',
+					'properties'  => array(
+						'year'     => array(
+							'type'        => 'integer',
+							'description' => __( 'Card expiration year', 'it-l10n-ithemes-exchange' ),
+							'context'     => array( 'view', 'edit', 'embed' ),
+						),
+						'month'    => array(
+							'type'        => 'integer',
+							'description' => __( 'Card expiration month', 'it-l10n-ithemes-exchange' ),
+							'min'         => 1,
+							'max'         => 12,
+							'context'     => array( 'view', 'edit', 'embed' ),
+						),
+						'editable' => array(
+							'type'        => 'boolean',
+							'description' => __( 'Is the expiration editable.', 'it-l10n-ithemes-exchange' ),
+							'default'     => false,
+							'readonly'    => true,
+							'context'     => array( 'edit' ),
+						)
+					),
 				),
 			)
 		);

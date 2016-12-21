@@ -4,12 +4,38 @@
 </script>
 
 <script type="text/template" id="tmpl-it-exchange-manage-tokens-token">
-    <span class="it-exchange-manage-token-label">{{ data.label.rendered }}</span>
+    <div class="it-exchange-manage-token-label-container">
+        <span class="it-exchange-manage-token-label">{{ data.label.rendered }}</span>
 
-    <label class="it-exchange-manage-token-edit-container" style="display: none">
-        <span>{{ data.i18n.label }}</span>
-        <input type="text" class="it-exchange-manage-token-edit-label" value="{{ data.label.raw }}">
-    </label>
+        <span class="it-exchange-manage-token-label-details">
+            <# if ( data.cardImage ) { #>
+                <img src="{{ data.cardImage }}">
+            <# } #>
+            <span class="it-exchange-manage-token-label-redacted">{{ data.redacted }}</span>
+
+            <# if ( data.expiration ) { #>
+                <span class="it-exchange-manage-token-label-expiration">
+                    {{ ExchangeCommon.zeroise( data.expiration.month, 2 ) }} / {{ data.expiration.year }}
+                </span>
+            <# } #>
+        </span>
+    </div>
+
+    <div class="it-exchange-manage-tokens-token-edit-container" style="display: none">
+        <label class="it-exchange-manage-tokens-token-edit--label">
+            <span>{{ data.i18n.labelLabel }}</span>
+            <input type="text" class="it-exchange-manage-tokens-token-edit--label-input" value="{{ data.label.raw }}"
+                   placeholder="{{ data.label.rendered }}">
+        </label>
+
+        <# if ( data.expiration && data.expiration.editable ) { #>
+            <label class="it-exchange-manage-tokens-token-edit--expiration">
+                <span>{{ data.i18n.labelExpiration }}</span>
+                <input type="text" class="it-exchange-manage-tokens-token-edit--expiration-input"
+                       value="{{ ExchangeCommon.zeroise( data.expiration.month, 2 ) }} / {{ data.expiration.year }}" placeholder="MM / YY">
+            </label>
+        <# } #>
+    </div>
 
     <div class="it-exchange-manage-tokens-token-action-container">
         <button class="it-exchange-manage-tokens-token-action it-exchange-manage-tokens-token-action--edit dashicons-before">
