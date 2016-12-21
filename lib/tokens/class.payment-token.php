@@ -20,6 +20,7 @@ use IronBound\DB\Query\FluentQuery;
  * @property string                     $label
  * @property string                     $redacted
  * @property-read bool                  $primary
+ * @property-read string                $mode
  */
 class ITE_Payment_Token extends ModelWithMeta implements ITE_Object, ITE_Gateway_Payment_Source {
 
@@ -56,10 +57,11 @@ class ITE_Payment_Token extends ModelWithMeta implements ITE_Object, ITE_Gateway
 
 		/** @var static $other */
 		$other = static::query()
-			->where( 'customer', '=', $this->customer->ID )
-			->and_where( 'primary', '=', true )
-			->and_where( 'gateway', '=', $this->get_raw_attribute( 'gateway' ) )
-			->first();
+		               ->where( 'customer', '=', $this->customer->ID )
+		               ->and_where( 'primary', '=', true )
+		               ->and_where( 'gateway', '=', $this->get_raw_attribute( 'gateway' ) )
+		               ->and_where( 'mode', '=', $this->mode )
+		               ->first();
 
 		if ( $other ) {
 			$other->set_attribute( 'primary', false );
@@ -90,7 +92,12 @@ class ITE_Payment_Token extends ModelWithMeta implements ITE_Object, ITE_Gateway
 		}
 
 		/** @var static $other */
-		$other = static::query()->where( 'customer', '=', $this->customer->ID )->and_where( 'primary', '=', true )->first();
+		$other = static::query()
+		               ->where( 'customer', '=', $this->customer->ID )
+		               ->and_where( 'primary', '=', true )
+		               ->and_where( 'gateway', '=', $this->get_raw_attribute( 'gateway' ) )
+		               ->and_where( 'mode', '=', $this->mode )
+		               ->first();
 
 		if ( ! $other ) {
 			throw new InvalidArgumentException( 'At least one payment token must be primary.' );
@@ -229,9 +236,16 @@ class ITE_Payment_Token extends ModelWithMeta implements ITE_Object, ITE_Gateway
 		parent::boot();
 
 		static::register_global_scope( 'active', function ( FluentQuery $query ) {
-			$query->and_where( 'gateway', true, array_map( function ( ITE_Gateway $gateway ) {
-				return $gateway->get_slug();
-			}, ITE_Gateways::all() ) );
+
+			$gateways = ITE_Gateways::handles( 'tokenize' );
+
+			$query->and_where( 'gateway', false, null, function ( FluentQuery $query ) use ( $gateways ) {
+				foreach ( $gateways as $i => $gateway ) {
+					$query->where( 'gateway', '=', $gateway->get_slug(), function ( FluentQuery $query ) use ( $gateway ) {
+						$query->and_where( 'mode', '=', $gateway->is_sandbox_mode() ? 'sandbox' : 'live' );
+					}, $i === 0 ? 'and' : 'or' );
+				}
+			} );
 		} );
 
 		static::register_global_scope( 'order', function ( FluentQuery $query ) {

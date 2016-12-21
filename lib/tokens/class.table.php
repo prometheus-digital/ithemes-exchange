@@ -7,6 +7,7 @@
  */
 use IronBound\DB\Extensions\Trash\TrashTable;
 use IronBound\DB\Table\Column\DateTime;
+use IronBound\DB\Table\Column\Enum;
 use IronBound\DB\Table\Column\ForeignUser;
 use IronBound\DB\Table\Column\IntegerBased;
 use IronBound\DB\Table\Column\StringBased;
@@ -49,6 +50,7 @@ class ITE_Payment_Tokens_Table extends \IronBound\DB\Table\BaseTable implements 
 			'gateway'  => new StringBased( 'VARCHAR', 'gateway', array(), array( 64 ) ),
 			'deleted'  => new DateTime( 'deleted' ),
 			'type'     => new StringBased( 'VARCHAR', 'type', array(), array( 32 ) ),
+			'mode'     => new Enum( array( 'live', 'sandbox' ), 'mode' ),
 		);
 
 		return $this->columns;
@@ -67,6 +69,7 @@ class ITE_Payment_Tokens_Table extends \IronBound\DB\Table\BaseTable implements 
 			'primary'  => false,
 			'deleted'  => null,
 			'type'     => 'cc',
+			'mode'     => '',
 		);
 	}
 
