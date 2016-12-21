@@ -137,6 +137,76 @@ a.it-exchange-button {
     font-weight: bold;
 }
 
+/** ----------------------------------------:[ Profile ]:--- */
+
+.it-exchange-customer-info::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.it-exchange-customer-first-name {
+    width: 40%;
+    float: left;
+    margin: 0 10px 0 0;
+}
+
+.it-exchange-customer-last-name {
+    width: 40%;
+    float: left;
+}
+
+.it-exchange-customer-last-name::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.it-exchange-customer-email {
+    width: 40%;
+    float: left;
+    margin: 0 10px 0 0;
+}
+
+.it-exchange-customer-nickname {
+    width: 40%;
+    float: left;
+}
+
+.it-exchange-customer-nickname::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.it-exchange-customer-website {
+    width: calc(80% + 10px);
+    float: left;
+}
+
+.it-exchange-customer-website::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.it-exchange-customer-password1 {
+    width: 40%;
+    float: left;
+    margin: 0 10px 0 0;
+}
+
+.it-exchange-customer-password2 {
+    width: 40%;
+    float: left;
+}
+
+.it-exchange-customer-password2::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
 /** ----------------------------------------:[ purchases ]:--- */
 #it-exchange-purchases .it-exchange-purchase,
 #it-exchange-purchases .it-exchange-purchase .it-exchange-purchase-top,
