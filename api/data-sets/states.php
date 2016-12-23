@@ -34,9 +34,26 @@ function it_exchange_get_country_states( $options=array() ) {
 	);
 	$supported_countries = apply_filters( 'it_exchange_get_country_states_supported_countries', $supported_countries );
 
+	if ( empty( $options['country'] ) ) {
+		return false;
+	}
+
+	if ( $options['country'] === 'all' ) {
+		$states = array();
+
+		foreach ( $supported_countries as $country => $fn ) {
+			if ( is_callable( $fn ) ) {
+				$states[ $country ] = call_user_func( $fn, $options );
+			}
+		}
+
+		return $states;
+	}
+
 	// Return the state data if its supported and we can find a callable function
-	if ( ! empty( $options['country'] ) && isset( $supported_countries[$options['country']] ) && is_callable( $supported_countries[$options['country']] ) )
-		return call_user_func( $supported_countries[$options['country']], $options );
+	if ( isset( $supported_countries[$options['country']] ) && is_callable( $supported_countries[$options['country']] ) ) {
+		return call_user_func( $supported_countries[ $options['country'] ], $options );
+	}
 
 	return false;
 }

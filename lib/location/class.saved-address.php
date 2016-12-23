@@ -5,6 +5,8 @@
  * @since   2.0.0
  * @license GPLv2
  */
+use IronBound\DB\Extensions\Trash\TrashTable;
+use IronBound\DB\Query\FluentQuery;
 
 /**
  * Class ITE_Address
@@ -12,48 +14,14 @@
  * @property int                   $ID
  * @property \IT_Exchange_Customer $customer
  * @property string                $label
- * @property bool                  $primary
- * @property string                $type
  */
 class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 
 	const T_SHIPPING = 'shipping';
 	const T_BILLING = 'billing';
 
-	/**
-	 * Make this the primary address for the customer.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @return bool
-	 */
-	public function make_primary() {
-
-		if ( ! $this->customer || ! $this->customer->ID ) {
-			return false;
-		}
-
-		if ( $this->primary ) {
-			return true;
-		}
-
-		/** @var static $other */
-		$other = static::query()->where( 'customer', '=', $this->customer->ID )->and_where( 'primary', '=', true )
-		               ->and_where( 'type', '=', $this->type )->first();
-
-		if ( $other ) {
-			$other->primary = false;
-
-
-			if ( ! $other->save() ) {
-				return false;
-			}
-		}
-
-		$this->primary = true;
-
-		return $this->save();
-	}
+	/** @var bool */
+	private $force_deleting = false;
 
 	/**
 	 * @inheritDoc
@@ -224,7 +192,7 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 
 		$columns = array_keys( static::table()->get_column_defaults() );
 
-		return array_diff( $columns, array( 'pk', 'customer', 'label', 'primary', 'type' ) );
+		return array_diff( $columns, array( 'ID', 'customer', 'label', 'deleted_at' ) );
 	}
 
 	/**
@@ -232,12 +200,12 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param \ITE_Location         $location
-	 * @param \ITE_Location|null    $current
-	 * @param \IT_Exchange_Customer $customer
-	 * @param string                $type
-	 * @param bool                  $validate
-	 * @param bool                  $filter Call the deprecated validation filter.
+	 * @param \ITE_Location         $location The location to save.
+	 * @param \ITE_Location|null    $current  The current address.
+	 * @param \IT_Exchange_Customer $customer The customer this address belongs to. Null if a Guest Customer.
+	 * @param string                $type     The address type. Either 'billing' or 'shipping'.
+	 * @param bool                  $validate Validate the address before saving.
+	 * @param bool                  $filter   Apply deprecated save filter when validating.
 	 *
 	 * @return \ITE_Saved_Address
 	 *
@@ -284,14 +252,11 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 				}
 
 				$location->customer = $cid;
-				$location->type     = $type;
-				$location->make_primary();
 
 				return $location;
 			}
 		} elseif ( $location instanceof ITE_Saved_Address ) {
 			$location->customer = $cid;
-			$location->type     = $type;
 
 			return $location;
 		}
@@ -300,12 +265,9 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 			/** @noinspection PhpIncompatibleReturnTypeInspection */
 			return ITE_Saved_Address::query()->first_or_create( array_merge( $fields, array(
 				'customer' => $cid,
-				'type'     => $type,
 			) ) );
 		} else { // We don't want to share addresses amongst guest customers.
-			return ITE_Saved_Address::create( array_merge( $fields, array(
-				'type' => $type
-			) ) );
+			return ITE_Saved_Address::create( $fields );
 		}
 	}
 
@@ -371,5 +333,126 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 		}
 
 		return $location;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected static function boot() {
+		parent::boot();
+
+		$table = static::table();
+
+		if ( ! $table instanceof TrashTable ) {
+			throw new \UnexpectedValueException( sprintf( "%s model's table must implement TrashTable.", get_called_class() ) );
+		}
+
+		static::register_global_scope( 'trash', function ( FluentQuery $query ) use ( $table ) {
+			$query->and_where( $table->get_deleted_at_column(), true, null );
+		} );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function delete() {
+
+		if ( $this->force_deleting ) {
+			return parent::delete();
+		} else {
+
+			$this->fire_model_event( 'trashing' );
+
+			$table = static::table();
+
+			$this->{$table->get_deleted_at_column()} = $this->fresh_timestamp();
+
+			$this->fire_model_event( 'trashed' );
+
+			return $this->save();
+		}
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function force_delete() {
+		$this->force_deleting = true;
+		$this->delete();
+		$this->force_deleting = false;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function untrash() {
+
+		$this->fire_model_event( 'untrashing' );
+
+		$table                                   = static::table();
+		$this->{$table->get_deleted_at_column()} = null;
+
+		$this->fire_model_event( 'untrashed' );
+
+		return $this->save();
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function is_trashed() {
+
+		$table  = static::table();
+		$column = $table->get_deleted_at_column();
+
+		return $this->{$column} !== null;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public static function with_trashed() {
+		return static::without_global_scope( 'trash' );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public static function only_trashed() {
+
+		/** @var FluentQuery $query */
+		$query = static::with_trashed();
+
+		$query->where( static::table()->get_deleted_at_column(), false, null );
+
+		return $query;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public static function trashing( $callback, $priority = 10, $accepted_args = 3 ) {
+		return static::register_model_event( 'trashing', $callback, $priority, $accepted_args );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public static function trashed( $callback, $priority = 10, $accepted_args = 3 ) {
+		return static::register_model_event( 'trashed', $callback, $priority, $accepted_args );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public static function untrashing( $callback, $priority = 10, $accepted_args = 3 ) {
+		return static::register_model_event( 'untrashing', $callback, $priority, $accepted_args );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public static function untrashed( $callback, $priority = 10, $accepted_args = 3 ) {
+		return static::register_model_event( 'untrashed', $callback, $priority, $accepted_args );
 	}
 }

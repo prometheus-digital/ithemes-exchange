@@ -1376,8 +1376,6 @@ function print_country_states_ajax() {
 
 	define( 'DOING_AJAX', true );
 
-	$base_country  = empty( $_POST['ite_base_country_ajax'] ) ? 'US' : $_POST['ite_base_country_ajax'];
-	$base_state    = empty( $_POST['ite_base_state_ajax'] ) ? '' : $_POST['ite_base_state_ajax'];
 	$template_part = empty( $_POST['ite_template_part_ajax'] ) ? '' : $_POST['ite_template_part_ajax'];
 	$admin_prefix  = empty( $_POST['ite_admin_prefix_ajax'] ) ? false : $_POST['ite_admin_prefix_ajax'];
 
@@ -2108,13 +2106,20 @@ function it_exchange_enqueue_manage_tokens_js() {
 	add_filter( 'it_exchange_preload_schemas', function( $schemas ) {
 		$schemas = is_array( $schemas ) ? $schemas : array();
 		$schemas[] = 'payment-token';
+		$schemas[] = 'customer';
+		$schemas[] = 'address';
 
 		return $schemas;
 	} );
 
-	wp_enqueue_script( 'it-exchange-profile', IT_Exchange::$url . '/lib/assets/js/profile.js', array( 'it-exchange-rest', 'jquery.payment' ) );
+	wp_enqueue_script(
+		'it-exchange-profile',
+		IT_Exchange::$url . '/lib/assets/js/profile.js',
+		array( 'it-exchange-rest', 'jquery.payment', 'jquery-select-to-autocomplete' )
+	);
 
 	it_exchange_add_inline_script( 'it-exchange-profile', include IT_Exchange::$dir . 'lib/assets/templates/manage-tokens.html' );
+	it_exchange_add_inline_script( 'it-exchange-profile', include IT_Exchange::$dir . 'lib/assets/templates/manage-addresses.html' );
 
 	$serializer = new \iThemes\Exchange\REST\Route\Customer\Token\Serializer();
 	$filter     = new \iThemes\Exchange\REST\Helpers\ContextFilterer();
@@ -2128,8 +2133,20 @@ function it_exchange_enqueue_manage_tokens_js() {
 
 	wp_localize_script( 'it-exchange-profile', 'ITExchangeProfileConfig', array(
 		'tokens'    => $tokens,
-		'customer'  => $customer->get_ID()
+		'customer'  => $customer->get_ID(),
+		'i18n'      => array(
+			'manageAddresses' => __( 'Manage Addresses', 'it-l10n-ithemes-exchange' ),
+			'billingLabel'    => __( 'Billing Address', 'it-l10n-ithemes-exchange' ),
+			'shippingLabel'   => __( 'Shipping Address', 'it-l10n-ithemes-exchange' ),
+			'edit'            => __( 'Edit Address', 'it-l10n-ithemes-exchange' ),
+			'save'            => __( 'Save Address', 'it-l10n-ithemes-exchange' ),
+			'cancel'          => __( 'Cancel', 'it-l10n-ithemes-exchange' ),
+			'delete'          => __( 'Delete Address', 'it-l10n-ithemes-exchange' ),
+			'makePrimary'     => __( 'Make Address Primary', 'it-l10n-ithemes-exchange' ),
+		)
 	) );
+
+	wp_enqueue_style( 'it-exchange-autocomplete-style' );
 }
 
 add_action( 'wp_enqueue_scripts', 'it_exchange_enqueue_manage_tokens_js' );
@@ -2140,6 +2157,7 @@ add_action( 'wp_enqueue_scripts', 'it_exchange_enqueue_manage_tokens_js' );
  * @since 2.0.0
  */
 function it_exchange_print_manage_tokens_container() {
+	echo '<div class="it-exchange-manage-address-container"></div>';
 	echo '<div class="it-exchange-manage-tokens-container"></div>';
 }
 

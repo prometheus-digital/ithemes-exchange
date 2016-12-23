@@ -139,7 +139,11 @@ a.it-exchange-button {
 
 /** ----------------------------------------:[ Profile ]:--- */
 
-.it-exchange-customer-info::after {
+.it-exchange-customer-info-fields {
+    width: 100%;
+}
+
+.it-exchange-customer-info-fields::after {
     content: "";
     display: table;
     clear: both;
@@ -205,6 +209,107 @@ a.it-exchange-button {
     content: "";
     display: table;
     clear: both;
+}
+
+.it-exchange-manage-address-container h4 {
+    margin-bottom: 0 !important;
+    padding: 0 !important;
+}
+
+.it-exchange-customer-addressses-container {
+    width: 100%;
+    padding: 10px 0 15px 0;
+}
+
+.it-exchange-customer-addressses-container::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.it-exchange-customer-address {
+    border: 1px #ddd solid;
+    width: auto;
+    display: inline-block;
+    padding: 10px;
+    margin: 10px 10px 10px 0;
+    min-width: 250px;
+    float: left;
+    max-width: 350px;
+}
+
+.it-exchange-customer-address p {
+    margin: 0;
+}
+
+.it-exchange-customer-addresses-edit-address-container input,
+.it-exchange-customer-addresses-edit-address-container select {
+    width: 100%;
+}
+
+button.it-exchange-customer-addresses-address-action {
+    background: none;
+    border: 0;
+    color: inherit;
+    /* cursor: default; */
+    font: inherit;
+    line-height: normal;
+    overflow: visible;
+    padding: 0;
+    -webkit-appearance: button; /* for input */
+    -webkit-user-select: none; /* for button */
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+button.it-exchange-customer-addresses-address-action:hover,
+button.it-exchange-customer-addresses-address-action:active {
+    background: none;
+    background-color: transparent;
+    opacity: .5;
+    border: none;
+    padding: 0;
+}
+
+.it-exchange-customer-addresses-address-action-container {
+    display: inline-block;
+    float: right;
+}
+
+button.it-exchange-customer-addresses-address-action:hover::before {
+    background: transparent;
+}
+
+.it-exchange-customer-addresses-address-action--edit::before {
+    content: "\f464";
+}
+
+.it-exchange-customer-addresses-address-action--save::before {
+    content: "\f147";
+}
+
+.it-exchange-customer-addresses-address-action--cancel::before {
+    content: "\f335";
+}
+
+.it-exchange-customer-addresses-address-action--delete::before {
+    content: "\f182";
+}
+
+.it-exchange-customer-addresses-address-action--primary::before {
+    content: "\f154";
+}
+
+.it-exchange-customer-addresses-address-action--primary:hover::before {
+    content: "\f155";
+}
+
+.it-exchange-customer-addresses-address--primary .it-exchange-customer-addresses-address-action--primary::before {
+    content: "\f155";
+}
+
+button.it-exchange-customer-addresses-address-action.it-exchange-customer-addresses-address-action--primary:hover {
+    opacity: 1;
 }
 
 /** ----------------------------------------:[ purchases ]:--- */
@@ -1773,7 +1878,7 @@ a.it-exchange-button {
 
 .it-exchange-manage-tokens-token-edit-container {
     display: inline-block;
-    margin: -17px 0 5px 0;
+    margin: -15px 0 5px 0;
 }
 
 .it-exchange-manage-tokens-token-edit-container .it-exchange-manage-tokens-token-edit--label {
@@ -1787,7 +1892,7 @@ a.it-exchange-button {
 }
 
 .it-exchange-manage-tokens-token-edit-container span {
-    display: inline-block;
+    display: block;
     font-size: .7em;
     text-transform: uppercase;
 }
@@ -1820,9 +1925,13 @@ button.it-exchange-manage-tokens-token-action {
     -ms-user-select: none;
 }
 
-button.it-exchange-manage-tokens-token-action:hover {
+button.it-exchange-manage-tokens-token-action:hover,
+button.it-exchange-manage-tokens-token-action:active {
+    background: none;
     background-color: transparent;
-    opacity: .5
+    opacity: .5;
+    border: none;
+    padding: 0;
 }
 
 .it-exchange-manage-tokens-token-action--edit::before {
@@ -1855,6 +1964,43 @@ button.it-exchange-manage-tokens-token-action:hover {
 
 button.it-exchange-manage-tokens-token-action.it-exchange-manage-tokens-token-action--primary:hover {
     opacity: 1;
+}
+
+@media screen and (max-width: 600px) {
+    .it-exchange-manage-token-label-container {
+        float: none;
+        display: block;
+        width: 100%;
+        text-align: center;
+        padding-top: 5px;
+    }
+
+    .it-exchange-manage-token-label-details img {
+        display: none;
+    }
+
+    .it-exchange-manage-token-label-details {
+        margin-left: 3px;
+    }
+
+    .it-exchange-manage-token-label-details::before {
+        margin-right: 2px;
+    }
+
+    .it-exchange-manage-token-label-redacted::before {
+        content: 'x';
+        margin-right: 3px;
+        font-size: .6em;
+    }
+
+    .it-exchange-manage-tokens-token-action-container {
+        display: block;
+        position: relative;
+        top: 0;
+        right: 0;
+        width: 100%;
+        text-align: center;
+    }
 }
 
 /** ----------------------------------------:[ Utility ]:--- */

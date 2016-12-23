@@ -236,10 +236,12 @@ class IT_Exchange_Customer implements ITE_Object {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @return \ITE_Location|null
+	 * @param bool $force_saved Force getting an ITE_Saved_Address object.
+	 *
+	 * @return \ITE_Location|ITE_Saved_Address|null
 	 */
-	public function get_billing_address() {
-		return $this->retrieve_address( ITE_Saved_Address::T_BILLING );
+	public function get_billing_address( $force_saved = false ) {
+		return $this->retrieve_address( ITE_Saved_Address::T_BILLING, $force_saved );
 	}
 
 	/**
@@ -274,10 +276,12 @@ class IT_Exchange_Customer implements ITE_Object {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @return \ITE_Location|null
+	 * @param bool $force_saved Force getting an ITE_Saved_Address object.
+	 *
+	 * @return \ITE_Location|ITE_Saved_Address|null
 	 */
-	public function get_shipping_address() {
-		return $this->retrieve_address( ITE_Saved_Address::T_SHIPPING );
+	public function get_shipping_address( $force_saved = false ) {
+		return $this->retrieve_address( ITE_Saved_Address::T_SHIPPING, $force_saved );
 	}
 
 	/**
@@ -311,33 +315,39 @@ class IT_Exchange_Customer implements ITE_Object {
 	 * @since 2.0.0
 	 *
 	 * @param string $type Accepts either 'shipping' or 'billing'.
+	 * @param bool $force_saved Force getting an ITE_Saved_Address object.
 	 *
 	 * @return \ITE_Saved_Address|ITE_Location|null In 99.9% of cases this returns an ITE_Saved_Address instance or
 	 *                                              null.
 	 */
-	protected function retrieve_address( $type ) {
+	protected function retrieve_address( $type, $force_saved = false ) {
 
 		if ( $this->$type ) {
 			return $this->$type;
 		}
 
 		/** @var ITE_Saved_Address $address */
-		$address = ITE_Saved_Address::query()
-		                            ->where( 'customer', '=', $this->id )->and_where( 'primary', '=', true )
-		                            ->and_where( 'type', '=', $type )->first();
+		$address = ITE_Saved_Address::get( $this->get_customer_meta( "primary_{$type}" ) );
 
 		if ( ! $address ) {
 			$parts = get_user_meta( $this->id, "it-exchange-{$type}-address", true );
 
 			if ( is_array( $parts ) ) {
 				$address = ITE_Saved_Address::create( array_merge( $parts, array(
-					'customer' => $this->id,
-					'primary'  => true,
-					'type'     => $type,
+					'customer' => $this->get_ID(),
 				) ) );
+
 			} else {
-				$address = null;
+				$address = ITE_Saved_Address::query()->where( 'customer', '=', $this->get_ID() )->take( 1 )->first();
 			}
+
+			if ( $address ) {
+				$this->update_customer_meta( "primary_{$type}", $address->ID );
+			}
+		}
+
+		if ( $force_saved ) {
+			return $address;
 		}
 
 		$raw_address = $address ? $address->to_array() : array();
@@ -397,7 +407,7 @@ class IT_Exchange_Customer implements ITE_Object {
 		$saved = ITE_Saved_Address::convert_to_saved( $location, $current, $this, $type, true, true );
 
 		if ( $saved ) {
-			$saved->make_primary();
+			$this->update_customer_meta( "primary_{$type}", $saved->ID );
 		}
 
 		return $saved;

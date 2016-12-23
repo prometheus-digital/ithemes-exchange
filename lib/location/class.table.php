@@ -13,7 +13,7 @@ use IronBound\DB\Table\Column\StringBased;
 /**
  * Class ITE_Saved_Address_Table
  */
-class ITE_Saved_Address_Table extends \IronBound\DB\Table\BaseTable {
+class ITE_Saved_Address_Table extends \IronBound\DB\Table\BaseTable implements \IronBound\DB\Extensions\Trash\TrashTable {
 
 	/** @var array */
 	private $columns = array();
@@ -46,7 +46,6 @@ class ITE_Saved_Address_Table extends \IronBound\DB\Table\BaseTable {
 				new IntegerBased( 'BIGINT', 'ID', array( 'unsigned', 'NOT NULL', 'auto_increment' ), array( 20 ) ),
 			'customer'     => new ForeignUser( 'customer' ),
 			'label'        => new StringBased( 'VARCHAR', 'label', array( 'NOT NULL' ), array( '191' ) ),
-			'primary'      => new IntegerBased( 'TINYINT', 'primary', array( 'NOT NULL' ), array( 1 ) ),
 			'company-name' => new StringBased( 'VARCHAR', 'company-name', array( 'NOT NULL' ), array( '191' ) ),
 			'first-name'   => new StringBased( 'VARCHAR', 'first-name', array( 'NOT NULL' ), array( '191' ) ),
 			'last-name'    => new StringBased( 'VARCHAR', 'last-name', array( 'NOT NULL' ), array( '191' ) ),
@@ -58,7 +57,7 @@ class ITE_Saved_Address_Table extends \IronBound\DB\Table\BaseTable {
 			'country'      => new StringBased( 'VARCHAR', 'country', array( 'NOT NULL' ), array( '3' ) ),
 			'email'        => new StringBased( 'VARCHAR', 'email', array( 'NOT NULL' ), array( '191' ) ),
 			'phone'        => new StringBased( 'VARCHAR', 'phone', array( 'NOT NULL' ), array( '25' ) ),
-			'type'         => new Enum( array( 'billing', 'shipping' ), 'type', 'billing', false ),
+			'deleted_at'   => new \IronBound\DB\Table\Column\DateTime( 'deleted_at' ),
 		);
 
 		return $this->columns;
@@ -72,7 +71,6 @@ class ITE_Saved_Address_Table extends \IronBound\DB\Table\BaseTable {
 			'ID'           => null,
 			'customer'     => 0,
 			'label'        => '',
-			'primary'      => false,
 			'first-name'   => '',
 			'last-name'    => '',
 			'company-name' => '',
@@ -84,9 +82,14 @@ class ITE_Saved_Address_Table extends \IronBound\DB\Table\BaseTable {
 			'country'      => '',
 			'email'        => '',
 			'phone'        => '',
-			'type'         => 'billing',
+			'deleted_at'   => null,
 		);
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_deleted_at_column() { return 'deleted_at'; }
 
 	/**
 	 * @inheritDoc
@@ -107,8 +110,8 @@ class ITE_Saved_Address_Table extends \IronBound\DB\Table\BaseTable {
 	 */
 	protected function get_keys() {
 		return array_merge( parent::get_keys(), array(
-			'KEY customer__type__primary (customer,type,`primary`)',
-			'KEY country (country)'
+			'KEY customer (customer)',
+			'KEY country__state (country,state)'
 		) );
 	}
 }

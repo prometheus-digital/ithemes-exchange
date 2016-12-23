@@ -191,16 +191,13 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 				try {
 					$billing = ITE_Saved_Address::query()->first_or_create( array_merge(
 						array_intersect_key( $cart_details->billing_address, ITE_Saved_Address::table()->get_column_defaults() ),
-						array( 'customer' => $customer_id, 'type' => ITE_Saved_Address::T_BILLING )
+						array( 'customer' => $customer_id )
 					) );
 				} catch ( Exception $e ) {
 
 				}
 			} else {
-				$billing = ITE_Saved_Address::create( array_merge(
-					$cart_details->billing_address,
-					array( 'type' => ITE_Saved_Address::T_BILLING )
-				) );
+				$billing = ITE_Saved_Address::create( $cart_details->billing_address );
 			}
 
 			$billing = $billing ? $billing->get_pk() : 0;
@@ -211,16 +208,13 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 				try {
 					$shipping = ITE_Saved_Address::query()->first_or_create( array_merge(
 						array_intersect_key( $cart_details->shipping_address, ITE_Saved_Address::table()->get_column_defaults() ),
-						array( 'customer' => $customer_id, 'type' => ITE_Saved_Address::T_SHIPPING )
+						array( 'customer' => $customer_id )
 					) );
 				} catch ( Exception $e ) {
 
 				}
 			} else {
-				$shipping = ITE_Saved_Address::create( array_merge(
-					$cart_details->shipping_address,
-					array( 'type' => ITE_Saved_Address::T_SHIPPING )
-				) );
+				$shipping = ITE_Saved_Address::create( $cart_details->shipping_address );
 			}
 
 			$shipping = $shipping ? $shipping->get_pk() : 0;

@@ -273,10 +273,10 @@ class ITE_Gateways {
 	 * @return \ITE_Gateway[]
 	 */
 	public static function accepting() {
-		return array_filter(
+		return array_values( array_filter(
 			static::all(),
 			function ( $gateway ) { return it_exchange_is_gateway_accepting_payments( $gateway ); }
-		);
+		) );
 	}
 
 	/**
@@ -287,10 +287,10 @@ class ITE_Gateways {
 	 * @return \ITE_Gateway[]
 	 */
 	public static function non_zero_sum() {
-		return array_filter(
+		return array_values( array_filter(
 			static::all(),
 			function ( $gateway ) { return ! $gateway instanceof ITE_Zero_Sum_Checkout_Gateway; }
-		);
+		) );
 	}
 
 	/**
@@ -303,8 +303,8 @@ class ITE_Gateways {
 	 * @return \ITE_Gateway[]
 	 */
 	public static function handles( $request_name ) {
-		return array_filter( static::all(), function ( ITE_Gateway $gateway ) use ( $request_name ) {
+		return array_values( array_filter( static::all(), function ( ITE_Gateway $gateway ) use ( $request_name ) {
 			return $gateway->can_handle( $request_name );
-		} );
+		} ) );
 	}
 }

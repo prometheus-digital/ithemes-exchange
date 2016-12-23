@@ -28,7 +28,7 @@
                    placeholder="{{ data.label.rendered }}">
         </label>
 
-        <# if ( data.expiration && data.expiration.editable ) { #>
+        <# if ( data.isExpirationEditable ) { #>
             <label class="it-exchange-manage-tokens-token-edit--expiration">
                 <span>{{ data.i18n.labelExpiration }}</span>
                 <input type="text" class="it-exchange-manage-tokens-token-edit--expiration-input"

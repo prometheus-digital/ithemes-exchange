@@ -239,7 +239,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 
 		$address = $this->get_shipping_address_data_for_customer( it_exchange_get_current_customer() );
 
-		// If billing error and form was submitted, use POST values as most recent
+		// If shipping error and form was submitted, use POST values as most recent
 		if ( ! empty( $_REQUEST['it-exchange-update-shipping-address'] ) && ! empty( $GLOBALS['it_exchange']['shipping-address-error'] ) ) {
 
 			$keys      = array_keys( $address );

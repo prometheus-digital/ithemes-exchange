@@ -22,6 +22,9 @@ use iThemes\Exchange\REST\Route\Cart\Purchase;
 use iThemes\Exchange\REST\Route\Cart\Shipping_Methods;
 use iThemes\Exchange\REST\Route\Cart\Types;
 use iThemes\Exchange\REST\Route\Cart\TypeSerializer;
+use iThemes\Exchange\REST\Route\Customer\Address\Address;
+use iThemes\Exchange\REST\Route\Customer\Address\Addresses;
+use iThemes\Exchange\REST\Route\Customer\Address\Serializer as AddressSerializer;
 use iThemes\Exchange\REST\Route\Customer\Customer;
 use iThemes\Exchange\REST\Route\Customer\Token\Serializer as TokenSerializer;
 use iThemes\Exchange\REST\Route\Customer\Token\Tokens;
@@ -56,6 +59,7 @@ add_action( 'rest_api_init', function () {
 add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 
 	$manager->register_route( new Route\Info() );
+	$manager->register_route( new Route\Dataset() );
 
 	$cart  = new Route\Cart\Cart( new Route\Cart\Serializer() );
 	$carts = new Carts( $cart );
@@ -85,6 +89,14 @@ add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 	// --- Customers --- //
 	$customer = new Customer();
 	$manager->register_route( $customer );
+
+	/* Addresses */
+	$serializer = new AddressSerializer();
+	$addresses  = new Addresses( $serializer );
+	$manager->register_route( $addresses->set_parent( $customer ) );
+
+	$address = new Address( $serializer );
+	$manager->register_route( $address->set_parent( $addresses ) );
 
 	/* Tokens */
 	$tokens = new Tokens( new TokenSerializer(), new \ITE_Gateway_Request_Factory() );

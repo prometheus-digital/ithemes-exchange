@@ -9,11 +9,13 @@
 namespace iThemes\Exchange\REST\Route\Customer;
 
 use iThemes\Exchange\REST\Getable;
+use iThemes\Exchange\REST\Putable;
 use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route;
 
 /**
  * Class Customer
+ *
  * @package iThemes\Exchange\REST\Customer
  */
 class Customer extends Route\Base implements Getable {
@@ -27,6 +29,24 @@ class Customer extends Route\Base implements Getable {
 	public function handle_get( Request $request ) {
 
 		$customer = it_exchange_get_customer( $request->get_param( 'customer_id', 'URL' ) );
+		$response = new \WP_REST_Response( $this->serialize( $customer, $request['context'] ) );
+
+		$this->linkify( $response, $customer );
+
+		return $response;
+	}
+
+	/**
+	 * Serialize a customer.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param \IT_Exchange_Customer $customer
+	 * @param string                $context
+	 *
+	 * @return array
+	 */
+	protected function serialize( \IT_Exchange_Customer $customer, $context ) {
 
 		$data = array(
 			'id'               => $customer->ID,
@@ -35,21 +55,17 @@ class Customer extends Route\Base implements Getable {
 			'first_name'       => $customer->get_first_name(),
 			'last_name'        => $customer->get_last_name(),
 			'avatar_url'       => get_avatar_url( $customer->get_email() ),
-			'billing_address'  => ( $a = $customer->get_billing_address() ) ? $a->to_array() : array(),
-			'shipping_address' => ( $a = $customer->get_shipping_address() ) ? $a->to_array() : array(),
+			'billing_address'  => ( $a = $customer->get_billing_address( true ) ) ? $a->get_pk() : 0,
+			'shipping_address' => ( $a = $customer->get_shipping_address( true ) ) ? $a->get_pk() : 0,
 			'created_at'       => date( 'c', strtotime( $customer->wp_user->user_registered ) )
 		);
 
-		if ( $request['context'] === 'stats' ) {
+		if ( $context === 'stats' ) {
 			$data['total_spent']       = $customer->get_total_spent();
 			$data['transaction_count'] = $customer->get_transactions_count();
 		}
 
-		$response = new \WP_REST_Response( $data );
-
-		$this->linkify( $response, $customer );
-
-		return $response;
+		return $data;
 	}
 
 	/**
@@ -62,11 +78,39 @@ class Customer extends Route\Base implements Getable {
 	 */
 	protected function linkify( \WP_REST_Response $response, \IT_Exchange_Customer $customer ) {
 
-		$tokens = new Route\Customer\Token\Tokens(
-			new Route\Customer\Token\Serializer(),
-			new \ITE_Gateway_Request_Factory()
+		$address = $this->get_manager()->get_first_route( 'iThemes\Exchange\REST\Route\Customer\Address\Address' );
+
+		if ( $a = $customer->get_billing_address( true ) ) {
+			$response->add_link(
+				'billing-address',
+				\iThemes\Exchange\REST\get_rest_url( $address, array(
+					'customer_id' => $customer->get_ID(),
+					'address_id'  => $a->get_pk()
+				) ),
+				array( 'embeddable' => true )
+			);
+		}
+
+		if ( $a = $customer->get_shipping_address( true ) ) {
+			$response->add_link(
+				'shipping-address',
+				\iThemes\Exchange\REST\get_rest_url( $address, array(
+					'customer_id' => $customer->get_ID(),
+					'address_id'  => $a->get_pk()
+				) ),
+				array( 'embeddable' => true )
+			);
+		}
+
+		$response->add_link(
+			'addresses',
+			\iThemes\Exchange\REST\get_rest_url(
+				$this->get_manager()->get_first_route( 'iThemes\Exchange\REST\Route\Customer\Address\Addresses' ),
+				array( 'customer_id' => $customer->get_ID() )
+			)
 		);
-		$tokens->set_parent( $this );
+
+		$tokens = $this->get_manager()->get_first_route( 'iThemes\Exchange\REST\Route\Customer\Token\Tokens' );
 		$response->add_link(
 			'tokens',
 			\iThemes\Exchange\REST\get_rest_url( $tokens, array( 'customer_id' => $customer->ID ) ),

@@ -142,7 +142,7 @@ class IT_Exchange_Guest_Customer extends IT_Exchange_Customer {
 	/**
 	 * @inheritDoc
 	 */
-	public function get_billing_address() {
+	public function get_billing_address( $force_saved = false ) {
 		if ( $this->transaction ) {
 			return $this->transaction->get_billing_address();
 		}
@@ -160,7 +160,7 @@ class IT_Exchange_Guest_Customer extends IT_Exchange_Customer {
 	/**
 	 * @inheritDoc
 	 */
-	public function get_shipping_address() {
+	public function get_shipping_address( $force_saved = false ) {
 		if ( $this->transaction ) {
 			return $this->transaction->get_shipping_address();
 		}
