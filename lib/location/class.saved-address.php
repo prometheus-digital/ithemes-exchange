@@ -86,6 +86,42 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 	}
 
 	/**
+	 * Is this the primary shipping address for the customer this is attached to.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return bool
+	 */
+	public function is_primary_shipping() {
+
+		if ( ! $this->customer ) {
+			return false;
+		}
+
+		$address = $this->customer->get_shipping_address( true );
+
+		return $address && $this->get_pk() == $address->get_pk();
+	}
+
+	/**
+	 * Is this the primary billing address for the customer this is attached to.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return bool
+	 */
+	public function is_primary_billing() {
+
+		if ( ! $this->customer ) {
+			return false;
+		}
+
+		$address = $this->customer->get_billing_address( true );
+
+		return $address && $this->get_pk() == $address->get_pk();
+	}
+
+	/**
 	 * @inheritDoc
 	 */
 	public function get_pk() {
@@ -234,7 +270,17 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 			// multiple transactions. So as not to affect those other
 			// transactions we split this into a new record.
 			if ( $location->is_address_shared() ) {
-				return ITE_Saved_Address::create( $fields );
+				$new = ITE_Saved_Address::create( $fields );
+
+				if ( $location->is_primary_billing() ) {
+					$customer->set_billing_address( $new );
+				}
+
+				if ( $location->is_primary_shipping() ) {
+					$customer->set_shipping_address( $new );
+				}
+
+				return $new;
 			}
 
 			if ( $current instanceof ITE_Saved_Address && $current->get_pk() === $location->get_pk() ) {
