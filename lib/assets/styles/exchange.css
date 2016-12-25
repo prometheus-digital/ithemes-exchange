@@ -341,7 +341,11 @@ button.it-exchange-customer-addresses-address-action.it-exchange-customer-addres
 }
 
 .it-exchange-customer-addresses-address-action--create:hover::before {
-    opacity: 1;
+    opacity: 1 !important;
+}
+
+.it-exchange-customer-addresses-address-action--create:hover {
+    opacity: 1 !important;
 }
 
 .it-exchange-customer-addresses-edit-address {
