@@ -2121,23 +2121,31 @@ function it_exchange_enqueue_manage_tokens_js() {
 	it_exchange_add_inline_script( 'it-exchange-profile', include IT_Exchange::$dir . 'lib/assets/templates/manage-tokens.html' );
 	it_exchange_add_inline_script( 'it-exchange-profile', include IT_Exchange::$dir . 'lib/assets/templates/manage-addresses.html' );
 
-	$serializer = new \iThemes\Exchange\REST\Route\Customer\Token\Serializer();
-	$filter     = new \iThemes\Exchange\REST\Helpers\ContextFilterer();
-	$schema     = $serializer->get_schema();
+	$filter = new \iThemes\Exchange\REST\Helpers\ContextFilterer();
+
+	$address_serializer = new \iThemes\Exchange\REST\Route\Customer\Address\Serializer();
+	$address_schema     = $address_serializer->get_schema();
+
+	$token_serializer = new \iThemes\Exchange\REST\Route\Customer\Token\Serializer();
+	$token_schema     = $token_serializer->get_schema();
+
+	$customer_serializer = new \iThemes\Exchange\REST\Route\Customer\Serializer();
 
 	$tokens = array();
 
 	foreach ( $customer->get_tokens() as $token ) {
-		$tokens[] = $filter->filter( $serializer->serialize( $token ), 'edit', $schema );
+		$tokens[] = $filter->filter( $token_serializer->serialize( $token ), 'edit', $token_schema );
 	}
 
 	wp_localize_script( 'it-exchange-profile', 'ITExchangeProfileConfig', array(
 		'tokens'    => $tokens,
-		'customer'  => $customer->get_ID(),
+		'customer'  => $customer_serializer->serialize( $customer, 'edit' ),
+		'billing'   => ( $b = $customer->get_billing_address( true ) ) ? $address_serializer->serialize( $b ) : null,
+		'shipping'  => ( $s = $customer->get_shipping_address( true ) ) ? $address_serializer->serialize( $s ) : null,
 		'i18n'      => array(
 			'manageAddresses' => __( 'Manage Addresses', 'it-l10n-ithemes-exchange' ),
-			'billingLabel'    => __( 'Billing Address', 'it-l10n-ithemes-exchange' ),
-			'shippingLabel'   => __( 'Shipping Address', 'it-l10n-ithemes-exchange' ),
+			'billingLabel'    => __( 'Billing', 'it-l10n-ithemes-exchange' ),
+			'shippingLabel'   => __( 'Shipping', 'it-l10n-ithemes-exchange' ),
 			'edit'            => __( 'Edit Address', 'it-l10n-ithemes-exchange' ),
 			'save'            => __( 'Save Address', 'it-l10n-ithemes-exchange' ),
 			'cancel'          => __( 'Cancel', 'it-l10n-ithemes-exchange' ),

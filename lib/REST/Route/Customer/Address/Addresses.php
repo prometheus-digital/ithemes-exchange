@@ -38,7 +38,7 @@ class Addresses extends Base implements Getable, Postable {
 
 		$data = array();
 
-		foreach ( \ITE_Saved_Address::query()->where( 'customer', '=', $customer_id ) as $address ) {
+		foreach ( \ITE_Saved_Address::query()->and_where( 'customer', '=', $customer_id )->results() as $address ) {
 			$data[] = $this->serializer->serialize( $address );
 		}
 
@@ -69,7 +69,7 @@ class Addresses extends Base implements Getable, Postable {
 		$customer_id = $request->get_param( 'customer_id', 'URL' );
 
 		$data    = array_merge( $request->get_body_params(), array( 'customer' => $customer_id ) );
-		$address = \ITE_Saved_Address::query()->where( $data )->take( 1 )->first();
+		$address = \ITE_Saved_Address::query()->and_where( $data )->take( 1 )->first();
 
 		if ( $address ) {
 			$response = new \WP_REST_Response( null, \WP_Http::SEE_OTHER );
@@ -87,7 +87,7 @@ class Addresses extends Base implements Getable, Postable {
 			$response = new \WP_REST_Response( $this->serializer->serialize( $address ), \WP_Http::CREATED );
 		}
 
-		$response->add_link( 'Location', \iThemes\Exchange\REST\get_rest_url(
+		$response->header( 'Location', \iThemes\Exchange\REST\get_rest_url(
 			$this->get_manager()->get_first_route( 'iThemes\Exchange\REST\Route\Customer\Address\Address' ),
 			array( 'customer_id' => $customer_id, 'address_id' => $address->get_pk() )
 		) );

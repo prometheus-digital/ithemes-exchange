@@ -26,6 +26,7 @@ use iThemes\Exchange\REST\Route\Customer\Address\Address;
 use iThemes\Exchange\REST\Route\Customer\Address\Addresses;
 use iThemes\Exchange\REST\Route\Customer\Address\Serializer as AddressSerializer;
 use iThemes\Exchange\REST\Route\Customer\Customer;
+use iThemes\Exchange\REST\Route\Customer\Serializer as CustomerSerializer;
 use iThemes\Exchange\REST\Route\Customer\Token\Serializer as TokenSerializer;
 use iThemes\Exchange\REST\Route\Customer\Token\Tokens;
 use iThemes\Exchange\REST\Route\Transaction\Activity\Serializer as ActivitySerializer;
@@ -87,7 +88,7 @@ add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 	$manager->register_route( $meta->set_parent( $cart ) );
 
 	// --- Customers --- //
-	$customer = new Customer();
+	$customer = new Customer( new CustomerSerializer() );
 	$manager->register_route( $customer );
 
 	/* Addresses */

@@ -216,12 +216,15 @@ a.it-exchange-button {
     padding: 0 !important;
 }
 
-.it-exchange-customer-addressses-container {
+.it-exchange-customer-addresses-container {
     width: 100%;
-    padding: 10px 0 15px 0;
+    padding: 10px 0 25px 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 
-.it-exchange-customer-addressses-container::after {
+.it-exchange-customer-addresses-container::after {
     content: "";
     display: table;
     clear: both;
@@ -229,17 +232,18 @@ a.it-exchange-button {
 
 .it-exchange-customer-address {
     border: 1px #ddd solid;
-    width: auto;
     display: inline-block;
     padding: 10px;
-    margin: 10px 10px 10px 0;
-    min-width: 250px;
-    float: left;
-    max-width: 350px;
+    margin: 10px 10px 0 0;
+    width: 300px;
 }
 
 .it-exchange-customer-address p {
     margin: 0;
+}
+
+.it-exchange-customer-addresses-edit-address-container {
+    margin-top: -15px;
 }
 
 .it-exchange-customer-addresses-edit-address-container input,

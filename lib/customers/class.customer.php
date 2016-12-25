@@ -338,7 +338,7 @@ class IT_Exchange_Customer implements ITE_Object {
 				) ) );
 
 			} else {
-				$address = ITE_Saved_Address::query()->where( 'customer', '=', $this->get_ID() )->take( 1 )->first();
+				$address = ITE_Saved_Address::query()->and_where( 'customer', '=', $this->get_ID() )->take( 1 )->first();
 			}
 
 			if ( $address ) {

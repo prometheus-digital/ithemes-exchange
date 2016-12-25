@@ -251,18 +251,28 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 		ITE_Location $location,
 		ITE_Location $current = null,
 		IT_Exchange_Customer $customer = null,
-		$type,
+		$type = '',
 		$validate = true,
 		$filter = false
 	) {
 
+		if ( ! $type && $location instanceof ITE_Saved_Address ) {
+			$type = $location->is_primary_billing() ? 'billing' : 'shipping';
+		} elseif ( ! $type && $current instanceof ITE_Saved_Address ) {
+			$type = $current->is_primary_billing() ? 'billing' : 'shipping';
+		}
+
 		$cid = $customer ? $customer->ID : 0;
 
-		if ( $validate ) {
+		if ( $validate && $type ) {
 			$location = self::validate_location( $location, $type, $filter ? $cid : false );
 		}
 
 		$fields = array_intersect_key( $location->to_array(), ITE_Saved_Address::table()->get_column_defaults() );
+
+		if ( $customer ) {
+			$fields['customer'] = $customer->get_ID();
+		}
 
 		if ( $current && $location instanceof ITE_Saved_Address ) {
 
@@ -309,9 +319,7 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 
 		if ( $cid ) {
 			/** @noinspection PhpIncompatibleReturnTypeInspection */
-			return ITE_Saved_Address::query()->first_or_create( array_merge( $fields, array(
-				'customer' => $cid,
-			) ) );
+			return ITE_Saved_Address::query()->first_or_create( $fields );
 		} else { // We don't want to share addresses amongst guest customers.
 			return ITE_Saved_Address::create( $fields );
 		}
@@ -325,8 +333,9 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 	 * @return bool
 	 */
 	public function is_address_shared() {
-		$results = IT_Exchange_Transaction::query()
-		                                  ->and_where( $this->type, '=', $this->get_pk() )
+		$results = IT_Exchange_Transaction::query_with_no_global_scopes()
+		                                  ->where( 'billing', '=', $this->get_pk() )
+		                                  ->or_where( 'shipping', '=', $this->get_pk() )
 		                                  ->expression( 'count', 'ID', 'count' )->results();
 
 		return $results->get( 'count' ) > 1;
@@ -396,6 +405,20 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 		static::register_global_scope( 'trash', function ( FluentQuery $query ) use ( $table ) {
 			$query->and_where( $table->get_deleted_at_column(), true, null );
 		} );
+	}
+
+	// Retrieve an IT_Exchange_Customer instead of WP_User for 'customer'
+	protected function _access_customer( $value ) {
+		return it_exchange_get_customer( $value );
+	}
+
+	protected function _mutate_customer( $value ) {
+
+		if ( $value instanceof IT_Exchange_Customer ) {
+			$value = $value->wp_user;
+		}
+
+		return $value;
 	}
 
 	/**

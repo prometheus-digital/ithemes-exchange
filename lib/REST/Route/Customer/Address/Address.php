@@ -88,18 +88,42 @@ class Address extends Base implements Getable, Putable, Deletable {
 	 */
 	public function handle_put( Request $request ) {
 
-		$address = \ITE_Saved_Address::get( $request->get_param( 'address_id', 'URL' ) );
+		$address_id  = $request->get_param( 'address_id', 'URL' );
+		$customer_id = $request->get_param( 'customer_id', 'URL' );
+
+		$current = \ITE_Saved_Address::get( $address_id );
+		$address = \ITE_Saved_Address::get( $address_id );
 
 		foreach ( $request->get_json_params() as $key => $value ) {
 			$address[ $key ] = $value;
 		}
 
-		if ( ! $address->save() ) {
+		if ( $request['label'] !== null ) {
+			$address->label = $request['label'];
+		}
+
+		$saved = \ITE_Saved_Address::convert_to_saved( $address, $current, $address->customer );
+
+		if ( ! $saved ) {
 			return new \WP_Error(
 				'it_exchange_rest_unable_to_save',
 				__( 'Unable to update this address.', 'it-l10n-ithemes-exchange' ),
 				array( 'status' => \WP_Http::INTERNAL_SERVER_ERROR )
 			);
+		}
+
+		if ( $saved->get_pk() != $current->get_pk() ) {
+			$current->delete();
+			$response = new \WP_REST_Response( null, \WP_Http::SEE_OTHER );
+			$response->header(
+				'Location',
+				\iThemes\Exchange\REST\get_rest_url(
+					$this->get_manager()->get_first_route( 'iThemes\Exchange\REST\Route\Customer\Address\Address' ),
+					array( 'customer_id' => $customer_id, 'address_id' => $saved->get_pk() )
+				)
+			);
+
+			return $response;
 		}
 
 		return new \WP_REST_Response( $this->serializer->serialize( $address ) );

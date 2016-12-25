@@ -2,62 +2,68 @@
 
     <h4>{{ data.i18n.manageAddresses }}</h4>
 
-    <div class="it-exchange-customer-addressses-container"></div>
+    <div class="it-exchange-customer-addresses-container"></div>
 </script>
 
 <script type="text/template" id="tmpl-it-exchange-manage-addresses-address">
 
-    <div class="it-exchange-customer-addresses-address-action-container">
-        <button class="it-exchange-customer-addresses-address-action it-exchange-customer-addresses-address-action--edit dashicons-before">
-            <span class="screen-reader-text">{{ data.i18n.edit }}</span>
-        </button>
+    <div class="it-exchange-customer-addresses-view-address-container">
+        <div class="it-exchange-customer-addresses-address-action-container">
+            <button class="it-exchange-customer-addresses-address-action it-exchange-customer-addresses-address-action--edit dashicons-before">
+                <span class="screen-reader-text">{{ data.i18n.edit }}</span>
+            </button>
 
-        <button class="it-exchange-customer-addresses-address-action it-exchange-customer-addresses-address-action--save dashicons-before"
-                style="display: none;">
+            <!--<button class="it-exchange-customer-addresses-address-action it-exchange-customer-addresses-address-action&#45;&#45;primary dashicons-before">
+                <span class="screen-reader-text">{{ data.i18n.makePrimary }}</span>
+            </button>-->
+
+            <button class="it-exchange-customer-addresses-address-action it-exchange-customer-addresses-address-action--delete dashicons-before">
+                <span class="screen-reader-text">{{ data.i18n.delete }}</span>
+            </button>
+        </div>
+
+        <p>
+            <# if ( data.renderedLabel ) { #>
+                <strong>{{ data.renderedLabel }}</strong><br>
+                <# } #>
+                    {{{ data.formattedAddress }}}
+        </p>
+    </div>
+
+    <div class="it-exchange-customer-addresses-edit-address-container" style="display: none"></div>
+</script>
+
+<script type="text/template" id="tmpl-it-exchange-manage-addresses-edit-address">
+
+    <div class="it-exchange-customer-addresses-address-action-container">
+        <button class="it-exchange-customer-addresses-address-action it-exchange-customer-addresses-address-action--save dashicons-before">
             <span class="screen-reader-text">{{ data.i18n.save }}</span>
         </button>
 
-        <button class="it-exchange-customer-addresses-address-action it-exchange-customer-addresses-address-action--cancel dashicons-before"
-                style="display: none;">
+        <button class="it-exchange-customer-addresses-address-action it-exchange-customer-addresses-address-action--cancel dashicons-before">
             <span class="screen-reader-text">{{ data.i18n.cancel }}</span>
-        </button>
-
-        <!--<button class="it-exchange-customer-addresses-address-action it-exchange-customer-addresses-address-action&#45;&#45;primary dashicons-before">
-            <span class="screen-reader-text">{{ data.i18n.makePrimary }}</span>
-        </button>-->
-
-        <button class="it-exchange-customer-addresses-address-action it-exchange-customer-addresses-address-action--delete dashicons-before">
-            <span class="screen-reader-text">{{ data.i18n.delete }}</span>
         </button>
     </div>
 
-    <p>
-        <# if ( data.i18n.addressLabel ) { #>
-            <strong>{{ data.i18n.addressLabel }}</strong><br>
-        <# } #>
-        {{{ data.formattedAddress }}}
-    </p>
-
-    <div class="it-exchange-customer-addresses-edit-address-container" style="display: none">
-
+    <div class="it-exchange-customer-addresses-edit-address">
         <label class="it-exchange-address-container--first-name">
             First Name
-            <input type="text" value="{{ data['first-name'] }}">
+            <input type="text" value="{{ data['first-name'] || '' }}">
         </label>
 
         <label class="it-exchange-address-container--last-name">
             Last Name
-            <input type="text" value="{{ data['last-name'] }}">
+            <input type="text" value="{{ data['last-name'] || '' }}">
         </label>
 
         <label class="it-exchange-address-container--address1">
             Address 1
-            <input type="text" value="{{ data.address1 }}">
+            <input type="text" value="{{ data.address1 || '' }}">
         </label>
 
         <label class="it-exchange-address-container--address2">
             Address 2
-            <input type="text" value="{{ data.address2 }}">
+            <input type="text" value="{{ data.address2 || '' }}">
         </label>
 
         <label class="it-exchange-address-container--country">
@@ -67,7 +73,7 @@
 
         <label class="it-exchange-address-container--city">
             City
-            <input type="text" value="{{ data.city }}">
+            <input type="text" value="{{ data.city || '' }}">
         </label>
 
         <label class="it-exchange-address-container--state">
@@ -77,7 +83,12 @@
 
         <label class="it-exchange-address-container--zip">
             Zip
-            <input type="text" value="{{ data.zip }}">
+            <input type="text" value="{{ data.zip || '' }}">
+        </label>
+
+        <label class="it-exchange-address-container--label">
+            Label
+            <input type="text" value="{{ data.label || '' }}">
         </label>
     </div>
 </script>
