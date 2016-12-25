@@ -316,6 +316,38 @@ button.it-exchange-customer-addresses-address-action.it-exchange-customer-addres
     opacity: 1;
 }
 
+.it-exchange-add-customer-address {
+    display: inline-block;
+    padding: 10px;
+    margin: 10px 10px 0 0;
+    width: 300px;
+    position: relative;
+    min-height: 130px;
+}
+
+.it-exchange-customer-addresses-address-action--create {
+    width: 100%;
+    position: absolute;
+    top: -50%;
+    bottom: -50%;
+}
+
+.it-exchange-customer-addresses-address-action--create::before {
+    content: "\f543";
+    width: 40px;
+    height: 40px;
+    font-size: 40px;
+    opacity: 0.5;
+}
+
+.it-exchange-customer-addresses-address-action--create:hover::before {
+    opacity: 1;
+}
+
+.it-exchange-customer-addresses-edit-address {
+    margin-top: -15px;
+}
+
 /** ----------------------------------------:[ purchases ]:--- */
 #it-exchange-purchases .it-exchange-purchase,
 #it-exchange-purchases .it-exchange-purchase .it-exchange-purchase-top,

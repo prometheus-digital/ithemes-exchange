@@ -2151,6 +2151,7 @@ function it_exchange_enqueue_manage_tokens_js() {
 			'cancel'          => __( 'Cancel', 'it-l10n-ithemes-exchange' ),
 			'delete'          => __( 'Delete Address', 'it-l10n-ithemes-exchange' ),
 			'makePrimary'     => __( 'Make Address Primary', 'it-l10n-ithemes-exchange' ),
+			'addNew'          => __( 'Add New', 'it-l10n-ithemes-exchange' ),
 		)
 	) );
 

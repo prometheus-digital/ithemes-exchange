@@ -68,7 +68,7 @@ class Addresses extends Base implements Getable, Postable {
 
 		$customer_id = $request->get_param( 'customer_id', 'URL' );
 
-		$data    = array_merge( $request->get_body_params(), array( 'customer' => $customer_id ) );
+		$data    = array_merge( $request->get_json_params(), array( 'customer' => $customer_id ) );
 		$address = \ITE_Saved_Address::query()->and_where( $data )->take( 1 )->first();
 
 		if ( $address ) {

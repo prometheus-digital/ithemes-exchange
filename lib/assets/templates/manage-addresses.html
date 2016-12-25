@@ -78,7 +78,7 @@
 
         <label class="it-exchange-address-container--state">
             State
-            <select></select>
+            <input type="text" value="{{ data.state || '' }}">
         </label>
 
         <label class="it-exchange-address-container--zip">
@@ -91,4 +91,12 @@
             <input type="text" value="{{ data.label || '' }}">
         </label>
     </div>
+</script>
+
+<script type="text/template" id="tmpl-it-exchange-manage-addresses-create-address">
+    <button class="it-exchange-customer-addresses-address-action it-exchange-customer-addresses-address-action--create dashicons-before">
+        <span class="screen-reader-text">{{ data.i18n.addNew }}</span>
+    </button>
+
+    <div class="it-exchange-customer-addresses-create-address-form-container" style="display: none"></div>
 </script>
