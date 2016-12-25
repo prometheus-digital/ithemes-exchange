@@ -143,6 +143,10 @@ a.it-exchange-button {
     width: 100%;
 }
 
+.it-exchange-customer-info-fields input {
+    width: 100%;
+}
+
 .it-exchange-customer-info-fields::after {
     content: "";
     display: table;
@@ -246,8 +250,8 @@ a.it-exchange-button {
     margin-top: -15px;
 }
 
-.it-exchange-customer-addresses-edit-address-container input,
-.it-exchange-customer-addresses-edit-address-container select {
+.it-exchange-customer-addresses-edit-address input,
+.it-exchange-customer-addresses-edit-address select {
     width: 100%;
 }
 
