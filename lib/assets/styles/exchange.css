@@ -222,10 +222,12 @@ a.it-exchange-button {
 
 .it-exchange-customer-addresses-container {
     width: 100%;
+    max-width: 37em;
     padding: 10px 0 25px 0;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .it-exchange-customer-addresses-container::after {
@@ -238,8 +240,32 @@ a.it-exchange-button {
     border: 1px #ddd solid;
     display: inline-block;
     padding: 10px;
-    margin: 10px 10px 0 0;
-    width: 300px;
+    margin-top: 1em;
+    width: 18em;
+    position: relative;
+}
+
+.it-exchange-add-customer-address {
+    display: inline-block;
+    padding: 10px;
+    margin-top: 1em;
+    width: 18em;
+    position: relative;
+    min-height: 130px;
+}
+
+.it-exchange-customer-address.editing,
+.it-exchange-add-customer-address.editing {
+    width: 37em;
+}
+
+.it-exchange-customer-address.editing .it-exchange-customer-addresses-edit-address label,
+.it-exchange-add-customer-address.editing .it-exchange-customer-addresses-edit-address label {
+    width: 17.5em;
+}
+
+.it-exchange-customer-addresses-edit-address .it-exchange-address-container--address1 {
+    width: 36em;
 }
 
 .it-exchange-customer-address p {
@@ -247,7 +273,7 @@ a.it-exchange-button {
 }
 
 .it-exchange-customer-addresses-edit-address-container {
-    margin-top: -15px;
+
 }
 
 .it-exchange-customer-addresses-edit-address input,
@@ -280,8 +306,9 @@ button.it-exchange-customer-addresses-address-action:active {
 }
 
 .it-exchange-customer-addresses-address-action-container {
-    display: inline-block;
-    float: right;
+    top: 5px;
+    right: 8px;
+    position: absolute;
 }
 
 button.it-exchange-customer-addresses-address-action:hover::before {
@@ -320,15 +347,6 @@ button.it-exchange-customer-addresses-address-action.it-exchange-customer-addres
     opacity: 1;
 }
 
-.it-exchange-add-customer-address {
-    display: inline-block;
-    padding: 10px;
-    margin: 10px 10px 0 0;
-    width: 300px;
-    position: relative;
-    min-height: 130px;
-}
-
 .it-exchange-customer-addresses-address-action--create {
     width: 100%;
     position: absolute;
@@ -353,7 +371,12 @@ button.it-exchange-customer-addresses-address-action.it-exchange-customer-addres
 }
 
 .it-exchange-customer-addresses-edit-address {
-    margin-top: -15px;
+    margin-top: -20px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 /** ----------------------------------------:[ purchases ]:--- */
