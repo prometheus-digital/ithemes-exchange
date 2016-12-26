@@ -256,7 +256,8 @@ a.it-exchange-button {
 
 .it-exchange-customer-address.editing,
 .it-exchange-add-customer-address.editing {
-    width: 37em;
+    max-width: 37em;
+    width: 100%;
     padding: 5px;
 }
 
