@@ -257,14 +257,19 @@ a.it-exchange-button {
 .it-exchange-customer-address.editing,
 .it-exchange-add-customer-address.editing {
     width: 37em;
+    padding: 5px;
 }
 
 .it-exchange-customer-address.editing .it-exchange-customer-addresses-edit-address label,
 .it-exchange-add-customer-address.editing .it-exchange-customer-addresses-edit-address label {
     width: 17.5em;
+    margin-top: 0;
+    flex-grow: 1;
+    border: 5px solid transparent;
 }
 
-.it-exchange-customer-addresses-edit-address .it-exchange-address-container--address1 {
+.it-exchange-customer-address.editing .it-exchange-customer-addresses-edit-address label.it-exchange-address-container--address1,
+.it-exchange-add-customer-address.editing .it-exchange-customer-addresses-edit-address label.it-exchange-address-container--address1 {
     width: 36em;
 }
 
@@ -371,7 +376,6 @@ button.it-exchange-customer-addresses-address-action.it-exchange-customer-addres
 }
 
 .it-exchange-customer-addresses-edit-address {
-    margin-top: -20px;
     width: 100%;
     display: flex;
     flex-direction: row;
