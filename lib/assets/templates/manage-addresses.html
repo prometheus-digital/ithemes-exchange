@@ -47,47 +47,47 @@
 
     <div class="it-exchange-customer-addresses-edit-address">
         <label class="it-exchange-address-container--first-name">
-            First Name
+            {{ data.i18n.firstName }}
             <input type="text" value="{{ data['first-name'] || '' }}">
         </label>
 
         <label class="it-exchange-address-container--last-name">
-            Last Name
+            {{ data.i18n.lastName }}
             <input type="text" value="{{ data['last-name'] || '' }}">
         </label>
 
         <label class="it-exchange-address-container--address1">
-            Address 1
+            {{ data.i18n.address1 }}
             <input type="text" value="{{ data.address1 || '' }}">
         </label>
 
         <label class="it-exchange-address-container--address2">
-            Address 2
+            {{ data.i18n.address2 }}
             <input type="text" value="{{ data.address2 || '' }}">
         </label>
 
         <label class="it-exchange-address-container--country">
-            Country
+            {{ data.i18n.country }}
             <select></select>
         </label>
 
         <label class="it-exchange-address-container--city">
-            City
+            {{ data.i18n.city }}
             <input type="text" value="{{ data.city || '' }}">
         </label>
 
         <label class="it-exchange-address-container--state">
-            State
+            {{ data.i18n.state }}
             <input type="text" value="{{ data.state || '' }}">
         </label>
 
         <label class="it-exchange-address-container--zip">
-            Zip
+            {{ data.i18n.zip }}
             <input type="text" value="{{ data.zip || '' }}">
         </label>
 
         <label class="it-exchange-address-container--label">
-            Label
+            {{ data.i18n.label }}
             <input type="text" value="{{ data.label || '' }}">
         </label>
     </div>

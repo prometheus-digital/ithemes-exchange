@@ -2123,13 +2123,11 @@ function it_exchange_enqueue_manage_tokens_js() {
 
 	$filter = new \iThemes\Exchange\REST\Helpers\ContextFilterer();
 
-	$address_serializer = new \iThemes\Exchange\REST\Route\Customer\Address\Serializer();
-	$address_schema     = $address_serializer->get_schema();
+	$address_serializer  = new \iThemes\Exchange\REST\Route\Customer\Address\Serializer();
+	$customer_serializer = new \iThemes\Exchange\REST\Route\Customer\Serializer();
 
 	$token_serializer = new \iThemes\Exchange\REST\Route\Customer\Token\Serializer();
 	$token_schema     = $token_serializer->get_schema();
-
-	$customer_serializer = new \iThemes\Exchange\REST\Route\Customer\Serializer();
 
 	$tokens = array();
 
@@ -2137,12 +2135,16 @@ function it_exchange_enqueue_manage_tokens_js() {
 		$tokens[] = $filter->filter( $token_serializer->serialize( $token ), 'edit', $token_schema );
 	}
 
+	$settings = it_exchange_get_option( 'settings_general' );
+	$country  = $settings['company-base-country'];
+
 	wp_localize_script( 'it-exchange-profile', 'ITExchangeProfileConfig', array(
-		'tokens'    => $tokens,
-		'customer'  => $customer_serializer->serialize( $customer, 'edit' ),
-		'billing'   => ( $b = $customer->get_billing_address( true ) ) ? $address_serializer->serialize( $b ) : null,
-		'shipping'  => ( $s = $customer->get_shipping_address( true ) ) ? $address_serializer->serialize( $s ) : null,
-		'i18n'      => array(
+		'tokens'      => $tokens,
+		'customer'    => $customer_serializer->serialize( $customer, 'edit' ),
+		'billing'     => ( $b = $customer->get_billing_address( true ) ) ? $address_serializer->serialize( $b ) : null,
+		'shipping'    => ( $s = $customer->get_shipping_address( true ) ) ? $address_serializer->serialize( $s ) : null,
+		'baseCountry' => $country,
+		'i18n'        => array(
 			'manageAddresses' => __( 'Manage Addresses', 'it-l10n-ithemes-exchange' ),
 			'billingLabel'    => __( 'Billing', 'it-l10n-ithemes-exchange' ),
 			'shippingLabel'   => __( 'Shipping', 'it-l10n-ithemes-exchange' ),
@@ -2152,6 +2154,15 @@ function it_exchange_enqueue_manage_tokens_js() {
 			'delete'          => __( 'Delete Address', 'it-l10n-ithemes-exchange' ),
 			'makePrimary'     => __( 'Make Address Primary', 'it-l10n-ithemes-exchange' ),
 			'addNew'          => __( 'Add New', 'it-l10n-ithemes-exchange' ),
+			'firstName'       => __( 'First Name', 'it-l10n-ithemes-exchange' ),
+			'lastName'        => __( 'Last Name', 'it-l10n-ithemes-exchange' ),
+			'address1'        => __( 'Address 1', 'it-l10n-ithemes-exchange' ),
+			'address2'        => __( 'Address 2', 'it-l10n-ithemes-exchange' ),
+			'country'         => __( 'Country', 'it-l10n-ithemes-exchange' ),
+			'city'            => __( 'City', 'it-l10n-ithemes-exchange' ),
+			'zip'             => __( 'Zip', 'it-l10n-ithemes-exchange' ),
+			'state'           => __( 'State', 'it-l10n-ithemes-exchange' ),
+			'label'           => __( 'Label', 'it-l10n-ithemes-exchange' ),
 		)
 	) );
 
