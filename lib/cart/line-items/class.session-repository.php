@@ -256,7 +256,20 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 			$address = ITUtility::merge_defaults( $post_data, $address );
 		}
 
+		$saved = empty( $address['id'] ) ? null : ITE_Saved_Address::get( $address['id'] );
+		unset( $address['id'] );
+
 		$filtered = apply_filters( 'it_exchange_get_cart_shipping_address', $address );
+
+		if ( $saved ) {
+			$filtered = new ITE_In_Memory_Address( $filtered );
+
+			if ( $filtered->equals( $saved ) ) {
+				return $saved;
+			} else {
+				return $filtered;
+			}
+		}
 
 		return new ITE_In_Memory_Address( is_array( $filtered ) ? $filtered : array() );
 	}
@@ -285,7 +298,20 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 			$address = ITUtility::merge_defaults( $post_data, $address );
 		}
 
+		$saved = empty( $address['id'] ) ? null : ITE_Saved_Address::get( $address['id'] );
+		unset( $address['id'] );
+
 		$filtered = apply_filters( 'it_exchange_get_cart_billing_address', $address );
+
+		if ( $saved ) {
+			$filtered = new ITE_In_Memory_Address( $filtered );
+
+			if ( $filtered->equals( $saved ) ) {
+				return $saved;
+			} else {
+				return $filtered;
+			}
+		}
 
 		return new ITE_In_Memory_Address( is_array( $filtered ) ? $filtered : array() );
 	}
@@ -326,8 +352,12 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 		}
 
 		// See if the customer has a billing address saved. If so, overwrite defaults with saved billing address
-		if ( $customer && ( $address = $customer->get_billing_address() ) ) {
-			return ITUtility::merge_defaults( $address->to_array(), $defaults );
+		if ( $customer && empty( $defaults['address1'] ) && ( $address = $customer->get_billing_address() ) ) {
+			return array_merge(
+				$defaults,
+				$address->to_array(),
+				$address instanceof ITE_Saved_Address ? array( 'id' => $address->get_pk() ) : array()
+			);
 		}
 
 		return $defaults;
@@ -370,7 +400,11 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 
 		// See if the customer has a billing address saved. If so, overwrite defaults with saved billing address
 		if ( $customer && ( $address = $customer->get_shipping_address() ) ) {
-			return ITUtility::merge_defaults( $address->to_array(), $defaults );
+			return array_merge(
+				$defaults,
+				$address->to_array(),
+				$address instanceof ITE_Saved_Address ? array( 'id' => $address->get_pk() ) : array()
+			);
 		}
 
 		return $defaults;
@@ -381,11 +415,13 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 	 */
 	public function set_billing_address( ITE_Location $location = null ) {
 
-		if ( $location === null ) {
-			$this->session->update_session_data( 'billing-address', array() );
-		} else {
-			$this->session->update_session_data( 'billing-address', $location->to_array() );
+		$data = $location ? $location->to_array() : array();
+
+		if ( $location instanceof ITE_Saved_Address ) {
+			$data['ID'] = $location->get_pk();
 		}
+
+		$this->session->update_session_data( 'billing-address', $data );
 
 		return true;
 	}
@@ -395,11 +431,13 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 	 */
 	public function set_shipping_address( ITE_Location $location = null ) {
 
-		if ( $location === null ) {
-			$this->session->update_session_data( 'shipping-address', array() );
-		} else {
-			$this->session->update_session_data( 'shipping-address', $location->to_array() );
+		$data = $location ? $location->to_array() : array();
+
+		if ( $location instanceof ITE_Saved_Address ) {
+			$data['ID'] = $location->get_pk();
 		}
+
+		$this->session->update_session_data( 'shipping-address', $data );
 
 		return true;
 	}

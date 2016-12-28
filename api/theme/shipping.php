@@ -32,19 +32,22 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 	 * @since 1.4.0
 	*/
 	public $_tag_map = array(
-		'firstname'   => 'first_name',
-		'lastname'    => 'last_name',
-		'companyname' => 'company_name',
-		'address1'    => 'address1',
-		'address2'    => 'address2',
-		'city'        => 'city',
-		'state'       => 'state',
-		'zip'         => 'zip',
-		'country'     => 'country',
-		'email'       => 'email',
-		'phone'       => 'phone',
-		'submit'      => 'submit',
-		'cancel'      => 'cancel',
+		'firstname'     => 'first_name',
+		'lastname'      => 'last_name',
+		'companyname'   => 'company_name',
+		'address1'      => 'address1',
+		'address2'      => 'address2',
+		'city'          => 'city',
+		'state'         => 'state',
+		'zip'           => 'zip',
+		'country'       => 'country',
+		'email'         => 'email',
+		'phone'         => 'phone',
+		'submit'        => 'submit',
+		'cancel'        => 'cancel',
+		'radioexisting' => 'radio_existing',
+		'radionew'      => 'radio_new',
+		'saved'         => 'saved_address',
 	);
 
 	/**
@@ -540,5 +543,63 @@ class IT_Theme_API_Shipping implements IT_Theme_API {
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Existing radio input.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param array $options
+	 *
+	 * @return string
+	 */
+	public function radio_existing( $options = array() ) {
+
+		$address = it_exchange_get_current_cart()->get_shipping_address();
+		$current = $address instanceof ITE_Saved_Address ? $address->get_pk() : 0;
+
+		$options = ITUtility::merge_defaults( $options, array(
+			'current' => $current,
+			'name' => 'saved_address'
+		) );
+
+		return it_exchange( 'address', 'get-radio-input', $options );
+	}
+
+	/**
+	 * New Radio input.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param array $options
+	 *
+	 * @return string
+	 */
+	public function radio_new( $options = array() ) {
+
+		$options = ITUtility::merge_defaults( $options, array(
+			'label' => __( 'New Address', 'it-l10n-ithemes-exchange' ),
+			'name'  => 'saved_address',
+		) );
+
+		$address = it_exchange_get_current_cart()->get_shipping_address();
+		$checked = checked( ! $address instanceof ITE_Saved_Address, true, false );
+
+		return "<label>" .
+		       "<input type='radio' class='it-exchange-new-address--shipping' name='{$options['name']}' value='0'{$checked}>" .
+		       $options['label'] .
+		       "</label>";
+	}
+
+	/**
+	 * Is the shipping address a saved address.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return bool
+	 */
+	public function saved_address() {
+		return it_exchange_get_current_cart()->get_shipping_address() instanceof ITE_Saved_Address;
 	}
 }

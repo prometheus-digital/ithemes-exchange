@@ -414,6 +414,39 @@ class IT_Exchange_Customer implements ITE_Object {
 	}
 
 	/**
+	 * Get a customer's addresses.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param bool $include_primary
+	 *
+	 * @return ITE_Saved_Address[]
+	 */
+	public function get_addresses( $include_primary = true ) {
+
+		$addresses = ITE_Saved_Address::query()->and_where( 'customer', '=', $this->get_ID() )->results()->toArray();
+
+		if ( $include_primary ) {
+			return $addresses;
+		}
+
+		$billing  = (int) $this->get_customer_meta( 'primary_billing' );
+		$shipping = (int) $this->get_customer_meta( 'primary_shipping' );
+
+		$return = $addresses;
+
+		foreach ( $addresses as $i => $address ) {
+			if ( $address->get_pk() === $billing ) {
+				unset( $return[$i] );
+			} elseif ( $address->get_pk() === $shipping ) {
+				unset( $return[$i] );
+			}
+		}
+
+		return $return;
+	}
+
+	/**
 	 * Gets a customer meta property.
 	 *
 	 * If the custom value is already set, it uses that.

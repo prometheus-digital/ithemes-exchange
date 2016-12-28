@@ -19,6 +19,7 @@
 	<?php it_exchange_get_template_part( 'messages' ); ?>
 	<h3><?php _e( 'Shipping Address', 'it-l10n-ithemes-exchange' ); ?></h3>
 	<form class="it-exchange-sw-shipping-address">
+	<?php it_exchange_get_template_part( 'super-widget-shipping-address/loops/addresses' ); ?>
 	<?php it_exchange_get_template_part( 'super-widget-shipping-address/loops/fields' ); ?>
 	<?php it_exchange_get_template_part( 'super-widget-shipping-address/loops/actions' ); ?>
 	</form>

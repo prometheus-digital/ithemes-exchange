@@ -404,6 +404,10 @@ class IT_Exchange_Shopping_Cart {
 			return false;
 		}
 
+		if ( ! empty( $_REQUEST['saved_address'] ) && $location = ITE_Saved_Address::get( $_REQUEST['saved_address'] ) ) {
+			return $this->update_shipping( $location );
+		}
+
 		// Validate required fields
 		$required_fields = apply_filters( 'it_exchange_required_shipping_address_fields', array(
 			'first-name',
@@ -449,6 +453,21 @@ class IT_Exchange_Shopping_Cart {
 
 		$location = new ITE_In_Memory_Address( $shipping );
 
+
+		return $this->update_shipping( $location );
+	}
+
+	/**
+	 * Update the shipping address.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param ITE_Location $location
+	 *
+	 * @return bool
+	 */
+	protected function update_shipping( ITE_Location $location ) {
+
 		if ( it_exchange_get_current_cart()->set_shipping_address( $location ) ) {
 			it_exchange_add_message( 'notice', __( 'Shipping Address Saved', 'it-l10n-ithemes-exchange' ) );
 
@@ -475,6 +494,10 @@ class IT_Exchange_Shopping_Cart {
 			$GLOBALS['it_exchange']['billing-address-error'] = true;
 
 			return false;
+		}
+
+		if ( ! empty( $_REQUEST['saved_address'] ) && $location = ITE_Saved_Address::get( $_REQUEST['saved_address'] ) ) {
+			return $this->update_billing( $location );
 		}
 
 		// Validate required fields
@@ -528,6 +551,20 @@ class IT_Exchange_Shopping_Cart {
 
 		$location = new ITE_In_Memory_Address( $billing );
 
+		return $this->update_billing( $location );
+	}
+
+	/**
+	 * Update the billing address.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param ITE_Location $location
+	 *
+	 * @return bool
+	 */
+	protected function update_billing( ITE_Location $location ) {
+
 		if ( it_exchange_get_current_cart()->set_billing_address( $location ) ) {
 			it_exchange_add_message( 'notice', __( 'Billing Address Saved', 'it-l10n-ithemes-exchange' ) );
 
@@ -536,9 +573,10 @@ class IT_Exchange_Shopping_Cart {
 				it_exchange_get_current_cart()->set_shipping_address( $location );
 			}
 
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 
 	/**

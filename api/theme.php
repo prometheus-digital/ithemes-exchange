@@ -27,9 +27,10 @@ include( $this->_plugin_path . '/api/theme/transaction-method.php' );
 include( $this->_plugin_path . '/api/theme/transactions.php' );
 include( $this->_plugin_path . '/api/theme/transaction.php' );
 include( $this->_plugin_path . '/api/theme/transaction-activity.php' );
+include( $this->_plugin_path . '/api/theme/address.php' );
+include( $this->_plugin_path . '/api/theme/billing.php' );
 include( $this->_plugin_path . '/api/theme/shipping.php' );
 include( $this->_plugin_path . '/api/theme/shipping-method.php' );
-include( $this->_plugin_path . '/api/theme/billing.php' );
 include( $this->_plugin_path . '/api/theme/purchase-dialog.php' );
 include( $this->_plugin_path . '/api/theme/email.php' );
 
@@ -211,6 +212,36 @@ function it_exchange() {
 		return $result;
 
 	return true;
+}
+
+/**
+ * Setup a loop for use in the Theme API.
+ *
+ * @since 2.0.0
+ *
+ * @param string   $single Singular key form. Example 'product'.
+ * @param string   $plural Plural key form. Example 'products'.
+ * @param callable $items  Callback that returns the items to loop over.
+ *
+ * @return bool
+ */
+function it_theme_api_loop( $single, $plural, $items ) {
+	
+	if ( empty( $GLOBALS['it_exchange'][ $plural ] ) ) {
+		$GLOBALS['it_exchange'][ $plural ] = call_user_func( $items );
+		$GLOBALS['it_exchange'][ $single ] = reset( $GLOBALS['it_exchange'][ $plural ]  );
+		return true;
+	} elseif ( next( $GLOBALS['it_exchange'][ $plural ] ) ) {
+		$GLOBALS['it_exchange'][ $single ] = current( $GLOBALS['it_exchange'][ $plural ]  );
+
+		return true;
+	} else {
+		$GLOBALS['it_exchange'][ $plural ] = array();
+		end( $GLOBALS['it_exchange'][ $plural ] );
+		$GLOBALS['it_exchange'][ $single ] = null;
+
+		return false;
+	}
 }
 
 /**

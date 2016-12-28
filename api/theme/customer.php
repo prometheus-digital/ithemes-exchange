@@ -45,6 +45,7 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 		'sitename'        => 'sitename',
 		'accountlink'     => 'account_link',
 		'thankyoumessage' => 'thank_you_message',
+		'addresses'       => 'addresses',
 	);
 
 	/**
@@ -157,7 +158,7 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 		$field_id = 'nickname';
 		$field_name = $field_id;
 		$field_value = $this->_customer->wp_user->nickname;
-		
+
 		switch( $options['format'] ) {
 
 			case 'field-id':
@@ -657,5 +658,36 @@ class IT_Theme_API_Customer implements IT_Theme_API {
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Loop over a customer's addresses.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param array $options
+	 *
+	 * @return bool
+	 */
+	public function addresses( $options = array() ) {
+
+		if ( ! $this->_customer ) {
+			return false;
+		}
+
+		$defaults = array(
+			'include_primary' => true,
+		);
+		$options = ITUtility::merge_defaults( $options, $defaults );
+
+		if ( $options['has'] ) {
+			return (bool) $this->_customer->get_addresses( $options['include_primary'] );
+		}
+
+		$customer = $this->_customer;
+
+		return it_theme_api_loop( 'address', 'addresses', function() use ( $customer, $options ) {
+			return $customer->get_addresses( $options['include_primary'] );
+		} );
 	}
 }

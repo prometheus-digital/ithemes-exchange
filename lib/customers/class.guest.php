@@ -178,6 +178,28 @@ class IT_Exchange_Guest_Customer extends IT_Exchange_Customer {
 	/**
 	 * @inheritDoc
 	 */
+	public function get_addresses( $include_primary = true ) {
+
+		if ( ! $include_primary ) {
+			return array();
+		}
+
+		$addresses = array();
+
+		if ( $billing = $this->get_billing_address() ) {
+			$addresses[] = $billing;
+		}
+
+		if ( $shipping = $this->get_shipping_address() ) {
+			$addresses[] = $shipping;
+		}
+
+		return array();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function get_tokens( $gateway = '' ) {
 		return new \IronBound\DB\Collection( array(), false, new \IronBound\DB\Saver\ModelSaver( 'ITE_Payment_Token' ) );
 	}
