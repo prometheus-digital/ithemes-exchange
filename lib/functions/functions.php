@@ -253,6 +253,7 @@ function it_exchange_register_scripts() {
 		'restNonce'     => wp_create_nonce( 'wp_rest' ),
 		'restUrl'       => rest_url( 'it_exchange/v1/' ),
 		'currentUser'   => get_current_user_id(),
+		'baseCountry'   => $settings['company-base-country'],
 		'i18n' => array(
 			'unknownError' => __( 'An unknown error occurred.', 'it-l10n-ithemes-exchange' ),
 		)
@@ -291,6 +292,19 @@ function it_exchange_register_scripts() {
 				'makePrimary'     => __( 'Make primary payment method.', 'it-l10n-ithemes-exchange' ),
 				'labelLabel'      => __( 'Label', 'it-l10n-ithemes-exchange' ),
 				'labelExpiration' => __( 'Expiration', 'it-l10n-ithemes-exchange' ),
+			),
+			'address' => array(
+				'save'            => __( 'Save', 'it-l10n-ithemes-exchange' ),
+				'cancel'          => __( 'Cancel', 'it-l10n-ithemes-exchange' ),
+				'firstName'       => __( 'First Name', 'it-l10n-ithemes-exchange' ),
+				'lastName'        => __( 'Last Name', 'it-l10n-ithemes-exchange' ),
+				'address1'        => __( 'Address 1', 'it-l10n-ithemes-exchange' ),
+				'address2'        => __( 'Address 2', 'it-l10n-ithemes-exchange' ),
+				'country'         => __( 'Country', 'it-l10n-ithemes-exchange' ),
+				'city'            => __( 'City', 'it-l10n-ithemes-exchange' ),
+				'zip'             => __( 'Zip', 'it-l10n-ithemes-exchange' ),
+				'state'           => __( 'State', 'it-l10n-ithemes-exchange' ),
+				'label'           => __( 'Label', 'it-l10n-ithemes-exchange' ),
 			),
 		),
 		'imageRoot' => IT_Exchange::$url . '/lib/assets/styles/images/'
@@ -2119,7 +2133,8 @@ function it_exchange_enqueue_manage_tokens_js() {
 	);
 
 	it_exchange_add_inline_script( 'it-exchange-profile', include IT_Exchange::$dir . 'lib/assets/templates/manage-tokens.html' );
-	it_exchange_add_inline_script( 'it-exchange-profile', include IT_Exchange::$dir . 'lib/assets/templates/manage-addresses.html' );
+	it_exchange_add_inline_script( 'it-exchange-profile', include IT_Exchange::$dir . 'lib/assets/templates/address-form.html' );
+	it_exchange_add_inline_script( 'it-exchange-profile', include IT_Exchange::$dir . 'lib/assets/templates/customer-addresses.html' );
 
 	$filter = new \iThemes\Exchange\REST\Helpers\ContextFilterer();
 
@@ -2177,7 +2192,7 @@ add_action( 'wp_enqueue_scripts', 'it_exchange_enqueue_manage_tokens_js' );
  * @since 2.0.0
  */
 function it_exchange_print_manage_tokens_container() {
-	echo '<div class="it-exchange-manage-address-container"></div>';
+	echo '<div class="it-exchange-customer-addresses-container"></div>';
 	echo '<div class="it-exchange-manage-tokens-container"></div>';
 }
 

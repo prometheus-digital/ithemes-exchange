@@ -269,8 +269,8 @@ a.it-exchange-button {
     border: 5px solid transparent;
 }
 
-.it-exchange-customer-address.editing .it-exchange-customer-addresses-edit-address label.it-exchange-address-container--address1,
-.it-exchange-add-customer-address.editing .it-exchange-customer-addresses-edit-address label.it-exchange-address-container--address1 {
+.it-exchange-customer-address.editing .it-exchange-customer-addresses-edit-address label.it-exchange-address-form-field--address1,
+.it-exchange-add-customer-address.editing .it-exchange-customer-addresses-edit-address label.it-exchange-address-form-field--address1 {
     width: 36em;
 }
 
@@ -278,37 +278,9 @@ a.it-exchange-button {
     margin: 0;
 }
 
-.it-exchange-customer-addresses-edit-address-container {
-
-}
-
 .it-exchange-customer-addresses-edit-address input,
 .it-exchange-customer-addresses-edit-address select {
     width: 100%;
-}
-
-button.it-exchange-customer-addresses-address-action {
-    background: none;
-    border: 0;
-    color: inherit;
-    /* cursor: default; */
-    font: inherit;
-    line-height: normal;
-    overflow: visible;
-    padding: 0;
-    -webkit-appearance: button; /* for input */
-    -webkit-user-select: none; /* for button */
-    -moz-user-select: none;
-    -ms-user-select: none;
-}
-
-button.it-exchange-customer-addresses-address-action:hover,
-button.it-exchange-customer-addresses-address-action:active {
-    background: none;
-    background-color: transparent;
-    opacity: .5;
-    border: none;
-    padding: 0;
 }
 
 .it-exchange-customer-addresses-address-action-container {
@@ -317,9 +289,6 @@ button.it-exchange-customer-addresses-address-action:active {
     position: absolute;
 }
 
-button.it-exchange-customer-addresses-address-action:hover::before {
-    background: transparent;
-}
 
 .it-exchange-customer-addresses-address-action--edit::before {
     content: "\f464";
@@ -1982,30 +1951,6 @@ button.it-exchange-customer-addresses-address-action.it-exchange-customer-addres
     clear: both;
 }
 
-button.it-exchange-manage-tokens-token-action {
-    background: none;
-    border: 0;
-    color: inherit;
-    /* cursor: default; */
-    font: inherit;
-    line-height: normal;
-    overflow: visible;
-    padding: 0;
-    -webkit-appearance: button; /* for input */
-    -webkit-user-select: none; /* for button */
-    -moz-user-select: none;
-    -ms-user-select: none;
-}
-
-button.it-exchange-manage-tokens-token-action:hover,
-button.it-exchange-manage-tokens-token-action:active {
-    background: none;
-    background-color: transparent;
-    opacity: .5;
-    border: none;
-    padding: 0;
-}
-
 .it-exchange-manage-tokens-token-action--edit::before {
     content: "\f464";
 }
@@ -2112,6 +2057,50 @@ button.it-exchange-manage-tokens-token-action.it-exchange-manage-tokens-token-ac
     100% {
         opacity: .4;
     }
+}
+
+.it-exchange-dashicon-button {
+    background: none;
+    border: 0;
+    color: inherit;
+    /* cursor: default; */
+    overflow: visible;
+    padding: 0;
+    -webkit-appearance: button; /* for input */
+    -webkit-user-select: none; /* for button */
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.it-exchange-dashicon-button::before {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+    line-height: 1;
+    font-family: dashicons;
+    text-decoration: inherit;
+    font-weight: normal;
+    font-style: normal;
+    vertical-align: top;
+    text-align: center;
+    -webkit-transition: color .1s ease-in 0;
+    transition: color .1s ease-in 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.it-exchange-dashicon-button:hover,
+.it-exchange-dashicon-button:active {
+    background: none;
+    background-color: transparent;
+    opacity: .5;
+    border: none;
+    padding: 0;
+}
+
+.it-exchange-dashicon-button:hover::before {
+    background: transparent;
 }
 
 /** ----------------------------------------:[ Compat ]:--- */

@@ -1,0 +1,42 @@
+<script type="text/template" id="tmpl-it-exchange-customer-addresses">
+
+    <h4>{{ data.i18n.manageAddresses }}</h4>
+
+    <div class="it-exchange-customer-addresses-container"></div>
+</script>
+
+<script type="text/template" id="tmpl-it-exchange-customer-addresses-address">
+
+    <div class="it-exchange-customer-addresses-view-address-container">
+        <div class="it-exchange-customer-addresses-address-action-container">
+            <button class="it-exchange-dashicon-button it-exchange-customer-addresses-address-action--edit">
+                <span class="screen-reader-text">{{ data.i18n.edit }}</span>
+            </button>
+
+            <!--<button class="it-exchange-dashicon-button it-exchange-customer-addresses-address-action&#45;&#45;primary">
+                <span class="screen-reader-text">{{ data.i18n.makePrimary }}</span>
+            </button>-->
+
+            <button class="it-exchange-dashicon-button it-exchange-customer-addresses-address-action--delete">
+                <span class="screen-reader-text">{{ data.i18n.delete }}</span>
+            </button>
+        </div>
+
+        <p>
+            <# if ( data.renderedLabel ) { #>
+                <strong>{{ data.renderedLabel }}</strong><br>
+            <# } #>
+            {{{ data.formattedAddress }}}
+        </p>
+    </div>
+
+    <div class="it-exchange-customer-addresses-edit-address-container" style="display: none"></div>
+</script>
+
+<script type="text/template" id="tmpl-it-exchange-customer-addresses-create-address">
+    <button class="it-exchange-dashicon-button it-exchange-customer-addresses-address-action--create">
+        <span class="screen-reader-text">{{ data.i18n.addNew }}</span>
+    </button>
+
+    <div class="it-exchange-customer-addresses-create-address-form-container" style="display: none"></div>
+</script>
