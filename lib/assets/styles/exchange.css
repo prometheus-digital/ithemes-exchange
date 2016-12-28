@@ -718,6 +718,16 @@ button.it-exchange-customer-addresses-address-action.it-exchange-customer-addres
     border-top: none;
 }
 
+.it-exchange-existing-addresses-selector {
+    list-style: none;
+    margin-left: 0;
+}
+
+.it-exchange-existing-addresses-selector li {
+    list-style: none;
+    margin-left: 0;
+}
+
 /** ---:[ coupons ]:--- */
 #it-exchange-cart-coupons {
     border-top: 0;

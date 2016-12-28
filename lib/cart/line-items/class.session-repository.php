@@ -418,7 +418,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 		$data = $location ? $location->to_array() : array();
 
 		if ( $location instanceof ITE_Saved_Address ) {
-			$data['ID'] = $location->get_pk();
+			$data['id'] = $location->get_pk();
 		}
 
 		$this->session->update_session_data( 'billing-address', $data );
@@ -434,7 +434,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 		$data = $location ? $location->to_array() : array();
 
 		if ( $location instanceof ITE_Saved_Address ) {
-			$data['ID'] = $location->get_pk();
+			$data['id'] = $location->get_pk();
 		}
 
 		$this->session->update_session_data( 'shipping-address', $data );

@@ -31,7 +31,7 @@ $editing_shipping = ( ( ! empty( $_REQUEST['it-exchange-update-shipping-address'
 	</div>
 	<div class="<?php echo $editing_shipping ? '' : 'it-exchange-hidden '; ?>checkout-purchase-requirement-shipping-address-edit">
 		<?php
-		$loops = array( 'fields', 'actions' );
+		$loops = array( 'addresses', 'fields', 'actions' );
 		?>
 		<div class="it-exchange-shipping-address-form">
 			<?php
