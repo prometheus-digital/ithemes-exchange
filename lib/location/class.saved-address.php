@@ -338,7 +338,7 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 		                                  ->or_where( 'shipping', '=', $this->get_pk() )
 		                                  ->expression( 'count', 'ID', 'count' )->results();
 
-		return $results->get( 'count' ) > 1;
+		return $results->get( 'count' ) > 0;
 	}
 
 	/**

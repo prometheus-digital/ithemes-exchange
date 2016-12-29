@@ -347,7 +347,7 @@ class IT_Exchange_Customer implements ITE_Object {
 		}
 
 		if ( $force_saved ) {
-			return $address;
+			return $address ?: null;
 		}
 
 		$raw_address = $address ? $address->to_array() : array();
@@ -388,7 +388,7 @@ class IT_Exchange_Customer implements ITE_Object {
 
 		$this->$type = $address;
 
-		return $address;
+		return $address ?: null;
 	}
 
 	/**
