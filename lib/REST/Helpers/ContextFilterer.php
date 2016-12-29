@@ -80,6 +80,10 @@ class ContextFilterer {
 	protected function filter_object( $object, $object_schema, $context, $schema ) {
 		foreach ( $object_schema['properties'] as $attribute => $v_schema ) {
 
+			if ( ! isset( $object[ $attribute ] ) ) {
+				continue;
+			}
+
 			$v_schema = $this->get_complex_v_schema( $v_schema, $schema, $object );
 
 			if ( $v_schema['type'] === 'object' ) {
