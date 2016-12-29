@@ -1964,7 +1964,7 @@ button.it-exchange-customer-addresses-address-action--primary:hover {
 .it-exchange-manage-tokens-token-action-container {
     display: inline-block;
     position: absolute;
-    top: .5em;
+    top: .3em;
     right: 1em;
 }
 
@@ -2048,37 +2048,29 @@ button.it-exchange-manage-tokens-token-action.it-exchange-manage-tokens-token-ac
 
 @-webkit-keyframes it-exchange-breathing {
     0% {
-        opacity: .4;
-    }
-
-    25% {
         opacity: 1;
     }
 
-    60% {
-        opacity: .4;
+    50% {
+        opacity: .5;
     }
 
     100% {
-        opacity: .4;
+        opacity: 1;
     }
 }
 
 @keyframes it-exchange-breathing {
     0% {
-        opacity: .4;
-    }
-
-    25% {
         opacity: 1;
     }
 
-    60% {
-        opacity: .4;
+    50% {
+        opacity: .5;
     }
 
     100% {
-        opacity: .4;
+        opacity: 1;
     }
 }
 
