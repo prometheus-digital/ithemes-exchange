@@ -102,13 +102,31 @@ class Serializer {
 				),
 				'billing_address'   => array(
 					'description' => __( "The customer's primary billing address.", 'it-l10n-ithemes-exchange' ),
-					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
+					'oneOf'       => array(
+						array(
+							'type'        => 'integer',
+							'description' => __( 'The billing address ID.', 'it-l10n-ithemes-exchange' ),
+						),
+						array(
+							'$ref'        => \iThemes\Exchange\REST\url_for_schema( 'address' ),
+							'description' => __( 'An address object.', 'it-l10n-ithemes-exchange' ),
+						),
+					)
 				),
 				'shipping_address'  => array(
 					'description' => __( "The customer's primary shipping address.", 'it-l10n-ithemes-exchange' ),
-					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
+					'oneOf'       => array(
+						array(
+							'type'        => 'integer',
+							'description' => __( 'The shipping address ID.', 'it-l10n-ithemes-exchange' ),
+						),
+						array(
+							'$ref'        => \iThemes\Exchange\REST\url_for_schema( 'address' ),
+							'description' => __( 'An address object.', 'it-l10n-ithemes-exchange' ),
+						),
+					)
 				),
 				'total_spent'       => array(
 					'description' => __( 'The total amount the customer has spent in the store.', 'it-l10n-ithemes-exchange' ),

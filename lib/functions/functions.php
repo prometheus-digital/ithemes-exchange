@@ -124,6 +124,7 @@ function it_exchange_load_public_scripts( $current_view ) {
 	$settings = it_exchange_get_option( 'settings_general' );
 
 	wp_register_style( 'it-exchange-icon-fonts', IT_Exchange::$url . '/lib/assets/styles/exchange-fonts.css' );
+	wp_register_style( 'jquery.contextMenu', IT_Exchange::$url . '/lib/assets/styles/jquery.contextMenu.min.css', '2.4.1', true );
 
 	// Frontend Product JS
 	if ( is_singular( 'it_exchange_prod' ) || IT_Exchange_SW_Shortcode::has_shortcode() ) {
@@ -231,6 +232,7 @@ function it_exchange_register_scripts() {
 	wp_register_script( 'backbonedeep', IT_Exchange::$url . '/lib/admin/js/backbone.modeldeep.min.js', array( 'backbone' ), '2.0.1', true );
 	wp_register_script( 'backbone.paginator', IT_Exchange::$url . '/lib/admin/js/backbone.paginator.min.js', array( 'backbone' ), '2.0.5', true );
 	wp_register_script( 'ithemes-momentjs', IT_Exchange::$url . '/lib/admin/js/moment.min.js', array(), '2.11.0', true );
+	wp_register_script( 'jquery.contextMenu', IT_Exchange::$url . '/lib/assets/js/jquery.contextMenu.min.js', array( 'jquery-ui-position' ), '2.4.1', true );
 
 	// Select to Autocomplete
 	wp_register_script( 'jquery-select-to-autocomplete', IT_Exchange::$url . '/lib/assets/js/jquery.select-to-autocomplete.min.js',
@@ -2129,7 +2131,7 @@ function it_exchange_enqueue_manage_tokens_js() {
 	wp_enqueue_script(
 		'it-exchange-profile',
 		IT_Exchange::$url . '/lib/assets/js/profile.js',
-		array( 'it-exchange-rest', 'jquery.payment', 'jquery-select-to-autocomplete' )
+		array( 'it-exchange-rest', 'jquery.payment', 'jquery-select-to-autocomplete', 'jquery.contextMenu' )
 	);
 
 	it_exchange_add_inline_script( 'it-exchange-profile', include IT_Exchange::$dir . 'lib/assets/templates/manage-tokens.html' );
@@ -2182,6 +2184,7 @@ function it_exchange_enqueue_manage_tokens_js() {
 	) );
 
 	wp_enqueue_style( 'it-exchange-autocomplete-style' );
+	wp_enqueue_style( 'jquery.contextMenu' );
 }
 
 add_action( 'wp_enqueue_scripts', 'it_exchange_enqueue_manage_tokens_js' );

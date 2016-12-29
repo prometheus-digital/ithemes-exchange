@@ -276,6 +276,21 @@ a.it-exchange-button {
 
 .it-exchange-customer-address p {
     margin: 0;
+
+    /* Hack to give enough space for the action buttons */
+    direction: rtl;
+    text-align: left;
+    text-indent: 70px;
+
+    word-break: break-word;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+}
+
+.it-exchange-customer-address.it-exchange-customer-address--primary p {
+    text-indent: 50px;
 }
 
 .it-exchange-customer-addresses-edit-address input,
@@ -288,7 +303,6 @@ a.it-exchange-button {
     right: 8px;
     position: absolute;
 }
-
 
 .it-exchange-customer-addresses-address-action--edit::before {
     content: "\f464";
@@ -314,11 +328,15 @@ a.it-exchange-button {
     content: "\f155";
 }
 
-.it-exchange-customer-addresses-address--primary .it-exchange-customer-addresses-address-action--primary::before {
+.it-exchange-customer-address--primary .it-exchange-customer-addresses-address-action--primary::before {
     content: "\f155";
 }
 
-button.it-exchange-customer-addresses-address-action.it-exchange-customer-addresses-address-action--primary:hover {
+.it-exchange-customer-address--primary .it-exchange-dashicon-button[disabled].it-exchange-customer-addresses-address-action--primary {
+    opacity: 1;
+}
+
+button.it-exchange-customer-addresses-address-action--primary:hover {
     opacity: 1;
 }
 
@@ -1892,11 +1910,6 @@ button.it-exchange-customer-addresses-address-action.it-exchange-customer-addres
     margin-bottom: 0;
 }
 
-.it-exchange-manage-tokens-list li.saving {
-    -webkit-animation: it-exchange-breathing 3.5s ease-out infinite normal;
-    animation: it-exchange-breathing 3.5s ease-out infinite normal;
-}
-
 .it-exchange-manage-token-label-container {
     float: left;
 }
@@ -2069,10 +2082,11 @@ button.it-exchange-manage-tokens-token-action.it-exchange-manage-tokens-token-ac
     }
 }
 
-.it-exchange-dashicon-button {
+.it-exchange-dashicon-button,
+.it-exchange-dashicon-button[disabled] {
     background: none;
     border: 0;
-    color: inherit;
+    color: inherit !important;
     /* cursor: default; */
     overflow: visible;
     padding: 0;
@@ -2080,6 +2094,10 @@ button.it-exchange-manage-tokens-token-action.it-exchange-manage-tokens-token-ac
     -webkit-user-select: none; /* for button */
     -moz-user-select: none;
     -ms-user-select: none;
+}
+
+.it-exchange-dashicon-button[disabled] {
+    opacity: .3;
 }
 
 .it-exchange-dashicon-button::before {
@@ -2101,7 +2119,9 @@ button.it-exchange-manage-tokens-token-action.it-exchange-manage-tokens-token-ac
 }
 
 .it-exchange-dashicon-button:hover,
-.it-exchange-dashicon-button:active {
+.it-exchange-dashicon-button:active,
+.it-exchange-dashicon-button[disabled]:hover,
+.it-exchange-dashicon-button[disabled]:active {
     background: none;
     background-color: transparent;
     opacity: .5;
@@ -2109,8 +2129,23 @@ button.it-exchange-manage-tokens-token-action.it-exchange-manage-tokens-token-ac
     padding: 0;
 }
 
-.it-exchange-dashicon-button:hover::before {
+.it-exchange-dashicon-button:hover::before,
+.it-exchange-dashicon-button[disabled]:hover::before {
     background: transparent;
+}
+
+.it-exchange-view.saving {
+    -webkit-animation: it-exchange-breathing 3.5s ease-out infinite normal;
+    animation: it-exchange-breathing 3.5s ease-out infinite normal;
+}
+
+.it-exchange-view.deleting {
+    opacity: .2;
+    -webkit-transition: opacity 1s;
+    -moz-transition: opacity 1s;
+    -ms-transition: opacity 1s;
+    -o-transition: opacity 1s;
+    transition: opacity 1s;
 }
 
 /** ----------------------------------------:[ Compat ]:--- */

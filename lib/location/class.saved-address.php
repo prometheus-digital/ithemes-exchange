@@ -23,6 +23,8 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 	/** @var bool */
 	private $force_deleting = false;
 
+	protected $_guarded = array( 'deleted_at', 'ID' );
+
 	/**
 	 * @inheritDoc
 	 */
@@ -272,6 +274,12 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 
 		if ( $customer ) {
 			$fields['customer'] = $customer->get_ID();
+		}
+
+		if ( $location instanceof ITE_Saved_Address ) {
+			$fields['label'] = $location->label;
+		} elseif ( $current instanceof ITE_Saved_Address ) {
+			$fields['label'] = $current->label;
 		}
 
 		if ( $current && $location instanceof ITE_Saved_Address ) {

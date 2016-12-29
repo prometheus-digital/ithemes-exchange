@@ -18,7 +18,7 @@ use iThemes\Exchange\REST\Route;
  *
  * @package iThemes\Exchange\REST\Customer
  */
-class Customer extends Route\Base implements Getable {
+class Customer extends Route\Base implements Getable, Putable {
 
 	/** @var array */
 	private $schema = array();
@@ -140,6 +140,95 @@ class Customer extends Route\Base implements Getable {
 		}
 
 		return true;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function handle_put( Request $request ) {
+
+		$customer = it_exchange_get_customer( $request->get_param( 'customer_id', 'URL' ) );
+
+		if ( $request['billing_address'] ) {
+			$e = $this->handle_address_update( $customer, $request['billing_address'], 'billing' );
+
+			if ( is_wp_error( $e ) ) {
+				return $e;
+			}
+		}
+
+		if ( $request['shipping_address'] ) {
+			$e = $this->handle_address_update( $customer, $request['shipping_address'], 'shipping' );
+
+			if ( is_wp_error( $e ) ) {
+				return $e;
+			}
+		}
+
+		$response = new \WP_REST_Response( $this->serializer->serialize( $customer, 'edit' ), \WP_Http::OK );
+		$this->linkify( $response, $customer );
+
+		return $response;
+	}
+
+	/**
+	 * Handle an address update.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param \IT_Exchange_Customer $customer
+	 * @param array|int             $input
+	 * @param string                $type
+	 *
+	 * @return null|\WP_Error
+	 */
+	protected function handle_address_update( \IT_Exchange_Customer $customer, $input, $type ) {
+
+		if ( is_int( $input ) ) {
+
+			if ( ( $current = call_user_func( array( $customer, "get_{$type}_address" ), true ) ) && $current->get_pk() == $input ) {
+				return null;
+			}
+
+			$address = \ITE_Saved_Address::get( $input );
+
+			if ( ! $address || ! $address->customer || $address->customer->get_ID() != $customer->get_ID() ) {
+				return new \WP_Error(
+					'it_exchange_rest_invalid_address',
+					__( 'Invalid address ID.', 'it-l10n-ithemes-exchange' ),
+					array( 'status' => \WP_Http::BAD_REQUEST )
+				);
+			}
+		} elseif ( is_array( $input ) ) {
+			$address = new \ITE_In_Memory_Address( $input );
+		} else {
+			return null;
+		}
+
+		try {
+			if ( call_user_func( array( $customer, "set_{$type}_address" ), $address ) ) {
+				return null;
+			}
+		} catch ( \InvalidArgumentException $e ) {
+			return new \WP_Error(
+				'it_exchange_rest_address_failed_validation',
+				__( 'Address failed to verification.', 'it-l10n-ithemes-exchange' ),
+				array( 'status' => \WP_Http::BAD_REQUEST )
+			);
+		}
+
+		return new \WP_Error(
+			'it_exchange_rest_unable_to_create_address',
+			__( 'Unable to create an address from the data provided.', 'it-l10n-ithemes-exchange' ),
+			array( 'status' => \WP_Http::INTERNAL_SERVER_ERROR )
+		);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function user_can_put( Request $request, \IT_Exchange_Customer $user = null ) {
+		return true; // Cascades
 	}
 
 	/**
