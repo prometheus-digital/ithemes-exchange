@@ -145,7 +145,9 @@ class ITE_Gateways {
 				/** @var WP_HTTP_Response $response */
 				$response = $gateway->get_handler_for( $request )->handle( $request );
 
-				status_header( $response->get_status() );
+				if ( $response ) {
+					status_header( $response->get_status() );
+				}
 			} );
 		}
 
