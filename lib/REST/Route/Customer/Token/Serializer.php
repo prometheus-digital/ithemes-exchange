@@ -146,7 +146,7 @@ class Serializer {
 						'slug'  => array(
 							'description' => __( 'The token type slug.', 'it-l10n-ithemes-exchange' ),
 							'type'        => 'string',
-							'context'     => array( 'edit' ),
+							'context'     => array( 'view', 'edit' ),
 						),
 						'label' => array(
 							'description' => __( 'The token type label.', 'it-l10n-ithemes-exchange' ),

@@ -33,9 +33,13 @@ class ITE_Tax_Manager implements ITE_Cart_Aware {
 		$this->use_shipping = (bool) $cart->get_shipping_address();
 
 		if ( $this->use_shipping ) {
-			$this->current_location = new ITE_In_Memory_Address( $this->cart->get_shipping_address()->to_array() );
+			$address = $this->cart->get_shipping_address();
 		} else {
-			$this->current_location = new ITE_In_Memory_Address( $this->cart->get_billing_address()->to_array() );
+			$address = $this->cart->get_billing_address();
+		}
+
+		if ( $address ) {
+			$this->current_location = new ITE_In_Memory_Address( $address->to_array() );
 		}
 	}
 
@@ -97,7 +101,7 @@ class ITE_Tax_Manager implements ITE_Cart_Aware {
 			}
 
 			if ( ! $b->is_restricted_to_location() ) {
-				return -1;
+				return - 1;
 			}
 
 			$pa = $a->is_restricted_to_location()->get_precision();
@@ -245,7 +249,7 @@ class ITE_Tax_Manager implements ITE_Cart_Aware {
 		}
 
 		// Force address updating when logging a customer in.
-		if ( $new && $new->equals( $this->current_location ) && ! doing_action( 'wp_login' ) ) {
+		if ( $this->current_location && $new && $new->equals( $this->current_location ) && ! doing_action( 'wp_login' ) ) {
 			return;
 		}
 
@@ -279,7 +283,7 @@ class ITE_Tax_Manager implements ITE_Cart_Aware {
 
 			$masked = $zone ? $zone->mask( $new_address ) : $new_address;
 
-			if ( $this->current_location->equals( $masked ) ) {
+			if ( $this->current_location && $this->current_location->equals( $masked ) ) {
 				continue;
 			} elseif ( ! $zone || $zone->contains( $masked ) ) {
 				$this->cart->get_items( 'tax', true )->with_only_instances_of( $provider->get_item_class() )->delete();

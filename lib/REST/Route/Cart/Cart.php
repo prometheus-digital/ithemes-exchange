@@ -193,7 +193,10 @@ class Cart extends r\Route\Base implements Getable, Putable, Deletable {
 		if ( $cart->get_customer() && ! $cart->get_customer() instanceof \IT_Exchange_Guest_Customer ) {
 			$response->add_link(
 				'customer',
-				r\get_rest_url( new r\Route\Customer\Customer(), array( 'customer_id' => $cart->get_customer()->ID ) ),
+				r\get_rest_url(
+					$this->get_manager()->get_first_route( 'iThemes\Exchange\REST\Route\Customer\Customer' ),
+					array( 'customer_id' => $cart->get_customer()->ID )
+				),
 				array( 'embeddable' => true )
 			);
 		}
