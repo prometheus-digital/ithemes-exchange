@@ -404,7 +404,7 @@ function it_exchange_maybe_preload_schemas() {
 	 */
 	$preload = apply_filters( 'it_exchange_preload_schemas', $preload );
 
-	if ( $preload === false ) {
+	if ( $preload === false || $preload == null ) {
 		return;
 	}
 

@@ -204,7 +204,7 @@ class Manager {
 	 */
 	public function get_schemas( $titles = array() ) {
 
-		$flipped = array_flip( $titles );
+		$flipped = $titles ? array_flip( $titles ) : array();
 		$schemas = array();
 
 		foreach ( $this->routes as $route ) {
