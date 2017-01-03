@@ -214,6 +214,7 @@ class IT_Exchange_Session implements IT_Exchange_SessionInterface, ITE_Expiring_
 			$this->_session->remove_cookie();
 
 			do_action( 'it_exchange_db_session_reset_on_logout' );
+			it_exchange_cache_customer_cart();
 		}
 	}
 

@@ -28,6 +28,8 @@ class IT_Exchange_Shopping_Cart {
 
 		// Filters to sync cart across devices
 		add_action( 'wp_login', array( $this, 'merge_session' ), 10, 2 );
+
+		ITE_Session_Model::updated( array( $this, 'fire_deprecated_cache_cart' ) );
 	}
 
 	/**
@@ -827,6 +829,30 @@ class IT_Exchange_Shopping_Cart {
 
 			}
 		}
+	}
+
+	/**
+	 * Fire the deprecated cache customer cart hooks.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param \IronBound\WPEvents\GenericEvent $event
+	 */
+	public function fire_deprecated_cache_cart( \IronBound\WPEvents\GenericEvent $event ) {
+
+		$session = $event->get_subject();
+
+		if ( ! $session instanceof ITE_Session_Model ) {
+			return;
+		}
+
+		$current_cart_id = it_exchange_get_cart_id();
+
+		if ( $current_cart_id !== $session->cart_id ) {
+			return;
+		}
+
+		it_exchange_cache_customer_cart();
 	}
 
 	/**

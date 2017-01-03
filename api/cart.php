@@ -456,6 +456,8 @@ function it_exchange_merge_cached_customer_cart_into_current_session( $user_logi
 	} catch ( InvalidArgumentException $e ) {
 
 	}
+
+	it_exchange_cache_customer_cart( $customer->id );
 }
 
 /**

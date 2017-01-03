@@ -173,6 +173,29 @@ function ite_fire_deprecated_emptied_cart_hook( ITE_Cart $cart ) {
 add_action( 'it_exchange_emptied_cart', 'ite_fire_deprecated_emptied_cart_hook' );
 
 /**
+ * Get cached cart.
+ *
+ * @since 2.0.0
+ *
+ * @param mixed  $value
+ * @param int    $customer_id
+ * @param string $meta_key
+ * @param bool   $single
+ *
+ * @return array|bool
+ */
+function ite_get_deprecated_cart_cache( $value, $customer_id, $meta_key, $single ) {
+
+	if ( $meta_key !== '_it_exchange_cached_cart' ) {
+		return $value;
+	}
+
+	return it_exchange_get_cached_customer_cart( $customer_id );
+}
+
+add_filter( 'get_user_metadata', 'ite_get_deprecated_cart_cache', 10, 4 );
+
+/**
  * Handle deprecating the active user carts metadata.
  *
  * @since 2.0.0
@@ -401,5 +424,26 @@ function it_exchange_sync_current_cart_with_all_active_customer_carts() {
  * @return void
  */
 function it_exchange_cache_customer_cart( $customer_id = false ) {
-	_deprecated_function( __FUNCTION__, '2.0.0' );
+
+	$customer = $customer_id ? it_exchange_get_customer( $customer_id ) : it_exchange_get_current_customer();
+
+	if ( ! $customer ) {
+		return;
+	}
+
+	$cart_id = it_exchange_get_cart_id();
+
+	if ( ! $cart_id ) {
+		return;
+	}
+
+	$session = ITE_Session_Model::from_cart_id( $cart_id );
+
+	if ( ! $session ) {
+		return;
+	}
+
+	$cart_data = $session->data;
+
+	do_action( 'it_exchange_cache_customer_cart', $customer, $cart_data );
 }
