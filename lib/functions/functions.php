@@ -261,14 +261,11 @@ function it_exchange_register_scripts() {
 		)
 	) );
 
-	wp_register_script(
-		'it-exchange-rest',
-		IT_Exchange::$url . '/lib/assets/js/rest.js',
-		array(
-			'backbone', 'underscore', 'it-exchange-common', 'wp-util', 'ithemes-momentjs', 'backbonedeep',
-			'wp-backbone', 'backbone.paginator'
-		)
+	$rest_libs = array(
+		'backbone', 'underscore', 'it-exchange-common', 'wp-util', 'ithemes-momentjs', 'backbonedeep',
+		'wp-backbone', 'backbone.paginator'
 	);
+	wp_register_script( 'it-exchange-rest', IT_Exchange::$url . '/lib/assets/js/rest.js', $rest_libs, IT_Exchange::VERSION	);
 
 	$config = array(
 		'i18n' => array(
@@ -320,11 +317,7 @@ function it_exchange_register_scripts() {
 		}
 	}
 
-	wp_localize_script(
-		'it-exchange-rest',
-		'ITExchangeRESTConfig',
-		$config
-	);
+	wp_localize_script( 'it-exchange-rest', 'ITExchangeRESTConfig', $config	);
 
 	$js_tokenizers = array();
 
@@ -362,11 +355,44 @@ add_action( 'wp_enqueue_scripts', 'it_exchange_register_scripts', 1 );
 add_action( 'admin_enqueue_scripts', 'it_exchange_register_scripts', 1 );
 
 /**
+ * Preload REST schemas.
+ *
+ * @since 2.0.0
+ *
+ * @param bool|string|string[] $schemas,... If true, all schemas will be preloaded. If false, no schemas will be preloaded.
+ *                                          Otherwise, a list of schemas identified by their title can be provided.
+ *                                          If no arguments given, will return a the current schema state.
+ *
+ * @return array|bool|null
+ */
+function it_exchange_preload_schemas( $schemas = null ) {
+
+	static $_schemas = null;
+
+	if ( func_num_args() === 0 ) {
+		return $_schemas;
+	}
+
+	if ( $schemas === true ) {
+		$_schemas = true;
+	} elseif ( $schemas === false ) {
+		$_schemas = false;
+	} elseif ( $_schemas !== true && $schemas ) {
+		$_schemas = is_array( $_schemas ) ? $_schemas : array();
+		$_schemas = array_merge( $_schemas, is_array( $schemas ) ? $schemas : func_get_args() );
+	}
+
+	return $_schemas;
+}
+
+/**
  * Maybe preload REST schemas.
  *
  * @since 2.0.0
  */
 function it_exchange_maybe_preload_schemas() {
+
+	$preload = it_exchange_preload_schemas();
 
 	/**
 	 * Filter the schemas to preload.
@@ -376,7 +402,7 @@ function it_exchange_maybe_preload_schemas() {
 	 * @param $preload bool|array True to preload all schemas. False to preload no schemas. An array of schema
 	 *                            document titles to only preload a selected amount of schemas.
 	 */
-	$preload = apply_filters( 'it_exchange_preload_schemas', false );
+	$preload = apply_filters( 'it_exchange_preload_schemas', $preload );
 
 	if ( $preload === false ) {
 		return;
@@ -398,6 +424,38 @@ function it_exchange_maybe_preload_schemas() {
 
 add_action( 'wp_enqueue_scripts', 'it_exchange_maybe_preload_schemas', 99 );
 add_action( 'admin_enqueue_scripts', 'it_exchange_maybe_preload_schemas', 99 );
+
+/**
+ * Register additional REST backbone libs if the main lib is enqueued.
+ *
+ * @since 2.0.0
+ */
+function it_exchange_register_additional_rest_backbone_libs() {
+
+	if ( ! wp_script_is( 'it-exchange-rest' ) ) {
+		return;
+	}
+
+	/**
+	 * Filter the dependencies for the REST backbone lib.
+	 *
+	 * This can be used to provide models and collections for an add-on.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param array $rest_libs
+	 */
+	$rest_libs = apply_filters( 'it_exchange_rest_backbone_addon_libs', array() );
+
+	$scripts = wp_scripts();
+
+	foreach ( $rest_libs as $addon => $src ) {
+		wp_enqueue_script( "it-exchange-rest-{$addon}", $src, array( 'it-exchange-rest' ) );
+	}
+}
+
+add_action( 'wp_print_footer_scripts', 'it_exchange_register_additional_rest_backbone_libs', 0 );
+add_action( 'wp_print_scripts', 'it_exchange_register_additional_rest_backbone_libs', 0 );
 
 /**
  * Add inline script data.
@@ -2119,14 +2177,7 @@ function it_exchange_enqueue_manage_tokens_js() {
 		return;
 	}
 
-	add_filter( 'it_exchange_preload_schemas', function( $schemas ) {
-		$schemas = is_array( $schemas ) ? $schemas : array();
-		$schemas[] = 'payment-token';
-		$schemas[] = 'customer';
-		$schemas[] = 'address';
-
-		return $schemas;
-	} );
+	it_exchange_preload_schemas( 'payment-token', 'customer', 'address' );
 
 	wp_enqueue_script(
 		'it-exchange-profile',

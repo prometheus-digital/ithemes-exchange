@@ -1881,15 +1881,7 @@ class IT_Exchange_Admin {
 			
 			
 			wp_enqueue_script( 'it-exchange-jquery-toastr', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/toastr.js' );
-		
-
-			add_action( 'it_exchange_preload_schemas', function( $schemas ) {
-				$schemas = is_array( $schemas ) ? $schemas : array();
-
-				$schemas[] = 'transaction';
-
-				return $schemas;
-			} );
+			it_exchange_preload_schemas( 'transaction' );
 
 			$serializer = new \iThemes\Exchange\REST\Route\Transaction\Serializer();
 
