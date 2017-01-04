@@ -126,12 +126,14 @@ class IT_Exchange_Product implements ITE_Object {
 	 *
 	 * @since 0.4.0
 	 *
+	 * @deprecated 2.0.0
+	 *
 	 * @param object $cart_object data passed to the transaction_method from the cart
 	 * @param integer $transaction_id id of the transaction
 	 * @return void
 	*/
 	function add_transaction_to_product( $transaction_id ) {
-		add_post_meta( $this->ID, '_it_exchange_transaction_id', $transaction_id );
+		_deprecated_function( __FUNCTION__, '2.0.0' );
 	}
 
 	/**

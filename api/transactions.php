@@ -595,18 +595,8 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 		$repo = new ITE_Line_Item_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction );
 
 		if ( $cart ) {
-			/** @var ITE_Cart_Product $product */
-			foreach ( $cart->get_items( 'product' ) as $product ) {
-				$product->get_product()->add_transaction_to_product( $transaction_id );
-			}
-
 			$cart->get_items()->flatten()->freeze();
 			$cart->with_new_repository( $repo );
-		} elseif ( ! empty( $cart_object->products ) ) {
-			foreach ( $cart_object->products as $product ) {
-				$product = new IT_Exchange_Product( $product['product_id'] );
-				$product->add_transaction_to_product( $transaction_id );
-			}
 		}
 
 		if ( ! $cart && ! empty( $cart_object->billing_address ) && is_array( $cart_object->billing_address ) ) {
