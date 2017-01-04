@@ -18,17 +18,17 @@
  */
 function it_exchange_email_receipt_subject_back_compat( $subject, IT_Exchange_Email $email ) {
 
-	if ( has_filter( 'it_exchange_send_purchase_emails_subject' ) ) {
+	$settings    = it_exchange_get_option( 'settings_email' );
+	$bc          = it_exchange_email_notifications();
+	$context     = $email->get_context();
+	$transaction = empty( $context['transaction'] ) ? null : it_exchange_get_transaction( $context['transaction'] );
 
-		it_exchange_deprecated_filter( 'it_exchange_send_purchase_emails_subject', 'it_exchange_email_receipt_subject' );
-
-		$settings    = it_exchange_get_option( 'settings_email' );
-		$bc          = it_exchange_email_notifications();
-		$context     = $email->get_context();
-		$transaction = empty( $context['transaction'] ) ? null : it_exchange_get_transaction( $context['transaction'] );
-
-		$subject = apply_filters( 'it_exchange_send_purchase_emails_subject', $subject, $transaction, $settings, $bc );
-	}
+	$subject = apply_filters_deprecated(
+		'it_exchange_send_purchase_emails_subject',
+		array( $subject, $transaction, $settings, $bc ),
+		'2.0.0',
+		'it_exchange_email_receipt_subject'
+	);
 
 	return $subject;
 }
@@ -47,17 +47,17 @@ add_filter( 'it_exchange_email_receipt_subject', 'it_exchange_email_receipt_subj
  */
 function it_exchange_email_receipt_body_back_compat( $body, IT_Exchange_Email $email ) {
 
-	if ( has_filter( 'it_exchange_send_purchase_emails_body' ) ) {
+	$settings    = it_exchange_get_option( 'settings_email' );
+	$bc          = it_exchange_email_notifications();
+	$context     = $email->get_context();
+	$transaction = empty( $context['transaction'] ) ? null : it_exchange_get_transaction( $context['transaction'] );
 
-		it_exchange_deprecated_filter( 'it_exchange_send_purchase_emails_body', 'it_exchange_email_receipt_body' );
-
-		$settings    = it_exchange_get_option( 'settings_email' );
-		$bc          = it_exchange_email_notifications();
-		$context     = $email->get_context();
-		$transaction = empty( $context['transaction'] ) ? null : it_exchange_get_transaction( $context['transaction'] );
-
-		$body = apply_filters( 'it_exchange_send_purchase_emails_body', $body, $transaction, $settings, $bc );
-	}
+	$body = apply_filters_deprecated(
+		'it_exchange_send_purchase_emails_body',
+		array( $body, $transaction, $settings, $bc ),
+		'2.0.0',
+		'it_exchange_email_receipt_body'
+	);
 
 	return $body;
 }
@@ -75,12 +75,12 @@ add_filter( 'it_exchange_email_receipt_body', 'it_exchange_email_receipt_body_ba
  */
 function it_exchange_email_headers_back_compat( $headers ) {
 
-	if ( has_filter( 'it_exchange_send_email_notification_headers' ) ) {
-
-		it_exchange_deprecated_filter( 'it_exchange_send_email_notification_headers', 'it_exchange_send_email_notification_wp_mail_headers' );
-
-		$headers = apply_filters( 'it_exchange_send_email_notification_headers', $headers );
-	}
+	$headers = apply_filters_deprecated(
+		'it_exchange_send_email_notification_headers',
+		array( $headers ),
+		'2.0.0',
+		'it_exchange_send_email_notification_wp_mail_headers'
+	);
 
 	return $headers;
 }
@@ -98,12 +98,12 @@ add_filter( 'it_exchange_send_email_notification_wp_mail_headers', 'it_exchange_
  */
 function it_exchange_email_body_back_compat( $body ) {
 
-	if ( has_filter( 'it_exchange_send_email_notification_body' ) ) {
-
-		it_exchange_deprecated_filter( 'it_exchange_send_email_notification_body', 'it_exchange_send_email_notification_wp_mail_body' );
-
-		$body = apply_filters( 'it_exchange_send_email_notification_body', $body );
-	}
+	$body = apply_filters_deprecated(
+		'it_exchange_send_email_notification_body',
+		array( $body ),
+		'2.0.0',
+		'it_exchange_send_email_notification_wp_mail_body'
+	);
 
 	return $body;
 }

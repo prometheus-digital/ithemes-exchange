@@ -223,22 +223,12 @@ abstract class IT_Exchange_Email_Tag_Replacer_Base implements IT_Exchange_Email_
 	 * @return array
 	 */
 	protected function get_legacy_functions() {
-
-		if ( has_filter( 'it_exchange_email_notification_shortcode_functions' ) ) {
-			it_exchange_deprecated_filter( 'it_exchange_email_notification_shortcode_functions', '2.0.0',
-				'IT_Exchange_Email_Tag_Replacer::add_tag' );
-		}
-
-		/**
-		 * Filter the available shortcode functions.
-		 *
-		 * @deprecated 2.0.0
-		 *
-		 * @since      1.0
-		 *
-		 * @param array $shortcode_functions
-		 */
-		return apply_filters( 'it_exchange_email_notification_shortcode_functions', array(), $this->get_data() );
+		return apply_filters_deprecated(
+			'it_exchange_email_notification_shortcode_functions',
+			array( array(), $this->get_data() ),
+			'2.0.0',
+			'IT_Exchange_Email_Tag_Replacer::add_tag'
+		);
 	}
 
 	/**

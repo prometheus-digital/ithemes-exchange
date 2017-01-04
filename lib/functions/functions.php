@@ -2295,50 +2295,6 @@ function it_exchange_delete_upgrade_logs( $days_old = 7 ) {
 add_action( 'it_exchange_delete_upgrade_logs', 'it_exchange_delete_upgrade_logs' );
 
 /**
- * Mark a filter as deprecated and inform when it has been used.
- *
- * @since 2.0.0
- *
- * @param string $filter      The Filter that was called.
- * @param string $version     The version of WordPress that deprecated the function.
- * @param string $replacement Optional. The function that should have been called. Default null.
- */
-function it_exchange_deprecated_filter( $filter, $version, $replacement = null ) {
-
-	/**
-	 * Fires when a deprecated filter is called.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @param string $filter    The function that was called.
-	 * @param string $replacement The function that should have been called.
-	 * @param string $version     The version of WordPress that deprecated the function.
-	 */
-	do_action( 'it_exchange_deprecated_filter_run', $filter, $replacement, $version );
-
-	/**
-	 * Filter whether to trigger an error for deprecated filters.
-	 *
-	 * @since 2.5.0
-	 *
-	 * @param bool $trigger Whether to trigger the error for deprecated functions. Default true.
-	 */
-	if ( WP_DEBUG && apply_filters( 'it_exchange_deprecated_filter_trigger_error', true ) ) {
-		if ( function_exists( '__' ) ) {
-			if ( ! is_null( $replacement ) )
-				trigger_error( sprintf( __('The %1$s filter is <strong>deprecated</strong> since version %2$s! Use %3$s instead.'), $filter, $version, $replacement ) );
-			else
-				trigger_error( sprintf( __('The %1$s filter is <strong>deprecated</strong> since version %2$s with no alternative available.'), $filter, $version ) );
-		} else {
-			if ( ! is_null( $replacement ) )
-				trigger_error( sprintf( 'The %1$s filter is <strong>deprecated</strong> since version %2$s! Use %3$s instead.', $filter, $version, $replacement ) );
-			else
-				trigger_error( sprintf( 'The %1$s filter is <strong>deprecated</strong> since version %2$s with no alternative available.', $filter, $version ) );
-		}
-	}
-}
-
-/**
  * Get System Info.
  *
  * @since 2.0.0
@@ -2349,9 +2305,6 @@ function it_exchange_get_system_info() {
 
 	/** @var $wpdb wpdb */
 	global $wpdb;
-
-	/** @var $IT_Exchange IT_Exchange */
-	global $IT_Exchange;
 
 	$info = array();
 
