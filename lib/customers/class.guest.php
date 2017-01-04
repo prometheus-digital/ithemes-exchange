@@ -123,13 +123,6 @@ class IT_Exchange_Guest_Customer extends IT_Exchange_Customer {
 	/**
 	 * @inheritDoc
 	 */
-	public function add_transaction_to_user( $transaction_id ) {
-		// Do nothing
-	}
-
-	/**
-	 * @inheritDoc
-	 */
 	public function has_transaction( $transaction_id ) {
 
 		if ( ! $transaction = it_exchange_get_transaction( $transaction_id ) ) {
