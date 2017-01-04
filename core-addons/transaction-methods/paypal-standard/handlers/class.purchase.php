@@ -86,7 +86,7 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 		$query += array(
 			'business'      => $paypal_email,
 			'item_name'     => strip_tags( it_exchange_get_cart_description( array( 'cart' => $cart ) ) ),
-			'currency_code' => $general_settings['default-currency'],
+			'currency_code' => $cart->get_currency_code(),
 			'return'        => $return_url,
 			'notify_url'    => it_exchange_get_webhook_url( $this->get_gateway()->get_webhook_param() ),
 			'no_note'       => 1,

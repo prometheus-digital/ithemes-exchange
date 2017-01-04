@@ -101,7 +101,7 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 		$button_vars['return']        = $return_url;
 		$button_vars['business']      = $paypal_email;
 		$button_vars['item_name']     = it_exchange_get_cart_description( array( 'cart' => $cart ) );
-		$button_vars['currency_code'] = $general_settings['default-currency'];
+		$button_vars['currency_code'] = $cart->get_currency_code();
 		$button_vars['notify_url']    = it_exchange_get_webhook_url( 'paypal-standard-secure' );
 		$button_vars['no_note']       = 1;
 		$button_vars['shipping']      = 0;

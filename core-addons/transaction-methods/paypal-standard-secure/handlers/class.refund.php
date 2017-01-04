@@ -47,12 +47,12 @@ class ITE_PayPal_Standard_Secure_Refund_Request_Handler implements ITE_Gateway_R
 			$use_sandbox = $this->get_gateway()->is_sandbox_mode();
 		}
 
-		$paypal_email = $is_sandbox ? $paypal_settings['sandbox-email-address'] : $paypal_settings['live-email-address'];
+		$paypal_email = $use_sandbox ? $paypal_settings['sandbox-email-address'] : $paypal_settings['live-email-address'];
 
-		$api_username  = $is_sandbox ? $paypal_settings['sandbox-api-username'] : $paypal_settings['live-api-username'];
-		$api_password  = $is_sandbox ? $paypal_settings['sandbox-api-password'] : $paypal_settings['live-api-password'];
-		$api_signature = $is_sandbox ? $paypal_settings['sandbox-api-signature'] : $paypal_settings['live-api-signature'];
-		$api_url       = $is_sandbox ? PAYPAL_NVP_API_SANDBOX_URL : PAYPAL_NVP_API_LIVE_URL;
+		$api_username  = $use_sandbox ? $paypal_settings['sandbox-api-username'] : $paypal_settings['live-api-username'];
+		$api_password  = $use_sandbox ? $paypal_settings['sandbox-api-password'] : $paypal_settings['live-api-password'];
+		$api_signature = $use_sandbox ? $paypal_settings['sandbox-api-signature'] : $paypal_settings['live-api-signature'];
+		$api_url       = $use_sandbox ? PAYPAL_NVP_API_SANDBOX_URL : PAYPAL_NVP_API_LIVE_URL;
 
 		if ( empty( $paypal_email ) || empty( $api_username ) || empty( $api_password ) || empty( $api_signature ) ) {
 			throw new UnexpectedValueException( __( 'PayPal API Credentials not set.', 'it-l10n-ithemes-exchange' ) );
@@ -65,7 +65,7 @@ class ITE_PayPal_Standard_Secure_Refund_Request_Handler implements ITE_Gateway_R
 			'VERSION'       => '204.0',
 			'METHOD'        => 'RefundTransaction',
 			'TRANSACTIONID' => $method_id,
-			'CURRENCYCODE'  => $general_settings['default-currency'],
+			'CURRENCYCODE'  => $transaction->get_currency(),
 		);
 
 		if ( $is_full ) {

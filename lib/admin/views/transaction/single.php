@@ -8,7 +8,7 @@ if ( isset( $_GET['convert'] ) ) {
 
 do_action( 'it_exchange_before_payment_details', $post );
 $settings = it_exchange_get_option( 'settings_general' );
-$currency = it_exchange_get_currency_symbol( $settings['default-currency'] );
+$currency = it_exchange_get_currency_symbol( $txn->get_currency() );
 $dtf      = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 ?>
 	<div class="postbox" id="it-exchange-transaction-details">

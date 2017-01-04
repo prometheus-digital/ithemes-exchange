@@ -258,7 +258,7 @@ function it_exchange_generate_transaction_object( ITE_Cart $cart = null ) {
 
 	// Grab default currency
 	$settings = it_exchange_get_option( 'settings_general' );
-	$currency = $settings['default-currency'];
+	$currency = $cart->get_currency_code();
 	unset( $settings );
 
 	$products = array();
