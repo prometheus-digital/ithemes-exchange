@@ -588,10 +588,6 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 
 		$transaction = IT_Exchange_Transaction::create( $purchase_args );
 
-		if ( $customer instanceof IT_Exchange_Customer ) {
-			$customer->add_transaction_to_user( $transaction_id );
-		}
-
 		$repo = new ITE_Line_Item_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction );
 
 		if ( $cart ) {
