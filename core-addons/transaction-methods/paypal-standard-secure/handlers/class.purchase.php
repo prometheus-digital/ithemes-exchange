@@ -39,8 +39,6 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 	 */
 	protected function generate_encrypted_id( ITE_Gateway_Purchase_Request $request ) {
 
-		$general_settings = it_exchange_get_option( 'settings_general' );
-
 		$paypal_settings = $this->get_gateway()->settings()->all();
 		$is_sandbox      = $this->get_gateway()->is_sandbox_mode();
 

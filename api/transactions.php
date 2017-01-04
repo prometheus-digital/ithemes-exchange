@@ -548,9 +548,9 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 		$gateway = ITE_Gateways::get( $method );
 
 		if ( $gateway && $gateway->is_sandbox_mode() ) {
-			$mode = IT_Exchange_Transaction::P_MODE_SANDBOX;
+			$mode = ITE_Const::P_MODE_SANDBOX;
 		} elseif ( $gateway && ! $gateway->is_sandbox_mode() ) {
-			$mode = IT_Exchange_Transaction::P_MODE_LIVE;
+			$mode = ITE_Const::P_MODE_LIVE;
 		} else {
 			$mode = '';
 		}
@@ -726,9 +726,9 @@ function it_exchange_add_child_transaction( $method, $method_id, $status = 'pend
 		$gateway = ITE_Gateways::get( $method );
 
 		if ( $gateway && $gateway->is_sandbox_mode() ) {
-			$mode = IT_Exchange_Transaction::P_MODE_SANDBOX;
+			$mode = ITE_Const::P_MODE_SANDBOX;
 		} elseif ( $gateway && ! $gateway->is_sandbox_mode() ) {
-			$mode = IT_Exchange_Transaction::P_MODE_LIVE;
+			$mode = ITE_Const::P_MODE_LIVE;
 		} else {
 			$mode = '';
 		}
@@ -1190,7 +1190,7 @@ function it_exchange_transaction_can_be_refunded( $transaction ) {
 		return false;
 	}
 
-	$gateway = ITE_Gateways::get( $transaction->get_method() ) ;
+	$gateway = $transaction->get_gateway();
 
 	if ( ! $gateway ) {
 		return false;
@@ -1203,7 +1203,6 @@ function it_exchange_transaction_can_be_refunded( $transaction ) {
 	if ( $transaction->get_total() <= 0 ) {
 		return false;
 	}
-
 
 	/**
 	 * Filter whether this transaction can be refunded.

@@ -273,7 +273,7 @@ class Serializer {
 				'method_id'            => array(
 					'description' => __( 'The method id used for this transaction.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'edit' ),
 				),
 				'status'               => array(
 					'description' => __( 'The transaction status.', 'it-l10n-ithemes-exchange' ),
@@ -318,8 +318,8 @@ class Serializer {
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit', 'embed' ),
 					'enum'        => array(
-						\IT_Exchange_Transaction::P_MODE_SANDBOX,
-						\IT_Exchange_Transaction::P_MODE_LIVE,
+						\ITE_Const::P_MODE_SANDBOX,
+						\ITE_Const::P_MODE_LIVE,
 					),
 					'readonly'    => true,
 				),
