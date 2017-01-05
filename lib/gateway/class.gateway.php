@@ -156,6 +156,15 @@ abstract class ITE_Gateway implements ITE_Supports_Optional_Features {
 	public abstract function get_webhook_param();
 
 	/**
+	 * Get webhook options.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return array
+	 */
+	public function get_webhook_options() { return array(); }
+
+	/**
 	 * Get the SSL mode of the gateway.
 	 *
 	 * @since 2.0.0

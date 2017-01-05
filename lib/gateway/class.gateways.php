@@ -32,7 +32,7 @@ class ITE_Gateways {
 		static::$gateways[ $gateway->get_slug() ] = $gateway;
 
 		if ( $webhook_param = $gateway->get_webhook_param() ) {
-			it_exchange_register_webhook( $gateway->get_slug(), $webhook_param );
+			it_exchange_register_webhook( $gateway->get_slug(), $webhook_param, $gateway->get_webhook_options() );
 		}
 
 		if (
