@@ -35,9 +35,11 @@ class ITE_Gateways {
 			it_exchange_register_webhook( $gateway->get_slug(), $webhook_param, $gateway->get_webhook_options() );
 		}
 
+		$fields = $gateway->get_settings_fields();
+
 		if (
-			empty( $GLOBALS['it_exchange']['add_ons']['registered'][ $gateway->get_slug() ]['options']['settings-callback'] ) &&
-			$gateway->get_settings_form()
+			is_admin() && $fields &&
+			empty( $GLOBALS['it_exchange']['add_ons']['registered'][ $gateway->get_slug() ]['options']['settings-callback'] )
 		) {
 			$GLOBALS['it_exchange']['add_ons']['registered'][ $gateway->get_slug() ]['options']['settings-callback'] = function () use ( $gateway ) {
 				?>
@@ -50,7 +52,7 @@ class ITE_Gateways {
 			};
 		}
 
-		if ( $fields = $gateway->get_settings_fields() ) {
+		if ( $fields ) {
 			$defaults = array();
 
 			foreach ( $fields as $field ) {
