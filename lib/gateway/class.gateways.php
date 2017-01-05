@@ -140,7 +140,10 @@ class ITE_Gateways {
 			add_action( "it_exchange_webhook_{$gateway->get_webhook_param()}", function ( $request ) use ( $gateway ) {
 				$factory = new ITE_Gateway_Request_Factory();
 
-				$request = $factory->make( 'webhook', array( 'webhook_data' => $request ) );
+				$request = $factory->make( 'webhook', array(
+					'webhook_data' => $request,
+					'headers'      => $_SERVER,
+				) );
 
 				/** @var WP_HTTP_Response $response */
 				$response = $gateway->get_handler_for( $request )->handle( $request );

@@ -98,7 +98,7 @@ class ITE_Gateway_Request_Factory {
 
 				break;
 			case ITE_Webhook_Gateway_Request::get_name():
-				$request = new ITE_Webhook_Gateway_Request( $args['webhook_data'] );
+				$request = new ITE_Webhook_Gateway_Request( $args['webhook_data'], isset( $args['headers'] ) ? $args['headers'] : array() );
 				break;
 			case ITE_Gateway_Tokenize_Request::get_name():
 

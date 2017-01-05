@@ -14,12 +14,19 @@ class ITE_Webhook_Gateway_Request implements ITE_Gateway_Request {
 	/** @var array */
 	private $webhook_data;
 
+	/** @var array */
+	private $headers;
+
 	/**
 	 * ITE_Webhook_Gateway_Request constructor.
 	 *
 	 * @param array $webhook_data
+	 * @param array $headers
 	 */
-	public function __construct( array $webhook_data ) { $this->webhook_data = $webhook_data; }
+	public function __construct( array $webhook_data, array $headers = array() ) {
+		$this->webhook_data = $webhook_data;
+		$this->headers      = $headers;
+	}
 
 	/**
 	 * Get webhook data.
@@ -46,6 +53,24 @@ class ITE_Webhook_Gateway_Request implements ITE_Gateway_Request {
 		}
 
 		return $HTTP_RAW_POST_DATA;
+	}
+
+	/**
+	 * Get a header value.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $header
+	 *
+	 * @return string|null
+	 */
+	public function get_header( $header ) {
+
+		if ( isset( $this->headers[ 'HTTP_' . $header ] ) ) {
+			return $this->headers[ 'HTTP_' . $header ];
+		}
+
+		return null;
 	}
 
 	/**
