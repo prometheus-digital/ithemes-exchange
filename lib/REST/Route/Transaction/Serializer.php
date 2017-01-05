@@ -277,22 +277,30 @@ class Serializer {
 				),
 				'status'               => array(
 					'description' => __( 'The transaction status.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'object',
 					'context'     => array( 'view', 'edit', 'embed' ),
-					'properties'  => array(
-						'slug'  => array(
-							'description' => __( 'The transaction status slug.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'string',
-							'context'     => array( 'edit' ),
-							'required'    => true,
+					'required'    => true,
+					'oneOf'       => array(
+						array(
+							'type'       => 'object',
+							'properties' => array(
+								'slug'  => array(
+									'description' => __( 'The transaction status slug.', 'it-l10n-ithemes-exchange' ),
+									'type'        => 'string',
+									'context'     => array( 'edit' ),
+									'required'    => true,
+								),
+								'label' => array(
+									'description' => __( 'The transaction status label.', 'it-l10n-ithemes-exchange' ),
+									'type'        => 'string',
+									'context'     => array( 'view', 'edit', 'embed' )
+								),
+							),
 						),
-						'label' => array(
-							'description' => __( 'The transaction status label.', 'it-l10n-ithemes-exchange' ),
+						array(
 							'type'        => 'string',
-							'context'     => array( 'view', 'edit', 'embed' )
+							'description' => __( 'The transaction status slug.', 'it-l10n-ithemes-exchange' ),
 						),
 					),
-					'required'    => true,
 				),
 				'cleared_for_delivery' => array(
 					'description' => __( 'The cleared for delivery status of the transaction.', 'it-l10n-ithemes-exchange' ),

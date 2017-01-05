@@ -74,7 +74,9 @@ class Transaction extends Base implements Getable, Putable {
 
 		$t = it_exchange_get_transaction( $request->get_param( 'transaction_id', 'URL' ) );
 
-		$t->update_status( $request['status']['slug'] );
+		if ( isset( $request['status'] ) ) {
+			$t->update_status( is_array( $request['status'] ) ? $request['status']['slug'] : $request['status'] );
+		}
 
 		$user     = it_exchange_get_current_customer();
 		$response = new \WP_REST_Response( $this->serializer->serialize( $t, $user ) );
