@@ -77,7 +77,7 @@ class IT_Theme_API_Address implements IT_Theme_API {
 				return $label;
 			case 'html':
 			default:
-				return "<{$options['wrap']} class='{$options['class']}'>{$label}</>";
+				return "<{$options['wrap']} class='{$options['class']}'>" . esc_html( $label ) . "<{$options['wrap']}/>";
 		}
 	}
 
@@ -165,7 +165,7 @@ class IT_Theme_API_Address implements IT_Theme_API {
 				return $value;
 			case 'html':
 			default:
-				return "<{$options['wrap']} class='{$options['class']}'>{$value}</>";
+				return "<{$options['wrap']} class='{$options['class']}'>" . esc_html( $value ) . "<{$options['wrap']}/>";
 		}
 	}
 
@@ -193,6 +193,6 @@ class IT_Theme_API_Address implements IT_Theme_API {
 		$label   = $this->address->label ?: $this->address['address1'];
 		$checked = checked( $id, $options['current'], false );
 
-		return "<label><input type='radio' name='{$options['name']}' value='{$id}'{$checked}>{$label}</label>";
+		return "<label><input type='radio' name='{$options['name']}' value='{$id}'{$checked}>" . esc_html( $label ) . "</label>";
 	}
 }
