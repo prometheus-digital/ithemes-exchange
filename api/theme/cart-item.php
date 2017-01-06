@@ -179,7 +179,7 @@ class IT_Theme_API_Cart_Item extends IT_Theme_API_Line_Item {
 		$var_key   = it_exchange_get_field_name( 'product_purchase_quantity' );
 		$var_value = $this->item->get_quantity();
 
-		if ( $this->item instanceof ITE_Quantity_Modifiable_Item && $this->item->is_quantity_modifiable() && $this->cart && ! $this->cart->is_current() ) {
+		if ( $this->item instanceof ITE_Quantity_Modifiable_Item && $this->item->is_quantity_modifiable() && $this->cart && $this->cart->is_current() ) {
 
 			switch ( $options['format'] ) {
 				case 'var_key' :
