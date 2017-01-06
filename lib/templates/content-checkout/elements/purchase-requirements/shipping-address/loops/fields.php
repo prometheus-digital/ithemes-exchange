@@ -15,7 +15,7 @@
  */
 ?>
 <?php do_action( 'it_exchange_content_checkout_shipping_address_purchase_requirement_before_fields_loop' ); ?>
-<div class="it-exchange-checkout-address-form it-exchange-checkout-address-form--shipping" <?php echo it_exchange( 'shipping', 'hide-fields' ) ? ' style="display: none;"' : ''; ?>>
+<div class="it-exchange-checkout-address-form it-exchange-checkout-address-form--shipping" <?php echo it_exchange( 'shipping', 'saved' ) ? ' style="display: none;"' : ''; ?>>
 	<?php $fields = array(
 		'first_name',
 		'last_name',
