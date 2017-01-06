@@ -94,7 +94,6 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 
 		$cart_methods                      = $this->cart_methods;
 		$cart_product_methods              = $this->cart_product_methods;
-		$multiple_shipping_methods_allowed = $this->multiple_shipping_methods_allowed;
 		$current_method                    = $this->current_method;
 
 		$cart_methods_count = count( $cart_methods );

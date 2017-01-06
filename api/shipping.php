@@ -401,8 +401,8 @@ function it_exchange_cart_contains_shippable_product( ITE_Cart $cart = null ) {
 
 	$cart = $cart ?: it_exchange_get_current_cart();
 
-	return $cart->get_items('product')->filter( function( ITE_Cart_Product $product ) {
-		$product->get_product()->has_feature( 'shipping' );
+	return $cart->get_items( 'product' )->filter( function( ITE_Cart_Product $product ) {
+		return $product->get_product()->has_feature( 'shipping' );
 	} )->count() > 0;
 }
 
