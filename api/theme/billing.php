@@ -49,6 +49,7 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 		'radioexisting' => 'radio_existing',
 		'radionew'      => 'radio_new',
 		'saved'         => 'saved_address',
+		'hidefields'    => 'hide_fields',
 	);
 
 	/**
@@ -649,5 +650,27 @@ class IT_Theme_API_Billing implements IT_Theme_API {
 	 */
 	public function saved_address() {
 		return it_exchange_get_current_cart()->get_billing_address() instanceof ITE_Saved_Address;
+	}
+
+	/**
+	 * Whether to hide the address fields.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return bool
+	 */
+	public function hide_fields() {
+
+		if ( ! it_exchange_get_current_cart()->get_billing_address() instanceof ITE_Saved_Address ) {
+			return false;
+		}
+
+		$customer = it_exchange_get_current_customer();
+
+		if ( count( $customer->get_addresses() ) === 1 ) {
+			return false;
+		}
+
+		return true;
 	}
 }

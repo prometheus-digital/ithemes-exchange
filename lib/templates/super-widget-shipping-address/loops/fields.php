@@ -15,7 +15,7 @@
 ?>
 
 <?php do_action( 'it_exchange_super_widget_shipping_address_before_fields_loop' ); ?>
-<div class="it-exchange-sw-address-form it-exchange-sw-address-form--shipping" <?php echo it_exchange( 'shipping', 'saved' ) ? ' style="display: none;"' : ''; ?>>
+<div class="it-exchange-sw-address-form it-exchange-sw-address-form--shipping" <?php echo it_exchange( 'shipping', 'hide-fields' ) ? ' style="display: none;"' : ''; ?>>
 	<?php do_action( 'it_exchange_super_widget_shipping_address_begin_fields_loop' ); ?>
 	<?php $fields = array(
 		'first_name',
