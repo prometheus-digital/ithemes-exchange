@@ -2076,7 +2076,7 @@ button.it-exchange-manage-tokens-token-action.it-exchange-manage-tokens-token-ac
 
 .it-exchange-dashicon-button,
 .it-exchange-dashicon-button[disabled] {
-    background: none;
+    background: none !important;
     border: 0;
     color: inherit !important;
     /* cursor: default; */
