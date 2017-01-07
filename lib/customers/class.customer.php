@@ -145,7 +145,7 @@ class IT_Exchange_Customer implements ITE_Object {
 	/**
 	 * Tack transaction_id to user_meta of customer
 	 *
-	 * @since 0.4.0
+	 * @since      0.4.0
 	 *
 	 * @deprecated 2.0.0
 	 *
@@ -168,10 +168,10 @@ class IT_Exchange_Customer implements ITE_Object {
 	 */
 	public function has_transaction( $transaction_id ) {
 		return (bool) IT_Exchange_Transaction::query()
-			->where( 'customer_id', '=', $this->get_ID() )
-			->and_where( 'ID', '=', $transaction_id )
-			->take( 1 )
-			->first();
+		                                     ->where( 'customer_id', '=', $this->get_ID() )
+		                                     ->and_where( 'ID', '=', $transaction_id )
+		                                     ->take( 1 )
+		                                     ->first();
 	}
 
 	/**
@@ -318,8 +318,8 @@ class IT_Exchange_Customer implements ITE_Object {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param string $type Accepts either 'shipping' or 'billing'.
-	 * @param bool $force_saved Force getting an ITE_Saved_Address object.
+	 * @param string $type        Accepts either 'shipping' or 'billing'.
+	 * @param bool   $force_saved Force getting an ITE_Saved_Address object.
 	 *
 	 * @return \ITE_Saved_Address|ITE_Location|null In 99.9% of cases this returns an ITE_Saved_Address instance or
 	 *                                              null.
@@ -441,9 +441,9 @@ class IT_Exchange_Customer implements ITE_Object {
 
 		foreach ( $addresses as $i => $address ) {
 			if ( $address->get_pk() === $billing ) {
-				unset( $return[$i] );
+				unset( $return[ $i ] );
 			} elseif ( $address->get_pk() === $shipping ) {
-				unset( $return[$i] );
+				unset( $return[ $i ] );
 			}
 		}
 
@@ -533,9 +533,12 @@ class IT_Exchange_Customer implements ITE_Object {
 			return ITE_Payment_Token::query()->and_where( 'customer', '=', $this->ID )->results();
 		}
 
-		return ITE_Payment_Token::without_global_scopes( array( 'active' ) )
+		$mode = it_exchange_is_gateway_in_sandbox_mode( $gateway ) ? 'sandbox' : 'live';
+
+		return ITE_Payment_Token::without_global_scope( 'active' )
 		                        ->and_where( 'customer', '=', $this->ID )
 		                        ->and_where( 'gateway', '=', $gateway )
+		                        ->and_where( 'mode', '=', $mode )
 		                        ->results();
 	}
 

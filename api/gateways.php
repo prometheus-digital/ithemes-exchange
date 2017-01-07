@@ -2,7 +2,7 @@
 /**
  * Gateway API functions.
  *
- * @since 2.0.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -35,4 +35,24 @@ function it_exchange_is_gateway_accepting_payments( $gateway ) {
 	}
 
 	return (bool) $accepting_payments[ $gateway ];
+}
+
+/**
+ * Is the gateway in sandbox mode.
+ *
+ * @since 2.0.0
+ *
+ * @param string|ITE_Gateway $gateway
+ *
+ * @return bool
+ */
+function it_exchange_is_gateway_in_sandbox_mode( $gateway ) {
+
+	$gateway = $gateway instanceof ITE_Gateway ? $gateway : ITE_Gateways::get( $gateway );
+
+	if ( ! $gateway ) {
+		return false;
+	}
+
+	return $gateway->is_sandbox_mode();
 }
