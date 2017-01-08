@@ -276,12 +276,6 @@ a.it-exchange-button {
 
 .it-exchange-customer-address p {
     margin: 0;
-
-    /* Hack to give enough space for the action buttons */
-    direction: rtl;
-    text-align: left;
-    text-indent: 70px;
-
     word-break: break-word;
     -webkit-hyphens: auto;
     -moz-hyphens: auto;
@@ -289,8 +283,16 @@ a.it-exchange-button {
     hyphens: auto;
 }
 
-.it-exchange-customer-address.it-exchange-customer-address--primary p {
-    text-indent: 50px;
+.it-exchange-customer-address p::before {
+    /* Hack to give enough space for the action buttons */
+    content: '';
+    float: right;
+    width: 70px;
+    height: 1em;
+}
+
+.it-exchange-customer-address.it-exchange-customer-address--primary p::before {
+    width: 50px;
 }
 
 .it-exchange-customer-addresses-edit-address input,
