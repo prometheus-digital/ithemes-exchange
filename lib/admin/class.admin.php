@@ -89,6 +89,7 @@ class IT_Exchange_Admin {
 		// Save core settings
 		add_action( 'admin_init', array( $this, 'save_core_wizard_settings' ), 9 );
 		add_action( 'admin_init', array( $this, 'save_core_general_settings' ) );
+		add_action( 'admin_init', array( $this, 'save_load_deprecated' ), 20 );
 		add_action( 'admin_init', array( $this, 'save_core_email_settings' ) );
 		add_action( 'admin_init', array( $this, 'save_core_gateway_settings' ) );
 		add_action( 'admin_init', array( $this, 'save_core_page_settings' ), 9 ); // Priority 9 to catch product rewrites
@@ -1325,6 +1326,33 @@ class IT_Exchange_Admin {
 			$this->status_message = __( 'Settings Saved.', 'it-l10n-ithemes-exchange' );
 		}
 	}
+
+	/**
+	 * Save whether we should load the deprecated code.
+     *
+     * @since 2.0.0
+	 */
+	public function save_load_deprecated() {
+
+		if ( empty( $_POST ) || 'it-exchange-settings' !== $this->_current_page || ! empty( $this->_current_tab ) ) {
+			return;
+		}
+
+		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'exchange-general-settings' ) ) {
+		    return;
+        }
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+		    return;
+        }
+
+        $load = ! empty( $_POST['it_exchange_load_deprecated'] );
+
+		update_option( 'it_exchange_load_deprecated', $load );
+
+		wp_redirect( admin_url( 'admin.php?page=it-exchange-settings' ) );
+		die();
+    }
 
 	/**
 	 * Save core general settings from Wizard and performs action for other addons to handle saving

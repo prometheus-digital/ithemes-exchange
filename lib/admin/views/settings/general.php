@@ -304,6 +304,18 @@
 						</p>
 					</td>
 				</tr>
+                <tr valign="top">
+                    <th scope="row"><label for="load-deprecated"><?php _e( 'Load Deprecated Version', 'it-l10n-ithemes-exchange' ) ?></label></th>
+                    <td>
+                        <label>
+                            <input type="checkbox" name="it_exchange_load_deprecated" id="load-deprecated" <?php checked( it_exchange_load_deprecated() ); ?>>
+                            <?php _e( 'Load Deprecated Version', 'it-l10n-ithemes-exchange' ); ?>
+                        </label>
+                        <p class="description">
+                            <?php _e( 'Load the pre 2.0.0 version of iThemes Exchange and add-ons.', 'it-l10n-ithemes-exchange' ); ?>
+                        </p>
+                    </td>
+                </tr>
 				<?php do_action( 'it_exchange_general_settings_table_bottom', $form ); ?>
 			</table>
 			<p class="submit"><input type="submit" value="<?php _e( 'Save Changes', 'it-l10n-ithemes-exchange' ); ?>" class="button button-primary" /></p>
