@@ -521,11 +521,19 @@ class IT_Exchange_Admin {
 
 			wp_enqueue_script( 'jquery-ui-tooltip' );
 
-			$gateways = ITE_Gateways::non_zero_sum();
+			/**
+			 * Filter the gateways that can be edited on the Gateways Settings page.
+             *
+             * @since 2.0.0
+             *
+             * @param ITE_Gateway[] $gateways
+			 */
+			$gateways = apply_filters( 'it_exchange_gateway_settings_page_gateways', ITE_Gateways::non_zero_sum() );
 
 			$form = new ITForm( array( 'prefix' => 'it-exchange-gateways' ) );
 			$form->set_input_group( 'accepting' );
 
+			/** @var ITE_Gateway[] $gateways */
 			foreach ( $gateways as $gateway ) {
 				$form->set_option( $gateway->get_slug(), it_exchange_is_gateway_accepting_payments( $gateway ) );
 			}
@@ -1674,7 +1682,8 @@ class IT_Exchange_Admin {
 	/**
 	 * Update URLs in nav menus
 	 *
-	 * If WP permalinks are updated or if Exchange page slugs are updated in settings, look for nav menu items, and update URLs
+	 * If WP permalinks are updated or if Exchange page slugs are updated in settings, look for nav menu items, and
+	 * update URLs
 	 *
 	 * @since 0.4.0
 	 *
