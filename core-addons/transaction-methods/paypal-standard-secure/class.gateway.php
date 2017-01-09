@@ -28,9 +28,18 @@ class ITE_PayPal_Standard_Secure_Gateway extends ITE_Gateway {
 		$this->handlers[] = new ITE_PayPal_Standard_Secure_Purchase_Handler( $this, $factory );
 		$this->handlers[] = new ITE_PayPal_Standard_Secure_Webhook_Handler();
 		$this->handlers[] = new ITE_PayPal_Standard_Secure_Refund_Request_Handler( $this );
-		$this->handlers[] = new ITE_PayPal_Standard_Secure_Pause_Subscription_Handler();
-		$this->handlers[] = new ITE_PayPal_Standard_Secure_Resume_Subscription_Handler();
-		$this->handlers[] = new ITE_PayPal_Standard_Secure_Cancel_Subscription_Handler();
+
+		if ( class_exists( 'ITE_Pause_Subscription_Request' ) ) {
+			$this->handlers[] = new ITE_PayPal_Standard_Secure_Pause_Subscription_Handler();
+		}
+
+		if ( class_exists( 'ITE_Resume_Subscription_Request' ) ) {
+			$this->handlers[] = new ITE_PayPal_Standard_Secure_Resume_Subscription_Handler();
+		}
+
+		if ( class_exists( 'ITE_Cancel_Subscription_Request' ) ) {
+			$this->handlers[] = new ITE_PayPal_Standard_Secure_Cancel_Subscription_Handler();
+		}
 	}
 
 	/**
@@ -279,14 +288,14 @@ class ITE_PayPal_Standard_Secure_Gateway extends ITE_Gateway {
 	private function get_step_3_to_5() {
 		ob_start();
 		?>
-		<h4><?php _e( 'Step 3. Setup PayPal Auto Return', 'it-l10n-ithemes-exchange' ); ?></h4>
-		<p><?php _e( 'PayPal Auto Return must be configured in Account Profile &rarr; Website Payment Preferences in your PayPal Account', 'it-l10n-ithemes-exchange' ); ?></p>
-		<p><?php _e( 'Please log into your account, set Auto Return to ON and add this URL to your Return URL Settings so your customers are redirected to your site to complete the transactions.', 'it-l10n-ithemes-exchange' ); ?></p>
-		<code><?php echo it_exchange_get_page_url( 'transaction' ); ?></code>
+        <h4><?php _e( 'Step 3. Setup PayPal Auto Return', 'it-l10n-ithemes-exchange' ); ?></h4>
+        <p><?php _e( 'PayPal Auto Return must be configured in Account Profile &rarr; Website Payment Preferences in your PayPal Account', 'it-l10n-ithemes-exchange' ); ?></p>
+        <p><?php _e( 'Please log into your account, set Auto Return to ON and add this URL to your Return URL Settings so your customers are redirected to your site to complete the transactions.', 'it-l10n-ithemes-exchange' ); ?></p>
+        <code><?php echo it_exchange_get_page_url( 'transaction' ); ?></code>
 
-		<h4><?php _e( 'Step 4. Setup PayPal Payment Data Transfer (PDT)', 'it-l10n-ithemes-exchange' ); ?></h4>
-		<p><?php _e( 'PayPal PDT must be turned <strong>ON</strong> in Account Profile &rarr; Website Payment Preferences in your PayPal Account', 'it-l10n-ithemes-exchange' ); ?></p>
-		<h4><?php _e( 'Step 5. Optional Configuration', 'it-l10n-ithemes-exchange' ); ?></h4>
+        <h4><?php _e( 'Step 4. Setup PayPal Payment Data Transfer (PDT)', 'it-l10n-ithemes-exchange' ); ?></h4>
+        <p><?php _e( 'PayPal PDT must be turned <strong>ON</strong> in Account Profile &rarr; Website Payment Preferences in your PayPal Account', 'it-l10n-ithemes-exchange' ); ?></p>
+        <h4><?php _e( 'Step 5. Optional Configuration', 'it-l10n-ithemes-exchange' ); ?></h4>
 		<?php
 
 		return ob_get_clean();
