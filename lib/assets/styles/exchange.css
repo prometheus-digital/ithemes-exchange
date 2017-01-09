@@ -1927,6 +1927,7 @@ button.it-exchange-customer-addresses-address-action--primary:hover {
 
 .it-exchange-manage-token-label-details img {
     margin-bottom: 3px;
+    vertical-align: middle;
 }
 
 .it-exchange-manage-token-label-redacted {
@@ -1965,9 +1966,11 @@ button.it-exchange-customer-addresses-address-action--primary:hover {
 
 .it-exchange-manage-tokens-token-action-container {
     display: inline-block;
-    position: absolute;
-    top: .3em;
-    right: 1em;
+    float: right;
+}
+
+.it-exchange-manage-tokens-token-action-container .it-exchange-dashicon-button {
+    vertical-align: middle;
 }
 
 .it-exchange-manage-tokens-list li::after {
