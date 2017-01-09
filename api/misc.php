@@ -940,3 +940,34 @@ function it_exchange_send_email( $email_or_message, $subject = '', $recipient = 
 
 	return it_exchange_email_notifications()->get_sender()->send( $email_or_message );
 }
+
+/**
+ * Check if a given upgrade has been completed.
+ *
+ * Note, this function will internally cache the result. If you want an uncached value, check with
+ * the upgrader object directly.
+ *
+ * @since 2.0.0
+ *
+ * @param string $upgrade
+ *
+ * @return bool
+ */
+function it_exchange_is_upgrade_complete( $upgrade ) {
+
+	static $upgrades = array();
+
+	if ( ! isset( $upgrades[ $upgrade ] ) ) {
+
+		$upgrader        = it_exchange_make_upgrader();
+		$upgrade_handler = $upgrader->get_upgrade( $upgrade );
+
+		if ( ! $upgrade_handler ) {
+			$upgrades[ $upgrade ] = false;
+		} else {
+			$upgrades[ $upgrade ] = $upgrader->is_upgrade_completed( $upgrade_handler );
+		}
+	}
+
+	return $upgrades[ $upgrade ];
+}

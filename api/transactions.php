@@ -63,7 +63,12 @@ function it_exchange_get_transaction( $post ) {
 
 		$ID = is_object( $post ) ? $post->ID : (int) $post;
 
-		$transaction = IT_Exchange_Transaction::get( $ID );
+		if ( it_exchange_is_upgrade_complete( 'txn-table' ) ) {
+			$transaction = IT_Exchange_Transaction::get( $ID );
+		} else {
+			$transaction = new IT_Exchange_Transaction( $ID );
+		}
+
 	} catch ( Exception $e ) {
 		return false;
 	}

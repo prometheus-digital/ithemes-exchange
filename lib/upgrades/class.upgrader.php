@@ -183,7 +183,7 @@ class IT_Exchange_Upgrader {
 
 		$in_progress = $this->get_upgrades_in_progress();
 
-		if ( array_search( $upgrade->get_slug(), $in_progress, true ) === false ) {
+		if ( ! in_array( $upgrade->get_slug(), $in_progress, true ) ) {
 			$in_progress[] = $upgrade->get_slug();
 
 			update_option( 'it_exchange_upgrades_in_progress', $in_progress );
