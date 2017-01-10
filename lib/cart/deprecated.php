@@ -443,7 +443,7 @@ function it_exchange_cache_customer_cart( $customer_id = false ) {
 		return;
 	}
 
-	$cart_data = $session->data;
+	$cart_data = $session->get_decoded_data();
 
 	do_action( 'it_exchange_cache_customer_cart', $customer, $cart_data );
 }

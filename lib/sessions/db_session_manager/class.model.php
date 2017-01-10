@@ -122,6 +122,24 @@ class ITE_Session_Model extends \IronBound\DB\Model {
 		return $this->save();
 	}
 
+	/**
+	 * Get the session data completely decoded.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return array
+	 */
+	public function get_decoded_data() {
+
+		$data = $this->data;
+
+		if ( ! $data || ! is_array( $data ) ) {
+			return array();
+		}
+
+		return array_map( 'maybe_unserialize', $data );
+	}
+
 	protected function _access_data( $data ) {
 		return $data ? unserialize( $data ) : array();
 	}

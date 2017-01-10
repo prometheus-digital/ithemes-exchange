@@ -378,7 +378,7 @@ function it_exchange_get_cached_customer_cart( $customer_id = false, $session_on
 	if ( $session_only ) {
 
 		// Grab the data
-		$cart = $repository->get_model()->data;
+		$cart = $repository->get_model()->get_decoded_data();
 
 		return apply_filters( 'it_exchange_get_chached_customer_cart', $cart, $customer->id );
 	} else {
