@@ -53,7 +53,7 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 
 		// Send emails on successfull transaction
 		add_action( 'it_exchange_add_transaction_success', array( $this, 'send_purchase_emails' ), 20 );
-		add_action( 'it_exchange_add_child_transaction_success', array( $this, 'send_purchase_emails' ), 20 );
+		add_action( 'it_exchange_add_child_transaction_success', array( $this, 'on_child_transaction' ), 20 );
 
 		// Send emails when admin requests a resend
 		add_action( 'admin_init', array( $this, 'handle_resend_confirmation_email_requests' ) );
@@ -320,6 +320,17 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 			}
 		}
 	}
+
+	/**
+     * Send a receipt to the customer when a renewal payment is made.
+     *
+     * @since 2.0.0
+     *
+	 * @param int $transaction_id
+	 */
+	public function on_child_transaction( $transaction_id ) {
+	    $this->send_purchase_emails( $transaction_id, false );
+    }
 
 	/**
 	 * Resends the email to the customer if the transaction status was changed from not cleared for delivery to cleared.
