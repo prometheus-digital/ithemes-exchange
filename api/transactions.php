@@ -667,11 +667,6 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
  * @return int|bool post id or false
  */
 function it_exchange_add_child_transaction( $method, $method_id, $status = 'pending', $customer_or_cart, $parent_tx_id, $txn_object_or_args = null, $args = array() ) {
-	$defaults = array(
-		'post_type'          => 'it_exchange_tran',
-		'post_status'        => 'publish',
-	);
-	$args = wp_parse_args( $args, $defaults );
 
 	$txn_object = null;
 
@@ -697,6 +692,12 @@ function it_exchange_add_child_transaction( $method, $method_id, $status = 'pend
 	if ( is_array( $txn_object_or_args ) ) {
 		$args = $txn_object_or_args;
 	}
+	
+	$defaults = array(
+		'post_type'          => 'it_exchange_tran',
+		'post_status'        => 'publish',
+	);
+	$args = wp_parse_args( $args, $defaults );
 
 	/** @var ITE_Gateway_Card $card */
 	$card          = empty( $args['card'] ) ? null : $args['card'];
