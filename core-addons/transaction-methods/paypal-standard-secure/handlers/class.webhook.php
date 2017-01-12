@@ -174,8 +174,19 @@ class ITE_PayPal_Standard_Secure_Webhook_Handler implements ITE_Gateway_Request_
 					break;
 
 				case 'subscr_cancel':
+
+					$subscription = it_exchange_get_subscription_by_subscriber_id( self::METHOD, $subscriber_id );
+
+					if ( ! $subscription || $subscription->is_status( $subscription::STATUS_CANCELLED ) ) {
+						break;
+					}
+
+					if ( $subscription->are_occurrences_limited() && $subscription->get_remaining_occurrences() === 0 ) {
+						break;
+					}
+
 					it_exchange_lock( "ppss-cancel-subscription-{$subscriber_id}", 2 );
-					it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'cancelled' );
+					$subscription->set_status( $subscription::STATUS_CANCELLED );
 					it_exchange_release_lock( "ppss-cancel-subscription-{$subscriber_id}" );
 					break;
 
