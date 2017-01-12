@@ -11,6 +11,8 @@
  */
 class ITE_PayPal_Standard_Secure_Webhook_Handler implements ITE_Gateway_Request_Handler {
 
+	const METHOD = 'paypal-standard-secure';
+
 	/**
 	 * @inheritDoc
 	 *
@@ -25,35 +27,63 @@ class ITE_PayPal_Standard_Secure_Webhook_Handler implements ITE_Gateway_Request_
 		$webhook = $request->get_webhook_data();
 
 		if ( ! empty( $webhook['custom'] ) ) {
-			$cart_id = $webhook['custom'];
+			$custom = $webhook['custom'];
 		} else if ( ! empty( $webhook['transaction_subject'] ) ) {
-			$cart_id = $webhook['transaction_subject'];
+			$custom = $webhook['transaction_subject'];
 		} else {
-			$cart_id = false;
+			$custom = false;
 		}
 
-		$cart = $lock = null;
+		$cart = $lock = $parent = null;
 
-		if ( $cart_id ) {
+		if ( $custom ) {
 
-			if ( strpos( $cart_id, 'v2|' ) !== 0 ) {
+			if ( strpos( $custom, 'v2|' ) !== 0 ) {
 				it_exchange_paypal_standard_secure_addon_process_webhook( $webhook );
 
 				return new WP_HTTP_Response( '', 200 );
 			}
 
-			// Remove the v2| from the beginning
-			$cart_id = substr( $cart_id, 3 );
+			$parts = explode( '|', $custom );
 
-			$cart = it_exchange_get_cart( $cart_id );
-			$lock = "ppss-$cart_id";
-			it_exchange_lock( $lock, 2 );
+			// Remove the v2| from the beginning
+			$cart_id = $parts[0];
+			$parent  = $parts[1];
+			$cart    = it_exchange_get_cart( $cart_id );
+			$lock    = "ppss-$cart_id";
 		}
 
 		if ( ! $this->validate_payload( $webhook ) ) {
 			return new WP_HTTP_Response( '', 400 );
 		}
 
+		if ( $lock ) {
+			$self = $this;
+			$code = it_exchange_wait_for_lock( $lock, 5, function () use ( $self, $webhook, $cart, $parent ) {
+				return $self->process( $webhook, $cart, $parent );
+			} );
+		} else {
+			$code = $this->process( $webhook, $cart, $parent );
+		}
+
+		return new WP_REST_Response( null, $code );
+	}
+
+	/**
+	 * Process a webhook.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param array         $webhook
+	 * @param ITE_Cart|null $cart
+	 * @param int           $parent
+	 *
+	 * @return int
+	 * @throws \InvalidArgumentException
+	 */
+	public function process( $webhook, ITE_Cart $cart = null, $parent = 0 ) {
+
+		$cart_id       = $cart ? $cart->get_id() : '';
 		$subscriber_id = ! empty( $webhook['subscr_id'] ) ? $webhook['subscr_id'] : false;
 		$subscriber_id = ! empty( $webhook['recurring_payment_id'] ) ? $webhook['recurring_payment_id'] : $subscriber_id;
 
@@ -72,21 +102,19 @@ class ITE_PayPal_Standard_Secure_Webhook_Handler implements ITE_Gateway_Request_
 							break;
 					}
 
-					return new WP_HTTP_Response( '', 200 );
+					return 200;
 				}
 
 				if ( ! $cart ) {
-					return new WP_HTTP_Response( '', 500 );
+					return 500;
 				}
 
 				$method_id = $webhook['txn_id'];
 				$status    = $webhook['payment_status'];
 
-				$txn_id = it_exchange_add_transaction( 'paypal-standard-secure', $method_id, $status, $cart );
+				$this->add_transaction( $cart, $method_id, $status, $parent );
 
-				it_exchange_release_lock( $txn_id );
-
-				return new WP_HTTP_Response( '', 200 );
+				return 200;
 			}
 
 			if ( $cart && ! it_exchange_get_transaction_by_cart_id( $cart_id ) ) {
@@ -99,7 +127,9 @@ class ITE_PayPal_Standard_Secure_Webhook_Handler implements ITE_Gateway_Request_
 				}
 
 				if ( isset( $status, $method_id ) ) {
-					it_exchange_add_transaction( 'paypal-standard-secure', $method_id, $status, $cart );
+					$this->add_transaction( $cart, $method_id, $status, $parent );
+
+					return 200;
 				}
 			}
 
@@ -110,7 +140,8 @@ class ITE_PayPal_Standard_Secure_Webhook_Handler implements ITE_Gateway_Request_
 
 						// if we can still retrieve the transaction by its temporary transaction ID ( cart ID )
 						// then this payment is a free trial being converted to a full subscription
-						if ( $transaction = it_exchange_get_transaction_by_method_id( 'paypal-standard-secure', $cart_id ) ) {
+						if ( $transaction = it_exchange_get_transaction_by_method_id( self::METHOD, $cart_id ) ) {
+							// PayPal doesn't give us a transaction ID for the first, so we make our own.
 							$transaction->update_method_id( md5( $cart_id ) );
 						}
 
@@ -154,20 +185,16 @@ class ITE_PayPal_Standard_Secure_Webhook_Handler implements ITE_Gateway_Request_
 					it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'deactivated' );
 					break;
 			}
-
-			if ( $lock ) {
-				it_exchange_release_lock( $lock );
-			}
 		} else {
 
 			//These IPNs don't have txn_types, why PayPal!? WHY!?
 			if ( ! empty( $webhook['reason_code'] ) && $webhook['reason_code'] === 'refund' ) {
 
 				$refund_id   = $webhook['txn_id'];
-				$transaction = it_exchange_get_transaction_by_method_id( 'paypal-standard-secure', $webhook['parent_txn_id'] );
+				$transaction = it_exchange_get_transaction_by_method_id( self::METHOD, $webhook['parent_txn_id'] );
 
 				if ( ! $transaction ) {
-					return new WP_HTTP_Response( '', 200 );
+					return 200;
 				}
 
 				it_exchange_lock( "paypal-secure-refund-created-{$transaction->ID}", 2 );
@@ -175,9 +202,9 @@ class ITE_PayPal_Standard_Secure_Webhook_Handler implements ITE_Gateway_Request_
 				$transaction->update_status( $webhook['payment_status'] );
 
 				$existing = ITE_Refund::query()
-					->and_where( 'gateway_id', '=', $refund_id )
-					->and_where( 'transaction', '=', $transaction->ID )
-					->first();
+				                      ->and_where( 'gateway_id', '=', $refund_id )
+				                      ->and_where( 'transaction', '=', $transaction->ID )
+				                      ->first();
 
 				if ( ! $refund_id || ! $existing ) {
 					it_exchange_paypal_standard_secure_addon_add_refund_to_transaction( $webhook['parent_txn_id'], $webhook['mc_gross'] );
@@ -191,8 +218,29 @@ class ITE_PayPal_Standard_Secure_Webhook_Handler implements ITE_Gateway_Request_
 			}
 		}
 
+		return 200;
+	}
 
-		return new WP_HTTP_Response( '', 200 );
+	/**
+	 * Add the transaction in Exchange.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param ITE_Cart $cart
+	 * @param string   $method_id
+	 * @param string   $status
+	 * @param int      $parent
+	 * @param array    $args
+	 *
+	 * @return int|false
+	 */
+	protected function add_transaction( ITE_Cart $cart, $method_id, $status, $parent, $args = array() ) {
+
+		if ( $parent ) {
+			return it_exchange_add_child_transaction( self::METHOD, $method_id, $status, $cart, $parent, $args );
+		}
+
+		return it_exchange_add_transaction( self::METHOD, $method_id, $status, $cart, null, $args );
 	}
 
 	/**

@@ -108,14 +108,18 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 		// https://developer.paypal.com/webapps/developer/docs/classic/button-manager/integration-guide/ButtonManagerHTMLVariables/
 		$button_vars['rm']            = 2;
 		$button_vars['cancel_return'] = it_exchange_get_page_url( 'cart' );
-		$button_vars['custom']        = 'v2|' . $cart->get_id();
+
+		$custom = "v2|{$cart->get_id()}|";
+		$custom .= ( $request->get_child_of() ? $request->get_child_of()->get_ID() : 0 );
+
+		$button_vars['custom'] = $custom;
 
 		/**
 		 * Filter the Button Vars that are passed to PayPal.
 		 *
 		 * @since 2.0.0
 		 *
-		 * @param array                                  $button_vars
+		 * @param array                        $button_vars
 		 * @param ITE_Gateway_Purchase_Request $request
 		 */
 		$button_vars = apply_filters( 'it_exchange_paypal_standard_secure_get_button_vars', $button_vars, $request );
@@ -150,7 +154,7 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 		 *
 		 * @since 2.0.0 Added the `$request` parameter.
 		 *
-		 * @param array                                  $button_request
+		 * @param array                        $button_request
 		 * @param ITE_Gateway_Purchase_Request $request
 		 */
 		$button_request = apply_filters( 'it_exchange_paypal_standard_secure_button_request', $button_request, $request );
@@ -351,8 +355,8 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 
 		$total = $cart->get_total();
 		$fee   = $cart_product->get_line_items()->with_only( 'fee' )
-		                    ->filter( function ( ITE_Fee_Line_Item $fee ) { return ! $fee->is_recurring(); } )
-		                    ->first();
+		                      ->filter( function ( ITE_Fee_Line_Item $fee ) { return ! $fee->is_recurring(); } )
+		                      ->first();
 
 		if ( $fee ) {
 			$total += $fee->get_total() * - 1;
@@ -382,17 +386,16 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 	 */
 	public function handle( $request ) {
 
-		$pdt = $request->get_http_request();
-
-		$paypal_id = $cart_id = $cart = $paypal_total = $paypal_status = $subscriber_id = $lock = null;
+		$pdt  = $request->get_http_request();
+		$cart = $custom = $lock = null;
 
 		if ( ! empty( $pdt['cm'] ) ) {
-			$cart_id = $pdt['cm'];
+			$custom = $pdt['cm'];
 		} elseif ( ! empty( $pdt['custom'] ) ) {
-			$cart_id = $pdt['custom'];
+			$custom = $pdt['custom'];
 		}
 
-		if ( $cart_id && strpos( $cart_id, 'v2|' ) !== 0 ) {
+		if ( $custom && strpos( $custom, 'v2|' ) !== 0 ) {
 			$r = it_exchange_process_paypal_standard_secure_addon_transaction(
 				false,
 				it_exchange_generate_transaction_object( $request->get_cart() )
@@ -400,6 +403,67 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 
 			return $r ? it_exchange_get_transaction( $r ) : null;
 		}
+
+		if ( $custom ) {
+			$cart = $request->get_cart();
+			$lock = "ppss-{$cart->get_id()}";
+		}
+
+		if ( ! wp_verify_nonce( $request->get_nonce(), $this->get_nonce_action() ) ) {
+
+			$error = __( 'Request expired. Please try again.', 'it-l10n-ithemes-exchange' );
+
+			if ( $cart ) {
+				$cart->get_feedback()->add_error( $error );
+			} else {
+				it_exchange_add_message( 'error', $error );
+			}
+
+			return null;
+		}
+
+		try {
+			if ( $lock ) {
+				$self = $this;
+
+				$transaction = it_exchange_wait_for_lock( $lock, 5, function () use ( $self, $request, $cart, $pdt ) {
+					return $self->process_pdt( $request, $cart, $pdt );
+				} );
+			} else {
+				$transaction = $this->process_pdt( $request, $cart, $pdt );
+			}
+
+			return $transaction ? it_exchange_get_transaction( $transaction ) : null;
+		} catch ( IT_Exchange_Locking_Exception $e ) {
+			throw $e;
+		} catch ( Exception $e ) {
+
+			if ( $cart ) {
+				$cart->get_feedback()->add_error( $e->getMessage() );
+			} else {
+				it_exchange_add_message( 'error', $e->getMessage() );
+			}
+
+			return null;
+		}
+	}
+
+	/**
+	 * Process a PDT request.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param ITE_Gateway_Purchase_Request $request
+	 * @param ITE_Cart|null                $cart
+	 * @param array                        $pdt
+	 *
+	 * @return false|int|IT_Exchange_Transaction|null
+	 * @throws Exception
+	 */
+	public function process_pdt( ITE_Gateway_Purchase_Request $request, ITE_Cart $cart = null, $pdt ) {
+
+		$cart_id   = $cart ? $cart->get_id() : null;
+		$paypal_id = $paypal_total = $paypal_status = $subscriber_id = null;
 
 		if ( ! empty( $pdt['tx'] ) ) { //if PDT is enabled
 			$paypal_id = $pdt['tx'];
@@ -419,125 +483,73 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 			$paypal_status = $pdt['payment_status'];
 		}
 
-		if ( $cart_id ) {
-			$lock = "ppss-$cart_id";
-
-			// Remove the v2| from the beginning
-			$cart_id = substr( $cart_id, 3 );
-
-			$cart = it_exchange_get_cart( $cart_id );
-		}
-
-		if ( ! wp_verify_nonce( $request->get_nonce(), $this->get_nonce_action() ) ) {
-
-			$error = __( 'Request expired. Please try again.', 'it-l10n-ithemes-exchange' );
-
-			if ( $cart ) {
-				$cart->get_feedback()->add_error( $error );
-			} else {
-				it_exchange_add_message( 'error', $error );
-			}
-
-			return null;
-		}
-
 		$customer = $request->get_customer();
 
-		try {
+		if ( isset( $paypal_id, $paypal_total, $paypal_status, $cart_id, $cart ) ) {
 
-			if ( isset( $paypal_id, $paypal_total, $paypal_status, $cart_id, $cart ) ) {
+			$response_array = $this->get_paypal_transaction_details( $paypal_id );
 
-				it_exchange_lock( $lock, 2 );
+			it_exchange_set_paypal_standard_secure_addon_customer_id( $customer->id, $response_array['PAYERID'] );
+			it_exchange_set_paypal_standard_secure_addon_customer_email( $customer->id, $response_array['EMAIL'] );
 
-				$response_array = $this->get_paypal_transaction_details( $paypal_id );
+			$paypal_status = $response_array['PAYMENTSTATUS'];
 
-				it_exchange_set_paypal_standard_secure_addon_customer_id( $customer->id, $response_array['PAYERID'] );
-				it_exchange_set_paypal_standard_secure_addon_customer_email( $customer->id, $response_array['EMAIL'] );
-
-				$paypal_status = $response_array['PAYMENTSTATUS'];
-
-				if ( $paypal_id !== $response_array['TRANSACTIONID'] ) {
-					throw new Exception( sprintf(
-						__( 'Error: Transaction IDs do not match! %s, %s', 'it-l10n-ithemes-exchange' ),
-						$paypal_id,
-						$response_array['TRANSACTIONID']
-					) );
-				}
-
-				$cart_total = it_exchange_get_cart_total( false, array( 'cart' => $cart ) );
-
-				if ( number_format( $response_array['AMT'], '2', '', '' ) !== number_format( $cart_total, '2', '', '' ) ) {
-					throw new Exception( __( 'Error: Amount charged is not the same as the cart total.', 'it-l10n-ithemes-exchange' ) );
-				}
-
-				if ( ! empty( $response_array['SUBSCRIPTIONID'] ) ) {
-					$subscriber_id = $response_array['SUBSCRIPTIONID'];
-				}
-
-				if ( $transaction = it_exchange_get_transaction_by_method_id( 'paypal-standard-secure', $cart_id ) ) {
-					$transaction->update_method_id( $paypal_id );
-
-					it_exchange_release_lock( $lock );
-
-					return $transaction;
-				}
-
-				if ( $transaction = it_exchange_get_transaction_by_cart_id( $cart_id ) ) {
-					it_exchange_release_lock( $lock );
-
-					return $transaction;
-				}
-
-				$txn_id = $this->add_transaction( $request, $paypal_id, $paypal_status );
-
-				it_exchange_release_lock( $lock );
-
-				if ( $subscriber_id ) {
-					it_exchange_paypal_standard_secure_addon_update_subscriber_id( $paypal_id, $subscriber_id );
-				}
-
-				return it_exchange_get_transaction( $txn_id );
-
-
-			} elseif ( null === $paypal_id && null === $cart_id && null === $cart && null === $paypal_total && null === $paypal_status ) {
-
-				$cart_id = it_exchange_get_session_data( 'ppss_transient_transaction_id' );
-				$cart_id = $cart_id[0];
-				it_exchange_clear_session_data( 'ppss_transient_transaction_id' );
-
-				$lock = "ppss-$cart_id";
-				it_exchange_lock( $lock, 2 );
-
-				$cart = it_exchange_get_cart( $cart_id );
-
-				if ( ! $cart ) {
-					throw new Exception( __( 'Unable to retrieve cart.', 'it-l10n-ithemes-exchange' ) );
-				}
-
-				if ( $transaction = it_exchange_get_transaction_by_cart_id( $cart_id ) ) {
-					it_exchange_release_lock( $lock );
-
-					return $transaction;
-				}
-
-				$txn_id = $this->add_transaction( $request, $cart_id, 'Completed' );
-
-				it_exchange_release_lock( $lock );
-
-				return it_exchange_get_transaction( $txn_id );
-			} else {
-				return null;
-			}
-		} catch ( IT_Exchange_Locking_Exception $e ) {
-			throw $e;
-		} catch ( Exception $e ) {
-
-			if ( $cart ) {
-				$cart->get_feedback()->add_error( $e->getMessage() );
-			} else {
-				it_exchange_add_message( 'error', $e->getMessage() );
+			if ( $paypal_id !== $response_array['TRANSACTIONID'] ) {
+				throw new Exception( sprintf(
+					__( 'Error: Transaction IDs do not match! %s, %s', 'it-l10n-ithemes-exchange' ),
+					$paypal_id,
+					$response_array['TRANSACTIONID']
+				) );
 			}
 
+			$cart_total = it_exchange_get_cart_total( false, array( 'cart' => $cart ) );
+
+			if ( number_format( $response_array['AMT'], '2', '', '' ) !== number_format( $cart_total, '2', '', '' ) ) {
+				throw new Exception( __( 'Error: Amount charged is not the same as the cart total.', 'it-l10n-ithemes-exchange' ) );
+			}
+
+			if ( ! empty( $response_array['SUBSCRIPTIONID'] ) ) {
+				$subscriber_id = $response_array['SUBSCRIPTIONID'];
+			}
+
+			if ( $transaction = it_exchange_get_transaction_by_method_id( 'paypal-standard-secure', $cart_id ) ) {
+				$transaction->update_method_id( $paypal_id );
+
+				return $transaction;
+			}
+
+			if ( $transaction = it_exchange_get_transaction_by_cart_id( $cart_id ) ) {
+				return $transaction;
+			}
+
+			$txn_id = $this->add_transaction( $request, $paypal_id, $paypal_status );
+
+			if ( $subscriber_id ) {
+				it_exchange_paypal_standard_secure_addon_update_subscriber_id( $paypal_id, $subscriber_id );
+			}
+
+			return $txn_id;
+		} elseif ( null === $paypal_id && null === $cart_id && null === $cart && null === $paypal_total && null === $paypal_status ) {
+
+			$cart_id = it_exchange_get_session_data( 'ppss_transient_transaction_id' );
+			$cart_id = $cart_id[0];
+			it_exchange_clear_session_data( 'ppss_transient_transaction_id' );
+
+			$lock = "ppss-$cart_id";
+			it_exchange_lock( $lock, 2 );
+
+			$cart = it_exchange_get_cart( $cart_id );
+
+			if ( ! $cart ) {
+				throw new Exception( __( 'Unable to retrieve cart.', 'it-l10n-ithemes-exchange' ) );
+			}
+
+			if ( $transaction = it_exchange_get_transaction_by_cart_id( $cart_id ) ) {
+				return $transaction;
+			}
+
+			return $this->add_transaction( $request, $cart_id, 'Completed' );
+		} else {
 			return null;
 		}
 	}
@@ -548,9 +560,9 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 	 * @since 2.0.0
 	 *
 	 * @param ITE_Gateway_Purchase_Request $request
-	 * @param string                                 $method_id
-	 * @param string                                 $status
-	 * @param array                                  $args
+	 * @param string                       $method_id
+	 * @param string                       $status
+	 * @param array                        $args
 	 *
 	 * @return int|false
 	 */

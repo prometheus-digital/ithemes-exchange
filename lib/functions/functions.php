@@ -548,6 +548,7 @@ function it_exchange_process_webhooks() {
 	$param = it_exchange_get_webhook( $doing );
 
 	try {
+	    it_exchange_set_time_limit();
 		do_action( 'it_exchange_webhook_' . $param, $_REQUEST );
 	} catch ( IT_Exchange_Locking_Exception $e ) {
 		status_header( 500 );
@@ -2480,6 +2481,20 @@ function it_exchange_get_host() {
 	}
 
 	return $host;
+}
+/**
+ * Wrapper for set_time_limit to see if it is enabled.
+ *
+ * @author WooCommerce GPLv2
+ *
+ * @since 2.0.0
+ *
+ * @param int $limit
+ */
+function it_exchange_set_time_limit( $limit = 0 ) {
+	if ( function_exists( 'set_time_limit' ) && false === strpos( ini_get( 'disable_functions' ), 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+		@set_time_limit( $limit );
+	}
 }
 
 

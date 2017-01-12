@@ -414,73 +414,74 @@ class IT_Exchange_Pages {
 	 *
 	 * @return void
 	*/
-	function process_transaction() {
+	public function process_transaction() {
 
-		if ( 'transaction' == $this->_current_view ) {
-
-			try {
-				$cart = it_exchange_get_requested_cart_and_check_auth();
-			} catch ( UnexpectedValueException $e ) {
-				it_exchange_add_message( 'error', $e->getMessage() );
-
-				return;
-			}
-
-			if ( is_user_logged_in() || $cart ) {
-
-				$cart = $cart ?: it_exchange_get_current_cart();
-
-				$transaction_id = apply_filters( 'it_exchange_process_transaction', false, $cart );
-
-				// If we made a transaction
-				if ( $transaction_id ) {
-
-					if ( $cart->is_current() ) {
-						// Clear the cart
-						it_exchange_empty_shopping_cart();
-					}
-
-					if ( isset( $_REQUEST['redirect_to'] ) ) {
-						wp_safe_redirect( add_query_arg( 'transaction_id', $transaction_id, $_REQUEST['redirect_to'] ) );
-						die();
-					}
-
-					// Grab the transaction confirmation URL. fall back to store if confirmation url fails
-					$confirmation_url = it_exchange_get_transaction_confirmation_url( $transaction_id );
-
-					if ( empty( $confirmation_url ) ) {
-						$confirmation_url = it_exchange_get_page_url( 'store' );
-					} elseif ( $cart && ! is_user_logged_in() ) {
-						$auth = \Firebase\JWT\JWT::encode( array(
-							'exp'              => time() + HOUR_IN_SECONDS,
-							'transaction_hash' => it_exchange_get_transaction_hash( $transaction_id )
-						), wp_salt() );
-
-						$confirmation_url = add_query_arg( array( 'confirmation_auth' => $auth ), $confirmation_url );
-					}
-
-					// Redirect
-					wp_redirect( $confirmation_url ); // no filter or it_exchange_redirect on this one
-					die();
-				}
-			}
-
-			// the transaction failed, or no products in the cart
-
-			if ( it_exchange_is_multi_item_cart_allowed() ) {
-				wp_redirect( it_exchange_get_page_url( 'checkout' ) ); // no filter or it_exchange_redirect on this one
-			} else {
-
-				foreach ( it_exchange_get_current_cart()->get_items( 'product' ) as $product ) {
-					wp_redirect( get_permalink( $product->get_product()->ID ) );
-					die();
-				}
-
-				wp_redirect( it_exchange_get_page_url( 'store' ) ); // no filter or it_exchange_redirect
-			}
-
-			die();
+		if ( $this->_current_view !== 'transaction' ) {
+			return;
 		}
+
+		try {
+			$cart = it_exchange_get_requested_cart_and_check_auth();
+		} catch ( UnexpectedValueException $e ) {
+			it_exchange_add_message( 'error', $e->getMessage() );
+
+			return;
+		}
+
+		if ( $cart || is_user_logged_in() ) {
+
+			$cart = $cart ?: it_exchange_get_current_cart();
+
+			$transaction_id = apply_filters( 'it_exchange_process_transaction', false, $cart );
+
+			// If we made a transaction
+			if ( $transaction_id ) {
+
+				if ( $cart->is_current() ) {
+					// Clear the cart
+					it_exchange_empty_shopping_cart();
+				}
+
+				if ( isset( $_REQUEST['redirect_to'] ) ) {
+					wp_safe_redirect( add_query_arg( 'transaction_id', $transaction_id, $_REQUEST['redirect_to'] ) );
+					die();
+				}
+
+				// Grab the transaction confirmation URL. fall back to store if confirmation url fails
+				$confirmation_url = it_exchange_get_transaction_confirmation_url( $transaction_id );
+
+				if ( empty( $confirmation_url ) ) {
+					$confirmation_url = it_exchange_get_page_url( 'store' );
+				} elseif ( $cart && ! is_user_logged_in() ) {
+					$auth = \Firebase\JWT\JWT::encode( array(
+						'exp'              => time() + HOUR_IN_SECONDS,
+						'transaction_hash' => it_exchange_get_transaction_hash( $transaction_id )
+					), wp_salt() );
+
+					$confirmation_url = add_query_arg( array( 'confirmation_auth' => $auth ), $confirmation_url );
+				}
+
+				// Redirect
+				wp_redirect( $confirmation_url ); // no filter or it_exchange_redirect on this one
+				die();
+			}
+		}
+
+		// the transaction failed, or no products in the cart
+
+		if ( it_exchange_is_multi_item_cart_allowed() ) {
+			wp_redirect( it_exchange_get_page_url( 'checkout' ) ); // no filter or it_exchange_redirect on this one
+		} else {
+
+			foreach ( it_exchange_get_current_cart()->get_items( 'product' ) as $product ) {
+				wp_redirect( get_permalink( $product->get_product()->ID ) );
+				die();
+			}
+
+			wp_redirect( it_exchange_get_page_url( 'store' ) ); // no filter or it_exchange_redirect
+		}
+
+		die();
 	}
 
 	/**

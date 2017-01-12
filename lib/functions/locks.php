@@ -48,6 +48,39 @@ function it_exchange_lock( $name, $length ) {
 }
 
 /**
+ * Helper to execute a function when a lock is able to be acquired.
+ *
+ * @since 2.0.0
+ *
+ * @param string   $name     Unique identifier for the lock.
+ * @param int      $length   Number of seconds the lock is needed.
+ * @param callable $callable Function to be called after the lock is aquired.
+ * @param int      $tries    How many wait tries before throwing an exception.
+ *
+ * @return mixed
+ * @throws IT_Exchange_Locking_Exception If unable to acquire a lock within the specified number of tries.
+ */
+function it_exchange_wait_for_lock( $name, $length, $callable, $tries = 10 ) {
+
+	do {
+		try {
+			it_exchange_lock( $name, $length );
+			$r = call_user_func( $callable );
+			it_exchange_release_lock( $name );
+
+			return $r;
+		} catch ( IT_Exchange_Locking_Exception $e ) {
+			$tries--;
+			sleep( $length / 2 );
+		}
+	} while ( $tries >= 0 );
+
+	$seconds = 10 * ( $length / 2 );
+
+	throw new IT_Exchange_Locking_Exception( "Unable to acquire locks within {$seconds} seconds." );
+}
+
+/**
  * Release a lock.
  *
  * Make sure to call this after completing your task.
