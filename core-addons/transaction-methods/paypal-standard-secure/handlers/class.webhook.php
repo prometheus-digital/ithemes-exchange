@@ -136,13 +136,6 @@ class ITE_PayPal_Standard_Secure_Webhook_Handler implements ITE_Gateway_Request_
 
 					if ( $webhook['payment_status'] === 'Completed' ) {
 
-						// if we can still retrieve the transaction by its temporary transaction ID ( cart ID )
-						// then this payment is a free trial being converted to a full subscription
-						if ( $transaction = it_exchange_get_transaction_by_method_id( self::METHOD, $cart_id ) ) {
-							// PayPal doesn't give us a transaction ID for the first, so we make our own.
-							$transaction->update_method_id( md5( $cart_id ) );
-						}
-
 						// attempt to update the payment status for a transaction
 						if ( ! it_exchange_paypal_standard_secure_addon_update_transaction_status( $webhook['txn_id'], $webhook['payment_status'] ) ) {
 							//If the transaction isn't found, we've got a new payment
@@ -159,10 +152,12 @@ class ITE_PayPal_Standard_Secure_Webhook_Handler implements ITE_Gateway_Request_
 
 					break;
 				case 'subscr_signup':
-					/* We need to do some free trial magic! */
-					if ( it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $webhook['custom'] ) ) {
-						it_exchange_paypal_standard_secure_addon_update_subscriber_id( $webhook['custom'], $subscriber_id );
-						it_exchange_paypal_standard_secure_addon_update_transaction_status( $webhook['custom'], 'Completed' );
+
+					$free_trial_id = md5( $cart_id );
+
+					if ( it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $free_trial_id ) ) {
+						it_exchange_paypal_standard_secure_addon_update_subscriber_id( $free_trial_id, $subscriber_id );
+						it_exchange_paypal_standard_secure_addon_update_transaction_status( $free_trial_id, 'Completed' );
 					} elseif ( ! empty( $webhook['txn_id'] ) && it_exchange_paypal_standard_secure_addon_get_ite_transaction_id( $webhook['txn_id'] ) ) {
 						it_exchange_paypal_standard_secure_addon_update_subscriber_id( $webhook['txn_id'], $subscriber_id );
 					}

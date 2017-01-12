@@ -53,8 +53,6 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 
 		remove_filter( 'the_title', 'wptexturize' );
 
-		$general_settings = it_exchange_get_option( 'settings_general' );
-
 		$return_args = array(
 			'it-exchange-transaction-method' => 'paypal-standard',
 			'_wpnonce'                       => $this->get_nonce(),
@@ -94,7 +92,7 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 			'email'         => $cart->get_customer() ? $cart->get_customer()->get_email() : '',
 			'rm'            => 2,
 			'cancel_return' => it_exchange_get_page_url( 'cart' ),
-			'custom'        => 'v2|' . $cart->get_id(),
+			'custom'        => "v2|{$cart->get_id()}|" . ( $request->get_child_of() ? $request->get_child_of()->get_ID() : 0 ),
 			'bn'            => 'iThemes_SP',
 		);
 
@@ -205,9 +203,9 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 		}
 
 		$total = $cart->get_total();
-		$fee = $cart_product->get_line_items()->with_only( 'fee' )
-		                    ->filter( function ( ITE_Fee_Line_Item $fee ) { return ! $fee->is_recurring(); } )
-		                    ->first();
+		$fee   = $cart_product->get_line_items()->with_only( 'fee' )
+		                      ->filter( function ( ITE_Fee_Line_Item $fee ) { return ! $fee->is_recurring(); } )
+		                      ->first();
 
 		if ( $fee ) {
 			$total += $fee->get_total() * - 1;
@@ -247,17 +245,16 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 	 */
 	public function handle( $request ) {
 
-		$pdt = $request->get_http_request();
-
-		$paypal_id = $cart_id = $cart = $paypal_total = $paypal_status = $lock = null;
+		$pdt    = $request->get_http_request();
+		$custom = $lock = null;
 
 		if ( ! empty( $pdt['cm'] ) ) {
-			$cart_id = $pdt['cm'];
+			$custom = $pdt['cm'];
 		} elseif ( ! empty( $pdt['custom'] ) ) {
-			$cart_id = $pdt['custom'];
+			$custom = $pdt['custom'];
 		}
 
-		if ( $cart_id && strpos( $cart_id, 'v2|' ) !== 0 ) {
+		if ( $custom && strpos( $custom, 'v2|' ) !== 0 ) {
 			$r = it_exchange_process_paypal_standard_addon_transaction(
 				false,
 				it_exchange_generate_transaction_object( $request->get_cart() )
@@ -265,6 +262,62 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 
 			return $r ? it_exchange_get_transaction( $r ) : null;
 		}
+
+		$cart = $request->get_cart();
+		$lock = "pps-{$cart->get_id()}";
+
+		if ( ! wp_verify_nonce( $request->get_nonce(), $this->get_nonce_action() ) ) {
+
+			$error = __( 'Request expired. Please try again.', 'it-l10n-ithemes-exchange' );
+
+			if ( $cart ) {
+				$cart->get_feedback()->add_error( $error );
+			} else {
+				it_exchange_add_message( 'error', $error );
+			}
+
+			return null;
+		}
+
+		try {
+			$self = $this;
+
+			$transaction = it_exchange_wait_for_lock( $lock, 5, function () use ( $self, $request, $pdt ) {
+				return $self->process_pdt( $request, $pdt );
+			} );
+
+			return $transaction ? it_exchange_get_transaction( $transaction ) : null;
+		} catch ( IT_Exchange_Locking_Exception $e ) {
+			throw $e;
+		} catch ( Exception $e ) {
+
+			if ( $cart ) {
+				$cart->get_feedback()->add_error( $e->getMessage() );
+			} else {
+				it_exchange_add_message( 'error', $e->getMessage() );
+			}
+
+			return null;
+		}
+	}
+
+	/**
+	 * Process a PDT request.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param ITE_Gateway_Purchase_Request $request
+	 * @param array                        $pdt
+	 *
+	 * @return false|int|IT_Exchange_Transaction|null
+	 * @throws Exception
+	 */
+	public function process_pdt( ITE_Gateway_Purchase_Request $request, $pdt ) {
+
+		$cart    = $request->get_cart();
+		$cart_id = $cart->get_id();
+
+		$paypal_id = $paypal_total = $paypal_status = $subscriber_id = null;
 
 		if ( ! empty( $pdt['tx'] ) ) { //if PDT is enabled
 			$paypal_id = $pdt['tx'];
@@ -284,99 +337,30 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 			$paypal_status = $pdt['payment_status'];
 		}
 
-		if ( $cart_id ) {
-			$lock = "pps-$cart_id";
+		if ( isset( $paypal_id, $paypal_total, $paypal_status, $cart_id, $cart ) ) {
 
-			// Remove the v2| from the beginning
-			$cart_id = substr( $cart_id, 3 );
+			$cart_total = it_exchange_get_cart_total( false, array( 'cart' => $cart ) );
 
-			$cart = it_exchange_get_cart( $cart_id );
-		}
-
-		if ( ! wp_verify_nonce( $request->get_nonce(), $this->get_nonce_action() ) ) {
-
-			$error = __( 'Request expired. Please try again.', 'it-l10n-ithemes-exchange' );
-
-			if ( $cart ) {
-				$cart->get_feedback()->add_error( $error );
-			} else {
-				it_exchange_add_message( 'error', $error );
+			if ( number_format( $paypal_total, '2', '', '' ) !== number_format( $cart_total, '2', '', '' ) ) {
+				throw new Exception( __( 'Error: Amount charged is not the same as the cart total.', 'it-l10n-ithemes-exchange' ) );
 			}
 
-			return null;
-		}
+			if ( $transaction = it_exchange_get_transaction_by_method_id( 'paypal-standard', $cart_id ) ) {
+				$transaction->update_method_id( $paypal_id );
 
-		try {
-
-			if ( isset( $paypal_id, $cart_id, $cart, $paypal_total, $paypal_status ) ) {
-
-				it_exchange_lock( $lock, 2 );
-
-				$cart_total = it_exchange_get_cart_total( false, array( 'cart' => $cart ) );
-
-				if ( number_format( $paypal_total, 2, '', '' ) !== number_format( $cart_total, 2, '', '' ) ) {
-					throw new Exception( __( 'Error: Amount charged is not the same as the cart total.', 'it-l10n-ithemes-exchange' ) );
-				}
-
-				if ( $transaction = it_exchange_get_transaction_by_method_id( 'paypal-standard', $cart_id ) ) {
-					$transaction->update_method_id( $paypal_id );
-
-					it_exchange_release_lock( $lock );
-
-					return $transaction;
-				}
-
-				if ( $transaction = it_exchange_get_transaction_by_cart_id( $cart_id ) ) {
-					it_exchange_release_lock( $lock );
-
-					return $transaction;
-				}
-
-				$txn_id = $this->add_transaction( $request, $paypal_id, $paypal_status );
-
-				it_exchange_release_lock( $lock );
-
-				return it_exchange_get_transaction( $txn_id );
-			} elseif ( null === $paypal_id && null === $cart_id && null === $cart && null === $paypal_total && null === $paypal_status ) {
-
-				$cart_id = it_exchange_get_session_data( 'pps_transient_transaction_id' );
-				$cart_id = $cart_id[0];
-				it_exchange_clear_session_data( 'pps_transient_transaction_id' );
-
-				$lock = "pps-$cart_id";
-				it_exchange_lock( $lock, 2 );
-
-				$cart = it_exchange_get_cart( $cart_id );
-
-				if ( ! $cart ) {
-					throw new Exception( __( 'Unable to retrieve cart.', 'it-l10n-ithemes-exchange' ) );
-				}
-
-				if ( $transaction = it_exchange_get_transaction_by_cart_id( $cart_id ) ) {
-					it_exchange_release_lock( $lock );
-
-					return $transaction;
-				}
-
-				$txn_id = $this->add_transaction( $request, $cart_id, 'Completed' );
-
-				it_exchange_release_lock( $lock );
-
-				return it_exchange_get_transaction( $txn_id );
-			} else {
-				return null;
-			}
-		} catch ( IT_Exchange_Locking_Exception $e ) {
-			throw $e;
-		} catch ( Exception $e ) {
-
-			if ( $cart ) {
-				$cart->get_feedback()->add_error( $e->getMessage() );
-			} else {
-				it_exchange_add_message( 'error', $e->getMessage() );
+				return $transaction;
 			}
 
-			return null;
+			if ( $transaction = it_exchange_get_transaction_by_cart_id( $cart_id ) ) {
+				return $transaction;
+			}
+
+			return $this->add_transaction( $request, $paypal_id, $paypal_status );
+		} else if ( $transaction = it_exchange_get_transaction_by_cart_id( $cart_id ) ) {
+			return $transaction;
+		} else {
+			// This occurs if we just made a free trial payment
+			return $this->add_transaction( $request, md5( $cart_id ), 'Completed' );
 		}
 	}
 
@@ -386,9 +370,9 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 	 * @since 2.0.0
 	 *
 	 * @param ITE_Gateway_Purchase_Request $request
-	 * @param string                                 $method_id
-	 * @param string                                 $status
-	 * @param array                                  $args
+	 * @param string                       $method_id
+	 * @param string                       $status
+	 * @param array                        $args
 	 *
 	 * @return int|false
 	 */

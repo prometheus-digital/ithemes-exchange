@@ -528,7 +528,7 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 			return $transaction;
 		} else {
 			// This occurs if we just made a free trial payment
-			return $this->add_transaction( $request, $cart_id, 'Completed' );
+			return $this->add_transaction( $request, md5( $cart_id ), 'Completed' );
 		}
 	}
 
