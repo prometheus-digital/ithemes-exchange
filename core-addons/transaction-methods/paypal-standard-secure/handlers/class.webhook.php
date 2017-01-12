@@ -44,13 +44,11 @@ class ITE_PayPal_Standard_Secure_Webhook_Handler implements ITE_Gateway_Request_
 				return new WP_HTTP_Response( '', 200 );
 			}
 
-			$parts = explode( '|', $custom );
+			// Custom is in a format of 'v2|cart_id|parentID'
+			list( , $cart_id, $parent ) = explode( '|', $custom );
 
-			// Remove the v2| from the beginning
-			$cart_id = $parts[0];
-			$parent  = $parts[1];
-			$cart    = it_exchange_get_cart( $cart_id );
-			$lock    = "ppss-$cart_id";
+			$cart = it_exchange_get_cart( $cart_id );
+			$lock = "ppss-$cart_id";
 		}
 
 		if ( ! $this->validate_payload( $webhook ) ) {

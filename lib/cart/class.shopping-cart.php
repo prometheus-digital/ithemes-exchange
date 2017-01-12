@@ -651,10 +651,6 @@ class IT_Exchange_Shopping_Cart {
 			catch ( IT_Exchange_Locking_Exception $e ) {
 				sleep( 2 );
 
-				// wipe paypal transient data. todo don't make this so hacky
-				it_exchange_clear_session_data( 'ppss_transient_transaction_id' );
-				it_exchange_clear_session_data( 'pps_transient_transaction_id' );
-
 				$transaction = it_exchange_get_transaction_by_cart_id( it_exchange_get_cart_id() );
 
 				if ( $transaction ) {

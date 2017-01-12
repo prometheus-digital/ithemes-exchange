@@ -386,8 +386,8 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 	 */
 	public function handle( $request ) {
 
-		$pdt  = $request->get_http_request();
-		$cart = $custom = $lock = null;
+		$pdt    = $request->get_http_request();
+		$custom = $lock = null;
 
 		if ( ! empty( $pdt['cm'] ) ) {
 			$custom = $pdt['cm'];
@@ -404,10 +404,8 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 			return $r ? it_exchange_get_transaction( $r ) : null;
 		}
 
-		if ( $custom ) {
-			$cart = $request->get_cart();
-			$lock = "ppss-{$cart->get_id()}";
-		}
+		$cart = $request->get_cart();
+		$lock = "ppss-{$cart->get_id()}";
 
 		if ( ! wp_verify_nonce( $request->get_nonce(), $this->get_nonce_action() ) ) {
 
@@ -423,15 +421,11 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 		}
 
 		try {
-			if ( $lock ) {
-				$self = $this;
+			$self = $this;
 
-				$transaction = it_exchange_wait_for_lock( $lock, 5, function () use ( $self, $request, $cart, $pdt ) {
-					return $self->process_pdt( $request, $cart, $pdt );
-				} );
-			} else {
-				$transaction = $this->process_pdt( $request, $cart, $pdt );
-			}
+			$transaction = it_exchange_wait_for_lock( $lock, 5, function () use ( $self, $request, $pdt ) {
+				return $self->process_pdt( $request, $pdt );
+			} );
 
 			return $transaction ? it_exchange_get_transaction( $transaction ) : null;
 		} catch ( IT_Exchange_Locking_Exception $e ) {
@@ -454,15 +448,16 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 	 * @since 2.0.0
 	 *
 	 * @param ITE_Gateway_Purchase_Request $request
-	 * @param ITE_Cart|null                $cart
 	 * @param array                        $pdt
 	 *
 	 * @return false|int|IT_Exchange_Transaction|null
 	 * @throws Exception
 	 */
-	public function process_pdt( ITE_Gateway_Purchase_Request $request, ITE_Cart $cart = null, $pdt ) {
+	public function process_pdt( ITE_Gateway_Purchase_Request $request, $pdt ) {
 
-		$cart_id   = $cart ? $cart->get_id() : null;
+		$cart    = $request->get_cart();
+		$cart_id = $cart->get_id();
+
 		$paypal_id = $paypal_total = $paypal_status = $subscriber_id = null;
 
 		if ( ! empty( $pdt['tx'] ) ) { //if PDT is enabled
@@ -529,28 +524,11 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 			}
 
 			return $txn_id;
-		} elseif ( null === $paypal_id && null === $cart_id && null === $cart && null === $paypal_total && null === $paypal_status ) {
-
-			$cart_id = it_exchange_get_session_data( 'ppss_transient_transaction_id' );
-			$cart_id = $cart_id[0];
-			it_exchange_clear_session_data( 'ppss_transient_transaction_id' );
-
-			$lock = "ppss-$cart_id";
-			it_exchange_lock( $lock, 2 );
-
-			$cart = it_exchange_get_cart( $cart_id );
-
-			if ( ! $cart ) {
-				throw new Exception( __( 'Unable to retrieve cart.', 'it-l10n-ithemes-exchange' ) );
-			}
-
-			if ( $transaction = it_exchange_get_transaction_by_cart_id( $cart_id ) ) {
-				return $transaction;
-			}
-
-			return $this->add_transaction( $request, $cart_id, 'Completed' );
+		} else if ( $transaction = it_exchange_get_transaction_by_cart_id( $cart_id ) ) {
+			return $transaction;
 		} else {
-			return null;
+			// This occurs if we just made a free trial payment
+			return $this->add_transaction( $request, $cart_id, 'Completed' );
 		}
 	}
 
