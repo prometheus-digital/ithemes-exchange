@@ -192,6 +192,36 @@ class IT_Exchange_Upgrade_Routine_Txn_Table implements IT_Exchange_UpgradeInterf
 			$skin->debug( 'Upgraded cart object.' );
 		}
 
+		/** @var array[] $refunds */
+		$refunds = get_post_meta( $transaction_id, '_it_exchange_transaction_refunds' );
+
+		foreach ( $refunds as $refund ) {
+			try {
+				$created = new DateTime( $refund['date'] );
+			} catch ( Exception $e ) {
+				$created = null;
+			}
+
+			$model = ITE_Refund::create( array(
+				'transaction' => $transaction_id,
+				'amount'      => $refund['amount'],
+				'created_at'  => $created,
+				'reason'      => isset( $refund['options']['reason'] ) ? $refund['options']['reason'] : '',
+			) );
+
+			if ( ! empty( $refund['options'] ) && is_array( $refund['options'] ) ) {
+				foreach ( $refund['options'] as $key => $value ) {
+					if ( $key !== 'reason' ) {
+						$model->update_meta( $key, $value );
+					}
+				}
+			}
+
+			if ( $verbose ) {
+				$skin->debug( "Upgraded refund of {$refund['amount']}" );
+			}
+		}
+
 		if ( $verbose ) {
 			$skin->debug( 'Upgraded Txn: ' . $transaction_id );
 			$skin->debug( '' );
