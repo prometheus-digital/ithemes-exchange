@@ -79,9 +79,21 @@ class ITE_PayPal_Standard_Webhook_Handler implements ITE_Gateway_Request_Handler
 	 */
 	public function process( $webhook, ITE_Cart $cart = null, $parent = 0 ) {
 
+		$txn_id        = isset( $webhook['txn_id'] ) ? $webhook['txn_id'] : null;
 		$cart_id       = $cart ? $cart->get_id() : '';
 		$subscriber_id = ! empty( $webhook['subscr_id'] ) ? $webhook['subscr_id'] : false;
 		$subscriber_id = ! empty( $webhook['recurring_payment_id'] ) ? $webhook['recurring_payment_id'] : $subscriber_id;
+
+		// PayPal omits the txn_id field for reattempted webhooks for whatever reason
+		if ( ! $txn_id && ! empty( $webhook['reattempt'] ) && isset( $webhook['custom'] ) ) {
+			list( , $cart_id ) = explode( '|', $webhook['custom'] );
+
+			$transaction = it_exchange_get_transaction_by_cart_id( $cart_id );
+
+			if ( $transaction ) {
+				$txn_id = $transaction->get_method_id();
+			}
+		}
 
 		if ( ! empty( $webhook['txn_type'] ) ) {
 
@@ -105,7 +117,7 @@ class ITE_PayPal_Standard_Webhook_Handler implements ITE_Gateway_Request_Handler
 					return 500;
 				}
 
-				$method_id = $webhook['txn_id'];
+				$method_id = $txn_id;
 				$status    = $webhook['payment_status'];
 
 				$this->add_transaction( $cart, $method_id, $status, $parent );
@@ -119,7 +131,7 @@ class ITE_PayPal_Standard_Webhook_Handler implements ITE_Gateway_Request_Handler
 					$method_id = md5( $cart_id );
 				} elseif ( ! empty( $webhook['payment_status'] ) ) {
 					$status    = $webhook['payment_status'];
-					$method_id = $webhook['txn_id'];
+					$method_id = $txn_id;
 				}
 
 				if ( isset( $status, $method_id ) ) {
@@ -135,13 +147,13 @@ class ITE_PayPal_Standard_Webhook_Handler implements ITE_Gateway_Request_Handler
 					if ( $webhook['payment_status'] === 'Completed' ) {
 
 						// attempt to update the payment status for a transaction
-						if ( ! it_exchange_paypal_standard_addon_update_transaction_status( $webhook['txn_id'], $webhook['payment_status'] ) ) {
+						if ( ! it_exchange_paypal_standard_addon_update_transaction_status( $txn_id, $webhook['payment_status'] ) ) {
 							//If the transaction isn't found, we've got a new payment
 							$GLOBALS['it_exchange']['child_transaction'] = true;
-							it_exchange_paypal_standard_addon_add_child_transaction( $webhook['txn_id'], $webhook['payment_status'], $subscriber_id, $webhook['mc_gross'] );
+							it_exchange_paypal_standard_addon_add_child_transaction( $txn_id, $webhook['payment_status'], $subscriber_id, $webhook['mc_gross'] );
 						} else {
 							//If it is found, make sure the subscriber ID is attached to it
-							it_exchange_paypal_standard_addon_update_subscriber_id( $webhook['txn_id'], $subscriber_id );
+							it_exchange_paypal_standard_addon_update_subscriber_id( $txn_id, $subscriber_id );
 						}
 
 						// if we have a good payment, make sure to keep the subscription status as active
@@ -156,8 +168,8 @@ class ITE_PayPal_Standard_Webhook_Handler implements ITE_Gateway_Request_Handler
 					if ( it_exchange_paypal_standard_addon_get_ite_transaction_id( $free_trial_id ) ) {
 						it_exchange_paypal_standard_addon_update_subscriber_id( $free_trial_id, $subscriber_id );
 						it_exchange_paypal_standard_addon_update_transaction_status( $free_trial_id, 'Completed' );
-					} elseif ( ! empty( $webhook['txn_id'] ) && it_exchange_paypal_standard_addon_get_ite_transaction_id( $webhook['txn_id'] ) ) {
-						it_exchange_paypal_standard_addon_update_subscriber_id( $webhook['txn_id'], $subscriber_id );
+					} elseif ( ! empty( $txn_id ) && it_exchange_paypal_standard_addon_get_ite_transaction_id( $txn_id ) ) {
+						it_exchange_paypal_standard_addon_update_subscriber_id( $txn_id, $subscriber_id );
 					}
 
 					it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'active' );
@@ -186,7 +198,7 @@ class ITE_PayPal_Standard_Webhook_Handler implements ITE_Gateway_Request_Handler
 			//These IPNs don't have txn_types, why PayPal!? WHY!?
 			if ( ! empty( $webhook['reason_code'] ) && $webhook['reason_code'] === 'refund' ) {
 
-				$refund_id   = $webhook['txn_id'];
+				$refund_id   = $txn_id;
 				$transaction = it_exchange_get_transaction_by_method_id( self::METHOD, $webhook['parent_txn_id'] );
 
 				if ( ! $transaction ) {
