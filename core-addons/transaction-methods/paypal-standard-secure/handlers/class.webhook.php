@@ -172,7 +172,7 @@ class ITE_PayPal_Standard_Secure_Webhook_Handler implements ITE_Gateway_Request_
 
 					$subscription = it_exchange_get_subscription_by_subscriber_id( self::METHOD, $subscriber_id );
 
-					if ( ! $subscription || $subscription->is_status( $subscription::STATUS_CANCELLED ) ) {
+					if ( ! $subscription || $subscription->is_status( $subscription::STATUS_CANCELLED, $subscription::STATUS_COMPLIMENTARY ) ) {
 						break;
 					}
 
