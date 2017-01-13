@@ -205,16 +205,9 @@ class ITE_PayPal_Standard_Secure_Webhook_Handler implements ITE_Gateway_Request_
 
 				$transaction->update_status( $webhook['payment_status'] );
 
-				$existing = ITE_Refund::query()
-				                      ->and_where( 'gateway_id', '=', $refund_id )
-				                      ->and_where( 'transaction', '=', $transaction->ID )
-				                      ->first();
+				it_exchange_paypal_standard_secure_addon_add_refund_to_transaction( $webhook['parent_txn_id'], $webhook['mc_gross'], $refund_id );
 
-				if ( ! $refund_id || ! $existing ) {
-					it_exchange_paypal_standard_secure_addon_add_refund_to_transaction( $webhook['parent_txn_id'], $webhook['mc_gross'] );
-				}
-
-				if ( $subscriber_id ) {
+				if ( $subscriber_id && $transaction->get_total() ) {
 					it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'cancelled' );
 				}
 

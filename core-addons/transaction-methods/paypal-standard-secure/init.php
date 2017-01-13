@@ -1285,14 +1285,36 @@ function it_exchange_paypal_standard_secure_addon_add_child_transaction( $method
  * Adds a refund to post_meta for a paypal transaction
  *
  * @since 0.4.0
- * @param string $paypal_standard_secure_id PayPal Transaction ID
- * @param string $refund Refund Amount
+ *
+ * @param string $method_id PayPal Transaction ID
+ * @param string $amount Refund Amount
+ * @param string $refund_id
 */
-function it_exchange_paypal_standard_secure_addon_add_refund_to_transaction( $paypal_standard_secure_id, $refund ) {
-	$transactions = it_exchange_paypal_standard_secure_addon_get_transaction_id( $paypal_standard_secure_id );
-	foreach( $transactions as $transaction ) { //really only one
-		it_exchange_add_refund_to_transaction( $transaction, number_format( abs( $refund ), '2', '.', '' ) );
+function it_exchange_paypal_standard_secure_addon_add_refund_to_transaction( $method_id, $amount, $refund_id = '' ) {
+
+    $amount      = number_format( abs( $amount ), '2', '.', '' );
+	$transaction = it_exchange_get_transaction_by_method_id( 'paypal-standard-secure', $method_id );
+
+	if ( ! $transaction ) {
+		return;
 	}
+
+	if ( $refund_id ) {
+		$exists = ITE_Refund::query()->and_where( array(
+			'transaction' => $transaction->get_ID(),
+			'gateway_id'  => $refund_id,
+		) )->take( 1 )->first();
+
+		if ( $exists ) {
+			return;
+		}
+	}
+
+	ITE_Refund::create( array(
+		'transaction' => $transaction,
+		'amount'      => $amount,
+		'gateway_id'  => $refund_id,
+	) );
 }
 
 /**
