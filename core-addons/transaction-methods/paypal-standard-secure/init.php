@@ -1346,6 +1346,10 @@ function it_exchange_paypal_standard_secure_addon_update_subscriber_status( $sub
 
     $subscription = it_exchange_get_subscription_by_subscriber_id( 'paypal-standard-secure', $subscriber_id );
 
+    if ( ! $subscription ) {
+        return;
+    }
+
     if ( ! $subscription->is_status( $status ) ) {
         $subscription->set_status( $status );
     }
