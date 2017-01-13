@@ -21,11 +21,17 @@ class ITE_Webhook_Gateway_Request implements ITE_Gateway_Request {
 	 * ITE_Webhook_Gateway_Request constructor.
 	 *
 	 * @param array $webhook_data
-	 * @param array $headers
+	 * @param array $server $_SERVER
 	 */
-	public function __construct( array $webhook_data, array $headers = array() ) {
+	public function __construct( array $webhook_data, array $server = array() ) {
 		$this->webhook_data = $webhook_data;
-		$this->headers      = $headers;
+		$this->headers      = $server;
+
+		foreach ( $server as $key => $value ) {
+			if ( strpos( $key, 'HTTP_' ) === 0 ) {
+				$this->headers[ str_replace( '-', '_', strtolower( substr( $key, 5 ) ) ) ] = $value;
+			}
+		}
 	}
 
 	/**
@@ -66,8 +72,10 @@ class ITE_Webhook_Gateway_Request implements ITE_Gateway_Request {
 	 */
 	public function get_header( $header ) {
 
-		if ( isset( $this->headers[ 'HTTP_' . $header ] ) ) {
-			return $this->headers[ 'HTTP_' . $header ];
+		$header = strtolower( str_replace( '-', '_', $header ) );
+
+		if ( isset( $this->headers[ $header ] ) ) {
+			return $this->headers[ $header ];
 		}
 
 		return null;
