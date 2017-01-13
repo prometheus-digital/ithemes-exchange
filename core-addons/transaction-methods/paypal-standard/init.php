@@ -1194,30 +1194,15 @@ function it_exchange_paypal_standard_addon_update_subscriber_id( $paypal_standar
  * @param string $status        Status of Subscription
  */
 function it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, $status ) {
-	$transactions = it_exchange_paypal_standard_addon_get_transaction_id_by_subscriber_id( $subscriber_id );
-	foreach ( $transactions as $transaction ) { //really only one
-		// If the subscription has been cancelled/suspended and fully refunded, they need to be deactivated
-		if ( ! in_array( $status, array( 'active', 'deactivated' ) ) ) {
-			if ( $transaction->has_refunds() && 0 === it_exchange_get_transaction_total( $transaction, false ) ) {
-				$status = 'deactivated';
-			}
 
-			if ( $transaction->has_children() ) {
-				//Get the last child and make sure it hasn't been fully refunded
-				$args                   = array(
-					'numberposts' => 1,
-					'order'       => 'ASC',
-				);
-				$last_child_transaction = $transaction->get_children( $args );
-				foreach ( $last_child_transaction as $last_transaction ) { //really only one
-					$last_transaction = it_exchange_get_transaction( $last_transaction );
-					if ( $last_transaction->has_refunds() && 0 === it_exchange_get_transaction_total( $last_transaction, false ) ) {
-						$status = 'deactivated';
-					}
-				}
-			}
-		}
-		do_action( 'it_exchange_update_transaction_subscription_status', $transaction, $subscriber_id, $status );
+	if ( ! $subscriber_id ) {
+		return;
+	}
+
+	$subscription = it_exchange_get_subscription_by_subscriber_id( 'paypal-standard-secure', $subscriber_id );
+
+	if ( ! $subscription->is_status( $status ) ) {
+		$subscription->set_status( $status );
 	}
 }
 
