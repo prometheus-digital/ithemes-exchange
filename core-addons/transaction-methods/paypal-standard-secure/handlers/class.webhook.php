@@ -207,7 +207,7 @@ class ITE_PayPal_Standard_Secure_Webhook_Handler implements ITE_Gateway_Request_
 
 				it_exchange_paypal_standard_secure_addon_add_refund_to_transaction( $webhook['parent_txn_id'], $webhook['mc_gross'], $refund_id );
 
-				if ( $subscriber_id && $transaction->get_total() ) {
+				if ( $subscriber_id && ! $transaction->get_total() ) {
 					it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'cancelled' );
 				}
 
