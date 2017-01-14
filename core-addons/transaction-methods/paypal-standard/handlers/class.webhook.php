@@ -182,15 +182,21 @@ class ITE_PayPal_Standard_Webhook_Handler implements ITE_Gateway_Request_Handler
 
 					$subscription = it_exchange_get_subscription_by_subscriber_id( self::METHOD, $subscriber_id );
 
-					if ( ! $subscription || $subscription->is_status( $subscription::STATUS_CANCELLED ) ) {
+					if ( ! $subscription ) {
 						break;
 					}
 
-					$subscription->set_status( $subscription::STATUS_CANCELLED );
+					$subscription->set_status_from_gateway_update( $subscription::STATUS_CANCELLED );
 					break;
 
 				case 'subscr_eot':
-					it_exchange_paypal_standard_addon_update_subscriber_status( $subscriber_id, 'deactivated' );
+					$subscription = it_exchange_get_subscription_by_subscriber_id( self::METHOD, $subscriber_id );
+
+					if ( ! $subscription ) {
+						break;
+					}
+
+					$subscription->set_status_from_gateway_update( $subscription::STATUS_DEACTIVATED );
 					break;
 			}
 		} else {

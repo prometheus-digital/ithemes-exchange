@@ -177,28 +177,38 @@ class ITE_PayPal_Standard_Secure_Webhook_Handler implements ITE_Gateway_Request_
 					it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'active' );
 					break;
 				case 'recurring_payment_suspended':
-					it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'suspended' );
+
+					$subscription = it_exchange_get_subscription_by_subscriber_id( self::METHOD, $subscriber_id );
+
+					if ( ! $subscription ) {
+						break;
+					}
+
+					$subscription->set_status_from_gateway_update( $subscription::STATUS_PAUSED );
 					break;
 
 				case 'subscr_cancel':
 
 					$subscription = it_exchange_get_subscription_by_subscriber_id( self::METHOD, $subscriber_id );
 
-					if ( ! $subscription || $subscription->is_status( $subscription::STATUS_CANCELLED, $subscription::STATUS_COMPLIMENTARY ) ) {
-						break;
-					}
-
-					if ( $subscription->are_occurrences_limited() && $subscription->get_remaining_occurrences() === 0 ) {
+					if ( ! $subscription ) {
 						break;
 					}
 
 					it_exchange_lock( "ppss-cancel-subscription-{$subscriber_id}", 2 );
-					$subscription->set_status( $subscription::STATUS_CANCELLED );
+					$subscription->set_status_from_gateway_update( $subscription::STATUS_CANCELLED );
 					it_exchange_release_lock( "ppss-cancel-subscription-{$subscriber_id}" );
 					break;
 
 				case 'subscr_eot':
-					it_exchange_paypal_standard_secure_addon_update_subscriber_status( $subscriber_id, 'deactivated' );
+
+					$subscription = it_exchange_get_subscription_by_subscriber_id( self::METHOD, $subscriber_id );
+
+					if ( ! $subscription ) {
+						break;
+					}
+
+					$subscription->set_status_from_gateway_update( $subscription::STATUS_DEACTIVATED );
 					break;
 			}
 		} else {
