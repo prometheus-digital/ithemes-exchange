@@ -302,31 +302,26 @@ class IT_Exchange_Super_Widget_Ajax {
 
 				$transaction_id = $this->shopping_cart->handle_purchase_cart_request( false );
 
-				// Return false if we didn't get a transaction_id
-				if ( ! $transaction_id ) {
+				if ( $transaction_id ) {
+					echo it_exchange_get_transaction_confirmation_url( $transaction_id );
 
-					$cart     = it_exchange_get_current_cart();
-					$feedback = $cart->get_feedback();
+					return null;
+                }
 
-					foreach ( $feedback->errors() as $error ) {
-						it_exchange_add_message( 'error', $error );
-					}
+                $cart     = it_exchange_get_current_cart();
+                $feedback = $cart->get_feedback();
 
-					foreach ( $feedback->notices() as $notice ) {
-						it_exchange_add_message( 'notice', $notice );
-					}
+                foreach ( $feedback->errors() as $error ) {
+                    it_exchange_add_message( 'error', $error );
+                }
 
-					$feedback->clear();
+                foreach ( $feedback->notices() as $notice ) {
+                    it_exchange_add_message( 'notice', $notice );
+                }
 
-					return false;
-				}
+                $feedback->clear();
 
-				it_exchange_empty_shopping_cart();
-				$url = it_exchange_get_transaction_confirmation_url( $transaction_id );
-
-				echo $url;
-
-				return null;
+                return false;
 
 			case 'update-shipping-method':
 
