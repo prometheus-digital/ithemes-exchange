@@ -346,7 +346,12 @@ function it_exchange_get_max_product_quantity_allowed( $product, $cart_product_i
  * @return void
 */
 function it_exchange_empty_shopping_cart() {
-	it_exchange_get_current_cart()->empty_cart();
+
+	$cart = it_exchange_get_current_cart( false );
+
+	if ( $cart ) {
+		$cart->empty_cart();
+	}
 }
 
 /**
