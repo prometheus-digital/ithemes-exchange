@@ -2135,11 +2135,11 @@ function it_exchange_trans_txn_cleanup() {
 add_action( 'it_exchange_trans_txn_garbage_collection', 'it_exchange_trans_txn_cleanup' );
 
 /**
- * Enqueue Manage Tokens JS.
+ * Enqueue Account -> Profile JS.
  *
  * @since 2.0.0
  */
-function it_exchange_enqueue_manage_tokens_js() {
+function it_exchange_enqueue_profile_js() {
 
 	if ( ! it_exchange_is_page( 'profile' ) ) {
 		return;
@@ -2212,19 +2212,19 @@ function it_exchange_enqueue_manage_tokens_js() {
 	wp_enqueue_style( 'jquery.contextMenu' );
 }
 
-add_action( 'wp_enqueue_scripts', 'it_exchange_enqueue_manage_tokens_js' );
+add_action( 'wp_enqueue_scripts', 'it_exchange_enqueue_profile_js' );
 
 /**
- * Print manage tokens container.
+ * Print the manage tokens and addresses container.
  *
  * @since 2.0.0
  */
-function it_exchange_print_manage_tokens_container() {
+function it_exchange_print_profile_js_container() {
 	echo '<div class="it-exchange-customer-addresses-container"></div>';
 	echo '<div class="it-exchange-manage-tokens-container"></div>';
 }
 
-add_action( 'it_exchange_content_profile_after_form', 'it_exchange_print_manage_tokens_container' );
+add_action( 'it_exchange_content_profile_after_form', 'it_exchange_print_profile_js_container' );
 
 /**
  * Delete upgrade logs older than 7 days.
