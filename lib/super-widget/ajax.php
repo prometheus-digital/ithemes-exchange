@@ -303,23 +303,8 @@ class IT_Exchange_Super_Widget_Ajax {
 				$transaction_id = $this->shopping_cart->handle_purchase_cart_request( false );
 
 				if ( $transaction_id ) {
-					echo it_exchange_get_transaction_confirmation_url( $transaction_id );
-
-					return null;
+					return it_exchange_get_transaction_confirmation_url( $transaction_id );
                 }
-
-                $cart     = it_exchange_get_current_cart();
-                $feedback = $cart->get_feedback();
-
-                foreach ( $feedback->errors() as $error ) {
-                    it_exchange_add_message( 'error', $error );
-                }
-
-                foreach ( $feedback->notices() as $notice ) {
-                    it_exchange_add_message( 'notice', $notice );
-                }
-
-                $feedback->clear();
 
                 return false;
 
