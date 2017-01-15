@@ -21,6 +21,7 @@ use IronBound\DB\Query\FluentQuery;
  * @property string                     $redacted
  * @property-read bool                  $primary
  * @property-read string                $mode
+ * @property \DateTime                  $expires_at
  */
 class ITE_Payment_Token extends ModelWithMeta implements ITE_Object, ITE_Gateway_Payment_Source {
 
@@ -106,6 +107,39 @@ class ITE_Payment_Token extends ModelWithMeta implements ITE_Object, ITE_Gateway
 		$other->set_attribute( 'primary', false );
 
 		return $this->save();
+	}
+
+	/**
+	 * Is this payment token expired.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return bool
+	 */
+	public function is_expired() {
+
+		$now = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
+
+		return $this->expires_at && $now >= $this->expires_at;
+	}
+
+	/**
+	 * Is this token expiring soon.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return bool
+	 */
+	public function is_expiring_soon() {
+
+		if ( ! $this->expires_at ) {
+			return false;
+		}
+
+		$now  = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
+		$diff = $this->expires_at->diff( $now );
+
+		return $diff->days < 30;
 	}
 
 	/**
@@ -250,6 +284,12 @@ class ITE_Payment_Token extends ModelWithMeta implements ITE_Object, ITE_Gateway
 
 		static::register_global_scope( 'order', function ( FluentQuery $query ) {
 			$query->order_by( 'primary', 'DESC' );
+		} );
+
+		static::register_global_scope( 'expires_at', function( FluentQuery $query ) {
+			$query->and_where( 'expires_at', '>', current_time( 'mysql', true ), function( FluentQuery $query ) {
+				$query->or_where( 'expires_at', '=', null );
+			} );
 		} );
 
 		$table = static::table();

@@ -187,13 +187,13 @@ class IT_Exchange_Guest_Customer extends IT_Exchange_Customer {
 			$addresses[] = $shipping;
 		}
 
-		return array();
+		return $addresses;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function get_tokens( $gateway = '' ) {
+	public function get_tokens( array $args = array() ) {
 		return new \IronBound\DB\Collection( array(), false, new \IronBound\DB\Saver\ModelSaver( 'ITE_Payment_Token' ) );
 	}
 }

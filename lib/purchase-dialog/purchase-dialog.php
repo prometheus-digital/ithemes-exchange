@@ -311,7 +311,7 @@ class IT_Exchange_Purchase_Dialog{
 			return '';
 		}
 
-		$cards = $customer->get_tokens( $this->addon_slug );
+		$cards = $customer->get_tokens( array( 'gateway' => $this->addon_slug ) );
 
 		if ( ! $cards || ! $cards->count() ) {
 			return '';

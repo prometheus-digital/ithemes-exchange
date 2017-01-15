@@ -61,7 +61,9 @@ class ITE_Payment_Token_Card extends ITE_Payment_Token {
 	 *
 	 * @return bool
 	 */
-	public function set_expiration_month( $month ) { return (bool) $this->update_meta( 'expiration_month', $month ); }
+	public function set_expiration_month( $month ) { return $this->set_expiration( $month, $this->get_expiration_year() ); }
+
+	protected function _set_expiration_month( $month ) { return (bool) $this->update_meta( 'expiration_month', $month ); }
 
 	/**
 	 * Get the card's expiration year
@@ -70,7 +72,7 @@ class ITE_Payment_Token_Card extends ITE_Payment_Token {
 	 *
 	 * @return string
 	 */
-	public function get_expiration_year() { return zeroise( $this->get_meta( 'expiration_year', true ), 2 ); }
+	public function get_expiration_year() { return $this->get_meta( 'expiration_year', true ); }
 
 	/**
 	 * Set the Card's expiration year.
@@ -81,7 +83,52 @@ class ITE_Payment_Token_Card extends ITE_Payment_Token {
 	 *
 	 * @return bool
 	 */
-	public function set_expiration_year( $year ) { return (bool) $this->update_meta( 'expiration_year', $year ); }
+	public function set_expiration_year( $year ) { return $this->set_expiration( $this->get_expiration_month(), $year ); }
+
+	protected function _set_expiration_year( $year ) {
+		$year = $year > 2000 ? $year : $year + 2000;
+
+		return (bool) $this->update_meta( 'expiration_year', $year );
+	}
+
+	/**
+	 * Set the Card's expiration date.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $month
+	 * @param string $year
+	 *
+	 * @return bool
+	 */
+	public function set_expiration( $month, $year ) {
+
+		$r1 = $this->_set_expiration_month( $month );
+		$r2 = $this->_set_expiration_year( $year );
+
+		return ( $r1 || $r2 ) && $this->set_expires_at( $month, $year );
+	}
+
+	/**
+	 * Set the expires_at column.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $month
+	 * @param string $year
+	 *
+	 * @return bool
+	 */
+	protected function set_expires_at( $month, $year ) {
+		$date = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
+		$date->setDate( $year, $month, 1 );
+		$date->modify( 'last day of this month' );
+		$date->setTime( 23, 59, 59 );
+
+		$this->expires_at = $date;
+
+		return $this->save();
+	}
 
 	/**
 	 * Get the Card's source of funding.

@@ -40,17 +40,18 @@ class ITE_Payment_Tokens_Table extends \IronBound\DB\Table\BaseTable implements 
 		}
 
 		$this->columns = array(
-			'ID'       =>
+			'ID'         =>
 				new IntegerBased( 'BIGINT', 'ID', array( 'unsigned', 'NOT NULL', 'auto_increment' ), array( 20 ) ),
-			'customer' => new ForeignUser( 'customer' ),
-			'token'    => new StringBased( 'VARCHAR', 'token', array(), array( 255 ) ),
-			'label'    => new StringBased( 'VARCHAR', 'label', array(), array( 255 ) ),
-			'redacted' => new StringBased( 'VARCHAR', 'redacted', array(), array( 32 ) ),
-			'primary'  => new IntegerBased( 'TINYINT', 'primary', array( 'unsigned' ), array( 1 ) ),
-			'gateway'  => new StringBased( 'VARCHAR', 'gateway', array(), array( 64 ) ),
-			'deleted'  => new DateTime( 'deleted' ),
-			'type'     => new StringBased( 'VARCHAR', 'type', array(), array( 32 ) ),
-			'mode'     => new Enum( array( 'live', 'sandbox' ), 'mode' ),
+			'customer'   => new ForeignUser( 'customer' ),
+			'token'      => new StringBased( 'VARCHAR', 'token', array(), array( 255 ) ),
+			'label'      => new StringBased( 'VARCHAR', 'label', array(), array( 255 ) ),
+			'redacted'   => new StringBased( 'VARCHAR', 'redacted', array(), array( 32 ) ),
+			'primary'    => new IntegerBased( 'TINYINT', 'primary', array( 'unsigned' ), array( 1 ) ),
+			'gateway'    => new StringBased( 'VARCHAR', 'gateway', array(), array( 64 ) ),
+			'type'       => new StringBased( 'VARCHAR', 'type', array(), array( 32 ) ),
+			'mode'       => new Enum( array( 'live', 'sandbox' ), 'mode' ),
+			'deleted'    => new DateTime( 'deleted' ),
+			'expires_at' => new DateTime( 'expires_at' ),
 		);
 
 		return $this->columns;
@@ -61,15 +62,16 @@ class ITE_Payment_Tokens_Table extends \IronBound\DB\Table\BaseTable implements 
 	 */
 	public function get_column_defaults() {
 		return array(
-			'ID'       => 0,
-			'customer' => 0,
-			'token'    => '',
-			'label'    => '',
-			'redacted' => '',
-			'primary'  => false,
-			'deleted'  => null,
-			'type'     => 'cc',
-			'mode'     => '',
+			'ID'         => 0,
+			'customer'   => 0,
+			'token'      => '',
+			'label'      => '',
+			'redacted'   => '',
+			'primary'    => false,
+			'type'       => 'cc',
+			'mode'       => '',
+			'deleted'    => null,
+			'expires_at' => null,
 		);
 	}
 

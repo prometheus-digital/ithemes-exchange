@@ -44,7 +44,7 @@ class Tokens extends Base implements Getable, Postable {
 
 		$customer = it_exchange_get_customer( $request->get_param( 'customer_id', 'URL' ) );
 
-		$tokens = $customer->get_tokens( $request['gateway'] );
+		$tokens = $customer->get_tokens( $request->get_query_params() );
 		$data   = array_map( array( $this->serializer, 'serialize' ), $tokens->getValues() );
 
 		return new \WP_REST_Response( $data );
@@ -168,6 +168,12 @@ class Tokens extends Base implements Getable, Postable {
 				'type'        => 'string',
 				'enum'        => array_map( function ( $gateway ) { return $gateway->get_slug(); }, \ITE_Gateways::handles( 'tokenize' ) ),
 			),
+			'status'  => array(
+				'description' => __( 'Payment token status.', 'it-l10n-ithemes-exchange' ),
+				'type'        => 'string',
+				'default'     => 'active',
+				'enum'        => array( 'all', 'active' ),
+			)
 		);
 	}
 

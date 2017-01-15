@@ -2173,7 +2173,7 @@ function it_exchange_enqueue_manage_tokens_js() {
 
 	$tokens = array();
 
-	foreach ( $customer->get_tokens() as $token ) {
+	foreach ( $customer->get_tokens( array( 'status' => 'all' ) ) as $token ) {
 		$tokens[] = $filter->filter( $token_serializer->serialize( $token ), 'edit', $token_schema );
 	}
 

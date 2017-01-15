@@ -523,23 +523,37 @@ class IT_Exchange_Customer implements ITE_Object {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param string $gateway
+	 * @param array $args
 	 *
 	 * @return \IronBound\DB\Collection|\ITE_Payment_Token[]
 	 */
-	public function get_tokens( $gateway = '' ) {
+	public function get_tokens( array $args = array() ) {
 
-		if ( ! $gateway ) {
-			return ITE_Payment_Token::query()->and_where( 'customer', '=', $this->ID )->results();
+		$args = ITUTility::merge_defaults( $args, array(
+			'gateway' => '',
+			'status'  => 'active',
+		) );
+
+		$without = array();
+
+		if ( $args['gateway'] ) {
+			$without[] = 'active';
 		}
 
-		$mode = it_exchange_is_gateway_in_sandbox_mode( $gateway ) ? 'sandbox' : 'live';
+		if ( $args['status'] === 'all' ) {
+			$without[] = 'expires_at';
+		}
 
-		return ITE_Payment_Token::without_global_scope( 'active' )
-		                        ->and_where( 'customer', '=', $this->ID )
-		                        ->and_where( 'gateway', '=', $gateway )
-		                        ->and_where( 'mode', '=', $mode )
-		                        ->results();
+		$query = ITE_Payment_Token::without_global_scopes( $without );
+		$query->and_where( 'customer', '=', $this->ID );
+
+		if ( $args['gateway'] ) {
+			$mode = it_exchange_is_gateway_in_sandbox_mode( $args['gateway'] ) ? 'sandbox' : 'live';
+			$query->and_where( 'gateway', '=', $args['gateway'] )
+			      ->and_where( 'mode', '=', $mode );
+		}
+
+		return $query->results();
 	}
 
 	/**
