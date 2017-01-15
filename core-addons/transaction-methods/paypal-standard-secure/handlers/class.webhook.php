@@ -45,7 +45,7 @@ class ITE_PayPal_Standard_Secure_Webhook_Handler implements ITE_Gateway_Request_
 			}
 
 			// Custom is in a format of 'v2|cart_id|parentID'
-			list( , $cart_id, $parent ) = explode( '|', $custom );
+			list( , $cart_id, $parent ) = array_pad( explode( '|', $custom ), 3, 0 );
 
 			$cart = it_exchange_get_cart( $cart_id );
 			$lock = "ppss-$cart_id";
