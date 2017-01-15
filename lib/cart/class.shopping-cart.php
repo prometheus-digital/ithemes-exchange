@@ -644,6 +644,8 @@ class IT_Exchange_Shopping_Cart {
 
 				if ( $transaction_id ) {
 					it_exchange_empty_shopping_cart();
+				} else {
+					$this->convert_feedback_to_notices();
 				}
 
 				return $transaction_id;
