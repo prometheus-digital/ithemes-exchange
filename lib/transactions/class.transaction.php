@@ -1209,7 +1209,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	 * @inheritDoc
 	 */
 	public function __toString() {
-		return sprintf( __( 'Order %s', 'it-l10n-ithemes-exchange', $this->get_order_number() ) );
+		return sprintf( __( 'Order %s', 'it-l10n-ithemes-exchange' ), $this->get_order_number() );
 	}
 
 	/**
