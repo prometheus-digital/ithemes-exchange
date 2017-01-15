@@ -31,7 +31,8 @@ $coupon_type     = empty( $_GET['sw-coupon-type'] ) ? false : esc_attr( $_GET['s
 $coupon          = empty( $_GET['sw-coupon-code'] ) ? false : esc_attr( $_GET['sw-coupon-code'] );
 $cart_product    = empty( $_GET['sw-cart-product'] ) ? false : esc_attr( $_GET['sw-cart-product'] );
 $shipping_method = empty( $_GET['sw-shipping-method'] ) ? '0' : esc_attr( $_GET['sw-shipping-method'] );
-$ajax_args       = compact( 'action', 'state', 'product', 'quantity', 'focus', 'coupon_type', 'coupon', 'cart_product', 'shipping_method' );
+$get_state       = empty( $_GET['get-state'] ) ? false : esc_attr( $_GET['get-state'] );
+$ajax_args       = compact( 'action', 'state', 'product', 'quantity', 'focus', 'coupon_type', 'coupon', 'cart_product', 'shipping_method', 'get_state' );
 
 /**
  * Class IT_Exchange_Super_Widget_Ajax
@@ -46,6 +47,7 @@ class IT_Exchange_Super_Widget_Ajax {
 
 	private $action;
 	private $state;
+	private $get_state;
 	private $product;
 	private $quantity;
 	private $focus;
@@ -93,6 +95,11 @@ class IT_Exchange_Super_Widget_Ajax {
 		}
 
 		$this->cart->get_feedback()->clear();
+
+		if ( $this->get_state ) {
+		    $this->state = $this->get_state;
+		    $success     = $this->do_action( 'get-state' );
+        }
 
 		if ( $success === null ) {
 			die();

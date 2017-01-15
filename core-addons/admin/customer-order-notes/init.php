@@ -72,7 +72,7 @@ function it_exchange_customer_order_notes_sw_save_note() {
 
 	it_exchange_customer_order_notes_store_current_note( wp_strip_all_tags( stripslashes( $_POST['note'] ) ) );
 
-	die( 1 );
+	return true;
 }
 
 add_action( 'it_exchange_processing_super_widget_ajax_customer-order-note', 'it_exchange_customer_order_notes_sw_save_note' );
