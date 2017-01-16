@@ -96,8 +96,10 @@ class IT_Exchange_Shipping {
 			return;
 		}
 
-		self::register_shipping_address_purchase_requirement();
-		self::register_shipping_method_purchase_requirement();
+		$methods = it_exchange_get_available_shipping_methods_for_cart_products();
+
+		self::register_shipping_address_purchase_requirement( $methods );
+		self::register_shipping_method_purchase_requirement( $methods );
 	}
 
 	/**
@@ -108,9 +110,12 @@ class IT_Exchange_Shipping {
 	 * For more details see api/misc.php
 	 *
 	 * @since  1.4.0
+     *
+     * @param array $available_shipping_methods The available shipping methods for cart products.
+     *
 	 * @return void
 	 */
-	public static function register_shipping_address_purchase_requirement() {
+	public static function register_shipping_address_purchase_requirement( array $available_shipping_methods = array() ) {
 		// User must have a shipping address to purchase
 		$properties = array(
 			'requirement-met'        => function() {
@@ -126,7 +131,11 @@ class IT_Exchange_Shipping {
 
 		$enabled = apply_filters( 'it_exchange_shipping_address_purchase_requirement_enabled', false );
 
-		if ( $enabled || it_exchange_get_available_shipping_methods_for_cart_products() ) {
+		if ( count( func_get_args() ) === 0 ) {
+			$available_shipping_methods = it_exchange_get_available_shipping_methods_for_cart_products();
+		}
+
+		if ( $enabled || $available_shipping_methods ) {
 			it_exchange_register_purchase_requirement( 'shipping-address', $properties );
 		}
 	}
@@ -139,9 +148,12 @@ class IT_Exchange_Shipping {
 	 * For more details see api/misc.php
 	 *
 	 * @since  1.4.0
+     *
+	 * @param array $available_shipping_methods The available shipping methods for cart products.
+     *
 	 * @return void
 	 */
-	public static function register_shipping_method_purchase_requirement() {
+	public static function register_shipping_method_purchase_requirement( array $available_shipping_methods = array() ) {
 		// User must have a shipping address to purchase
 		$properties = array(
 			'requirement-met'        => __CLASS__ . '::method_purchase_requirement_complete', // This is a PHP callback
@@ -153,7 +165,11 @@ class IT_Exchange_Shipping {
 
 		$enabled = apply_filters( 'it_exchange_shipping_address_purchase_requirement_enabled', false );
 
-		if ( $enabled || it_exchange_get_available_shipping_methods_for_cart_products() ) {
+		if ( count( func_get_args() ) === 0 ) {
+			$available_shipping_methods = it_exchange_get_available_shipping_methods_for_cart_products();
+		}
+
+		if ( $enabled || $available_shipping_methods ) {
 			it_exchange_register_purchase_requirement( 'shipping-method', $properties );
 		}
 	}

@@ -233,10 +233,6 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 	 */
 	public function get_shipping_address() {
 
-		if ( ! it_exchange_is_purchase_requirement_registered( 'shipping-address' ) ) {
-			return null;
-		}
-
 		$address = $this->get_shipping_address_data_for_customer( it_exchange_get_current_customer() );
 
 		// If shipping error and form was submitted, use POST values as most recent

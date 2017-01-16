@@ -477,7 +477,11 @@ function it_exchange_get_available_shipping_methods_for_cart( $only_methods_avai
 		}
 	}
 
-	return apply_filters( 'it_exchange_get_available_shipping_methods_for_cart', $methods, $cart );
+	$r = apply_filters( 'it_exchange_get_available_shipping_methods_for_cart', $methods, $cart );
+
+	$GLOBALS['it_exchange']['shipping']['only_return_methods_available_to_all_cart_products'] = true;
+
+	return $r;
 }
 
 /**
