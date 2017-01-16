@@ -404,11 +404,16 @@ class IT_Exchange_Customer implements ITE_Object {
 	 * @param \ITE_Location|null $current
 	 * @param string             $type
 	 *
-	 * @return \ITE_Location
+	 * @return \ITE_Saved_Address
 	 * @throws \InvalidArgumentException
 	 */
 	protected function persist_address( ITE_Location $location, ITE_Location $current = null, $type ) {
-		$saved = ITE_Saved_Address::convert_to_saved( $location, $current, $this, $type, true, true );
+
+		if ( $location instanceof ITE_Saved_Address ) {
+			$saved = $location;
+		} else {
+			$saved = ITE_Saved_Address::convert_to_saved( $location, $current, $this, $type, true, true );
+		}
 
 		if ( $saved ) {
 			$this->update_customer_meta( "primary_{$type}", $saved->ID );

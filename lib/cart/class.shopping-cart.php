@@ -455,7 +455,6 @@ class IT_Exchange_Shopping_Cart {
 
 		$location = new ITE_In_Memory_Address( $shipping );
 
-
 		return $this->update_shipping( $location );
 	}
 
