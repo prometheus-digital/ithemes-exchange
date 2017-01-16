@@ -191,8 +191,10 @@ function get_rest_manager() {
 
 	if ( ! $manager ) {
 
+		$is_debug = defined( 'WP_DEBUG' ) && WP_DEBUG && defined( 'WP_DEBUG_DISPLAY' ) && WP_DEBUG_DISPLAY;
+
 		$stack = new Stack();
-		$stack->push( new Error_Handler( defined( 'WP_DEBUG' ) && WP_DEBUG ), 'error-handler' );
+		$stack->push( new Error_Handler( $is_debug ), 'error-handler' );
 		$stack->push( new Cart_Decorator(), 'cart-decorator' );
 		$stack->push( new Autolinker(), 'autolinker' );
 		$stack->push( new Filter_By_Context( new ContextFilterer() ), 'filter-by-context' );
