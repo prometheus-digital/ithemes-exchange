@@ -265,6 +265,7 @@ class ITE_Payment_Token extends ModelWithMeta implements ITE_Object, ITE_Gateway
 
 	/**
 	 * @inheritDoc
+	 * @throws \InvalidArgumentException
 	 */
 	protected static function boot() {
 		parent::boot();
@@ -287,9 +288,13 @@ class ITE_Payment_Token extends ModelWithMeta implements ITE_Object, ITE_Gateway
 		} );
 
 		static::register_global_scope( 'expires_at', function( FluentQuery $query ) {
-			$query->and_where( 'expires_at', '>', current_time( 'mysql', true ), function( FluentQuery $query ) {
-				$query->or_where( 'expires_at', '=', null );
-			} );
+
+			$now = current_time( 'mysql', true );
+
+			$where = new \IronBound\DB\Query\Tag\Where_Raw(
+				"(t1.`expires_at` > '$now' OR t1.`expires_at` IS NULL)"
+			);
+			$query->and_where( $where );
 		} );
 
 		$table = static::table();
