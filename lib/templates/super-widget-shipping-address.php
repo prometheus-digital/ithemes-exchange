@@ -24,7 +24,7 @@
             <li><?php echo it_exchange_get_next_purchase_requirement_property( 'notification' ); ?></li>
         </ul>
 	<?php endif; ?>
-    
+
 	<form class="it-exchange-sw-shipping-address">
 	<?php it_exchange_get_template_part( 'super-widget-shipping-address/loops/addresses' ); ?>
 	<?php it_exchange_get_template_part( 'super-widget-shipping-address/loops/fields' ); ?>

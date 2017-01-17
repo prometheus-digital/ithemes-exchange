@@ -54,8 +54,9 @@ class IT_Exchange_Upgrade_Routine_Txn_Table implements IT_Exchange_UpgradeInterf
 	public function get_description() {
 		return
 			__( 'Move transactions to their own database table for increased performance and reporting.', 'it-l10n-ithemes-exchange' )
-			. ' ' .
-			__( 'Ensure all tax and shipping add-ons ever used have been activated before proceeding.', 'it-l10n-ithemes-exchange' );
+			. ' <b>' .
+			__( 'Ensure all tax and shipping add-ons ever used have been activated before proceeding.', 'it-l10n-ithemes-exchange' )
+			 . '</b>';
 	}
 
 	/**
