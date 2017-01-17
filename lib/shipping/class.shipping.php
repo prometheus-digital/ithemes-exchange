@@ -46,6 +46,7 @@ class IT_Exchange_Shipping {
 
 		// Setup purchase requirement
 		add_action( 'init', array( $this, 'init_shipping_address_purchase_requirements' ) );
+		add_filter( 'it_exchange_get_next_purchase_requirement_shipping-address_notification', array( $this, 'shipping_address_requirement_notification' ) );
 
 		// Template part filters
 		add_filter( 'it_exchange_get_content_checkout_totals_elements', array( $this, 'add_shipping_to_template_totals_loops' ) );
@@ -96,10 +97,8 @@ class IT_Exchange_Shipping {
 			return;
 		}
 
-		$methods = it_exchange_get_available_shipping_methods_for_cart_products();
-
-		self::register_shipping_address_purchase_requirement( $methods );
-		self::register_shipping_method_purchase_requirement( $methods );
+		self::register_shipping_address_purchase_requirement();
+		self::register_shipping_method_purchase_requirement();
 	}
 
 	/**
@@ -111,17 +110,25 @@ class IT_Exchange_Shipping {
 	 *
 	 * @since  1.4.0
      *
-     * @param array $available_shipping_methods The available shipping methods for cart products.
-     *
 	 * @return void
 	 */
-	public static function register_shipping_address_purchase_requirement( array $available_shipping_methods = array() ) {
+	public static function register_shipping_address_purchase_requirement() {
 		// User must have a shipping address to purchase
 		$properties = array(
 			'requirement-met'        => function() {
 				$address = it_exchange_get_cart_shipping_address();
 
-				return $address && ! empty( $address['address1'] );
+				if ( ! $address || empty( $address['address1'] ) ) {
+				    return false;
+                }
+
+                $methods = it_exchange_get_available_shipping_methods_for_cart_products();
+
+				if ( ! $methods ) {
+				    return false;
+                }
+
+                return true;
 			},
 			'sw-template-part'       => 'shipping-address',
 			'checkout-template-part' => 'shipping-address',
@@ -131,14 +138,37 @@ class IT_Exchange_Shipping {
 
 		$enabled = apply_filters( 'it_exchange_shipping_address_purchase_requirement_enabled', false );
 
-		if ( count( func_get_args() ) === 0 ) {
-			$available_shipping_methods = it_exchange_get_available_shipping_methods_for_cart_products();
-		}
-
-		if ( $enabled || $available_shipping_methods ) {
+		if ( $enabled || it_exchange_get_current_cart()->requires_shipping() ) {
 			it_exchange_register_purchase_requirement( 'shipping-address', $properties );
 		}
 	}
+
+	/**
+     * Adjust the shipping address purchase requirement notification to distinguish between no shipping address entered
+     * at all and no shipping methods available to that shipping address.
+     *
+     * @since 2.0.0
+     *
+	 * @param string $notification
+	 *
+	 * @return string
+	 */
+	public function shipping_address_requirement_notification( $notification ) {
+
+		$address = it_exchange_get_cart_shipping_address();
+
+		if ( ! $address || empty( $address['address1'] ) ) {
+			return $notification;
+		}
+
+		$methods = it_exchange_get_available_shipping_methods_for_cart_products();
+
+		if ( $methods ) {
+		    return $notification;
+		}
+
+		return __( 'No shipping methods are available for your selected address.', 'it-l10n-ithemes-exchange' );
+    }
 
 	/**
 	 * Registers the shipping method purchase requirement
@@ -149,11 +179,9 @@ class IT_Exchange_Shipping {
 	 *
 	 * @since  1.4.0
      *
-	 * @param array $available_shipping_methods The available shipping methods for cart products.
-     *
 	 * @return void
 	 */
-	public static function register_shipping_method_purchase_requirement( array $available_shipping_methods = array() ) {
+	public static function register_shipping_method_purchase_requirement() {
 		// User must have a shipping address to purchase
 		$properties = array(
 			'requirement-met'        => __CLASS__ . '::method_purchase_requirement_complete', // This is a PHP callback
@@ -165,11 +193,7 @@ class IT_Exchange_Shipping {
 
 		$enabled = apply_filters( 'it_exchange_shipping_address_purchase_requirement_enabled', false );
 
-		if ( count( func_get_args() ) === 0 ) {
-			$available_shipping_methods = it_exchange_get_available_shipping_methods_for_cart_products();
-		}
-
-		if ( $enabled || $available_shipping_methods ) {
+		if ( $enabled || it_exchange_get_current_cart()->requires_shipping() ) {
 			it_exchange_register_purchase_requirement( 'shipping-method', $properties );
 		}
 	}

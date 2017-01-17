@@ -18,6 +18,13 @@
 	<?php do_action( 'it_exchange_super_widget_shipping_address_begin_wrap' ); ?>
 	<?php it_exchange_get_template_part( 'messages' ); ?>
 	<h3><?php _e( 'Shipping Address', 'it-l10n-ithemes-exchange' ); ?></h3>
+
+	<?php if ( it_exchange_get_next_purchase_requirement_property( 'slug' ) === 'shipping-address' && it_exchange_get_cart_shipping_address() ) : ?>
+        <ul class="it-exchange-messages it-exchange-errors">
+            <li><?php echo it_exchange_get_next_purchase_requirement_property( 'notification' ); ?></li>
+        </ul>
+	<?php endif; ?>
+    
 	<form class="it-exchange-sw-shipping-address">
 	<?php it_exchange_get_template_part( 'super-widget-shipping-address/loops/addresses' ); ?>
 	<?php it_exchange_get_template_part( 'super-widget-shipping-address/loops/fields' ); ?>

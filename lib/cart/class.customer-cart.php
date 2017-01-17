@@ -902,6 +902,19 @@ class ITE_Cart {
 	}
 
 	/**
+	 * Does this cart require shipping.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return bool
+	 */
+	public function requires_shipping() {
+		return $this->get_items( 'product' )->filter(function( ITE_Cart_Product $item ) {
+			return $item->get_product()->has_feature( 'shipping' );
+		})->count() > 0;
+	}
+
+	/**
 	 * Set the shipping method for the cart.
 	 *
 	 * This function does not handle updating the session, so behavior is consistent among cart types.

@@ -558,22 +558,54 @@ function it_exchange_get_all_purchase_requirement_checkout_element_template_part
  *
  * @since 1.2.0
  *
- * @param string $prop the registered property we are looking for
+ * @param string $name the registered property we are looking for
  *
  * @return mixed
  */
-function it_exchange_get_next_purchase_requirement_property( $prop ) {
+function it_exchange_get_next_purchase_requirement_property( $name ) {
 	$requirement = it_exchange_get_next_purchase_requirement();
-	$property    = ! isset( $requirement[ $prop ] ) ? false : $requirement[ $prop ];
+	$property    = ! isset( $requirement[ $name ] ) ? false : $requirement[ $name ];
 
 	// Send them to checkout in the SuperWidget if a template-part wasn't
-	if ( 'sw-template-part' == $prop && ! $property ) {
+	if ( 'sw-template-part' === $name && ! $property ) {
 		$property = 'checkout';
 	}
 
-	$property = apply_filters( 'it_exchange_get_next_purchase_requirement_property', $property, $prop );
+	/**
+	 * Filter the property for the next purchase requirement.
+	 *
+	 * The $requirement['slug'] variable refers to the slug of the purchase requirement. For example, 'logged-in'.
+	 * The $name variable refers to the property name. For example, 'notification.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param mixed $property
+	 */
+	$property = apply_filters( "it_exchange_get_next_purchase_requirement_{$requirement['slug']}_{$name}", $property );
 
-	return $property;
+	/**
+	 * Filter the property for the next purchase requirement.
+	 *
+	 * The $requirement['slug'] variable refers to the slug of the purchase requirement. For example, 'logged-in'.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param mixed  $property
+	 * @param string $name
+	 */
+	$property = apply_filters( "it_exchange_get_next_purchase_requirement_{$requirement['slug']}_property", $property, $name );
+
+	/**
+	 * Filter the property for the next purchase requirement.
+	 *
+	 * @since 1.2.0
+	 * @since 2.0.0 Add $requirement property.
+	 *
+	 * @param mixed  $property
+	 * @param string $name
+	 * @param array  $requirement
+	 */
+	return apply_filters( 'it_exchange_get_next_purchase_requirement_property', $property, $name, $requirement );
 }
 
 /**
