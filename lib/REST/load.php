@@ -191,7 +191,7 @@ function get_rest_manager() {
 
 	if ( ! $manager ) {
 
-		$is_debug = defined( 'WP_DEBUG' ) && WP_DEBUG && defined( 'WP_DEBUG_DISPLAY' ) && WP_DEBUG_DISPLAY;
+		$is_debug = defined( 'WP_DEBUG' ) && WP_DEBUG && ( ( defined( 'WP_DEBUG_DISPLAY' ) && WP_DEBUG_DISPLAY ) || current_user_can( 'manage_options' ) );
 
 		$stack = new Stack();
 		$stack->push( new Error_Handler( $is_debug ), 'error-handler' );

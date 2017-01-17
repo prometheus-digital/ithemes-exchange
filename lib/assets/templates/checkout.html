@@ -12,6 +12,8 @@
         <div class="it-exchange-checkout-coupon-container"></div>
     <# } #>
 
+    <div class="it-exchange-checkout-default-method-container"></div>
+
     <ul class="it-exchange-checkout-purchase-methods"></ul>
 
     <div class="it-exchange-checkout-additional-info-container"></div>
@@ -41,7 +43,7 @@
 </script>
 
 <script type="text/template" id="tmpl-it-exchange-checkout-coupon">
-    <a href="#" class="it-exchange-checkout-have-coupon-prompt"> {{ data.i18n.haveCoupon }}</a>
+    <a href="#" class="it-exchange-checkout-have-coupon-prompt"> {{ data.i18n.haveCoupon }} </a>
     <div class="it-exchange-checkout-coupon-input-container" style="display: none">
         <label>
             <span> {{ data.i18n.couponCode }} </span>
@@ -50,7 +52,7 @@
         <button class="it-exchange-checkout-coupon-add"> {{ data.i18n.addCoupon }} </button>
         <button class="it-exchange-checkout-coupon-cancel">
             &times;
-            <span class="screen-reader-text"> Cancel </span>
+            <span class="screen-reader-text"> {{ data.i18n.cancel }} </span>
         </button>
     </div>
 </script>
@@ -68,4 +70,14 @@
     <button class="it-exchange-checkout-cancel-purchase-method btn button">
         {{ data.cancel }}
     </button>
+</script>
+
+<script type="text/template" id="tmpl-it-exchange-checkout-default-method">
+
+    <div class="it-exchange-checkout-default-method--action-container">
+        <div class="it-exchange-checkout-default-method--source"></div>
+        <button class="it-exchange-checkout-default-method--action">{{ data.i18n.purchaseDefaultMethod }}</button>
+    </div>
+
+    <a href="#" class="it-exchange-checkout-default-method--select-other">{{ data.i18n.otherPaymentMethod }}</a>
 </script>

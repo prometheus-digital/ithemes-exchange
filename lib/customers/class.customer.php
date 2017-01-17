@@ -537,6 +537,7 @@ class IT_Exchange_Customer implements ITE_Object {
 		$args = ITUTility::merge_defaults( $args, array(
 			'gateway' => '',
 			'status'  => 'active',
+			'primary' => null,
 		) );
 
 		$without = array();
@@ -556,6 +557,10 @@ class IT_Exchange_Customer implements ITE_Object {
 			$mode = it_exchange_is_gateway_in_sandbox_mode( $args['gateway'] ) ? 'sandbox' : 'live';
 			$query->and_where( 'gateway', '=', $args['gateway'] )
 			      ->and_where( 'mode', '=', $mode );
+		}
+
+		if ( is_bool( $args['primary'] ) ) {
+			$query->and_where( 'primary', '=', $args['primary'] );
 		}
 
 		return $query->results();

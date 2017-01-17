@@ -236,14 +236,32 @@ HTML;
 	 */
 	public function get_data_for_REST( ITE_Gateway_Purchase_Request $request ) {
 
-		$accepts = array();
+		$data = array(
+			'method'  => 'REST',
+			'accepts' => array(),
+		);
 
 		if ( $this->get_gateway()->can_handle( 'tokenize' ) ) {
-			$accepts[] = 'token';
-			$accepts[] = 'tokenize';
+			$data['accepts'][] = 'token';
+			$data['accepts'][] = 'tokenize';
+
+			$primary_token = $request->get_customer()->get_tokens( array(
+				'gateway' => $this->get_gateway()->get_slug(),
+				'primary' => true,
+			) );
+
+			if ( $primary_token->count() ) {
+				$token_serializer = new \iThemes\Exchange\REST\Route\Customer\Token\Serializer();
+				$context_filterer = new \iThemes\Exchange\REST\Helpers\ContextFilterer();
+				$data['primaryToken'] = $context_filterer->filter(
+					$token_serializer->serialize( $primary_token->first() ),
+					'embed',
+					$token_serializer->get_schema()
+				);
+			}
 		}
 
-		return array( 'method' => 'REST', 'accepts' => $accepts );
+		return $data;
 	}
 
 	/**

@@ -1727,7 +1727,11 @@ button.it-exchange-customer-addresses-address-action--primary:hover {
     padding: 0;
 }
 
-.it-exchange-payment-tokens-selector--list li {
+.it-exchange-payment-tokens-selector--list .it-exchange-payment-tokens-selector--payment-token:last-child {
+    margin-bottom: 0;
+}
+
+.it-exchange-payment-tokens-selector--payment-token {
     display: block;
     border: 1px solid #ddd;
     padding: .5em 1em;
@@ -1735,23 +1739,19 @@ button.it-exchange-customer-addresses-address-action--primary:hover {
     transition: .2s ease-in opacity;
 }
 
-.it-exchange-payment-tokens-selector--list li:last-child {
-    margin-bottom: 0;
-}
-
-.it-exchange-payment-tokens-selector--list li:hover,
-.it-exchange-payment-tokens-selector--list li:focus {
+.it-exchange-payment-tokens-selector--payment-token:hover,
+.it-exchange-payment-tokens-selector--payment-token:focus {
     opacity: .8;
     cursor: pointer;
 }
 
-.it-exchange-payment-tokens-selector--list li label {
+.it-exchange-payment-tokens-selector--payment-token label {
     display: inline-block;
     margin: 0 0 0 .5em;
     vertical-align: middle;
 }
 
-.it-exchange-payment-tokens-selector--list li label img {
+.it-exchange-payment-tokens-selector--payment-token label img {
     margin-bottom: 3px;
     margin-left: 10px;
 }
@@ -1763,7 +1763,7 @@ button.it-exchange-customer-addresses-address-action--primary:hover {
 }
 
 .it-exchange-checkout-line-items {
-    margin-left: 0;
+    margin: 0 !important;
 }
 
 .it-exchange-checkout-line-items li {
@@ -1816,9 +1816,15 @@ button.it-exchange-customer-addresses-address-action--primary:hover {
     max-width: 400px;
 }
 
+.it-exchange-checkout-line-items-container + .it-exchange-checkout-line-item-totals-container {
+    border-top: 1px solid #666;
+    padding-top: 5px;
+    margin-top: 5px;
+}
+
 .it-exchange-checkout-line-item-totals {
     width: 100%;
-    margin-left: 0;
+    margin: 0 !important;
 }
 
 .it-exchange-checkout-line-item-totals li {
@@ -1890,6 +1896,27 @@ button.it-exchange-customer-addresses-address-action--primary:hover {
     list-style-type: none;
     display: inline-block;
     margin: 0 5px 5px 0;
+}
+
+.it-exchange-checkout-default-method--source {
+    display: inline-block;
+}
+
+.it-exchange-checkout-default-method--action-container .it-exchange-payment-tokens-selector--payment-token {
+    margin-bottom: 0;
+}
+
+.it-exchange-checkout-default-method--select-other {
+    font-size: .7em;
+    font-style: oblique;
+}
+
+.it-exchange-checkout-default-method--select-other::before {
+    content: '(';
+}
+
+.it-exchange-checkout-default-method--select-other::after {
+    content: ')';
 }
 
 /** -----------------------------------------------------:[ Backbone Manage Tokens ]:---------- */

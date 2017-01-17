@@ -20,7 +20,14 @@ class ITE_Payment_Token_Card extends ITE_Payment_Token {
 	 * @inheritDoc
 	 */
 	public function get_label() {
-		return parent::get_label() ?: sprintf( __( 'Card ending in %s', 'it-l10n-ithemes-exchange' ), $this->redacted );
+		if ( $label = parent::get_label() ) {
+			return $label;
+		} elseif ( $brand = $this->get_brand() ) {
+			/* translators: %1$s refers to the card brand. %2$s refers to the last 4 numbers of the card */
+			return sprintf( __( '%1$s ending in %2$s', 'it-l10n-ithemes-exchange' ), ucfirst( $brand ), $this->redacted );
+		} else {
+			return sprintf( __( 'Card ending in %s', 'it-l10n-ithemes-exchange' ), $this->redacted );
+		}
 	}
 
 	/**
