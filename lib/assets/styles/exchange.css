@@ -1900,8 +1900,15 @@ button.it-exchange-customer-addresses-address-action--primary:hover {
     margin: 0 5px 5px 0;
 }
 
-.it-exchange-checkout-default-method--source {
+.it-exchange-checkout-default-method--source.it-exchange-checkout-default-method--source--token {
     display: inline-block;
+    cursor: default;
+}
+
+.it-exchange-checkout-default-method--source--token .it-exchange-payment-tokens-selector--payment-token:hover,
+.it-exchange-checkout-default-method--source--token .it-exchange-payment-tokens-selector--payment-token:focus {
+    opacity: 1;
+    cursor: default;
 }
 
 .it-exchange-checkout-default-method--action-container .it-exchange-payment-tokens-selector--payment-token {
