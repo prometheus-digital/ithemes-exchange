@@ -46,7 +46,7 @@ class ITE_Gateway_Request_Factory {
 						throw new InvalidArgumentException( 'Invalid `card` option.' );
 					}
 
-					$request->set_card( $args['card'] );
+					$request->set_card( $card );
 				}
 
 				if ( ! empty( $args['token'] ) ) {

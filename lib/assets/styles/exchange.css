@@ -1929,7 +1929,7 @@ button.it-exchange-customer-addresses-address-action--primary:hover {
 }
 
 .it-exchange-checkout-payment-summary {
-    max-width: 300px;
+    max-width: 320px;
     width: 100%;
 }
 
@@ -2245,6 +2245,18 @@ button.it-exchange-manage-tokens-token-action.it-exchange-manage-tokens-token-ac
 }
 
 /** ----------------------------------------:[ Compat ]:--- */
+
+.it-exchange button:disabled,
+.it-exchange-wrap button:disabled {
+    opacity: .7;
+    cursor: progress;
+}
+
+.it-exchange button:disabled:hover,
+.it-exchange-wrap button:disabled:hover {
+    opacity: .7;
+    cursor: progress;
+}
 
 .screen-reader-text,
 .screen-reader-text span,
