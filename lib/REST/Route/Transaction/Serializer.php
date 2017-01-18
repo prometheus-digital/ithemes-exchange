@@ -32,6 +32,23 @@ class Serializer {
 	public function serialize( \IT_Exchange_Transaction $transaction, \IT_Exchange_Customer $user, $size = 96 ) {
 		$t = $transaction;
 
+		$payment = array();
+
+		if ( $source = $t->get_payment_source() ) {
+			$payment['label'] = $source->get_label();
+		}
+
+		if ( $card = $t->get_card() ) {
+			$payment['card'] = array(
+				'number' => $card->get_redacted_number(),
+				'year'   => $card->get_expiration_year(),
+				'month'  => $card->get_expiration_month(),
+				'name'   => $card->get_holder_name(),
+			);
+		} elseif ( $t->payment_token ) {
+			$payment['token'] = $t->payment_token->get_ID();
+		}
+
 		return array(
 			'id'                   => $t->get_ID(),
 			'order_number'         => $t->get_order_number(),
@@ -45,7 +62,7 @@ class Serializer {
 			'status'               => array( 'slug' => $t->get_status(), 'label' => $t->get_status( true ) ),
 			'cleared_for_delivery' => $t->is_cleared_for_delivery(),
 			'order_date'           => \iThemes\Exchange\REST\format_rfc339( $t->get_date() ),
-			'payment_token'        => $t->payment_token ? $t->payment_token->ID : 0,
+			'payment'              => $payment,
 			'purchase_mode'        => $t->purchase_mode,
 			'parent'               => $t->has_parent() ? $t->get_parent()->get_ID() : 0,
 			'subtotal'             => $t->get_subtotal(),
@@ -75,6 +92,12 @@ class Serializer {
 		$t = $transaction;
 
 		$links = array();
+
+		$links['alternate'][] = array(
+			'href'       => it_exchange_get_transaction_confirmation_url( $transaction->get_ID() ),
+			'embeddable' => false,
+			'mediaType'  => 'text/html'
+		);
 
 		$links['refunds'][] = array(
 			'href'       => r\get_rest_url(
@@ -315,11 +338,24 @@ class Serializer {
 					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
 				),
-				'payment_token'        => array(
-					'description' => __( 'The payment token used for this transaction.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
+				'payment'              => array(
+					'description' => __( 'The method of payment for this transaction.', 'it-l10n-ithemes-exchange' ),
+					'type'        => 'object',
+					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
+					'properties'  => array(
+						'label' => array(
+							'description' => __( 'Human readable label of the payment method used.' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit', 'embed' ),
+						),
+						'card'  => array( '$ref' => r\url_for_schema( 'card' ) ),
+						'token' => array(
+							'description' => __( 'The payment token used.', 'it-l10n-ithemes-exchange' ),
+							'type'        => 'integer',
+							'context'     => array( 'view', 'edit' ),
+						)
+					),
 				),
 				'purchase_mode'        => array(
 					'description' => __( 'The mode the transaction was created in.', 'it-l10n-ithemes-exchange' ),

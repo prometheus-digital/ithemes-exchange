@@ -226,7 +226,7 @@ function get_rest_manager() {
 					'cvc'    => array(
 						'type'        => 'string',
 						'description' => __( 'Card security code.', 'it-l10n-ithemes-exchange' ),
-						'required'    => true,
+						'required'    => false,
 						'min'         => 3,
 						'max'         => 4,
 					),

@@ -281,6 +281,12 @@ function it_exchange_register_scripts() {
 				'addCoupon'          => _x( 'Add', 'Add coupon', 'it-l10n-ithemes-exchange' ),
 				'couponCode'         => __( 'Coupon Code', 'it-l10n-ithemes-exchange' ),
                 'otherPaymentMethod' => __( 'Use other payment method', 'it-l10n-ithemes-exchange' ),
+                'paymentSummary'     => __( 'Payment Summary', 'it-l10n-ithemes-exchange' ),
+                'total'              => __( 'Total', 'it-l10n-ithemes-exchange' ),
+				'date'               => __( 'Date', 'it-l10n-ithemes-exchange' ),
+				'method'             => __( 'Method', 'it-l10n-ithemes-exchange' ),
+				'order'              => __( 'Order', 'it-l10n-ithemes-exchange' ),
+                'viewDetails'        => __( 'View Details', 'it-l10n-ithemes-exchange' ),
 			),
 			'paymentToken' => array(
 				'addNew'          => _x( 'Add New', 'Add new payment source, like a credit card.', 'it-l10n-ithemes-exchange' ),

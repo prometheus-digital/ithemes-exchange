@@ -1928,6 +1928,68 @@ button.it-exchange-customer-addresses-address-action--primary:hover {
     content: ')';
 }
 
+.it-exchange-checkout-payment-summary {
+    max-width: 300px;
+    width: 100%;
+}
+
+.it-exchange-checkout-payment-summary h4 {
+    text-align: center;
+    margin: 0 0 15px 0;
+    padding: 0;
+}
+
+.it-exchange-checkout-payment-summary ul {
+    margin: 0;
+    padding: 0;
+}
+
+.it-exchange-checkout-payment-summary ul::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.it-exchange-checkout-payment-summary li {
+    border-top: 1px solid #eee;
+    display: block;
+    clear: both;
+    padding: 10px 0 25px 0;
+}
+
+.it-exchange-checkout-payment-summary ul li:first-child {
+    border-top: none;
+    padding-top: 0;
+}
+
+.it-exchange-checkout-payment-summary ul li:last-child {
+    padding-bottom: 0;
+}
+
+.it-exchange-checkout-payment-summary ul li h5 {
+    font-size: 1rem;
+    height: 1em;
+    line-height: 1em;
+    text-transform: uppercase;
+    font-weight: normal !important;
+    letter-spacing: 1px;
+    float: left;
+    margin: 0;
+    padding: 0;
+}
+
+.it-exchange-checkout-payment-summary ul div {
+    float: right;
+    height: 1rem;
+    font-size: 1em;
+    line-height: 1em;
+}
+
+.it-exchange-checkout-payment-summary button {
+    display: block;
+    margin: 10px auto 0;
+}
+
 /** -----------------------------------------------------:[ Backbone Manage Tokens ]:---------- */
 
 .it-exchange-manage-tokens-list {
