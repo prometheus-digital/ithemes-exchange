@@ -42,7 +42,7 @@ interface ITE_Object_Type {
 	 *
 	 * @return ITE_Object
 	 *
-	 * @throws BadMethodCallException
+	 * @throws BadMethodCallException If this method is not supported by the object type.
 	 */
 	public function create_object( array $attributes );
 
@@ -66,7 +66,7 @@ interface ITE_Object_Type {
 	 *
 	 * @return ITE_Object[]
 	 *
-	 * @throws BadMethodCallException
+	 * @throws BadMethodCallException If this method is not supported by the object type.
 	 */
 	public function get_objects( \Doctrine\Common\Collections\Criteria $criteria = null );
 
@@ -79,7 +79,7 @@ interface ITE_Object_Type {
 	 *
 	 * @return bool True if deleted or already deleted, false if not able to delete.
 	 *
-	 * @throws BadMethodCallException
+	 * @throws BadMethodCallException If this method is not supported by the object type.
 	 */
 	public function delete_object_by_id( $id );
 
