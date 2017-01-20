@@ -41,6 +41,8 @@ interface ITE_Object_Type {
 	 * @param array $attributes
 	 *
 	 * @return ITE_Object
+	 *
+	 * @throws BadMethodCallException
 	 */
 	public function create_object( array $attributes );
 
@@ -63,6 +65,8 @@ interface ITE_Object_Type {
 	 * @param array|\Doctrine\Common\Collections\Criteria $criteria
 	 *
 	 * @return ITE_Object[]
+	 *
+	 * @throws BadMethodCallException
 	 */
 	public function get_objects( \Doctrine\Common\Collections\Criteria $criteria = null );
 
@@ -74,6 +78,8 @@ interface ITE_Object_Type {
 	 * @param string $id
 	 *
 	 * @return bool True if deleted or already deleted, false if not able to delete.
+	 *
+	 * @throws BadMethodCallException
 	 */
 	public function delete_object_by_id( $id );
 
