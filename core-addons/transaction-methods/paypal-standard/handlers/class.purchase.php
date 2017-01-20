@@ -339,7 +339,7 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 
 		if ( isset( $paypal_id, $paypal_total, $paypal_status, $cart_id, $cart ) ) {
 
-			$cart_total = it_exchange_get_cart_total( false, array( 'cart' => $cart ) );
+			$cart_total = $cart->has_meta( 'frozen_total' ) ? $cart->get_meta( 'frozen_total' ) : $cart->get_total();
 
 			if ( number_format( $paypal_total, '2', '', '' ) !== number_format( $cart_total, '2', '', '' ) ) {
 				throw new Exception( __( 'Error: Amount charged is not the same as the cart total.', 'it-l10n-ithemes-exchange' ) );

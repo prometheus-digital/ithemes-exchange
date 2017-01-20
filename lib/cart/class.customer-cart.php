@@ -1282,6 +1282,7 @@ class ITE_Cart {
 	public function mark_as_purchased( $purchased = true ) {
 
 		$repo = $this->get_repository();
+		$this->set_meta( 'frozen_total', $this->get_total() );
 
 		if ( $repo instanceof ITE_Line_Item_Cached_Session_Repository ) {
 			return $repo->get_model()->mark_purchased( $purchased );
