@@ -204,10 +204,16 @@ function it_exchange_db_delete_all_sessions() {
  * Register the garbage collector as a twice daily event.
  *
  * @internal
+ *
+ * @since 2.0.0 Changed schedule to 'hourly'.
  */
 function it_exchange_db_session_register_garbage_collection() {
-	if ( ! wp_next_scheduled( 'it_exchange_db_session_garbage_collection' ) ) {
-		wp_schedule_event( time(), 'twicedaily', 'it_exchange_db_session_garbage_collection' );
+
+	$next = wp_next_scheduled( 'it_exchange_db_session_garbage_collection' );
+
+	// Ensure that the proper schedule is set.
+	if ( ! $next || time() + HOUR_IN_SECONDS < $next ) {
+		wp_schedule_event( time(), 'hourly', 'it_exchange_db_session_garbage_collection' );
 	}
 }
-add_action( 'wp', 'it_exchange_db_session_register_garbage_collection' );
+add_action( 'admin_init', 'it_exchange_db_session_register_garbage_collection' );
