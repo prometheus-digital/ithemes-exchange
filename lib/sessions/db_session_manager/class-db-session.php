@@ -132,7 +132,9 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 
 			$this->option_key = $this->generate_option_key();
 
-			$this->set_cookie();
+			if ( ! $this->is_rest_request() ) {
+				$this->set_cookie();
+			}
 		} elseif ( ! $this->is_rest_request() && is_user_logged_in() ) {
 			$this->initialize_new_session();
 		}

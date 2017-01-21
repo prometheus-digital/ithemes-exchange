@@ -1752,8 +1752,8 @@ button.it-exchange-customer-addresses-address-action--primary:hover {
 }
 
 .it-exchange-payment-tokens-selector--payment-token label img {
-    margin-bottom: 3px;
-    margin-left: 10px;
+    vertical-align: middle;
+    padding-left: 5px;
 }
 
 /** -----------------------------------------------------:[ Backbone Checkout ]:---------- */

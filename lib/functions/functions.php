@@ -231,6 +231,7 @@ function it_exchange_register_scripts() {
 	wp_register_script( 'jquery.payment', IT_Exchange::$url . '/lib/assets/js/jquery.payment.min.js', array( 'jquery' ), '1.3.2', true );
 	wp_register_script( 'backbonedeep', IT_Exchange::$url . '/lib/admin/js/backbone.modeldeep.min.js', array( 'backbone' ), '2.0.1', true );
 	wp_register_script( 'backbone.paginator', IT_Exchange::$url . '/lib/admin/js/backbone.paginator.min.js', array( 'backbone' ), '2.0.5', true );
+	wp_register_script( 'backbone.fetch-cache', IT_Exchange::$url . '/lib/admin/js/backbone.fetch-cache.min.js', array( 'backbone' ), '2.0.1', true );
 	wp_register_script( 'ithemes-momentjs', IT_Exchange::$url . '/lib/admin/js/moment.min.js', array(), '2.11.0', true );
 	wp_register_script( 'jquery.contextMenu', IT_Exchange::$url . '/lib/assets/js/jquery.contextMenu.min.js', array( 'jquery-ui-position' ), '2.4.1', true );
 
@@ -263,7 +264,7 @@ function it_exchange_register_scripts() {
 
 	$rest_libs = array(
 		'backbone', 'underscore', 'it-exchange-common', 'wp-util', 'ithemes-momentjs', 'backbonedeep',
-		'wp-backbone', 'backbone.paginator'
+		'wp-backbone', 'backbone.paginator', 'backbone.fetch-cache'
 	);
 	wp_register_script( 'it-exchange-rest', IT_Exchange::$url . '/lib/assets/js/rest.js', $rest_libs, IT_Exchange::VERSION	);
 
