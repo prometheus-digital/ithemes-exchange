@@ -11,6 +11,9 @@
  */
 class Test_Demo extends IT_Exchange_UnitTestCase {
 
+	/**
+	 * @group demo
+	 */
 	public function test_something() {
 		$this->assertTrue( true );
 	}

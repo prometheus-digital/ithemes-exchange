@@ -1,8 +1,10 @@
 #!/bin/sh
 
-dir=$(pwd)
-dir+="/../../../../../wordpress-develop/tests/phpunit"
+#dir=$(pwd)
+dir="/app/wordpress-develop/tests/phpunit/"
 
-export WP_TESTS_DIR=${dir}
+export WP_TESTS_DIR="$1"
 
-phpunit
+shift
+
+phpunit "$@"

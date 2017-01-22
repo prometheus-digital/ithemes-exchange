@@ -70,7 +70,8 @@ class IT_Exchange {
 
 		// Set version
 		$GLOBALS['it_exchange']['version'] = self::VERSION;
-		if ( is_admin() ) {
+
+		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) || defined( 'WP_TESTS_TABLE_PREFIX' ) ) {
 			$versions        = get_option( 'it-exchange-versions', false );
 			$current_version = empty( $versions['current'] ) ? false : $versions['current'];
 

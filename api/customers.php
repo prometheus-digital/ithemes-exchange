@@ -284,7 +284,7 @@ add_action( 'template_redirect', 'handle_it_exchange_save_profile_action', 5 );
  * @since 0.4.0
  * @param array $user_data optional. Overwrites POST data
  *
- * @return WP_User|WP_Error
+ * @return int|WP_Error
 */
 function it_exchange_register_user( $user_data=array() ) {
 
