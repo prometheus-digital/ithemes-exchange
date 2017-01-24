@@ -816,7 +816,7 @@
 	Added Order By product feature to Product's Advanced options and General Settings
 	Fixed typo in Purchase Messages has_feature hook
 1.7.23 - 2014-03-26 - Lew Ayotte, Glenn Ansley, Elise Alley
-	Fix registration call for Cart and Checkout pages	
+	Fix registration call for Cart and Checkout pages
 	Fixed for Pages tab not showing Page Types set to WordPress or Disabled
 1.7.24 - 2014-03-26 - Packaging Bot (lib/icon-fonts)
 	Fixed issue with admin menu icons not functioning properly on sites that have an ABSPATH or WP_CONTENT_DIR of "/".
@@ -1046,7 +1046,7 @@
 	Extend inline-docs a bit for saving custom billing address fields
 1.11.7 - Lew Ayotte, Glenn Ansley, Elise Alley, Timothy Jacobs
 	Don't pre-check box to mailchimp subscription in Exchange Startup Wizard
-	Fix for DB Session Cleanup 
+	Fix for DB Session Cleanup
 	Add a filter to the individual product description when generated for the cart description
 	Add product-[ID] and product-[product-type] class names to store product li elementes by default. Make filterable as well.
 1.11.8 - Lew Ayotte, Glenn Ansley, Elise Alley, Timothy Jacobs
@@ -1093,12 +1093,12 @@
 	If no username or password is provided on submit from exchange Login page, don't redirect to wp-login.php
 	Fix bug in purchase-requirement template part's filter name created by first param. Maintain back_compat.
 	Adding IPN Verification to PayPal non-Secure option
-1.11.16 - Lew Ayotte, Glenn Ansley, Elise Alley 
+1.11.16 - Lew Ayotte, Glenn Ansley, Elise Alley
 	Fix for DB Session bloat bug
-1.11.17 - Lew Ayotte, Glenn Ansley, Elise Alley 
+1.11.17 - Lew Ayotte, Glenn Ansley, Elise Alley
 	Added filter to shipping address and method requirement
 	Added cart object verification to PayPal processing
-1.11.18 - Lew Ayotte, Glenn Ansley, Elise Alley 
+1.11.18 - Lew Ayotte, Glenn Ansley, Elise Alley
 	Pass shipping to PayPal when available
 1.12.0 - Glenn Ansley, Lew Ayotte, Elise Alley
 	Multiple updates involving add_query_arg and remove_query_arg to esc_url()
@@ -1168,7 +1168,7 @@
 	Better Output Buffer Cleaning for Plugins/Themes that have created multiple levels of Output Buffer that we need to escape
 	Change how DB sessions initialize
 1.26.0 - Lew Ayotte, Elise Alley
-	Fix for registration/checkout redirects bug	
+	Fix for registration/checkout redirects bug
 1.27.0 - Lew Ayotte, Elise Alley
 	Changing init priority for db sessions, to happen before widget_init
 1.28.0 - Lew Ayotte, Elise Alley, Timothy B. Jacobs
@@ -1314,3 +1314,5 @@
     Update: Updating lib/classes to 2.4.8
 1.36.1 - Lew Ayotte, Elise Alley
 	Fix: Variable name for superwidget error output
+1.36.2 - Chris Jean
+	Security Fix: Automatically detect and remove development directory that could exist in the exchange-addon-membership plugin.
