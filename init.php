@@ -76,6 +76,7 @@ class IT_Exchange {
 
 		do_action( 'it_exchange_loaded' );
 		add_action( 'it_libraries_loaded', array( $this, 'addons_init' ) );
+		add_action( 'it_libraries_loaded', array( $this, 'remove_dev_dirs' ) );
 	}
 
 	/**
@@ -166,6 +167,22 @@ class IT_Exchange {
 			}
 		}
 		do_action( 'it_exchange_enabled_addons_loaded' );
+	}
+
+	function remove_dev_dirs() {
+		$plugins_dir = dirname( $this->_plugin_path );
+
+		$dirs = array(
+			$this->_plugin_path . '/vendor/phpunit',
+			$plugins_dir . '/exchange-addon-membership/vendor/phpunit',
+		);
+
+		foreach ( $dirs as $dir ) {
+			if ( is_dir( $dir ) ) {
+				it_classes_load( 'it-file-utility.php' );
+				ITFileUtility::delete_directory( $dir );
+			}
+		}
 	}
 }
 
