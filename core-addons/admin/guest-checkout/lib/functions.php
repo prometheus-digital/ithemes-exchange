@@ -11,6 +11,10 @@ function it_exchange_guest_checkout_bump_session() {
 	$customer_email = it_exchange_get_cart_data( 'guest-checkout-user' );
 	$customer_email = is_array( $customer_email ) ? reset( $customer_email ) : $customer_email;
 
+	if ( ! $customer_email ) {
+		return;
+	}
+
 	it_exchange_update_cart_data( 'guest-checkout', $now );
 	it_exchange_get_current_cart()->set_guest( new IT_Exchange_Guest_Customer( $customer_email ) );
 
@@ -88,4 +92,17 @@ function it_exchange_init_guest_checkout_session( $customer_email ) {
 	it_exchange_guest_checkout_bump_session();
 
 	do_action( 'it_exchange_init_guest_checkout', $customer_email );
+}
+
+/**
+ * Set the cookie flagging the current guest email.
+ *
+ * This is used so that the customer can view the confirmation page again if they refresh.
+ *
+ * @since 2.0.0
+ *
+ * @param string $email
+ */
+function it_exchange_set_guest_email_cookie( $email ) {
+	@setcookie( 'it-exchange-guest-email', $email, time() + HOUR_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN, '', true );
 }

@@ -635,11 +635,11 @@ class IT_Exchange_Shopping_Cart {
 
 		} else {
 
-			$transaction_object = apply_filters( 'it_exchange_transaction_object', $transaction_object, $requested_transaction_method );
+			$transaction_object = apply_filters( 'it_exchange_transaction_object', $transaction_object, $requested_transaction_method, $cart );
 
 			try {
 				// Do the transaction
-				$transaction_id = it_exchange_do_transaction( $requested_transaction_method, $transaction_object );
+				$transaction_id = it_exchange_do_transaction( $requested_transaction_method, $transaction_object, $cart );
 
 				if ( $transaction_id ) {
 					it_exchange_empty_shopping_cart();

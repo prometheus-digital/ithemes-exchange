@@ -310,7 +310,7 @@ class IT_Exchange_Super_Widget_Ajax {
 				$transaction_id = $this->shopping_cart->handle_purchase_cart_request( false );
 
 				if ( $transaction_id ) {
-					return it_exchange_get_transaction_confirmation_url( $transaction_id );
+					return it_exchange_get_transaction_confirmation_url( $transaction_id, ! is_user_logged_in() );
                 }
 
                 return false;

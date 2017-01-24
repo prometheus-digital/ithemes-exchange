@@ -91,25 +91,10 @@ function it_exchange_handle_guest_checkout_session() {
 	$guest_session = empty( $guest_session ) ? false : reset( $guest_session );
 
 	// IF we don't have a guest session, return
-	if ( ! $guest_session )
+	if ( ! $guest_session ) {
 		return;
-
-	// Grab guest session timeout value from settings
-	$settings      = it_exchange_get_option( 'addon-guest-checkout' );
-	$timeout       = empty( $settings['cart-expiration'] ) ? 15 : $settings['cart-expiration'];
-
-	// Do some math.
-	$expires = $guest_session + ( $timeout * 60 );
-
-	/**
-	 * DISABLING SESSION TIMEOUTS FOR NOW 
-	if ( ( $expires ) <= time() ) {
-		it_exchange_kill_guest_checkout_session();
-		it_exchange_add_message( 'notice', __( 'Session has expired.', 'it-l10n-ithemes-exchange' ) );
-	} else {
-		it_exchange_guest_checkout_bump_session();
 	}
-	*/
+
 	it_exchange_guest_checkout_bump_session();
 }
 add_action( 'template_redirect', 'it_exchange_handle_guest_checkout_session', 9 );
@@ -229,13 +214,14 @@ function it_exchange_guest_checkout_set_customer_data( $data, $customer_id ) {
  *
  * @since 1.6.0
  *
- * @param object $transaction_object the transaction object right before being added to database
+ * @param object        $transaction_object The transaction object right before being added to database
+ * @param ITE_Cart|null $cart
  *
  * @return object
 */
-function it_exchange_flag_transaction_as_guest_checkout( $transaction_object ) {
+function it_exchange_flag_transaction_as_guest_checkout( $transaction_object, ITE_Cart $cart = null ) {
 
-	if ( ! it_exchange_doing_guest_checkout() ) {
+	if ( ! $cart || ! $cart->is_guest() ) {
 		return $transaction_object;
 	}
 
@@ -243,7 +229,7 @@ function it_exchange_flag_transaction_as_guest_checkout( $transaction_object ) {
 
 	return $transaction_object;
 }
-add_filter( 'it_exchange_generate_transaction_object', 'it_exchange_flag_transaction_as_guest_checkout' );
+add_filter( 'it_exchange_generate_transaction_object', 'it_exchange_flag_transaction_as_guest_checkout', 10, 2 );
 
 /**
  * Adds post meta to flag as guest checkout after its inserted into the DB
@@ -252,19 +238,23 @@ add_filter( 'it_exchange_generate_transaction_object', 'it_exchange_flag_transac
  *
  * @since 1.6.0
  *
- * @param int $transaction_id
+ * @param int           $transaction_id
+ * @param ITE_Cart|null $cart
  *
  * @return void
 */
-function it_exchange_flag_transaction_post_as_guest_checkout( $transaction_id ) {
+function it_exchange_flag_transaction_post_as_guest_checkout( $transaction_id, ITE_Cart $cart = null ) {
 	$transaction = it_exchange_get_transaction( $transaction_id );
 
-	if ( $transaction->is_guest_purchase() ) {
+	if ( $cart && $cart->is_guest() ) {
 		update_post_meta( $transaction_id, '_it-exchange-is-guest-checkout', true );
-		@setcookie( 'it-exchange-guest-email', $transaction->customer_email, time() + HOUR_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN, '', true );
+
+		if ( $cart && $cart->is_current() ) {
+			it_exchange_set_guest_email_cookie( $transaction->get_customer_email() );
+		}
 	}
 }
-add_action( 'it_exchange_add_transaction_success', 'it_exchange_flag_transaction_post_as_guest_checkout' );
+add_action( 'it_exchange_add_transaction_success', 'it_exchange_flag_transaction_post_as_guest_checkout', 10, 2 );
 
 /**
  * Removes guest checkout transactions from User Purchases
@@ -471,8 +461,10 @@ add_action( 'it_exchange_processing_super_widget_ajax_guest-checkout', 'it_excha
  * @return boolean
 */
 function it_exchange_guest_checkout_maybe_remove_download_page_link_from_email( $boolean, $id ) {
-	if ( ! $transaction = it_exchange_get_transaction( $id ) )
+
+	if ( ! $transaction = it_exchange_get_transaction( $id ) ) {
 		return $boolean;
+	}
 
 	if ( ! $transaction->is_guest_purchase() ) {
 		return $boolean;

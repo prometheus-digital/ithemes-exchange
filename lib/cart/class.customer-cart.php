@@ -174,6 +174,22 @@ class ITE_Cart {
 	}
 
 	/**
+	 * Set the customer object for this cart.
+	 *
+	 * This is not advisable to use under most circumstances. This change is only
+	 * persisted in memory and not to the DB.
+	 *
+	 * @internal
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param IT_Exchange_Customer $customer
+	 */
+	public function _set_customer( IT_Exchange_Customer $customer ) {
+		$this->customer = $customer;
+	}
+
+	/**
 	 * Check if the cart is the current active cart.
 	 *
 	 * @since 2.0.0

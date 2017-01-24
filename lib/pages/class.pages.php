@@ -359,9 +359,7 @@ class IT_Exchange_Pages {
 		}
 
 		if ( isset( $_REQUEST['confirmation_auth'] ) ) {
-			$jwt = \Firebase\JWT\JWT::decode( $_REQUEST['confirmation_auth'], wp_salt(), array( 'HS256' ) );
-
-			if ( hash_equals( $jwt->transaction_hash, $transaction_hash ) ) {
+			if ( it_exchange_verify_transaction_confirmation_auth( $transaction, $_REQUEST['confirmation_auth'] ) ) {
 				return;
 			}
 		}
@@ -448,17 +446,10 @@ class IT_Exchange_Pages {
 				}
 
 				// Grab the transaction confirmation URL. fall back to store if confirmation url fails
-				$confirmation_url = it_exchange_get_transaction_confirmation_url( $transaction_id );
+				$confirmation_url = it_exchange_get_transaction_confirmation_url( $transaction_id, $cart && ! is_user_logged_in() );
 
 				if ( empty( $confirmation_url ) ) {
 					$confirmation_url = it_exchange_get_page_url( 'store' );
-				} elseif ( $cart && ! is_user_logged_in() ) {
-					$auth = \Firebase\JWT\JWT::encode( array(
-						'exp'              => time() + HOUR_IN_SECONDS,
-						'transaction_hash' => it_exchange_get_transaction_hash( $transaction_id )
-					), wp_salt() );
-
-					$confirmation_url = add_query_arg( array( 'confirmation_auth' => $auth ), $confirmation_url );
 				}
 
 				// Redirect

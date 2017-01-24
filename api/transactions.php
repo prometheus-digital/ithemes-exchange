@@ -535,10 +535,6 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 		update_post_meta( $transaction_id, '_it_exchange_customer_ip', $customer_ip );
 		update_post_meta( $transaction_id, '_it_exchange_cart_object', $cart_object );
 
-		if ( $customer instanceof IT_Exchange_Guest_Customer ) {
-			update_post_meta( $transaction_id, '_it-exchange-is-guest-checkout', 1 );
-		}
-
 		$hash = it_exchange_generate_transaction_hash( $transaction_id, $customer ? $customer->id  : false );
 
 		/** @var mixed $cart_object */
@@ -867,17 +863,17 @@ function it_exchange_get_transaction_id_from_hash( $hash ) {
  *
  * @since 0.4.0
  *
- * @param integer $id transaction_id
+ * @param int|IT_Exchange_Transaction $transaction transaction_id
  *
  * @return string|bool ID or false
  */
-function it_exchange_get_transaction_hash( $id ) {
+function it_exchange_get_transaction_hash( $transaction ) {
 
-	if ( ! $transaction = it_exchange_get_transaction( $id ) ) {
+	if ( ! $transaction = it_exchange_get_transaction( $transaction ) ) {
 		return false;
 	}
 
-	return apply_filters( 'it_exchange_get_transaction_hash', $transaction->hash, $id );
+	return apply_filters( 'it_exchange_get_transaction_hash', $transaction->hash, $transaction );
 }
 
 /**
@@ -1669,13 +1665,17 @@ function it_exchange_get_transaction_method_id( $transaction ) {
  *
  * @since 0.3.7
  *
- * @param string $method
- * @param object $transaction_object
+ * @param string        $method
+ * @param object        $transaction_object
+ * @param ITE_Cart|null $cart
  *
  * @return mixed
  */
-function it_exchange_do_transaction( $method, $transaction_object ) {
-	return apply_filters( 'it_exchange_do_transaction_' . $method, false, $transaction_object );
+function it_exchange_do_transaction( $method, $transaction_object, ITE_Cart $cart = null ) {
+
+	$cart = $cart ?: it_exchange_get_cart( $transaction_object->cart_id );
+
+	return apply_filters( 'it_exchange_do_transaction_' . $method, false, $transaction_object, $cart );
 }
 
 /**
@@ -1811,7 +1811,8 @@ function it_exchange_get_webhook_options( $key ) {
  *
  * @param string $webhook Optionally, specify the webhook to compare against.
  *
- * @return bool|string
+ * @return string|bool If called with $webhook parameter, will return whether that webhook is being evaluated.
+ *                     If called without, will return the webhook key of the currently firing webhook, or false.
  */
 function it_exchange_doing_webhook( $webhook = '' ) {
 
@@ -1880,10 +1881,11 @@ function it_exchange_get_webhook_url( $webhook_key ) {
  * @since 0.4.0
  *
  * @param integer $transaction_id id of the transaction
+ * @param bool    $include_auth
  *
  * @return string url
  */
-function it_exchange_get_transaction_confirmation_url( $transaction_id ) {
+function it_exchange_get_transaction_confirmation_url( $transaction_id, $include_auth = false ) {
 
 	// If we can't grab the hash, return false
 	if ( ! $transaction_hash = it_exchange_get_transaction_hash( $transaction_id ) ) {
@@ -1901,7 +1903,56 @@ function it_exchange_get_transaction_confirmation_url( $transaction_id ) {
 		$confirmation_url = add_query_arg( $slug, $transaction_hash, $confirmation_url );
 	}
 
+	if ( $include_auth ) {
+		$confirmation_url = add_query_arg(
+			'confirmation_auth',
+			it_exchange_generate_transaction_confirmation_auth( $transaction_id ),
+			$confirmation_url
+		);
+	}
+
 	return apply_filters( 'it_exchange_get_transaction_confirmation_url', $confirmation_url, $transaction_id );
+}
+
+/**
+ * Generate an authentication token for the confirmation URL.
+ *
+ * @since 2.0.0
+ *
+ * @param int|IT_Exchange_Transaction $transaction
+ *
+ * @return string
+ */
+function it_exchange_generate_transaction_confirmation_auth( $transaction ) {
+	$transaction = it_exchange_get_transaction( $transaction );
+
+	$auth = \Firebase\JWT\JWT::encode( array(
+		'exp'              => time() + HOUR_IN_SECONDS,
+		'transaction_hash' => it_exchange_get_transaction_hash( $transaction )
+	), wp_salt() );
+
+	return $auth;
+}
+
+/**
+ * Verify the transaction confirmation auth token.
+ *
+ * @since 2.0.0
+ *
+ * @param int|IT_Exchange_Transaction $transaction
+ * @param string                      $auth
+ *
+ * @return bool
+ */
+function it_exchange_verify_transaction_confirmation_auth( $transaction, $auth ) {
+
+	try {
+		$jwt = \Firebase\JWT\JWT::decode( $auth, wp_salt(), array( 'HS256' ) );
+	} catch ( Exception $e ) {
+		return false;
+	}
+
+	return hash_equals( $jwt->transaction_hash, it_exchange_get_transaction_hash( $transaction ) );
 }
 
 /**

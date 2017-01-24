@@ -348,7 +348,6 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 
 		// Get state from REQUEST
 		$state                   = empty( $_REQUEST['ite-sw-state'] ) ? false : $_REQUEST['ite-sw-state'];
-		$user_logged_in          = is_user_logged_in();
 		$multi_item_cart_allowed = it_exchange_is_multi_item_cart_allowed();
 		$items_in_cart           = ( $cart = it_exchange_get_current_cart( false ) ) && $cart->get_items( 'product' )->count() > 0;
 		$it_exchange_view        = get_query_var( 'it_exchange_view' );

@@ -53,12 +53,10 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 
 		add_filter(
 			"it_exchange_do_transaction_{$gateway->get_slug()}",
-			function ( $_, $transaction_object ) use ( $self, $factory ) {
+			function ( $_, $transaction_object, ITE_Cart $cart = null ) use ( $self, $factory ) {
 				if ( ! isset( $transaction_object->cart_id ) ) {
 					return $_;
 				}
-
-				$cart = it_exchange_get_cart( $transaction_object->cart_id );
 
 				if ( ! $cart ) {
 					return $_;
@@ -78,7 +76,7 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 
 				return $txn ? $txn->ID : false;
 			},
-			10, 2
+			10, 3
 		);
 	}
 
