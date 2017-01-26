@@ -30,7 +30,7 @@ class ITE_Tax_Manager implements ITE_Cart_Aware {
 	 */
 	public function __construct( ITE_Cart $cart ) {
 		$this->cart         = $cart;
-		$this->use_shipping = (bool) $cart->get_shipping_address();
+		$this->use_shipping = $cart->requires_shipping();
 
 		if ( $this->use_shipping ) {
 			$address = $this->cart->get_shipping_address();

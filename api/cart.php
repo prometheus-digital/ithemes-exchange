@@ -31,6 +31,15 @@ function it_exchange_get_current_cart( $create_if_not_started = true ) {
 			new ITE_Line_Item_Session_Repository( it_exchange_get_session(), new ITE_Line_Item_Repository_Events() ),
 			$cart_id
 		);
+
+		/**
+		 * Fires when a cart is constructed.
+		 *
+		 * @since 2.0.0
+		 *
+		 * @param \ITE_Cart $this
+		 */
+		do_action( 'it_exchange_construct_cart', $cart );
 	}
 
 	if ( $cart && ! $cart->get_id() ) {
@@ -65,7 +74,12 @@ function it_exchange_get_cart( $cart_id ) {
 		return null;
 	}
 
-	return new ITE_Cart( $repo, $cart_id, $repo->get_customer() );
+	$cart = new ITE_Cart( $repo, $cart_id, $repo->get_customer() );
+
+	// This filter is documented in api/cart.php
+	do_action( 'it_exchange_construct_cart', $cart );
+
+	return $cart;
 }
 
 /**

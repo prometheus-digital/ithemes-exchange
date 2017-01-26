@@ -68,15 +68,6 @@ class ITE_Cart {
 				$this->add_location_validator( $validator );
 			}
 		}
-
-		/**
-		 * Fires when a cart is constructed.
-		 *
-		 * @since 2.0.0
-		 *
-		 * @param \ITE_Cart $this
-		 */
-		do_action( 'it_exchange_construct_cart', $this );
 	}
 
 	/**
@@ -925,9 +916,9 @@ class ITE_Cart {
 	 * @return bool
 	 */
 	public function requires_shipping() {
-		return $this->get_items( 'product' )->filter(function( ITE_Cart_Product $item ) {
+		return $this->get_items( 'product' )->filter( function( ITE_Cart_Product $item ) {
 			return $item->get_product()->has_feature( 'shipping' );
-		})->count() > 0;
+		} )->count() > 0;
 	}
 
 	/**
