@@ -794,9 +794,15 @@ class ITE_Cart {
 	 *
 	 * @since 2.0.0
 	 *
+	 * @param bool $try_frozen Try to get the frozen cart total if possible. Otherwise, will fall back to calculating the total.
+	 *
 	 * @return float
 	 */
-	public function get_total() {
+	public function get_total( $try_frozen = false ) {
+
+		if ( $try_frozen && $this->has_meta( 'frozen_total' ) ) {
+			return (float) $this->get_meta( 'frozen_total' );
+		}
 
 		$total = $this->get_subtotal();
 		$total += $this->get_items( '', true )->without( 'product' )->summary_only()->total();
@@ -916,9 +922,9 @@ class ITE_Cart {
 	 * @return bool
 	 */
 	public function requires_shipping() {
-		return $this->get_items( 'product' )->filter( function( ITE_Cart_Product $item ) {
-			return $item->get_product()->has_feature( 'shipping' );
-		} )->count() > 0;
+		return $this->get_items( 'product' )->filter( function ( ITE_Cart_Product $item ) {
+				return $item->get_product()->has_feature( 'shipping' );
+			} )->count() > 0;
 	}
 
 	/**

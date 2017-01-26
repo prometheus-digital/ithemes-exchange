@@ -497,7 +497,7 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 				) );
 			}
 
-			$cart_total = $cart->has_meta( 'frozen_total' ) ? $cart->get_meta( 'frozen_total' ) : $cart->get_total();
+			$cart_total = $cart->get_total( true );
 
 			if ( number_format( $response_array['AMT'], '2', '', '' ) !== number_format( $cart_total, '2', '', '' ) ) {
 				throw new Exception( __( 'Error: Amount charged is not the same as the cart total.', 'it-l10n-ithemes-exchange' ) );
@@ -526,9 +526,11 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 			return $txn_id;
 		} else if ( $transaction = it_exchange_get_transaction_by_cart_id( $cart_id ) ) {
 			return $transaction;
-		} else {
+		} elseif ( 0.00 === $cart->get_total( true ) ) {
 			// This occurs if we just made a free trial payment
 			return $this->add_transaction( $request, md5( $cart_id ), 'Completed' );
+		} else {
+			return null;
 		}
 	}
 
