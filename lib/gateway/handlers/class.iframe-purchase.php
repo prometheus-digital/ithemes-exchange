@@ -33,9 +33,12 @@ abstract class ITE_IFrame_Purchase_Request_Handler extends ITE_Purchase_Request_
 	 * @inheritDoc
 	 */
 	public function get_data_for_REST( ITE_Gateway_Purchase_Request $request ) {
-		return array_merge_recursive( parent::get_data_for_REST( $request ), array(
-			'method' => 'iframe',
-			'html'   => $this->render_payment_button( $request ),
+		$data = array_merge_recursive( parent::get_data_for_REST( $request ), array(
+			'html' => $this->render_payment_button( $request ),
 		) );
+
+		$data['method'] = 'iframe';
+
+		return $data;
 	}
 }

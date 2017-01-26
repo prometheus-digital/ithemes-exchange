@@ -107,7 +107,7 @@ abstract class ITE_Dialog_Purchase_Request_Handler extends ITE_Purchase_Request_
 
 		ob_start();
 		?>
-		<script type="text/javascript">
+        <script type="text/javascript">
 			(function ( $, gateway, inSuperWidget, tokenize ) {
 				"use strict";
 
@@ -209,7 +209,7 @@ abstract class ITE_Dialog_Purchase_Request_Handler extends ITE_Purchase_Request_
 				<?php echo it_exchange_in_superwidget() ? 'true' : 'false'; ?>,
 				<?php echo $tokenizer->get_tokenize_js_function(); ?>
 			);
-		</script>
+        </script>
 
 		<?php
 
@@ -220,9 +220,12 @@ abstract class ITE_Dialog_Purchase_Request_Handler extends ITE_Purchase_Request_
 	 * @inheritDoc
 	 */
 	public function get_data_for_REST( ITE_Gateway_Purchase_Request $request ) {
-		return array_merge_recursive( parent::get_data_for_REST( $request ), array(
-			'method'  => 'dialog',
+		$data = array_merge_recursive( parent::get_data_for_REST( $request ), array(
 			'accepts' => array( 'card' )
 		) );
+
+		$data['method'] = 'dialog';
+
+		return $data;
 	}
 }

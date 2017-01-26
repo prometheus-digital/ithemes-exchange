@@ -100,10 +100,13 @@ abstract class ITE_Redirect_Purchase_Request_Handler extends ITE_Purchase_Reques
 		$url = it_exchange_get_page_url( 'transaction' );
 		$url = add_query_arg( $query_args, $url );
 
-		return array_merge_recursive( parent::get_data_for_REST( $request ), array(
-			'method' => 'redirect',
-			'url'    => $url,
+		$data = array_merge_recursive( parent::get_data_for_REST( $request ), array(
+			'url' => $url,
 		) );
+
+		$data['method'] = 'redirect';
+
+		return $data;
 	}
 
 	/**
