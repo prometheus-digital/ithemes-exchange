@@ -567,6 +567,7 @@ function it_exchange_process_webhooks() {
 	die();
 }
 add_action( 'wp', 'it_exchange_process_webhooks' );
+add_filter( 'pre_handle_404', 'it_exchange_doing_webhook' );
 
 /**
  * Add reset exchange button to settings page if WP_Debug is on
