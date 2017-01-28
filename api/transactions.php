@@ -528,6 +528,14 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 	if ( empty( $args['post_title'] ) )
 		$args['post_title'] = $method . '-' . $method_id . '-' . date_i18n( 'Y-m-d-H:i:s' );
 
+	if ( isset( $args['date'] ) ) {
+		$date = $args['date'] instanceof DateTime ? $args['date']->format( 'Y-m-d H:i:s' ) : $args['date'];
+
+		$args['post_date_gmt'] = $date;
+		$args['post_date']     = $date;
+		unset( $args['date'] );
+	}
+
 	if ( $transaction_id = wp_insert_post( $args ) ) {
 
 		$customer_ip = ! empty( $cart_object->customer_ip ) ? $cart_object->customer_ip : it_exchange_get_ip();
@@ -707,6 +715,16 @@ function it_exchange_add_child_transaction( $method, $method_id, $status = 'pend
 
 	$args['post_parent'] = $parent_tx_id;
 
+	if ( isset( $args['date'] ) ) {
+		$date = $args['date'] instanceof DateTime ? $args['date']->format( 'Y-m-d H:i:s' ) : $args['date'];
+
+		$args['post_date_gmt'] = $date;
+		$args['post_date']     = $date;
+		unset( $args['date'] );
+	} else {
+		$date = current_time( 'mysql', true );
+	}
+
 	if ( $transaction_id = wp_insert_post( $args ) ) {
 
 		update_post_meta( $transaction_id, '_it_exchange_cart_object', $txn_object );
@@ -729,7 +747,7 @@ function it_exchange_add_child_transaction( $method, $method_id, $status = 'pend
 			'cart_id'       => isset( $txn_object->cart_id ) ? $txn_object->cart_id : '',
 			'total'         => isset( $txn_object->total ) ? $txn_object->total : 0,
 			'subtotal'      => isset( $txn_object->sub_total ) ? $txn_object->sub_total : 0,
-			'order_date'    => current_time( 'mysql', true ),
+			'order_date'    => $date,
 			'parent'        => $parent_tx_id,
 			'hash'          => it_exchange_generate_transaction_hash( $transaction_id, $customer_id ),
 			'purchase_mode' => $mode,
