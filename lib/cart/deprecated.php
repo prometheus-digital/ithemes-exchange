@@ -297,23 +297,48 @@ function it_exchange_add_cart_product( $cart_product_id, $product ) {
 function it_exchange_update_cart_product( $cart_product_id, $product ) {
 	_deprecated_function( __FUNCTION__, '2.0.0' );
 
-	if ( ! empty( $cart_product_id ) && ! empty( $product ) ) {
+	if ( empty( $cart_product_id ) || empty( $product ) ) {
+		return;
+	}
+
+	/** @var ITE_Cart_Product $cart_product */
+	$cart_product = it_exchange_get_current_cart()->get_item( 'product', $cart_product_id );
+
+	if ( ! $cart_product ) {
+		it_exchange_add_cart_product( $cart_product_id, $product );
+
+		do_action_deprecated(
+			'it_exchange_update_cart_product',
+			array( $cart_product_id, $product, it_exchange_get_session_data( 'products' ) ),
+			'2.0.0'
+		);
+
+		return;
+	}
+
+	if ( $cart_product->get_quantity() != $product['count'] ) {
+		$cart_product->set_quantity( $product['count'] );
+	}
+
+	$bc = $cart_product->bc();
+	sort( $bc );
+	sort( $product );
+
+	if ( $bc !== $product ) {
+
 		$products = it_exchange_get_session_data( 'products' );
-		if ( isset( $products[ $cart_product_id ] ) ) {
 
-			foreach ( $product as $key => $value ) {
-				$products[ $cart_product_id ][ $key ] = $value;
-			}
-
-			it_exchange_update_session_data( 'products', $products );
-		} else {
-			it_exchange_add_cart_product( $cart_product_id, $product );
+		foreach ( $product as $key => $value ) {
+			$products[ $cart_product_id ][ $key ] = $value;
 		}
-		do_action_deprecated( 'it_exchange_update_cart_product', array(
-			$cart_product_id,
-			$product,
-			$products
-		), '2.0.0' );
+
+		it_exchange_update_session_data( 'products', $products );
+
+		do_action_deprecated(
+			'it_exchange_update_cart_product',
+			array( $cart_product_id, $product, $products ),
+			'2.0.0'
+		);
 	}
 }
 
@@ -329,14 +354,16 @@ function it_exchange_update_cart_product( $cart_product_id, $product ) {
  * @return void
  */
 function it_exchange_delete_cart_product( $cart_product_id ) {
+
 	_deprecated_function( __FUNCTION__, '2.0.0', 'ITE_Cart::remove_item()' );
 
-	$products = it_exchange_get_session_data( 'products' );
-	if ( isset( $products[ $cart_product_id ] ) ) {
-		unset( $products[ $cart_product_id ] );
-		it_exchange_update_session_data( 'products', $products );
+	$cart = it_exchange_get_current_cart( false );
+
+	if ( ! $cart ) {
+		return;
 	}
-	do_action_deprecated( 'it_exchange_delete_cart_product', array( $cart_product_id, $products ), '2.0.0' );
+
+	$cart->remove_item( 'product', $cart_product_id );
 }
 
 /**
