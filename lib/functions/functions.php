@@ -264,7 +264,7 @@ function it_exchange_register_scripts() {
 
 	$rest_libs = array(
 		'backbone', 'underscore', 'it-exchange-common', 'wp-util', 'ithemes-momentjs', 'backbonedeep',
-		'wp-backbone', 'backbone.paginator', 'backbone.fetch-cache'
+		'wp-backbone', 'backbone.paginator', 'backbone.fetch-cache', 'it-exchange-event-manager'
 	);
 	wp_register_script( 'it-exchange-rest', IT_Exchange::$url . '/lib/assets/js/rest.js', $rest_libs, IT_Exchange::VERSION	);
 
