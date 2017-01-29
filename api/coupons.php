@@ -341,7 +341,6 @@ function it_exchange_apply_coupon( $type, $code, $options = array() ) {
 	if ( ( $coupon = it_exchange_get_coupon_from_code( $code, $type ) ) && $coupon->get_type() ) {
 		try {
 			$item = ITE_Coupon_Line_Item::create( $coupon );
-			$coupon->validate( $cart );
 			$cart->add_item( $item );
 			$valid = true;
 		} catch ( Exception $e ) {
@@ -351,7 +350,9 @@ function it_exchange_apply_coupon( $type, $code, $options = array() ) {
 				isset( $item ) ? $item : null
 			);
 
-			it_exchange_add_message( 'error', $e->getMessage() );
+			if ( $cart->is_current() ) {
+				it_exchange_add_message( 'error', $e->getMessage() );
+			}
 
 			return false;
 		}

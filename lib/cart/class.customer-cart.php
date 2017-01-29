@@ -373,7 +373,8 @@ class ITE_Cart {
 	 * @param \ITE_Line_Item $item
 	 * @param bool           $coerce
 	 *
-	 * @return bool
+	 * @return bool True if item successfully added. Errors encountered during adding an item will be added to
+	 *              the cart feedback and false returned from this method.
 	 *
 	 * @throws \ITE_Line_Item_Coercion_Failed_Exception
 	 * @throws \ITE_Cart_Coercion_Failed_Exception
@@ -388,14 +389,15 @@ class ITE_Cart {
 			$item->set_cart( $this );
 		}
 
-		$method = "add_{$item->get_type()}_item";
+		$method  = "add_{$item->get_type()}_item";
+		$add_new = true;
+		$success = true;
 
-		if ( ! method_exists( $this, $method ) || $this->{$method}( $item ) !== false ) {
+		if ( ! method_exists( $this, $method ) ) {
+			$add_new = true;
+			$success = $this->get_repository()->save( $item );
+		} elseif ( $success = $this->{$method}( $item, $add_new ) && $add_new ) {
 			$this->get_repository()->save( $item );
-
-			$new_added = true;
-		} else {
-			$new_added = false;
 		}
 
 		if ( $coerce ) {
@@ -406,8 +408,8 @@ class ITE_Cart {
 			return false;
 		}
 
-		if ( ! $new_added ) {
-			return true;
+		if ( ! $add_new ) {
+			return $success;
 		}
 
 		/**
@@ -686,10 +688,11 @@ class ITE_Cart {
 	 * @since 2.0.0
 	 *
 	 * @param \ITE_Cart_Product $product
+	 * @param bool              $add_item
 	 *
 	 * @return bool
 	 */
-	protected function add_product_item( ITE_Cart_Product $product ) {
+	protected function add_product_item( ITE_Cart_Product $product, &$add_item ) {
 
 		if ( ! $product->get_id() ) {
 			ITE_Cart_Product::generate_cart_product_id( $product );
@@ -698,13 +701,15 @@ class ITE_Cart {
 		if ( $dupe = $this->get_item( 'product', $product->get_id() ) ) {
 
 			if ( $this->is_doing_merge() ) {
-				return false; // Don't combine quantities when doing a merge
+				$add_item = false;
+
+				return true; // Don't combine quantities when doing a merge
 			}
 
 			$dupe->set_quantity( $product->get_quantity() + $dupe->get_quantity() );
 			$this->get_repository()->save( $dupe );
 
-			return false;
+			$add_item = false;
 		}
 
 		return true;
@@ -716,10 +721,11 @@ class ITE_Cart {
 	 * @since 2.0.0
 	 *
 	 * @param ITE_Tax_Line_Item $tax
+	 * @param bool              $add_item
 	 *
 	 * @return bool
 	 */
-	protected function add_tax_item( ITE_Tax_Line_Item $tax ) {
+	protected function add_tax_item( ITE_Tax_Line_Item $tax, &$add_item ) {
 		foreach ( $this->get_items() as $item ) {
 			if ( $item instanceof ITE_Taxable_Line_Item && $tax->applies_to( $item ) ) {
 				$item->add_tax( $tax->create_scoped_for_taxable( $item ) );
@@ -727,7 +733,9 @@ class ITE_Cart {
 			}
 		}
 
-		return false;
+		$add_item = false;
+
+		return true;
 	}
 
 	/**
@@ -736,10 +744,19 @@ class ITE_Cart {
 	 * @since 2.0.0
 	 *
 	 * @param \ITE_Coupon_Line_Item $coupon
+	 * @param bool                  $add_item
 	 *
 	 * @return bool
 	 */
-	protected function add_coupon_item( ITE_Coupon_Line_Item $coupon ) {
+	protected function add_coupon_item( ITE_Coupon_Line_Item $coupon, &$add_item ) {
+
+		try {
+			$coupon->get_coupon()->validate( $this );
+		} catch ( Exception $e ) {
+			$this->get_feedback()->add_error( $e->getMessage(), $coupon );
+
+			return false;
+		}
 
 		/** @var ITE_Cart_Product $product */
 		foreach ( $this->get_items( 'product' ) as $product ) {
@@ -749,7 +766,9 @@ class ITE_Cart {
 			}
 		}
 
-		return false;
+		$add_item = false;
+
+		return true;
 	}
 
 	/**
@@ -794,7 +813,8 @@ class ITE_Cart {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param bool $try_frozen Try to get the frozen cart total if possible. Otherwise, will fall back to calculating the total.
+	 * @param bool $try_frozen Try to get the frozen cart total if possible. Otherwise, will fall back to calculating
+	 *                         the total.
 	 *
 	 * @return float
 	 */
