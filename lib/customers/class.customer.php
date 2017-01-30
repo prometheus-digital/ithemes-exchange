@@ -624,11 +624,15 @@ class _IT_Exchange_Customer_Data extends stdClass {
 	 */
 	public function __get( $name ) {
 		if ( $name === 'billing_address' ) {
-			return $this->customer->get_billing_address();
+			$a = $this->customer->get_billing_address();
+
+			return $a ? $a->to_array() : array();
 		}
 
 		if ( $name === 'shipping_address' ) {
-			return $this->customer->get_shipping_address();
+			$a = $this->customer->get_shipping_address();
+
+			return $a ? $a->to_array() : array();
 		}
 
 		return isset( $this->data->{$name} ) ? $this->data->{$name} : null;
