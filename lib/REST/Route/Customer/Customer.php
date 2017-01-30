@@ -192,7 +192,7 @@ class Customer extends Route\Base implements Getable, Putable {
 
 			$address = \ITE_Saved_Address::get( $input );
 
-			if ( ! $address || ! $address->customer || $address->customer->get_ID() != $customer->get_ID() ) {
+			if ( ! $address || $address->is_trashed() || ! $address->customer || $address->customer->get_ID() != $customer->get_ID() ) {
 				return new \WP_Error(
 					'it_exchange_rest_invalid_address',
 					__( 'Invalid address ID.', 'it-l10n-ithemes-exchange' ),

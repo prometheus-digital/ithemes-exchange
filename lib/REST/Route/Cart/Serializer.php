@@ -142,129 +142,29 @@ class Serializer {
 				),
 				'billing_address'  => array(
 					'description' => __( 'The billing address for this cart.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'object',
 					'context'     => array( 'view', 'edit' ),
-					'properties'  => array(
-						'first-name'   => array(
-							'description' => __( 'The first name of the billing address.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
+					'oneOf'       => array(
+						array(
+							'type'        => 'integer',
+							'description' => __( 'Billing address id.', 'it-l10n-ithemes-exchange' ),
 						),
-						'last-name'    => array(
-							'description' => __( 'The last name of the billing address.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'company-name' => array(
-							'description' => __( 'The company name of the billing address.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'address1'     => array(
-							'description' => __( 'The address line 1 of the billing address.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'address2'     => array(
-							'description' => __( 'The address line 2 of the billing address.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'city'         => array(
-							'description' => __( 'The city of the billing address.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'state'        => array(
-							'description' => __( 'The state two-letter abbreviation of the billing address.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'country'      => array(
-							'description' => __( 'The country two-letter abbreviation of the billing address.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'zip'          => array(
-							'description' => __( 'The zip code of the billing address.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'email'        => array(
-							'description' => __( 'The email address of the billing address.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-							'format'      => 'email',
-						),
-						'phone'        => array(
-							'description' => __( 'The phone number of the billing address.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-					)
+						array(
+							'$ref' => \iThemes\Exchange\REST\url_for_schema( 'address' )
+						)
+					),
 				),
 				'shipping_address' => array(
 					'description' => __( 'The shipping address for this cart.', 'it-l10n-ithemes-exchange' ),
-					'type'        => 'object',
 					'context'     => array( 'view', 'edit' ),
-					'properties'  => array(
-						'first-name'   => array(
-							'description' => __( 'The first name of the shipping address.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
+					'oneOf'       => array(
+						array(
+							'type'        => 'integer',
+							'description' => __( 'Shipping address id.', 'it-l10n-ithemes-exchange' ),
 						),
-						'last-name'    => array(
-							'description' => __( 'The last name of the shipping address.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'company-name' => array(
-							'description' => __( 'The company name of the shipping address.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'address1'     => array(
-							'description' => __( 'The address line 1 of the shipping address.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'address2'     => array(
-							'description' => __( 'The address line 2 of the shipping address.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'city'         => array(
-							'description' => __( 'The city of the shipping address.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'state'        => array(
-							'description' => __( 'The state two-letter abbreviation of the shipping address.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'country'      => array(
-							'description' => __( 'The country two-letter abbreviation of the shipping address.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'zip'          => array(
-							'description' => __( 'The zip code of the shipping address.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'email'        => array(
-							'description' => __( 'The email address of the shipping address.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-							'format'      => 'email',
-						),
-						'phone'        => array(
-							'description' => __( 'The phone number of the shipping address.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-					)
+						array(
+							'$ref' => \iThemes\Exchange\REST\url_for_schema( 'address' )
+						)
+					),
 				),
 				'items'            => array(
 					'context' => array( 'view', 'edit' ),

@@ -56,33 +56,66 @@ class Cart extends r\Route\Base implements Getable, Putable, Deletable {
 	public function handle_put( Request $request ) {
 		$cart = $request->get_cart();
 
-		$c_billing = $cart->get_billing_address() ? $cart->get_billing_address()->to_array() : array();
-		$u_billing = $request['billing_address'];
-
-		$c_billing = array_filter( $c_billing );
-		$u_billing = array_filter( $u_billing );
-
-		ksort( $c_billing );
-		ksort( $u_billing );
-
-		if ( $c_billing !== $u_billing ) {
-			$cart->set_billing_address( $request['billing_address'] ? new \ITE_In_Memory_Address( $request['billing_address'] ) : null );
+		if ( $e = $this->handle_address_update( $cart, $request['billing_address'], 'billing') ) {
+			return $e;
 		}
 
-		$c_shipping = $cart->get_shipping_address() ? $cart->get_shipping_address()->to_array() : array();
-		$u_shipping = $request['shipping_address'];
-
-		$c_shipping = array_filter( $c_shipping );
-		$u_shipping = array_filter( $u_shipping );
-
-		ksort( $c_shipping );
-		ksort( $u_shipping );
-
-		if ( $c_shipping !== $u_shipping ) {
-			$cart->set_shipping_address( $request['shipping_address'] ? new \ITE_In_Memory_Address( $request['shipping_address'] ) : null );
+		if ( $e = $this->handle_address_update( $cart, $request['shipping_address'], 'shipping') ) {
+			return $e;
 		}
 
 		return $this->prepare_item_for_response( $cart );
+	}
+
+	/**
+	 * Handle an address update.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param \ITE_Cart $cart
+	 * @param array|int $input
+	 * @param string    $type
+	 *
+	 * @return null|\WP_Error
+	 */
+	protected function handle_address_update( \ITE_Cart $cart, $input, $type ) {
+
+		$current = call_user_func( array( $cart, "get_{$type}_address" ) );
+
+		if ( is_int( $input ) ) {
+
+			if ( $current instanceof \ITE_Saved_Address && $current->get_pk() == $input ) {
+				return null;
+			}
+
+			$address = \ITE_Saved_Address::get( $input );
+
+			if ( ! $address || $address->is_trashed() || ! $address->customer || $address->customer->get_ID() != $cart->get_customer()->get_ID() ) {
+				return new \WP_Error(
+					'it_exchange_rest_invalid_address',
+					__( 'Invalid address ID.', 'it-l10n-ithemes-exchange' ),
+					array( 'status' => \WP_Http::BAD_REQUEST )
+				);
+			}
+		} elseif ( is_array( $input ) ) {
+			$address = new \ITE_In_Memory_Address( $input );
+
+			if ( $address->equals( $current ) ) {
+				return null;
+			}
+		} else {
+			return null;
+		}
+
+		if ( call_user_func( array( $cart, "set_{$type}_address" ), $address ) ) {
+			return null;
+		} else {
+			return new \WP_Error(
+				'it_exchange_rest_address_failed_validation',
+				__( 'Address failed to verification.', 'it-l10n-ithemes-exchange' ),
+				array( 'status' => \WP_Http::BAD_REQUEST )
+			);
+		}
 	}
 
 	/**
