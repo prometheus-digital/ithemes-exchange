@@ -76,6 +76,30 @@ class Purchase extends Base implements Getable, Postable, VariableSchema {
 
 		$cart = $request->get_cart();
 
+		if ( $feedback = $cart->get_requirements_for_purchase() ) {
+			$error = new \WP_Error(
+				'it_exchange_rest_purchase_requirements_not_met',
+				__( 'This cart is not yet ready for purchase.', 'it-l10n-ithemes-exchange' ),
+				array( 'status' => 400 )
+			);
+
+			$errors = array();
+
+			foreach ( $feedback->errors() as $error ) {
+				$errors[] = array(
+					'text' => (string) $error,
+					'item' => $error->get_item() ? array(
+						'type' => $error->get_item()->get_type(),
+						'id'   => $error->get_item()->get_id()
+					) : array()
+				);
+			}
+
+			$error->add_data( $errors, 'feedback' );
+
+			return $error;
+		}
+
 		$token = (int) $request['token'];
 
 		if ( $token && ! current_user_can( 'it_use_payment_token', $token ) ) {

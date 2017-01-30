@@ -1200,6 +1200,64 @@ class ITE_Cart {
 	}
 
 	/**
+	 * Is the cart ready to be purchased.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return ITE_Cart_Feedback|null Returns a new cart feedback object if requirements are not met. Otherwise,
+	 *                                returns null.
+	 */
+	public function get_requirements_for_purchase() {
+
+		$feedback = new ITE_Cart_Feedback();
+
+		if ( $this->requires_shipping() ) {
+			$s = $this->get_shipping_address();
+
+			if ( ! $s || empty( $s['address1'] ) ) {
+				$feedback->add_error( __( 'Please enter a shipping address.', 'it-l10n-ithemes-exchange' ) );
+
+				return $feedback;
+			}
+
+			$method = $this->get_shipping_method();
+
+			if ( ! $method ) {
+				$feedback->add_error( __( 'Please select a shipping method.', 'it-l10n-ithemes-exchange' ) );
+
+				return $feedback;
+			}
+
+			if ( $method->slug === 'multiple-methods' ) {
+				$required_shipping = $this->get_items( 'product' )->filter( function ( ITE_Cart_Product $product ) {
+					return $product->get_product()->has_feature( 'shipping' );
+				} );
+
+				$missing = false;
+
+				/** @var ITE_Cart_Product $product */
+				foreach ( $required_shipping as $product ) {
+					if ( ! $this->get_shipping_method( $product ) ) {
+						$missing = true;
+						$feedback->add_error(
+							sprintf(
+								__( 'Please select a shipping method for %s.', 'it-l10n-ithemes-exchange' ), $product->get_name()
+							),
+							$product
+						);
+					}
+				}
+
+				if ( $missing ) {
+					return $feedback;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Empty the cart.
 	 *
 	 * This will remove all items, not just products. The cart will also be destroyed.
