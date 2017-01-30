@@ -26,6 +26,9 @@ class ITE_Gateway_Purchase_Request implements ITE_Gateway_Request {
 	/** @var ITE_Payment_Token|null */
 	protected $token;
 
+	/** @var string */
+	protected $one_time_token;
+
 	/** @var ITE_Gateway_Tokenize_Request */
 	protected $tokenize;
 
@@ -130,6 +133,28 @@ class ITE_Gateway_Purchase_Request implements ITE_Gateway_Request {
 		}
 
 		$this->token = $token;
+	}
+
+	/**
+	 * Get the one time use token.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return string
+	 */
+	public function get_one_time_token() {
+		return $this->one_time_token;
+	}
+
+	/**
+	 * Set the one time token.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $one_time_token
+	 */
+	public function set_one_time_token( $one_time_token ) {
+		$this->one_time_token = $one_time_token;
 	}
 
 	/**

@@ -63,6 +63,10 @@ class ITE_Gateway_Request_Factory {
 					$request->set_token( $token );
 				}
 
+				if ( ! empty( $args['one_time_token'] ) ) {
+					$request->set_one_time_token( $args['one_time_token'] );
+				}
+
 				if ( ! empty( $args['tokenize'] ) ) {
 
 					if ( ! is_object( $args['tokenize'] ) || ! $args['tokenize'] instanceof ITE_Gateway_Tokenize_Request ) {

@@ -1379,6 +1379,10 @@ button.it-exchange-customer-addresses-address-action--primary:hover {
     padding-bottom: 10px;
 }
 
+.it-exchange-credit-card-selector label {
+    display: block;
+}
+
 .it-exchange-credit-card-selector + .it-exchange-visual-cc-wrap {
     display: none;
 }

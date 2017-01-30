@@ -88,12 +88,13 @@ class Purchase extends Base implements Getable, Postable, VariableSchema {
 
 		try {
 			$purchase_request = $this->request_factory->make( 'purchase', array(
-				'cart'        => $cart,
-				'nonce'       => $request['nonce'],
-				'card'        => $request['card'],
-				'token'       => $token,
-				'tokenize'    => $request['tokenize'],
-				'redirect_to' => $request['redirect_to']
+				'cart'           => $cart,
+				'nonce'          => $request['nonce'],
+				'card'           => $request['card'],
+				'token'          => $token,
+				'tokenize'       => $request['tokenize'],
+				'one_time_token' => $request['one_time_token'],
+				'redirect_to'    => $request['redirect_to']
 			) );
 		} catch ( \InvalidArgumentException $e ) {
 			return new \WP_Error(
@@ -191,15 +192,15 @@ class Purchase extends Base implements Getable, Postable, VariableSchema {
 			'title'      => 'cart-purchase',
 			'type'       => 'object',
 			'properties' => array(
-				'id'          => array(
+				'id'             => array(
 					'type'        => 'string',
 					'description' => __( 'Purchase gateway slug.', 'it-l10n-ithemes-exchange' ),
 				),
-				'nonce'       => array(
+				'nonce'          => array(
 					'type'        => 'string',
 					'description' => __( 'A token unique to this gateway that is required to complete the purchase.', 'it-l10n-ithemes-exchange' ),
 				),
-				'redirect_to' => array(
+				'redirect_to'    => array(
 					'type'        => 'string',
 					'format'      => 'uri',
 					'description' => __( 'A location to redirect the customer to after purchase. Useful for redirect methods.', 'it-l10n-ithemes-exchange' ),
@@ -210,13 +211,17 @@ class Purchase extends Base implements Getable, Postable, VariableSchema {
 						},
 					),
 				),
-				'card'        => array( '$ref' => \iThemes\Exchange\REST\url_for_schema( 'card' ) ),
-				'token'       => array(
+				'card'           => array( '$ref' => \iThemes\Exchange\REST\url_for_schema( 'card' ) ),
+				'token'          => array(
 					'type'        => 'integer',
 					'min'         => 1,
 					'description' => __( 'Payment token to use for payment.', 'it-l10n-ithemes-exchange' ),
 				),
-				'tokenize'    => array(
+				'one_time_token' => array(
+					'type'        => 'string',
+					'description' => __( 'One time token provided by the gateway for completing the purchase.', 'it-l10n-ithemes-exchange' ),
+				),
+				'tokenize'       => array(
 					'description' => __( 'Payment info to auto-tokenize and then use for payment.', 'it-l10n-ithemes-exchange' ),
 					'oneOf'       => array(
 						array(
@@ -232,6 +237,7 @@ class Purchase extends Base implements Getable, Postable, VariableSchema {
 				// May also pass none, for things like Offline Payments
 				array( 'required' => array( 'id', 'nonce', 'card' ) ),
 				array( 'required' => array( 'id', 'nonce', 'token' ) ),
+				array( 'required' => array( 'id', 'nonce', 'one_time_token' ) ),
 				array( 'required' => array( 'id', 'nonce', 'tokenize' ) ),
 				array( 'required' => array( 'id', 'nonce' ) ),
 			),

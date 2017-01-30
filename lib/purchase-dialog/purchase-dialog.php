@@ -325,7 +325,7 @@ class IT_Exchange_Purchase_Dialog{
 
 			$selected = checked( $card->primary, true, false );
 
-			$html .= "<label><input type='radio' name='purchase_token' value='{$card->ID}' {$selected}>&nbsp;{$label}</label><br>";
+			$html .= "<label><input type='radio' name='purchase_token' value='{$card->ID}' {$selected}>&nbsp;{$label}</label>";
 		}
 
 		$new_method = __( 'New Payment Method', 'it-l10n-ithemes-exchange' );

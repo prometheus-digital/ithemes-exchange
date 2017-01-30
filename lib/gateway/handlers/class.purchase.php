@@ -135,12 +135,17 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 	 */
 	public function render_payment_button( ITE_Gateway_Purchase_Request $request ) {
 
-		$action     = esc_attr( $this->get_form_action() );
+		$attributes = '';
+
+		foreach ( $this->get_form_element_attributes( $request ) as $attr => $val ) {
+			$attributes .= $attr . '="' . esc_attr( $val ) . '" ';
+		}
+
 		$label      = esc_attr( $this->get_payment_button_label() );
 		$field_name = esc_attr( it_exchange_get_field_name( 'transaction_method' ) );
 
 		return <<<HTML
-<form method="POST" action="{$action}" id="{$this->get_gateway()->get_slug()}-purchase-form">
+<form $attributes>
 	<input type="submit" class="it-exchange-purchase-button it-exchange-purchase-button-{$this->gateway->get_slug()}" 
 	name="{$this->gateway->get_slug()}_purchase" value="{$label}">
 	<input type="hidden" name="{$field_name}" value="{$this->gateway->get_slug()}">
@@ -148,6 +153,24 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 	{$this->get_html_before_form_end( $request )}
 </form>
 HTML;
+	}
+
+	/**
+	 * Get attributes that should be included on the <form> element triggering this purchase.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param ITE_Gateway_Purchase_Request $request
+	 *
+	 * @return array
+	 */
+	protected function get_form_element_attributes( ITE_Gateway_Purchase_Request $request ) {
+		return array(
+			'method'       => 'POST',
+			'action'       => $this->get_form_action(),
+			'id'           => "{$this->get_gateway()->get_slug()}-purchase-form",
+			'data-gateway' => $this->get_gateway()->get_slug(),
+		);
 	}
 
 	/**
@@ -249,8 +272,8 @@ HTML;
 			) );
 
 			if ( $primary_token->count() ) {
-				$token_serializer = new \iThemes\Exchange\REST\Route\Customer\Token\Serializer();
-				$context_filterer = new \iThemes\Exchange\REST\Helpers\ContextFilterer();
+				$token_serializer     = new \iThemes\Exchange\REST\Route\Customer\Token\Serializer();
+				$context_filterer     = new \iThemes\Exchange\REST\Helpers\ContextFilterer();
 				$data['primaryToken'] = $context_filterer->filter(
 					$token_serializer->serialize( $primary_token->first() ),
 					'embed',
