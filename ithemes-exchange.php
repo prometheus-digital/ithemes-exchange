@@ -59,11 +59,8 @@ class IT_Exchange {
 		$this->set_plugin_locations();
 		$this->set_textdomain();
 
-		if ( file_exists( self::$dir . 'vendor/autoload.php' ) && version_compare( PHP_VERSION, '5.3', '>=' ) ) {
-			include( self::$dir . 'vendor/autoload.php' );
-		}
-
 		// Load supporting libraries
+		require( self::$dir . 'vendor/autoload.php' );
 		require( self::$dir . 'lib/load.php' );
 		require( self::$dir . 'api/load.php' );
 		require( self::$dir . 'core-addons/load.php' );
