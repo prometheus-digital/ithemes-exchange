@@ -88,8 +88,8 @@ abstract class IT_Exchange_Email_Notification {
 
 		$this->setup_properties( $data );
 
-		if ( empty( $data['upgraded'] ) && ! empty( $data['previous'] ) ) {
-			$this->set_body( $this->convert_to_curly( $data['previous'] ) );
+		if ( empty( $data['upgraded'] ) && ! empty( $args['previous'] ) ) {
+			$this->set_body( $this->convert_to_curly( $args['previous'] ) );
 
 			$emails = it_exchange_get_option( 'emails', true );
 
