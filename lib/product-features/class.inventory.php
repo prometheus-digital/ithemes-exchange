@@ -239,7 +239,10 @@ class IT_Exchange_Product_Feature_Inventory extends IT_Exchange_Product_Feature_
 		// Does this product type support this feature?
 		if ( false === $this->product_supports_feature( false, $product_id ) )
 			return false;
-		return (boolean) $this->get_feature( false, $product_id );
+
+		$inventory = $this->get_feature( false, $product_id );
+
+		return (int) $inventory > 0;
 	}
 
 	/**
