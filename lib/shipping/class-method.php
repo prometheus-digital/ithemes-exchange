@@ -165,7 +165,7 @@ abstract class IT_Exchange_Shipping_Method {
 	 *
 	 * @return float
 	 */
-	public function get_shipping_cost_for_product( $cart_product, ITE_Cart $cart = null ) {
+	public function get_shipping_cost_for_product( $cart_product, $cart = null ) {
 		return 0.00;
 	}
 
