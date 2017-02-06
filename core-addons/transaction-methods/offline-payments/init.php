@@ -9,7 +9,10 @@
 require_once dirname( __FILE__ ) . '/deprecated.php';
 
 add_action( 'it_exchange_register_gateways', function ( ITE_Gateways $gateways ) {
-	require_once dirname( __FILE__ ) . '/class.purchase-handler.php';
+	require_once dirname( __FILE__ ) . '/handlers/class.purchase.php';
+	require_once dirname( __FILE__ ) . '/handlers/class.pause-subscription.php';
+	require_once dirname( __FILE__ ) . '/handlers/class.resume-subscription.php';
+	require_once dirname( __FILE__ ) . '/handlers/class.cancel-subscription.php';
 	require_once dirname( __FILE__ ) . '/class.gateway.php';
 
 	$gateways::register( new ITE_Gateway_Offline_Payments() );
@@ -267,6 +270,9 @@ function it_exchange_offline_payments_mark_subscriptions_as_active_on_clear( $tr
 
 add_action( 'it_exchange_update_transaction_status', 'it_exchange_offline_payments_mark_subscriptions_as_active_on_clear', 10, 3 );
 
+// Offline Payments doesn't need a subscriber ID.
+add_filter( 'it_exchange_offline-payments_subscription_requires_subscriber_id', '__return_false' );
+
 /**
  * Handles expired transactions that are offline payments
  * If this product autorenews and is an offline payment, it should auto-renew
@@ -288,36 +294,23 @@ function it_exchange_offline_payments_handle_expired( $true, $product_id, $trans
 
 	$transaction_method = it_exchange_get_transaction_method( $transaction->ID );
 
-	if ( 'offline-payments' === $transaction_method ) {
+	if ( 'offline-payments' !== $transaction_method ) {
+		return $true;
+	}
 
-		if ( function_exists( 'it_exchange_get_subscription_by_transaction' ) ) {
+	$subscription = it_exchange_get_subscription_by_transaction( $transaction, $product );
 
-			$subscription = it_exchange_get_subscription_by_transaction( $transaction, $product );
+	if ( $subscription->is_auto_renewing() && $subscription->get_status() === IT_Exchange_Subscription::STATUS_ACTIVE ) {
 
-			if ( $subscription->is_auto_renewing() && $subscription->get_status() === IT_Exchange_Subscription::STATUS_ACTIVE ) {
+		it_exchange_offline_payments_add_child_transaction( $transaction );
 
-				it_exchange_offline_payments_add_child_transaction( $transaction );
-
-				if ( it_exchange_offline_payments_default_status() !== 'paid' ) {
-					add_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
-					$subscription->set_status( IT_Exchange_Subscription::STATUS_PAYMENT_FAILED );
-					remove_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
-				}
-
-				return false;
-			}
-
-		} else {
-			$autorenews = $transaction->get_transaction_meta( 'subscription_autorenew_' . $product_id, true );
-			$status     = $transaction->get_transaction_meta( 'subscriber_status', true );
-
-			if ( $autorenews && empty( $status ) ) { //if the subscriber status is empty, it hasn't been set, which really means it's active for offline payments
-				//if the transaction autorenews and is an offline payment, we want to create a new child transaction until deactivated
-				it_exchange_offline_payments_add_child_transaction( $transaction );
-
-				return false;
-			}
+		if ( it_exchange_offline_payments_default_status() !== 'paid' ) {
+			add_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
+			$subscription->set_status( IT_Exchange_Subscription::STATUS_PAYMENT_FAILED );
+			remove_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
 		}
+
+		return false;
 	}
 
 	return $true;

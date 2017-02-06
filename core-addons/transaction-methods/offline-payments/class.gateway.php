@@ -25,6 +25,18 @@ class ITE_Gateway_Offline_Payments extends ITE_Gateway {
 		parent::__construct();
 
 		$this->handlers[] = new ITE_Offline_Payments_Purchase_Request_Handler( $this, new ITE_Gateway_Request_Factory() );
+
+		if ( class_exists( 'ITE_Cancel_Subscription_Request' ) ) {
+			$this->handlers[] = new ITE_Offline_Payments_Cancel_Subscription_Handler();
+		}
+
+		if ( class_exists( 'ITE_Pause_Subscription_Request' ) ) {
+			$this->handlers[] = new ITE_Offline_Payments_Pause_Subscription_Handler();
+		}
+
+		if ( class_exists( 'ITE_Resume_Subscription_Request' ) ) {
+			$this->handlers[] = new ITE_Offline_Payments_Resume_Subscription_Handler();
+		}
 	}
 
 	/**
