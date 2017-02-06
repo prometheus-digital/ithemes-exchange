@@ -382,6 +382,45 @@ class IT_Exchange_Product_Post_Type {
 						<?php endif; ?>
 					</div>
 
+                    <?php if ( $product && $post->post_status !== 'auto-draft' ): ?>
+                        <div class="misc-pub-section">
+                            <label><?php _e( 'Available Gateways:', 'it-l10n-ithemes-exchange' ) ?></label>
+                            <?php
+                            $useable  = array();
+
+                            $item     = ITE_Cart_Product::create( $product );
+                            $optional = $item->optional_features_required();
+
+                            if ( $optional ) {
+                                /** @var ITE_Optionally_Supported_Feature_Requirement $requirement */
+	                            foreach ( $item->optional_features_required() as $requirement ) {
+		                            foreach ( ITE_Gateways::all() as $gateway ) {
+			                            if ( $gateway->supports_feature( $requirement->get_feature() ) ) {
+			                                $all_meet = true;
+
+				                            foreach ( $requirement->get_requirement_details() as $slug => $detail ) {
+					                            if ( ! $gateway->supports_feature_and_detail( $requirement->get_feature(), $slug, $detail ) ) {
+						                            $all_meet = false;
+
+						                            break;
+					                            }
+				                            }
+
+				                            if ( $all_meet ) {
+				                                $useable[] = $gateway->get_name();
+                                            }
+			                            }
+		                            }
+	                            }
+                            } else {
+                                $useable[] = array_map( function( $gateway ) { return $gateway->get_name(); }, ITE_Gateways::all() );
+                            }
+
+                            ?>
+                           <span><?php echo implode( ', ', $useable ); ?></span>
+                        </div>
+                    <?php endif; ?>
+
 					<?php
 						if ( 'private' == $post->post_status ) {
 							$post->post_password = '';
@@ -515,9 +554,12 @@ class IT_Exchange_Product_Post_Type {
 	 * that will only be called when the post being saved is an iThemes Exchange product.
 	 * It provides the following 4 hooks:
 	 * - it_exchange_save_product_unvalidated                // Runs every time an iThemes Exchange product is saved.
-	 * - it_exchange_save_product_unavalidate-[product-type] // Runs every time a specific iThemes Exchange product type is saved.
-	 * - it_exchange_save_product                            // Runs every time an iThemes Exchange product is saved if not an autosave and if user has permission to save post
-	 * - it_exchange_save_product-[product-type]             // Runs every time a specific iThemes Exchange product-type is saved if not an autosave and if user has permission to save post
+	 * - it_exchange_save_product_unavalidate-[product-type] // Runs every time a specific iThemes Exchange product
+	 * type is saved.
+	 * - it_exchange_save_product                            // Runs every time an iThemes Exchange product is saved if
+	 * not an autosave and if user has permission to save post
+	 * - it_exchange_save_product-[product-type]             // Runs every time a specific iThemes Exchange
+	 * product-type is saved if not an autosave and if user has permission to save post
 	 *
 	 * @since 0.3.1
 	 * @param int $post_id WordPress Post ID
@@ -577,7 +619,8 @@ class IT_Exchange_Product_Post_Type {
 	}
 
 	/**
-	 * Modifies the value of $post_new_file to change the link attached to the Add New button next to the H2 on all / edit products
+	 * Modifies the value of $post_new_file to change the link attached to the Add New button next to the H2 on all /
+	 * edit products
 	 *
 	 * I'm not proud of this. Don't copy it. ^gta
 	 *
@@ -638,7 +681,8 @@ class IT_Exchange_Product_Post_Type {
 	}
 
 	/**
-	 * Replace the excerpt with the product description (our version of excerpt) in the admin All Products table when mode is 'excerpt'
+	 * Replace the excerpt with the product description (our version of excerpt) in the admin All Products table when
+	 * mode is 'excerpt'
 	 *
 	 * @since 0.4.0
 	 *
