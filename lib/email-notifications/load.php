@@ -65,107 +65,108 @@ function it_exchange_email_notifications() {
 
 	static $notifications = null;
 
-	if ( ! $notifications ) {
+	if ( $notifications ) {
+		return $notifications;
+	}
 
-		$replacer = new IT_Exchange_Email_Curly_Tag_Replacer();
+	$replacer = new IT_Exchange_Email_Curly_Tag_Replacer();
 
-		/**
-		 * Filter the tag replacer.
-		 *
-		 * The return value must implement IT_Exchange_Email_Tag_Replacer.
-		 *
-		 * @since 2.0.0
-		 *
-		 * @param IT_Exchange_Email_Tag_Replacer $replacer
-		 */
-		$filtered = apply_filters( 'it_exchange_email_notifications_tag_replacer', $replacer );
+	/**
+	 * Filter the tag replacer.
+	 *
+	 * The return value must implement IT_Exchange_Email_Tag_Replacer.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param IT_Exchange_Email_Tag_Replacer $replacer
+	 */
+	$filtered = apply_filters( 'it_exchange_email_notifications_tag_replacer', $replacer );
 
-		if ( $filtered instanceof IT_Exchange_Email_Tag_Replacer ) {
-			$replacer = $filtered;
-		}
+	if ( $filtered instanceof IT_Exchange_Email_Tag_Replacer ) {
+		$replacer = $filtered;
+	}
 
-		/**
-		 * Fires when replacement tags should be registered.
-		 *
-		 * @since 2.0.0
-		 *
-		 * @param IT_Exchange_Email_Tag_Replacer $replacer
-		 */
-		do_action( 'it_exchange_email_notifications_register_tags', $replacer );
+	/**
+	 * Fires when replacement tags should be registered.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param IT_Exchange_Email_Tag_Replacer $replacer
+	 */
+	do_action( 'it_exchange_email_notifications_register_tags', $replacer );
 
-		$middleware = new IT_Exchange_Email_Middleware_Handler();
-		$middleware
-			->push( new IT_Exchange_Email_Middleware_Formatter(), 'formatter' )
-			->push( new IT_Exchange_Email_Middleware_Contextualizer() )
-			->push( $replacer, 'replacer' )
-			->push( new IT_Exchange_Email_Middleware_Style_Links(), 'style-links' );
+	$middleware = new IT_Exchange_Email_Middleware_Handler();
+	$middleware
+		->push( new IT_Exchange_Email_Middleware_Formatter(), 'formatter' )
+		->push( new IT_Exchange_Email_Middleware_Contextualizer() )
+		->push( $replacer, 'replacer' )
+		->push( new IT_Exchange_Email_Middleware_Style_Links(), 'style-links' );
 
-		/**
-		 * Fires when add-ons should register additional middleware.
-		 *
-		 * @since 2.0.0
-		 *
-		 * @param IT_Exchange_Email_Middleware_Handler
-		 */
-		do_action( 'it_exchange_email_notifications_register_middleware', $middleware );
+	/**
+	 * Fires when add-ons should register additional middleware.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param IT_Exchange_Email_Middleware_Handler
+	 */
+	do_action( 'it_exchange_email_notifications_register_middleware', $middleware );
 
-		if ( defined( 'IT_EXCHANGE_DISABLE_EMAILS' ) && IT_EXCHANGE_DISABLE_EMAILS ) {
-			$sender = new IT_Exchange_Email_Null_Sender();
-		} else {
-			$sender = new IT_Exchange_WP_Mail_Sender( $middleware );
+	if ( defined( 'IT_EXCHANGE_DISABLE_EMAILS' ) && IT_EXCHANGE_DISABLE_EMAILS ) {
+		$sender = new IT_Exchange_Email_Null_Sender();
+	} else {
+		$sender = new IT_Exchange_WP_Mail_Sender( $middleware );
 
-			if ( class_exists( 'Postmark_Mail' ) ) {
+		if ( class_exists( 'Postmark_Mail' ) ) {
 
-				$settings = get_option( 'postmark_settings', '' );
-				$settings = json_decode( $settings, true );
+			$settings = get_option( 'postmark_settings', '' );
+			$settings = json_decode( $settings, true );
 
-				if ( $settings['api_key'] && $settings['enabled'] ) {
-					$sender = new IT_Exchange_Email_Postmark_Sender( $middleware, _wp_http_get_object(), array(
-						'server-token' => $settings['api_key']
-					) );
-				}
-			} elseif ( class_exists( 'SparkPost' ) && SparkPost::get_option( 'enable_sparkpost' ) ) {
+			if ( $settings['api_key'] && $settings['enabled'] ) {
+				$sender = new IT_Exchange_Email_Postmark_Sender( $middleware, _wp_http_get_object(), array(
+					'server-token' => $settings['api_key']
+				) );
+			}
+		} elseif ( class_exists( 'SparkPost' ) && SparkPost::get_option( 'enable_sparkpost' ) ) {
 
-				$api_key = SparkPost::get_option( 'password' );
+			$api_key = SparkPost::get_option( 'password' );
 
-				if ( $api_key ) {
-					$sender = new IT_Exchange_Email_SparkPost_Sender( $middleware, $replacer, _wp_http_get_object(), array(
-						'api-key' => $api_key
-					) );
-				}
-			} elseif ( class_exists( 'WP_Mailjet' ) && get_option( 'mailjet_enabled' ) ) {
+			if ( $api_key ) {
+				$sender = new IT_Exchange_Email_SparkPost_Sender( $middleware, $replacer, _wp_http_get_object(), array(
+					'api-key' => $api_key
+				) );
+			}
+		} elseif ( class_exists( 'WP_Mailjet' ) && get_option( 'mailjet_enabled' ) ) {
 
-				$public  = get_option( 'mailjet_username' );
-				$private = get_option( 'mailjet_password' );
+			$public  = get_option( 'mailjet_username' );
+			$private = get_option( 'mailjet_password' );
 
-				if ( $public && $private ) {
-					/*$sender = new IT_Exchange_Email_Mailjet_Sender( $middleware, _wp_http_get_object(), array(
-						'public'  => $public,
-						'private' => $private
-					) );*/
-				}
+			if ( $public && $private ) {
+				/*$sender = new IT_Exchange_Email_Mailjet_Sender( $middleware, _wp_http_get_object(), array(
+					'public'  => $public,
+					'private' => $private
+				) );*/
 			}
 		}
-
-		/**
-		 * Filter the sender object.
-		 *
-		 * The return value must implement IT_Exchange_Email_Sender
-		 *
-		 * @since 2.0.0
-		 *
-		 * @param IT_Exchange_Email_Sender             $sender
-		 * @param IT_Exchange_Email_Middleware_Handler $middleware
-		 * @param IT_Exchange_Email_Tag_Replacer       $replacer
-		 */
-		$filtered = apply_filters( 'it_exchange_email_notifications_sender', $sender, $middleware, $replacer );
-
-		if ( $filtered instanceof IT_Exchange_Email_Sender ) {
-			$sender = $filtered;
-		}
-
-		$notifications = new IT_Exchange_Email_Notifications( $sender, $replacer );
 	}
+
+	/**
+	 * Filter the sender object.
+	 *
+	 * The return value must implement IT_Exchange_Email_Sender
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param IT_Exchange_Email_Sender             $sender
+	 * @param IT_Exchange_Email_Middleware_Handler $middleware
+	 * @param IT_Exchange_Email_Tag_Replacer       $replacer
+	 */
+	$filtered = apply_filters( 'it_exchange_email_notifications_sender', $sender, $middleware, $replacer );
+
+	if ( $filtered instanceof IT_Exchange_Email_Sender ) {
+		$sender = $filtered;
+	}
+
+	$notifications = new IT_Exchange_Email_Notifications( $sender, $replacer );
 
 	return $notifications;
 }

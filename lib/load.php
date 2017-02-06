@@ -23,6 +23,7 @@ require_once dirname( __FILE__ ) . '/objects/load.php';
 
 // Other Functions
 require_once dirname( __FILE__ ) . '/functions/functions.php';
+require_once dirname( __FILE__ ) . '/functions/hooks.php';
 
 // Locking
 require_once dirname( __FILE__ ) . '/functions/locks.php';

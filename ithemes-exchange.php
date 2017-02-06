@@ -13,41 +13,23 @@ class IT_Exchange {
 	const MIN_WP = '4.4.0';
 	const MIN_PHP = '5.3.0';
 
-	/**
-	 * @var string
-	 */
+	const NAME = 'iThemes Exchange';
+	const SLUG = 'ithemes-exchange';
+
+	/** @var string */
 	public static $dir;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	public static $url;
 
-	var $_slug = 'ithemes-exchange';
-	var $_name = 'iThemes Exchange';
-	var $_series = '';
-	var $_plugin_base = '';
-
-	/** @deprecated 2.0.0 */
-	var $_plugin_path = '';
-
-	/** @deprecated 2.0.0 */
-	var $_plugin_url = '';
-
-	/** @deprecated 2.0.0 */
-	var $_version;
-
-	/** @deprecated 2.0.0  */
-	var $_wp_minimum = '';
+	/** @var string */
+	public static $base;
 
 	/**
 	 * Setup the plugin
 	 *
 	 * Class Constructor. Sets up the environment and then loads admin or enqueues active bar.
 	 *
-	 * @uses  IT_Exchange::set_plugin_locations()
-	 * @uses  IT_Exchange::set_textdomain()
-	 * @uses  IT_Exchange::init_exchange()
 	 * @since 0.1.0
 	 */
 	public function __construct() {
@@ -101,19 +83,13 @@ class IT_Exchange {
 	/**
 	 * Defines where the plugin lives on the server
 	 *
-	 * @uses  WP_PLUGIN_DIR
-	 * @uses  ABSPATH
 	 * @since 0.1.0
-	 * @return void
 	 */
 	public function set_plugin_locations() {
 
 		self::$dir = plugin_dir_path( __FILE__ );
 		self::$url = plugins_url( '', __FILE__ );
-
-		$this->_plugin_path = self::$dir;
-		$this->_plugin_url  = self::$url;
-		$this->_plugin_base = plugin_basename( __FILE__ );
+		self::$base = plugin_basename( __FILE__ );
 	}
 
 	/**
@@ -130,9 +106,7 @@ class IT_Exchange {
 	/**
 	 * Loads the translation data for WordPress
 	 *
-	 * @uses  load_plugin_textdomain()
 	 * @since 0.1.0
-	 * @return void
 	 */
 	public function set_textdomain() {
 		$plugin_name = dirname( $this->_plugin_base );
@@ -147,7 +121,6 @@ class IT_Exchange {
 	 * Includes files for enabled add-ons
 	 *
 	 * @since 0.3.1
-	 * @return void
 	 */
 	public function addons_init() {
 		// Add action for third party addons to register addons with.
@@ -178,6 +151,32 @@ class IT_Exchange {
 			}
 		}
 		do_action( 'it_exchange_enabled_addons_loaded' );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function __get( $name ) {
+		switch ( $name ) {
+			case '_version':
+				return self::VERSION;
+			case '_slug':
+				return self::SLUG;
+			case '_name':
+				return self::NAME;
+			case '_plugin_url':
+				return self::$url;
+			case '_plugin_path':
+				return self::$dir;
+			case '_plugin_base':
+				return self::$base;
+			case '_wp_minimum':
+				return self::MIN_WP;
+			case '_series':
+				return '';
+		}
+
+		return null;
 	}
 }
 
