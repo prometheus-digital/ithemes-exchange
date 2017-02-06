@@ -41,7 +41,8 @@ class Refunds extends Base implements Getable, Postable {
 	 */
 	public function handle_get( Request $request ) {
 
-		$transaction = it_exchange_get_transaction( $request->get_param( 'transaction_id', 'URL' ) );
+		/** @var \IT_Exchange_Transaction $transaction */
+		$transaction = $request->get_route_object( 'transaction_id' );
 		$refunds     = $transaction->refunds;
 
 		$user = it_exchange_get_current_customer();
@@ -77,7 +78,8 @@ class Refunds extends Base implements Getable, Postable {
 	 */
 	public function handle_post( Request $request ) {
 
-		$transaction = it_exchange_get_transaction( $request->get_param( 'transaction_id', 'URL' ) );
+		/** @var \IT_Exchange_Transaction $transaction */
+		$transaction = $request->get_route_object( 'transaction_id' );
 
 		$gateway = \ITE_Gateways::get( $transaction->get_method() );
 
@@ -145,7 +147,7 @@ class Refunds extends Base implements Getable, Postable {
 	 */
 	protected function permissions_check( Request $request, \IT_Exchange_Customer $user = null ) {
 
-		if ( ! $user || ! user_can( $user->wp_user, 'edit_it_transaction', $request->get_param( 'transaction_id', 'URL' ) ) ) {
+		if ( ! $user || ! user_can( $user->wp_user, 'edit_it_transaction', $request->get_route_object( 'transaction_id' ) ) ) {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( "Sorry, you are not allowed to view this transaction's refunds.", 'it-l10n-ithemes-exchange' ),

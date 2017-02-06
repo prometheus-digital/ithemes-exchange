@@ -13,13 +13,14 @@ use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Putable;
 use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
+use iThemes\Exchange\REST\RouteObjectExpandable;
 
 /**
  * Class Token
  *
  * @package iThemes\Exchange\REST\Route\Customer\Token
  */
-class Token extends Base implements Getable, Putable, Deletable {
+class Token extends Base implements Getable, Putable, Deletable, RouteObjectExpandable {
 
 	/** @var Serializer */
 	private $serializer;
@@ -36,7 +37,7 @@ class Token extends Base implements Getable, Putable, Deletable {
 	 */
 	public function handle_get( Request $request ) {
 
-		$token = \ITE_Payment_Token::get( $request->get_param( 'token_id', 'URL' ) );
+		$token = $request->get_route_object( 'token_id' );
 
 		return new \WP_REST_Response( $this->serializer->serialize( $token ) );
 	}
@@ -49,7 +50,7 @@ class Token extends Base implements Getable, Putable, Deletable {
 			return $r;
 		}
 
-		if ( ! user_can( $user->wp_user, 'it_read_payment_token', $request->get_param( 'token_id', 'URL' ) ) ) {
+		if ( ! user_can( $user->wp_user, 'it_read_payment_token', $request->get_route_object( 'token_id' ) ) ) {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you are not allowed to view this payment token.', 'it-l10n-ithemes-exchange' ),
@@ -66,7 +67,7 @@ class Token extends Base implements Getable, Putable, Deletable {
 	public function handle_put( Request $request ) {
 
 		/** @var \ITE_Payment_Token_Card|\ITE_Payment_Token_Bank_Account $token */
-		$token = \ITE_Payment_Token::get( $request->get_param( 'token_id', 'URL' ) );
+		$token = $request->get_route_object( 'token_id' );
 
 		if ( $token instanceof \ITE_Payment_Token_Card && $request['expiration'] ) {
 
@@ -139,7 +140,7 @@ class Token extends Base implements Getable, Putable, Deletable {
 			return $r;
 		}
 
-		if ( ! user_can( $user->wp_user, 'it_edit_payment_token', $request->get_param( 'token_id', 'URL' ) ) ) {
+		if ( ! user_can( $user->wp_user, 'it_edit_payment_token', $request->get_route_object( 'token_id' ) ) ) {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you are not allowed to edit this payment token.', 'it-l10n-ithemes-exchange' ),
@@ -168,7 +169,7 @@ class Token extends Base implements Getable, Putable, Deletable {
 			return $r;
 		}
 
-		if ( ! user_can( $user->wp_user, 'it_delete_payment_token', $request->get_param( 'token_id', 'URL' ) ) ) {
+		if ( ! user_can( $user->wp_user, 'it_delete_payment_token', $request->get_route_object( 'token_id' ) ) ) {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you are not allowed to delete this payment token.', 'it-l10n-ithemes-exchange' ),
@@ -191,7 +192,7 @@ class Token extends Base implements Getable, Putable, Deletable {
 	 */
 	protected function permissions_check( Request $request, \IT_Exchange_Customer $user = null ) {
 
-		$token = \ITE_Payment_Token::get( $request->get_param( 'token_id', 'URL' ) );
+		$token = $request->get_route_object( 'token_id' );
 
 		if ( ! $token ) {
 			return new \WP_Error(
@@ -213,6 +214,11 @@ class Token extends Base implements Getable, Putable, Deletable {
 	 * @inheritDoc
 	 */
 	public function get_path() { return '(?P<token_id>\d+)/'; }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_route_object_map() { return array( 'token_id' => 'ITE_Payment_Token::get' ); }
 
 	/**
 	 * @inheritDoc

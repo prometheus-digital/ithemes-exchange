@@ -13,13 +13,14 @@ use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Putable;
 use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
+use iThemes\Exchange\REST\RouteObjectExpandable;
 
 /**
  * Class Address
  *
  * @package iThemes\Exchange\REST\Route\Customer\Address
  */
-class Address extends Base implements Getable, Putable, Deletable {
+class Address extends Base implements Getable, Putable, Deletable, RouteObjectExpandable {
 
 	/** @var Serializer */
 	private $serializer;
@@ -36,7 +37,8 @@ class Address extends Base implements Getable, Putable, Deletable {
 	 */
 	public function handle_get( Request $request ) {
 
-		$address = \ITE_Saved_Address::get( $request->get_param( 'address_id', 'URL' ) );
+		/** @var \ITE_Saved_Address $address */
+		$address = $request->get_route_object( 'address_id' );
 
 		return new \WP_REST_Response( $this->serializer->serialize( $address ) );
 	}
@@ -46,7 +48,8 @@ class Address extends Base implements Getable, Putable, Deletable {
 	 */
 	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) {
 
-		$address = \ITE_Saved_Address::get( $request->get_param( 'address_id', 'URL' ) );
+		/** @var \ITE_Saved_Address $address */
+		$address = $request->get_route_object( 'address_id' );
 
 		if ( ! $address ) {
 			return new \WP_Error(
@@ -91,6 +94,7 @@ class Address extends Base implements Getable, Putable, Deletable {
 		$address_id  = $request->get_param( 'address_id', 'URL' );
 		$customer_id = $request->get_param( 'customer_id', 'URL' );
 
+		// Purposely bypass route object cache
 		$current = \ITE_Saved_Address::get( $address_id );
 		$address = \ITE_Saved_Address::get( $address_id );
 
@@ -163,6 +167,11 @@ class Address extends Base implements Getable, Putable, Deletable {
 	 * @inheritDoc
 	 */
 	public function get_path() { return '(?P<address_id>\d+)/'; }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_route_object_map() { return array( 'address_id' => 'ITE_Saved_Address::get' ); }
 
 	/**
 	 * @inheritDoc

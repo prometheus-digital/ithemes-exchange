@@ -11,12 +11,14 @@ namespace iThemes\Exchange\REST\Route\Transaction\Refunds;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
+use iThemes\Exchange\REST\RouteObjectExpandable;
 
 /**
  * Class Transaction
+ *
  * @package iThemes\Exchange\REST\Route\Transaction
  */
-class Refund extends Base implements Getable {
+class Refund extends Base implements Getable, RouteObjectExpandable {
 
 	/** @var Serializer */
 	private $serializer;
@@ -33,7 +35,8 @@ class Refund extends Base implements Getable {
 	 */
 	public function handle_get( Request $request ) {
 
-		$refund = \ITE_Refund::get( $request->get_param( 'refund_id', 'URL' ) );
+		/** @var \ITE_Refund $refund */
+		$refund = $request->get_route_object( 'refund_id' );
 
 		$user     = it_exchange_get_current_customer();
 		$response = new \WP_REST_Response( $this->serializer->serialize( $refund, $user ) );
@@ -53,7 +56,9 @@ class Refund extends Base implements Getable {
 	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) {
 
 		$transaction_id = $request->get_param( 'transaction_id', 'URL' );
-		$refund         = \ITE_Refund::get( $request->get_param( 'refund_id', 'URL' ) );
+
+		/** @var \ITE_Refund $refund */
+		$refund = $request->get_route_object( 'refund_id' );
 
 		if ( ! $refund || ! $refund->transaction || $refund->transaction->ID !== (int) $transaction_id ) {
 			return new \WP_Error(
@@ -75,6 +80,11 @@ class Refund extends Base implements Getable {
 	 * @inheritDoc
 	 */
 	public function get_path() { return '(?P<refund_id>\d+)/'; }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_route_object_map() { return array( 'refund_id' => 'ITE_Refund::get' ); }
 
 	/**
 	 * @inheritDoc

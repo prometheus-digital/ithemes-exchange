@@ -12,13 +12,14 @@ use iThemes\Exchange\REST\Deletable;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
+use iThemes\Exchange\REST\RouteObjectExpandable;
 
 /**
  * Class Item
  *
  * @package iThemes\Exchange\REST\Route\Transaction\Activity
  */
-class Item extends Base implements Getable, Deletable {
+class Item extends Base implements Getable, Deletable, RouteObjectExpandable {
 
 	/** @var Serializer */
 	private $serializer;
@@ -35,7 +36,8 @@ class Item extends Base implements Getable, Deletable {
 	 */
 	public function handle_get( Request $request ) {
 
-		$item = it_exchange_get_txn_activity( $request->get_param( 'activity_id', 'URL' ) );
+		/** @var \IT_Exchange_Txn_Activity $item */
+		$item = $request->get_route_object( 'activity_id' );
 
 		return new \WP_REST_Response( $this->serializer->serialize( $item, $request ) );
 	}
@@ -45,7 +47,8 @@ class Item extends Base implements Getable, Deletable {
 	 */
 	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) {
 
-		$item = it_exchange_get_txn_activity( $request->get_param( 'activity_id', 'URL' ) );
+		/** @var \IT_Exchange_Txn_Activity $item */
+		$item = $request->get_route_object( 'activity_id' );
 
 		if ( ! $item ) {
 			return new \WP_Error(
@@ -55,7 +58,7 @@ class Item extends Base implements Getable, Deletable {
 			);
 		}
 
-		if ( ! $item->is_public() && ! user_can( $user->wp_user, 'edit_it_transaction', $item->get_transaction()->ID ) ) {
+		if ( ! $item->is_public() && ! user_can( $user->wp_user, 'edit_it_transaction', $item->get_transaction() ) ) {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you are not allowed to access this activity item.', 'it-l10n-ithemes-exchange' ),
@@ -71,7 +74,8 @@ class Item extends Base implements Getable, Deletable {
 	 */
 	public function handle_delete( Request $request ) {
 
-		$item = it_exchange_get_txn_activity( $request->get_param( 'activity_id', 'URL' ) );
+		/** @var \IT_Exchange_Txn_Activity $item */
+		$item = $request->get_route_object( 'activity_id' );
 		$item->delete();
 
 		return new \WP_REST_Response( '', \WP_Http::NO_CONTENT );
@@ -82,7 +86,8 @@ class Item extends Base implements Getable, Deletable {
 	 */
 	public function user_can_delete( Request $request, \IT_Exchange_Customer $user = null ) {
 
-		$item = it_exchange_get_txn_activity( $request->get_param( 'activity_id', 'URL' ) );
+		/** @var \IT_Exchange_Txn_Activity $item */
+		$item = $request->get_route_object( 'activity_id' );
 
 		if ( ! $item ) {
 			return new \WP_Error(
@@ -92,7 +97,7 @@ class Item extends Base implements Getable, Deletable {
 			);
 		}
 
-		if ( ! user_can( $user->wp_user, 'edit_it_transaction', $item->get_transaction()->ID ) ) {
+		if ( ! user_can( $user->wp_user, 'edit_it_transaction', $item->get_transaction() ) ) {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you are not allowed to delete this activity item.', 'it-l10n-ithemes-exchange' ),
@@ -112,6 +117,11 @@ class Item extends Base implements Getable, Deletable {
 	 * @inheritDoc
 	 */
 	public function get_path() { return '(?P<activity_id>\d+)/'; }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_route_object_map() { return array( 'activity_id' => 'it_exchange_get_txn_activity' ); }
 
 	/**
 	 * @inheritDoc

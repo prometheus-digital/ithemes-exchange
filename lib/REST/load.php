@@ -191,7 +191,18 @@ function get_rest_manager() {
 
 	if ( ! $manager ) {
 
-		$is_debug = defined( 'WP_DEBUG' ) && WP_DEBUG && ( ( defined( 'WP_DEBUG_DISPLAY' ) && WP_DEBUG_DISPLAY ) || current_user_can( 'manage_options' ) );
+		$is_debug = defined( 'WP_DEBUG' ) && WP_DEBUG && defined( 'WP_DEBUG_DISPLAY' ) && WP_DEBUG_DISPLAY;
+
+		/**
+		 * Filter whether the REST API is in debug mode or not.
+		 *
+		 * When in debug mode Exception messages and stack traces will be included in the error response.
+		 *
+		 * @since 2.0.0
+		 *
+		 * @param bool $is_debug
+		 */
+		$is_debug = apply_filters( 'it_exchange_is_rest_in_debug_mode', $is_debug );
 
 		$stack = new Stack();
 		$stack->push( new Error_Handler( $is_debug ), 'error-handler' );

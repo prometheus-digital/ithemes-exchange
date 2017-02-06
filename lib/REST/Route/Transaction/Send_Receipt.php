@@ -34,8 +34,9 @@ class Send_Receipt extends Base implements Postable {
 	 */
 	public function handle_post( Request $request ) {
 
+		/** @var \IT_Exchange_Transaction $transaction */
+		$transaction = $request->get_route_object( 'transaction_id' );
 		$email       = $request['email'];
-		$transaction = it_exchange_get_transaction( $request->get_param( 'transaction_id', 'URL' ) );
 
 		if ( $email && $email !== $transaction->get_customer_email() ) {
 			$notification = $this->notifications->get_notification( $transaction->has_parent() ? 'renewal-receipt' : 'receipt' );
@@ -53,7 +54,7 @@ class Send_Receipt extends Base implements Postable {
 			$this->notifications->send_purchase_emails( $transaction, false );
 		}
 
-		return new \WP_REST_Response( '', \WP_Http::ACCEPTED );
+		return new \WP_REST_Response( null, \WP_Http::ACCEPTED );
 	}
 
 	/**
@@ -61,7 +62,7 @@ class Send_Receipt extends Base implements Postable {
 	 */
 	public function user_can_post( Request $request, \IT_Exchange_Customer $user = null ) {
 
-		if ( ! $user || ! user_can( $user->wp_user, 'edit_it_transaction', $request->get_param( 'transaction_id', 'URL' ) ) ) {
+		if ( ! $user || ! user_can( $user->wp_user, 'edit_it_transaction', $request->get_route_object( 'transaction_id' ) ) ) {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you are not allowed to edit this transaction.', 'it-l10n-ithemes-exchange' ),

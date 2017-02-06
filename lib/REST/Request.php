@@ -21,6 +21,9 @@ class Request extends \WP_REST_Request {
 	/** @var \ITE_Cart|null */
 	private $cart;
 
+	/** @var array */
+	private $route_objects = array();
+
 	/**
 	 * Create a Request object from the WP_REST_Request object.
 	 *
@@ -102,6 +105,73 @@ class Request extends \WP_REST_Request {
 		$this->cart = $cart;
 
 		return $this;
+	}
+
+	/**
+	 * Get the route object.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $key
+	 *
+	 * @return mixed|null
+	 */
+	public function get_route_object( $key ) {
+
+		if ( array_key_exists( $key, $this->route_objects ) ) {
+			return $this->route_objects[ $key ];
+		}
+
+		$route = $this->get_matched_route_controller();
+
+		return $this->expand_route_object( $route, $key );
+	}
+
+	/**
+	 * Expand a route object ID into an actual object.
+	 *
+	 * Will traverse the route parent tree.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param Route  $route
+	 * @param string $key
+	 *
+	 * @return mixed|null
+	 */
+	protected function expand_route_object( Route $route, $key ) {
+
+		if ( $route instanceof RouteObjectExpandable && ( $map = $route->get_route_object_map() ) && isset( $map[ $key ] ) ) {
+			$callable  = $map[ $key ];
+			$object_id = $this->get_param( $key, 'URL' );
+
+			if ( ! $object_id ) {
+				$this->set_route_object( $key, null );
+
+				return null;
+			}
+
+			$object = call_user_func( $callable, $object_id ) ?: null;
+			$this->set_route_object( $key, $object );
+
+			return $object;
+		} elseif ( $route->has_parent() ) {
+			return $this->expand_route_object( $route->get_parent(), $key );
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Set the route object for a given route variable.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $key
+	 * @param mixed  $object
+	 */
+	public function set_route_object( $key, $object ) {
+		$this->route_objects[ $key ] = $object;
 	}
 
 	/**

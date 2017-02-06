@@ -13,6 +13,7 @@ use iThemes\Exchange\REST\Route;
 
 /**
  * Class Stack
+ *
  * @package iThemes\Exchange\REST
  */
 class Stack {
@@ -200,14 +201,12 @@ class Stack {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param \WP_REST_Request             $request
+	 * @param Request                      $request
 	 * @param \iThemes\Exchange\REST\Route $route
 	 *
 	 * @return \WP_REST_Response
 	 */
-	public function handle( \WP_REST_Request $request, Route $route ) {
-
-		$request = Request::from_wp( $request )->set_matched_route_controller( $route );
+	public function handle( Request $request, Route $route ) {
 
 		reset( $this->middleware );
 

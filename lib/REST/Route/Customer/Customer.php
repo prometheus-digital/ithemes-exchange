@@ -12,13 +12,14 @@ use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Putable;
 use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route;
+use iThemes\Exchange\REST\RouteObjectExpandable;
 
 /**
  * Class Customer
  *
  * @package iThemes\Exchange\REST\Customer
  */
-class Customer extends Route\Base implements Getable, Putable {
+class Customer extends Route\Base implements Getable, Putable, RouteObjectExpandable {
 
 	/** @var array */
 	private $schema = array();
@@ -38,7 +39,7 @@ class Customer extends Route\Base implements Getable, Putable {
 	 */
 	public function handle_get( Request $request ) {
 
-		$customer = it_exchange_get_customer( $request->get_param( 'customer_id', 'URL' ) );
+		$customer = $request->get_route_object( 'customer_id' );
 		$response = new \WP_REST_Response( $this->serializer->serialize( $customer, $request['context'] ) );
 
 		$this->linkify( $response, $customer );
@@ -51,7 +52,7 @@ class Customer extends Route\Base implements Getable, Putable {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param \WP_REST_Response     $response
+	 * @param \WP_REST_Response $response
 	 * @param \IT_Exchange_Customer $customer
 	 */
 	protected function linkify( \WP_REST_Response $response, \IT_Exchange_Customer $customer ) {
@@ -121,7 +122,7 @@ class Customer extends Route\Base implements Getable, Putable {
 			);
 		}
 
-		$customer = it_exchange_get_customer( $request->get_param( 'customer_id', 'URL' ) );
+		$customer = $request->get_route_object( 'customer_id' );
 
 		if ( ! $customer ) {
 			return new \WP_Error(
@@ -186,7 +187,11 @@ class Customer extends Route\Base implements Getable, Putable {
 
 		if ( is_int( $input ) ) {
 
-			if ( ( $current = call_user_func( array( $customer, "get_{$type}_address" ), true ) ) && $current->get_pk() == $input ) {
+			if ( ( $current = call_user_func( array(
+					$customer,
+					"get_{$type}_address"
+				), true ) ) && $current->get_pk() == $input
+			) {
 				return null;
 			}
 
@@ -240,6 +245,11 @@ class Customer extends Route\Base implements Getable, Putable {
 	 * @inheritDoc
 	 */
 	public function get_path() { return 'customers/(?P<customer_id>\d+)/'; }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_route_object_map() { return array( 'customer_id' => 'it_exchange_get_customer' ); }
 
 	/**
 	 * @inheritDoc

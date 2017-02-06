@@ -35,7 +35,9 @@ class Activity extends Base implements Getable, Postable {
 	 */
 	public function handle_get( Request $request ) {
 
-		$t          = it_exchange_get_transaction( $request->get_param( 'transaction_id', 'URL' ) );
+		/** @var \IT_Exchange_Transaction $t */
+		$t = $request->get_route_object( 'transaction_id' );
+
 		$collection = new \IT_Exchange_Txn_Activity_Collection( $t, array(
 			'per_page'  => $request['per_page'],
 			'page'      => $request['page'],
@@ -68,7 +70,7 @@ class Activity extends Base implements Getable, Postable {
 		if (
 			! $request['activity_id'] &&
 			$request['public_only'] !== true &&
-			! user_can( $user->wp_user, 'edit_it_transaction', $request['transaction_id'] )
+			! user_can( $user->wp_user, 'edit_it_transaction', $request->get_route_object( 'transaction_id' ) )
 		) {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
@@ -85,7 +87,8 @@ class Activity extends Base implements Getable, Postable {
 	 */
 	public function handle_post( Request $request ) {
 
-		$t = it_exchange_get_transaction( $request->get_param( 'transaction_id', 'URL' ) );
+		/** @var \IT_Exchange_Transaction $t */
+		$t = $request->get_route_object( 'transaction_id' );
 
 		$builder = new \IT_Exchange_Txn_Activity_Builder( $t, 'note' );
 		$builder->set_description( $request['description'] );
@@ -122,7 +125,7 @@ class Activity extends Base implements Getable, Postable {
 	 */
 	public function user_can_post( Request $request, \IT_Exchange_Customer $user = null ) {
 
-		if ( ! user_can( $user->wp_user, 'edit_it_transaction', $request['transaction_id'] ) ) {
+		if ( ! user_can( $user->wp_user, 'edit_it_transaction', $request->get_route_object( 'transaction_id' ) ) ) {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you are not allowed to create transaction activity.', 'it-l10n-ithemes-exchange' ),

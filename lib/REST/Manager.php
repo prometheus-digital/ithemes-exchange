@@ -275,9 +275,12 @@ class Manager {
 				continue;
 			}
 
-			$permission = function ( \WP_REST_Request $request ) use ( $verb, $route, $parents ) {
+			$exchange_request = null;
 
-				$request = Request::from_wp( $request );
+			$permission = function ( \WP_REST_Request $request ) use ( $verb, $route, $parents, &$exchange_request ) {
+
+				$exchange_request = Request::from_wp( $request );
+				$exchange_request->set_matched_route_controller( $route );
 
 				$user = it_exchange_get_current_customer() ?: null;
 
@@ -293,20 +296,26 @@ class Manager {
 						}
 					}
 
-					if ( ( $r = call_user_func( $callback, $request, $user ) ) !== true ) {
+					if ( ( $r = call_user_func( $callback, $exchange_request, $user ) ) !== true ) {
 						return $r;
 					}
 				}
 
 				$callback = array( $route, 'user_can_' . strtolower( $verb ) );
 
-				return call_user_func( $callback, $request, $user );
+				return call_user_func( $callback, $exchange_request, $user );
 			};
 
 			$middleware = $this->get_middleware();
 
-			$handle = function ( \WP_REST_Request $request ) use ( $middleware, $route ) {
-				return $middleware->handle( $request, $route );
+			$handle = function ( \WP_REST_Request $request ) use ( $middleware, $route, $exchange_request ) {
+
+				if ( ! $exchange_request ) {
+					$exchange_request = Request::from_wp( $request );
+					$exchange_request->set_matched_route_controller( $route );
+				}
+
+				return $middleware->handle( $exchange_request, $route );
 			};
 
 			if ( $verb === 'GET' ) {

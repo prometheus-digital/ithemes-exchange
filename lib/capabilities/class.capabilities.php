@@ -82,7 +82,13 @@ class IT_Exchange_Capabilities {
 				return array( 'it_create_others_payment_tokens' );
 			case 'it_read_payment_token':
 
-				if ( ! $user_id || empty( $args[0] ) || ! $token = ITE_Payment_Token::get( $args[0] ) ) {
+				if ( ! $user_id || empty( $args[0] ) ) {
+					return array( 'do_not_allow' );
+				}
+
+				$token = $args[0] instanceof ITE_Payment_Token ? $args[0] : ITE_Payment_Token::get( $args[0] );
+
+				if ( ! $token ) {
 					return array( 'do_not_allow' );
 				}
 
@@ -94,9 +100,16 @@ class IT_Exchange_Capabilities {
 			case 'it_delete_payment_token':
 			case 'it_edit_payment_token':
 
-				if ( ! $user_id || empty( $args[0] ) || ! $token = ITE_Payment_Token::get( $args[0] ) ) {
+				if ( ! $user_id || empty( $args[0] ) ) {
 					return array( 'do_not_allow' );
 				}
+
+				$token = $args[0] instanceof ITE_Payment_Token ? $args[0] : ITE_Payment_Token::get( $args[0] );
+
+				if ( ! $token ) {
+					return array( 'do_not_allow' );
+				}
+
 
 				if ( $token->customer && $token->customer->ID === (int) $user_id ) {
 					return array(); // a user can edit their own payment tokens
@@ -105,7 +118,13 @@ class IT_Exchange_Capabilities {
 				return array( 'it_edit_others_payment_tokens' );
 			case 'it_use_payment_token':
 
-				if ( ! $user_id || empty( $args[0] ) || ! $token = ITE_Payment_Token::get( $args[0] ) ) {
+				if ( ! $user_id || empty( $args[0] ) ) {
+					return array( 'do_not_allow' );
+				}
+
+				$token = $args[0] instanceof ITE_Payment_Token ? $args[0] : ITE_Payment_Token::get( $args[0] );
+
+				if ( ! $token ) {
 					return array( 'do_not_allow' );
 				}
 
