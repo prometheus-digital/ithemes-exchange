@@ -28,7 +28,8 @@ class Cart_Feedback implements Middleware {
 			return $response;
 		}
 
-		$cart = $request->get_cart();
+		/** @var \ITE_Cart $cart */
+		$cart = $request->get_route_object( 'cart_id' );
 
 		if ( ! $cart ) {
 			return $response;

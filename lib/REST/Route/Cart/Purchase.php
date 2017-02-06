@@ -44,7 +44,8 @@ class Purchase extends Base implements Getable, Postable, VariableSchema {
 	 */
 	public function handle_get( Request $request ) {
 
-		$cart = $request->get_cart();
+		/** @var \ITE_Cart $cart */
+		$cart = $request->get_route_object( 'cart_id' );
 
 		$cart->prepare_for_purchase();
 
@@ -74,7 +75,8 @@ class Purchase extends Base implements Getable, Postable, VariableSchema {
 	 */
 	public function handle_post( Request $request ) {
 
-		$cart = $request->get_cart();
+		/** @var \ITE_Cart $cart */
+		$cart = $request->get_route_object( 'cart_id' );
 
 		if ( $feedback = $cart->get_requirements_for_purchase() ) {
 			$error = new \WP_Error(

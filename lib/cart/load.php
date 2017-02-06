@@ -151,7 +151,8 @@ ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'product', array(
 
 		$item = \ITE_Cart_Product::create( $product, $quantity );
 
-		$cart = $request->get_cart();
+		/** @var \ITE_Cart $cart */
+		$cart = $request->get_route_object( 'cart_id' );
 		$cart->add_item( $item );
 
 		return $item;
@@ -215,7 +216,8 @@ ITE_Line_Item_Types::register_type( new ITE_Line_Item_Type( 'coupon', array(
 			$coupon
 		);
 
-		$cart = $request->get_cart();
+		/** @var \ITE_Cart $cart */
+		$cart = $request->get_route_object( 'cart_id' );
 		$cart->add_item( $item );
 
 		return $item;

@@ -120,7 +120,7 @@ class Carts extends Base implements Postable {
 		$location = r\get_rest_url( $this->cart, array( 'cart_id' => $cart->get_id() ) );
 		$request  = Request::from_url( $location );
 		$request->set_url_params( array( 'cart_id' => $cart->get_id() ) );
-		$request->set_cart( $cart );
+		$request->set_route_object( 'cart_id', $cart );
 
 		$response = $this->cart->handle_get( $request );
 		$response->set_status( \WP_Http::CREATED );

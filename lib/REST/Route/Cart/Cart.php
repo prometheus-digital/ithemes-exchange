@@ -19,7 +19,7 @@ use iThemes\Exchange\REST\Request;
  *
  * @package iThemes\Exchange\REST\Route\Cart
  */
-class Cart extends r\Route\Base implements Getable, Putable, Deletable {
+class Cart extends r\Route\Base implements Getable, Putable, Deletable, r\RouteObjectExpandable {
 
 	/** @var Serializer */
 	private $serializer;
@@ -36,11 +36,11 @@ class Cart extends r\Route\Base implements Getable, Putable, Deletable {
 	 */
 	public function handle_get( Request $request ) {
 
-		if ( ! $request->get_cart() ) {
+		if ( ! $request->get_route_object( 'cart_id' ) ) {
 			return new \WP_REST_Response( array(), 500 );
 		}
 
-		return $this->prepare_item_for_response( $request->get_cart() );
+		return $this->prepare_item_for_response( $request->get_route_object( 'cart_id' ) );
 	}
 
 	/**
@@ -54,7 +54,9 @@ class Cart extends r\Route\Base implements Getable, Putable, Deletable {
 	 * @inheritDoc
 	 */
 	public function handle_put( Request $request ) {
-		$cart = $request->get_cart();
+
+		/** @var \ITE_Cart $cart */
+		$cart = $request->get_route_object( 'cart_id' );
 
 		if ( $e = $this->handle_address_update( $cart, $request['billing_address'], 'billing') ) {
 			return $e;
@@ -129,7 +131,9 @@ class Cart extends r\Route\Base implements Getable, Putable, Deletable {
 	 * @inheritDoc
 	 */
 	public function handle_delete( Request $request ) {
-		$cart = $request->get_cart();
+
+		/** @var \ITE_Cart $cart */
+		$cart = $request->get_route_object( 'cart_id' );
 		$cart->empty_cart();
 
 		return new \WP_HTTP_Response( '', 204 );
@@ -151,6 +155,11 @@ class Cart extends r\Route\Base implements Getable, Putable, Deletable {
 	 * @inheritDoc
 	 */
 	public function get_path() { return '(?P<cart_id>\w+)/'; }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_route_object_map() { return array( 'cart_id' => 'it_exchange_get_cart' ); }
 
 	/**
 	 * @inheritDoc
@@ -179,7 +188,8 @@ class Cart extends r\Route\Base implements Getable, Putable, Deletable {
 	 */
 	protected function permission_check( Request $request, \IT_Exchange_Customer $user = null ) {
 
-		if ( ! $cart = it_exchange_get_cart( $request->get_param( 'cart_id', 'URL' ) ) ) {
+		/** @var \ITE_Cart $cart */
+		if ( ! $cart = $request->get_route_object( 'cart_id' ) ) {
 			return new \WP_Error(
 				'it_exchange_rest_invalid_cart',
 				__( 'Invalid cart id.', 'it-l10n-ithemes-exchange' ),

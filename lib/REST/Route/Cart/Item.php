@@ -44,7 +44,8 @@ class Item extends Base implements Getable, Putable, Deletable {
 	 */
 	public function handle_get( Request $request ) {
 
-		$cart = $request->get_cart();
+		/** @var \ITE_Cart $cart */
+		$cart = $request->get_route_object( 'cart_id' );
 		$item = $cart->get_item( $this->type->get_type(), $request->get_param( 'item_id', 'URL' ) );
 
 		$response = new \WP_REST_Response( $this->serializer->serialize( $item, $cart ) );
@@ -68,7 +69,8 @@ class Item extends Base implements Getable, Putable, Deletable {
 	 */
 	public function handle_put( Request $request ) {
 
-		$cart = $request->get_cart();
+		/** @var \ITE_Cart $cart */
+		$cart = $request->get_route_object( 'cart_id' );
 		$item = $cart->get_item( $this->type->get_type(), $request->get_param( 'item_id', 'URL' ) );
 
 		if ( $item instanceof \ITE_Quantity_Modifiable_Item && $item->is_quantity_modifiable() ) {
@@ -109,7 +111,8 @@ class Item extends Base implements Getable, Putable, Deletable {
 	 */
 	public function handle_delete( Request $request ) {
 
-		$cart = $request->get_cart();
+		/** @var \ITE_Cart $cart */
+		$cart = $request->get_route_object( 'cart_id' );
 		$cart->remove_item( $this->type->get_type(), $request->get_param( 'item_id', 'URL' ) );
 
 		return new \WP_REST_Response( null, 204 );
@@ -142,7 +145,8 @@ class Item extends Base implements Getable, Putable, Deletable {
 	 */
 	protected function permission_check( Request $request, \IT_Exchange_Customer $user = null ) {
 
-		$cart = it_exchange_get_cart( $request->get_param( 'cart_id', 'URL' ) );
+		/** @var \ITE_Cart $cart */
+		$cart = $request->get_route_object( 'cart_id' );
 
 		if ( ! $cart->get_item( $this->type->get_type(), $request->get_param( 'item_id', 'URL' ) ) ) {
 			return new \WP_Error(

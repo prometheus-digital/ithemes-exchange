@@ -15,6 +15,7 @@ use iThemes\Exchange\REST\Route\Base;
 
 /**
  * Class Shipping_Methods
+ *
  * @package iThemes\Exchange\REST\Route\Cart
  */
 class Shipping_Methods extends Base implements Getable, Putable {
@@ -24,7 +25,8 @@ class Shipping_Methods extends Base implements Getable, Putable {
 	 */
 	public function handle_get( Request $request ) {
 
-		$cart = $request->get_cart();
+		/** @var \ITE_Cart $cart */
+		$cart = $request->get_route_object( 'cart_id' );
 		$data = $this->prepare_cart_for_response( $cart );
 
 		return new \WP_REST_Response( $data );
@@ -40,7 +42,8 @@ class Shipping_Methods extends Base implements Getable, Putable {
 	 */
 	public function handle_put( Request $request ) {
 
-		$cart = $request->get_cart();
+		/** @var \ITE_Cart $cart */
+		$cart = $request->get_route_object( 'cart_id' );
 
 		$cart_method          = $cart->get_shipping_method();
 		$cart_method          = $cart_method ? $cart_method->slug : '';

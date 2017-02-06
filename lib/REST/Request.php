@@ -84,30 +84,6 @@ class Request extends \WP_REST_Request {
 	}
 
 	/**
-	 * Get the cart being operated on in this request.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @return \ITE_Cart|null
-	 */
-	public function get_cart() { return $this->cart; }
-
-	/**
-	 * Set the cart being operated on in this request.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @param \ITE_Cart $cart
-	 *
-	 * @return $this
-	 */
-	public function set_cart( \ITE_Cart $cart ) {
-		$this->cart = $cart;
-
-		return $this;
-	}
-
-	/**
 	 * Get the route object.
 	 *
 	 * @since 2.0.0

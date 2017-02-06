@@ -44,7 +44,8 @@ class Items extends Base implements Getable, Postable, Deletable {
 	 */
 	public function handle_get( Request $request ) {
 
-		$cart       = $request->get_cart();
+		/** @var \ITE_Cart $cart */
+		$cart       = $request->get_route_object( 'cart_id' );
 		$serializer = $this->serializer;
 
 		return new \WP_REST_Response( array_map( function ( \ITE_Line_Item $item ) use ( $serializer, $cart ) {
@@ -81,7 +82,8 @@ class Items extends Base implements Getable, Postable, Deletable {
 
 		if ( $item ) {
 
-			$cart = $request->get_cart();
+			/** @var \ITE_Cart $cart */
+			$cart = $request->get_route_object( 'cart_id' );
 
 			$response = new \WP_REST_Response( $this->serializer->serialize( $item, $cart ) );
 			$response->set_status( \WP_Http::CREATED );
@@ -121,7 +123,9 @@ class Items extends Base implements Getable, Postable, Deletable {
 	 * @inheritDoc
 	 */
 	public function handle_delete( Request $request ) {
-		$cart = $request->get_cart();
+
+		/** @var \ITE_Cart $cart */
+		$cart = $request->get_route_object( 'cart_id' );
 		$cart->remove_all( $this->type->get_type() );
 
 		return new \WP_REST_Response( '', 204 );

@@ -206,7 +206,6 @@ function get_rest_manager() {
 
 		$stack = new Stack();
 		$stack->push( new Error_Handler( $is_debug ), 'error-handler' );
-		$stack->push( new Cart_Decorator(), 'cart-decorator' );
 		$stack->push( new Autolinker(), 'autolinker' );
 		$stack->push( new Filter_By_Context( new ContextFilterer() ), 'filter-by-context' );
 		$stack->push( new Cart_Feedback(), 'cart-feedback' );
