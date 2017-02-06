@@ -355,6 +355,7 @@ class ITE_PayPal_Standard_Secure_Gateway extends ITE_Gateway {
 
 					case 'auto-renew':
 					case 'trial':
+                    case 'max-occurrences':
 						return true;
 					default:
 						return false;

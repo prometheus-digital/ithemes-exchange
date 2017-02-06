@@ -172,6 +172,7 @@ class ITE_Gateway_Offline_Payments extends ITE_Gateway {
 					case 'profile':
 					case 'trial':
 					case 'trial-profile':
+					case 'max-occurrences':
 						return true;
 					default:
 						return false;
