@@ -73,28 +73,7 @@ function it_exchange_get_offline_transaction_uniqid() {
  * @return boolean
  */
 function it_exchange_verify_offline_transaction_unique_uniqid( $uniqid ) {
-
-	if ( ! empty( $uniqid ) ) { //verify we get a valid 32 character md5 hash
-		$args = array(
-			'post_type'  => 'it_exchange_tran',
-			'meta_query' => array(
-				array(
-					'key'   => '_it_exchange_transaction_method',
-					'value' => 'offline-payments',
-				),
-				array(
-					'key'   => '_it_exchange_transaction_method_id',
-					'value' => $uniqid,
-				),
-			),
-		);
-
-		$query = new WP_Query( $args );
-
-		return ( ! empty( $query ) );
-	}
-
-	return false;
+	return ! it_exchange_get_transaction_by_method_id( 'offline-payments', $uniqid );
 }
 
 /**
