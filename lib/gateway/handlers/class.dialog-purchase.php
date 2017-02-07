@@ -59,6 +59,10 @@ abstract class ITE_Dialog_Purchase_Request_Handler extends ITE_Purchase_Request_
 			return $args;
 		}
 
+		if ( ! empty( $args['one_time_token'] ) && ( $this->get_gateway()->get_handler_by_request_name( 'tokenize' ) ?: $this instanceof ITE_Gateway_JS_Tokenize_Handler ) ) {
+		    return $args;
+        }
+
 		if ( $error_message = $this->get_dialog_controller()->is_submitted_form_valid( false ) ) {
 			throw new InvalidArgumentException( $error_message );
 		}
@@ -82,12 +86,10 @@ abstract class ITE_Dialog_Purchase_Request_Handler extends ITE_Purchase_Request_
 	protected function get_html_before_form_end( ITE_Gateway_Purchase_Request $request ) {
 		$html = parent::get_html_before_form_end( $request );
 
-		if ( $this->get_gateway()->can_handle( 'tokenize' ) ) {
-			$handler = $this->get_gateway()->get_handler_by_request_name( 'tokenize' );
+		$handler = $this->get_gateway()->get_handler_by_request_name( 'tokenize' ) ?: $this;
 
-			if ( $handler instanceof ITE_Gateway_JS_Tokenize_Handler ) {
-				$html .= $this->generate_tokenize_js( $request, $handler );
-			}
+		if ( $handler instanceof ITE_Gateway_JS_Tokenize_Handler && $handler->is_js_tokenizer_configured() ) {
+			$html .= $this->generate_tokenize_js( $request, $handler );
 		}
 
 		return $html;
@@ -108,7 +110,7 @@ abstract class ITE_Dialog_Purchase_Request_Handler extends ITE_Purchase_Request_
 		ob_start();
 		?>
         <script type="text/javascript">
-			(function ( $, gateway, inSuperWidget, tokenize ) {
+			(function ( $, gateway, inSuperWidget, canMakeTokens, tokenize ) {
 				"use strict";
 
 				if ( inSuperWidget ) {
@@ -119,7 +121,7 @@ abstract class ITE_Dialog_Purchase_Request_Handler extends ITE_Purchase_Request_
 
 					itExchange.hooks.addAction( 'itExchangeSW.preSubmitPurchaseDialog_' + gateway, function ( deferred ) {
 
-						if ( !$( '#new-method-' + gateway ).is( ':checked' ) ) {
+						if ( !$( '#new-method-' + gateway ).is( ':checked' ) && canMakeTokens && itExchange.common.config.currentUser > 0 ) {
 
 							deferred.resolve( { alreadyProcessed: true } );
 
@@ -128,7 +130,7 @@ abstract class ITE_Dialog_Purchase_Request_Handler extends ITE_Purchase_Request_
 
 						var $form = $( 'form.it-exchange-purchase-dialog-' + gateway );
 
-						if ( $( "input[name='to_tokenize']", $form ).length ) {
+						if ( $( "input[name='to_tokenize'], input[name='one_time_token']", $form ).length ) {
 							deferred.resolve( { alreadyProcessed: true } );
 
 							return;
@@ -139,13 +141,13 @@ abstract class ITE_Dialog_Purchase_Request_Handler extends ITE_Purchase_Request_
 				} else {
 					$( document ).on( 'submit', 'form.it-exchange-purchase-dialog-' + gateway, function ( e ) {
 
-						if ( !$( '#new-method-' + gateway ).is( ':checked' ) ) {
+						if ( !$( '#new-method-' + gateway ).is( ':checked' ) && canMakeTokens && itExchange.common.config.currentUser > 0 ) {
 							return;
 						}
 
 						var $form = $( this );
 
-						if ( $( "input[name='to_tokenize']", $form ).length ) {
+						if ( $( "input[name='to_tokenize'], input[name='one_time_token']", $form ).length ) {
 							return;
 						}
 
@@ -190,7 +192,9 @@ abstract class ITE_Dialog_Purchase_Request_Handler extends ITE_Purchase_Request_
 							$( this ).val( '' );
 						} );
 
-						$form.append( $( '<input type="hidden" name="to_tokenize">' ).val( token ) );
+						var fieldName = itExchange.common.config.currentUser > 0 && canMakeTokens ? 'to_tokenize' : 'one_time_token';
+						console.log(fieldName);
+						$form.append( $( '<input type="hidden">' ).val( token ).attr( 'name', fieldName ) );
 
 						deferred.resolve();
 					} ).fail( function ( error ) {
@@ -207,6 +211,7 @@ abstract class ITE_Dialog_Purchase_Request_Handler extends ITE_Purchase_Request_
 				jQuery,
 				'<?php echo $this->get_gateway()->get_slug(); ?>',
 				<?php echo it_exchange_in_superwidget() ? 'true' : 'false'; ?>,
+				<?php echo $this->get_gateway()->can_handle( 'tokenize' ) ? 'true' : 'false'; ?>,
 				<?php echo $tokenizer->get_tokenize_js_function(); ?>
 			);
         </script>

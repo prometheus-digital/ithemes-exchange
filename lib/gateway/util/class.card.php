@@ -37,7 +37,7 @@ class ITE_Gateway_Card implements ITE_Gateway_Payment_Source {
 	 */
 	public function __construct( $number, $expiration_year, $expiration_month, $cvc, $holder_name = '' ) {
 
-		if ( $expiration_year < 100 ) {
+		if ( $expiration_year && $expiration_year < 100 ) {
 			$expiration_year += 2000;
 		}
 

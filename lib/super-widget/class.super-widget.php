@@ -215,7 +215,8 @@ class IT_Exchange_Super_Widget extends WP_Widget {
 			'jquery-ui-spinner',
 			'detect-credit-card-type',
 			'it-exchange-event-manager',
-			'jquery.payment'
+			'jquery.payment',
+            'it-exchange-common',
 		), false, true );
 		wp_localize_script( 'it-exchange-super-widget', 'exchangeSWL10n', array(
 				'processingPaymentLabel' => __( 'Processing', 'it-l10n-ithemes-exchange' ),

@@ -290,7 +290,7 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 		}
 
 		if ( ! empty( $this->container['cart_id'] ) ) {
-			$cart_id = unserialize( $this->container['cart_id'] );
+			$cart_id = maybe_unserialize( $this->container['cart_id'] );
 
 			if ( is_array( $cart_id ) ) {
 				$cart_id = reset( $cart_id );

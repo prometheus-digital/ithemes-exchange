@@ -67,7 +67,7 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 						'purchase',
 						$self->build_factory_args_from_global_state( $cart, $_REQUEST )
 					);
-					$txn     = $self->handle( $request );
+					$txn = $self->handle( $request );
 				} catch ( Exception $e ) {
 					$cart->get_feedback()->add_error( $e->getMessage() );
 
@@ -102,11 +102,12 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 		}
 
 		return array(
-			'cart'         => $cart,
-			'nonce'        => empty( $state['_wpnonce'] ) ? '' : $state['_wpnonce'],
-			'http_request' => $state,
-			'token'        => $token,
-			'tokenize'     => empty( $state['to_tokenize'] ) ? '' : $state['to_tokenize'],
+			'cart'           => $cart,
+			'nonce'          => empty( $state['_wpnonce'] ) ? '' : $state['_wpnonce'],
+			'http_request'   => $state,
+			'token'          => $token,
+			'tokenize'       => empty( $state['to_tokenize'] ) ? '' : $state['to_tokenize'],
+			'one_time_token' => empty( $state['one_time_token'] ) ? '' : $state['one_time_token'],
 		);
 	}
 
@@ -265,6 +266,12 @@ HTML;
 		if ( $this->get_gateway()->can_handle( 'tokenize' ) ) {
 			$data['accepts'][] = 'token';
 			$data['accepts'][] = 'tokenize';
+
+			if ( $this->get_gateway()->get_handler_by_request_name( 'tokenize' ) instanceof ITE_Gateway_JS_Tokenize_Handler ) {
+				$data['accepts'][] = 'one_time_token';
+			} elseif ( $this instanceof ITE_Gateway_JS_Tokenize_Handler ) {
+				$data['accepts'][] = 'one_time_token';
+			}
 
 			$primary_token = $request->get_customer()->get_tokens( array(
 				'gateway' => $this->get_gateway()->get_slug(),

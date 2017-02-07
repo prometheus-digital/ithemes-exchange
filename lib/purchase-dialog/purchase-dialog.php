@@ -305,6 +305,12 @@ class IT_Exchange_Purchase_Dialog{
 			return '';
 		}
 
+		$gateway = ITE_Gateways::get( $this->addon_slug );
+
+		if ( ! $gateway || ! $gateway->can_handle( 'tokenize' ) )  {
+			return '';
+		}
+
 		$customer = it_exchange_get_current_customer();
 
 		if ( ! $customer ) {

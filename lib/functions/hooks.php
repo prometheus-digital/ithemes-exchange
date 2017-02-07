@@ -62,7 +62,7 @@ function it_exchange_load_public_scripts( $current_view ) {
 
 		// General Checkout
 		wp_enqueue_script( 'it-exchange-checkout-page', IT_Exchange::$url . '/lib/assets/js/checkout-page.js',
-			array( 'it-exchange-event-manager', 'jquery' ), false, true
+			array( 'it-exchange-event-manager', 'jquery', 'it-exchange-common', ), false, true
 		);
 
 		// Load Logged In purchase requirement JS if not logged in and on checkout page.
@@ -159,7 +159,7 @@ function it_exchange_register_scripts() {
 		'decimalsSep'  => $settings['currency-decimals-separator'],
 		'restNonce'    => wp_create_nonce( 'wp_rest' ),
 		'restUrl'      => rest_url( 'it_exchange/v1/' ),
-		'currentUser'  => get_current_user_id(),
+		'currentUser'  => (int) get_current_user_id(),
 		'baseCountry'  => $settings['company-base-country'],
 		'i18n'         => array(
 			'unknownError' => __( 'An unknown error occurred.', 'it-l10n-ithemes-exchange' ),
@@ -242,9 +242,9 @@ function it_exchange_register_scripts() {
 	$js_tokenizers = array();
 
 	foreach ( ITE_Gateways::handles( 'tokenize' ) as $gateway ) {
-		$handler = $gateway->get_handler_by_request_name( 'tokenize' );
+		$handler = $gateway->get_handler_by_request_name( 'tokenize' ) ?: $gateway->get_handler_by_request_name( 'purchase' );
 
-		if ( ! $handler instanceof ITE_Gateway_JS_Tokenize_Handler ) {
+		if ( ! $handler instanceof ITE_Gateway_JS_Tokenize_Handler || ! $handler->is_js_tokenizer_configured() ) {
 			continue;
 		}
 
@@ -294,7 +294,7 @@ function it_exchange_maybe_preload_schemas() {
 	 */
 	$preload = apply_filters( 'it_exchange_preload_schemas', $preload );
 
-	if ( $preload === false || $preload == null ) {
+	if ( $preload === false || $preload === null ) {
 		return;
 	}
 

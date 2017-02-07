@@ -861,8 +861,7 @@ function it_exchange_get_cart_description( $options = array() ) {
 
 	if ( ! empty( $options['use_cached_customer_cart'] ) ) {
 		$cart = it_exchange_get_cached_customer_cart( $options['use_cached_customer_cart'], false );
-	}
-	elseif ( ! empty( $options['cart'] ) ) {
+	} elseif ( ! empty( $options['cart'] ) ) {
 		$cart = $options['cart'];
 	} else {
 		$cart = it_exchange_get_current_cart();

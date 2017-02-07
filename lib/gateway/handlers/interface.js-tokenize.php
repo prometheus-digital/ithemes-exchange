@@ -54,4 +54,13 @@ interface ITE_Gateway_JS_Tokenize_Handler {
 	 * @return string
 	 */
 	public function get_tokenize_js_function();
+
+	/**
+	 * Is the JS tokenizer configured properly.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return bool
+	 */
+	public function is_js_tokenizer_configured();
 }
