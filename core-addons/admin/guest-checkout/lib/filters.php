@@ -245,6 +245,7 @@ add_filter( 'it_exchange_generate_transaction_object', 'it_exchange_flag_transac
 */
 function it_exchange_flag_transaction_post_as_guest_checkout( $transaction_id, ITE_Cart $cart = null ) {
 	$transaction = it_exchange_get_transaction( $transaction_id );
+	error_log($cart && $cart->is_guest());
 
 	if ( $cart && $cart->is_guest() ) {
 		update_post_meta( $transaction_id, '_it-exchange-is-guest-checkout', true );
@@ -254,7 +255,7 @@ function it_exchange_flag_transaction_post_as_guest_checkout( $transaction_id, I
 		}
 	}
 }
-add_action( 'it_exchange_add_transaction_success', 'it_exchange_flag_transaction_post_as_guest_checkout', 10, 2 );
+add_action( 'it_exchange_add_transaction_success', 'it_exchange_flag_transaction_post_as_guest_checkout', 0, 2 );
 
 /**
  * Removes guest checkout transactions from User Purchases
