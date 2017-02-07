@@ -23,7 +23,7 @@ class ITE_Refund_Object_Type extends ITE_Table_With_Meta_Object_Type implements 
 	 */
 	public function get_collection_route() {
 		return \iThemes\Exchange\REST\get_rest_manager()->get_first_route(
-			'iThemes\Exchange\REST\Route\Transaction\Refunds\Refunds'
+			'iThemes\Exchange\REST\Route\v1\Transaction\Refunds\Refunds'
 		);
 	}
 
@@ -32,7 +32,7 @@ class ITE_Refund_Object_Type extends ITE_Table_With_Meta_Object_Type implements 
 	 */
 	public function get_object_route( $object_id ) {
 		return \iThemes\Exchange\REST\get_rest_manager()->get_first_route(
-			'iThemes\Exchange\REST\Route\Customer\Refunds\Refund'
+			'iThemes\Exchange\REST\Route\v1\Customer\Refunds\Refund'
 		);
 	}
 

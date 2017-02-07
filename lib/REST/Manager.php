@@ -75,7 +75,7 @@ class Manager {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param \iThemes\Exchange\REST\Route $route
+	 * @param \iThemes\Exchange\REST\Route\v1 $route
 	 *
 	 * @return $this
 	 *
@@ -101,7 +101,7 @@ class Manager {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param \iThemes\Exchange\REST\Route_Provider $provider
+	 * @param \iThemes\Exchange\REST\Route\v1_Provider $provider
 	 *
 	 * @return $this
 	 */
@@ -121,7 +121,7 @@ class Manager {
 	 *
 	 * @param string $class
 	 *
-	 * @return \iThemes\Exchange\REST\Route|null
+	 * @return \iThemes\Exchange\REST\Route\v1|null
 	 */
 	public function get_first_route( $class ) {
 
@@ -141,7 +141,7 @@ class Manager {
 	 *
 	 * @param string $class
 	 *
-	 * @return \iThemes\Exchange\REST\Route[]
+	 * @return \iThemes\Exchange\REST\Route\v1[]
 	 */
 	public function get_routes_by_class( $class ) {
 
@@ -244,7 +244,7 @@ class Manager {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param \iThemes\Exchange\REST\Route $route
+	 * @param \iThemes\Exchange\REST\Route\v1 $route
 	 *
 	 * @return bool
 	 */
@@ -488,7 +488,7 @@ class Manager {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param \iThemes\Exchange\REST\Route $route
+	 * @param \iThemes\Exchange\REST\Route\v1 $route
 	 * @param string                       $verb
 	 *
 	 * @return array
@@ -553,7 +553,7 @@ class Manager {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param \iThemes\Exchange\REST\Route $route
+	 * @param \iThemes\Exchange\REST\Route\v1 $route
 	 *
 	 * @return array
 	 */
@@ -582,7 +582,7 @@ class Manager {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param \iThemes\Exchange\REST\Route $route
+	 * @param \iThemes\Exchange\REST\Route\v1 $route
 	 * @param array                        $args
 	 *
 	 * @return array

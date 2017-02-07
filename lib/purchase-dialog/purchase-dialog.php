@@ -5,9 +5,9 @@
  * @package IT_Exchange
  * @since 1.3.0
 */
-use iThemes\Exchange\REST\Route\Customer\Token\Serializer;
-use iThemes\Exchange\REST\Route\Customer\Token\Token;
-use iThemes\Exchange\REST\Route\Customer\Token\Tokens;
+use iThemes\Exchange\REST\Route\v1\Customer\Token\Serializer;
+use iThemes\Exchange\REST\Route\v1\Customer\Token\Token;
+use iThemes\Exchange\REST\Route\v1\Customer\Token\Tokens;
 
 /**
  * Transaction methods call or extend this class to create a

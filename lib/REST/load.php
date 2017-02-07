@@ -9,30 +9,23 @@
 namespace iThemes\Exchange\REST;
 
 use iThemes\Exchange\REST\Middleware\Autolinker;
-use iThemes\Exchange\REST\Middleware\Cart_Decorator;
 use iThemes\Exchange\REST\Middleware\Cart_Feedback;
 use iThemes\Exchange\REST\Middleware\Error_Handler;
 use iThemes\Exchange\REST\Middleware\Filter_By_Context;
 use iThemes\Exchange\REST\Middleware\Stack;
 use iThemes\Exchange\REST\Helpers\ContextFilterer;
-use iThemes\Exchange\REST\Route\Cart\Carts;
-use iThemes\Exchange\REST\Route\Cart\Item;
-use iThemes\Exchange\REST\Route\Cart\Meta;
-use iThemes\Exchange\REST\Route\Cart\Purchase;
-use iThemes\Exchange\REST\Route\Cart\Shipping_Methods;
-use iThemes\Exchange\REST\Route\Cart\Types;
-use iThemes\Exchange\REST\Route\Cart\TypeSerializer;
-use iThemes\Exchange\REST\Route\Customer\Address\Address;
-use iThemes\Exchange\REST\Route\Customer\Address\Addresses;
-use iThemes\Exchange\REST\Route\Customer\Address\Serializer as AddressSerializer;
-use iThemes\Exchange\REST\Route\Customer\Customer;
-use iThemes\Exchange\REST\Route\Customer\Serializer as CustomerSerializer;
-use iThemes\Exchange\REST\Route\Customer\Token\Serializer as TokenSerializer;
-use iThemes\Exchange\REST\Route\Customer\Token\Tokens;
-use iThemes\Exchange\REST\Route\Transaction\Activity\Serializer as ActivitySerializer;
-use iThemes\Exchange\REST\Route\Transaction\Refunds\Serializer as RefundSerializer;
-use iThemes\Exchange\REST\Route\Transaction\Serializer as TransactionSerializer;
-use iThemes\Exchange\REST\Route\Transaction\Transaction;
+use iThemes\Exchange\REST\Route\v1\Cart\Carts;
+use iThemes\Exchange\REST\Route\v1\Cart\TypeSerializer;
+use iThemes\Exchange\REST\Route\v1\Customer\Address\Address;
+use iThemes\Exchange\REST\Route\v1\Customer\Address\Addresses;
+use iThemes\Exchange\REST\Route\v1\Customer\Address\Serializer as AddressSerializer;
+use iThemes\Exchange\REST\Route\v1\Customer\Customer;
+use iThemes\Exchange\REST\Route\v1\Customer\Serializer as CustomerSerializer;
+use iThemes\Exchange\REST\Route\v1\Customer\Token\Serializer as TokenSerializer;
+use iThemes\Exchange\REST\Route\v1\Customer\Token\Tokens;
+use iThemes\Exchange\REST\Route\v1\Transaction\Activity\Serializer as ActivitySerializer;
+use iThemes\Exchange\REST\Route\v1\Transaction\Refunds\Serializer as RefundSerializer;
+use iThemes\Exchange\REST\Route\v1\Transaction\Serializer as TransactionSerializer;
 
 /**
  * Register the rest routes on libraries loaded.
@@ -59,29 +52,29 @@ add_action( 'rest_api_init', function () {
 
 add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 
-	$manager->register_route( new Route\Info() );
-	$manager->register_route( new Route\Dataset() );
+	$manager->register_route( new Route\v1\Info() );
+	$manager->register_route( new Route\v1\Dataset() );
 
-	$cart  = new Route\Cart\Cart( new Route\Cart\Serializer() );
+	$cart  = new Route\v1\Cart\Cart( new Route\v1\Cart\Serializer() );
 	$carts = new Carts( $cart );
 
 	$manager->register_route( $cart );
 	$manager->register_route( $carts );
 
-	$item_types = new Route\Cart\Types( new TypeSerializer() );
+	$item_types = new Route\v1\Cart\Types( new TypeSerializer() );
 	$manager->register_route( $item_types );
 
 	foreach ( \ITE_Line_Item_Types::shows_in_rest() as $item_type ) {
-		$items_route = new Route\Cart\Items( $item_type->get_rest_serializer(), $item_type );
-		$item_route  = new Route\Cart\Item( $item_type, $item_type->get_rest_serializer() );
+		$items_route = new Route\v1\Cart\Items( $item_type->get_rest_serializer(), $item_type );
+		$item_route  = new Route\v1\Cart\Item( $item_type, $item_type->get_rest_serializer() );
 
 		$manager->register_route( $items_route->set_parent( $cart ) );
 		$manager->register_route( $item_route->set_parent( $items_route ) );
 	}
 
-	$shipping_methods = new Route\Cart\Shipping_Methods();
-	$purchase         = new Route\Cart\Purchase( new \ITE_Gateway_Request_Factory(), new Route\Cart\PurchaseSerializer() );
-	$meta             = new Route\Cart\Meta();
+	$shipping_methods = new Route\v1\Cart\Shipping_Methods();
+	$purchase         = new Route\v1\Cart\Purchase( new \ITE_Gateway_Request_Factory(), new Route\v1\Cart\PurchaseSerializer() );
+	$meta             = new Route\v1\Cart\Meta();
 
 	$manager->register_route( $shipping_methods->set_parent( $cart ) );
 	$manager->register_route( $purchase->set_parent( $cart ) );
@@ -103,39 +96,39 @@ add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 	$tokens = new Tokens( new TokenSerializer(), new \ITE_Gateway_Request_Factory() );
 	$manager->register_route( $tokens->set_parent( $customer ) );
 
-	$token = new Route\Customer\Token\Token( new TokenSerializer() );
+	$token = new Route\v1\Customer\Token\Token( new TokenSerializer() );
 	$manager->register_route( $token->set_parent( $tokens ) );
 
 	// --- Transactions --- //
-	$transactions = new Route\Transaction\Transactions( new TransactionSerializer() );
+	$transactions = new Route\v1\Transaction\Transactions( new TransactionSerializer() );
 	$manager->register_route( $transactions );
 
-	$transaction = new Route\Transaction\Transaction( new TransactionSerializer() );
+	$transaction = new Route\v1\Transaction\Transaction( new TransactionSerializer() );
 	$manager->register_route( $transaction->set_parent( $transactions ) );
 
-	$send_receipt = new Route\Transaction\Send_Receipt( it_exchange_email_notifications() );
+	$send_receipt = new Route\v1\Transaction\Send_Receipt( it_exchange_email_notifications() );
 	$manager->register_route( $send_receipt->set_parent( $transaction ) );
 
 	/* Activity */
-	$activity = new Route\Transaction\Activity\Activity( new ActivitySerializer() );
+	$activity = new Route\v1\Transaction\Activity\Activity( new ActivitySerializer() );
 	$manager->register_route( $activity->set_parent( $transaction ) );
 
-	$activity_item = new Route\Transaction\Activity\Item( new ActivitySerializer() );
+	$activity_item = new Route\v1\Transaction\Activity\Item( new ActivitySerializer() );
 	$manager->register_route( $activity_item->set_parent( $activity ) );
 
 	/* Refunds */
-	$refunds = new Route\Transaction\Refunds\Refunds( new RefundSerializer(), new \ITE_Gateway_Request_Factory() );
+	$refunds = new Route\v1\Transaction\Refunds\Refunds( new RefundSerializer(), new \ITE_Gateway_Request_Factory() );
 	$manager->register_route( $refunds->set_parent( $transaction ) );
 
-	$refund = new Route\Transaction\Refunds\Refund( new RefundSerializer() );
+	$refund = new Route\v1\Transaction\Refunds\Refund( new RefundSerializer() );
 	$manager->register_route( $refund->set_parent( $refunds ) );
 
 	// --- Products --- //
-	$serializer = new Route\Product\Serializer();
-	$products   = new Route\Product\Products( $serializer );
+	$serializer = new Route\v1\Product\Serializer();
+	$products   = new Route\v1\Product\Products( $serializer );
 	$manager->register_route( $products );
 
-	$product = new Route\Product\Product( $serializer );
+	$product = new Route\v1\Product\Product( $serializer );
 	$manager->register_route( $product->set_parent( $products ) );
 } );
 
@@ -144,7 +137,7 @@ add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
  *
  * @since 2.0.0
  *
- * @param \iThemes\Exchange\REST\Route $route
+ * @param \iThemes\Exchange\REST\Route\v1 $route
  * @param array                        $path_parameters
  *
  * @return string

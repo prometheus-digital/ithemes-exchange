@@ -272,7 +272,7 @@ HTML;
 			) );
 
 			if ( $primary_token->count() ) {
-				$token_serializer     = new \iThemes\Exchange\REST\Route\Customer\Token\Serializer();
+				$token_serializer     = new \iThemes\Exchange\REST\Route\v1\Customer\Token\Serializer();
 				$context_filterer     = new \iThemes\Exchange\REST\Helpers\ContextFilterer();
 				$data['primaryToken'] = $context_filterer->filter(
 					$token_serializer->serialize( $primary_token->first() ),

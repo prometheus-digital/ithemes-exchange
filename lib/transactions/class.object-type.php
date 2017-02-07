@@ -31,7 +31,7 @@ class ITE_Transaction_Object_Type extends ITE_Table_With_Meta_Object_Type implem
 	 */
 	public function get_collection_route() {
 		return \iThemes\Exchange\REST\get_rest_manager()->get_first_route(
-			'iThemes\Exchange\REST\Route\Transaction\Transactions'
+			'iThemes\Exchange\REST\Route\v1\Transaction\Transactions'
 		);
 	}
 
@@ -40,7 +40,7 @@ class ITE_Transaction_Object_Type extends ITE_Table_With_Meta_Object_Type implem
 	 */
 	public function get_object_route( $object_id ) {
 		return \iThemes\Exchange\REST\get_rest_manager()->get_first_route(
-			'iThemes\Exchange\REST\Route\Transaction\Transaction'
+			'iThemes\Exchange\REST\Route\v1\Transaction\Transaction'
 		);
 	}
 }

@@ -202,7 +202,7 @@ class Stack {
 	 * @since 2.0.0
 	 *
 	 * @param Request                      $request
-	 * @param \iThemes\Exchange\REST\Route $route
+	 * @param \iThemes\Exchange\REST\Route\v1 $route
 	 *
 	 * @return \WP_REST_Response
 	 */

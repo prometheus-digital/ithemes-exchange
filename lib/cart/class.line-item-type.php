@@ -5,7 +5,7 @@
  * @since   2.0.0
  * @license GPLv2
  */
-use iThemes\Exchange\REST\Route\Cart\Item_Serializer;
+use iThemes\Exchange\REST\Route\v1\Cart\Item_Serializer;
 
 /**
  * Class ITE_Line_Item_Type
@@ -24,7 +24,7 @@ class ITE_Line_Item_Type {
 	/** @var bool */
 	private $editable_in_rest = false;
 
-	/** @var \iThemes\Exchange\REST\Route\Cart\Item_Serializer */
+	/** @var \iThemes\Exchange\REST\Route\v1\Cart\Item_Serializer */
 	private $rest_serializer;
 
 	/** @var callable */
@@ -165,7 +165,7 @@ class ITE_Line_Item_Type {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @return \iThemes\Exchange\REST\Route\Cart\Item_Serializer
+	 * @return \iThemes\Exchange\REST\Route\v1\Cart\Item_Serializer
 	 */
 	public function get_rest_serializer() {
 		return $this->rest_serializer;

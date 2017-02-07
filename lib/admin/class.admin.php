@@ -1920,7 +1920,7 @@ class IT_Exchange_Admin {
 			wp_enqueue_script( 'it-exchange-jquery-toastr', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/toastr.js' );
 			it_exchange_preload_schemas( 'transaction' );
 
-			$serializer = new \iThemes\Exchange\REST\Route\Transaction\Serializer();
+			$serializer = new \iThemes\Exchange\REST\Route\v1\Transaction\Serializer();
 
 			wp_enqueue_script( 'it-exchange-transaction-details', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/transaction-details.js', $deps );
 			wp_localize_script( 'it-exchange-transaction-details', 'EXCHANGE', array(

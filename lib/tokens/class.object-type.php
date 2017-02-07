@@ -23,7 +23,7 @@ class ITE_Payment_Token_Object_Type extends ITE_Table_With_Meta_Object_Type impl
 	 */
 	public function get_collection_route() {
 		return \iThemes\Exchange\REST\get_rest_manager()->get_first_route(
-			'iThemes\Exchange\REST\Route\Customer\Token\Tokens'
+			'iThemes\Exchange\REST\Route\v1\Customer\Token\Tokens'
 		);
 	}
 
@@ -32,7 +32,7 @@ class ITE_Payment_Token_Object_Type extends ITE_Table_With_Meta_Object_Type impl
 	 */
 	public function get_object_route( $object_id ) {
 		return \iThemes\Exchange\REST\get_rest_manager()->get_first_route(
-			'iThemes\Exchange\REST\Route\Customer\Token\Token'
+			'iThemes\Exchange\REST\Route\v1\Customer\Token\Token'
 		);
 	}
 

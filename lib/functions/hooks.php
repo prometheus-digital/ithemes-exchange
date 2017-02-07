@@ -230,7 +230,7 @@ function it_exchange_register_scripts() {
 	);
 
 	if ( apply_filters( 'it_exchange_preload_cart_item_types', it_exchange_is_page( 'checkout' ) ) ) {
-		$serializer = new \iThemes\Exchange\REST\Route\Cart\TypeSerializer();
+		$serializer = new \iThemes\Exchange\REST\Route\v1\Cart\TypeSerializer();
 
 		foreach ( ITE_Line_Item_Types::shows_in_rest() as $type ) {
 			$config['cartItemTypes'][] = $serializer->serialize( $type );
@@ -1465,10 +1465,10 @@ function it_exchange_enqueue_profile_js() {
 
 	$filter = new \iThemes\Exchange\REST\Helpers\ContextFilterer();
 
-	$address_serializer  = new \iThemes\Exchange\REST\Route\Customer\Address\Serializer();
-	$customer_serializer = new \iThemes\Exchange\REST\Route\Customer\Serializer();
+	$address_serializer  = new \iThemes\Exchange\REST\Route\v1\Customer\Address\Serializer();
+	$customer_serializer = new \iThemes\Exchange\REST\Route\v1\Customer\Serializer();
 
-	$token_serializer = new \iThemes\Exchange\REST\Route\Customer\Token\Serializer();
+	$token_serializer = new \iThemes\Exchange\REST\Route\v1\Customer\Token\Serializer();
 	$token_schema     = $token_serializer->get_schema();
 
 	$tokens = array();
