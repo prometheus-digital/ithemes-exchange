@@ -250,6 +250,73 @@ function it_exchange_register_sync_verbs( $api ) {
 add_action( 'ithemes_sync_register_verbs', 'it_exchange_register_sync_verbs' );
 
 /**
+ * Display a dismissible notice as to why v2 isn't loaded.
+ */
+function it_exchange_v2_admin_notice() {
+
+	$reason = array();
+
+	if ( version_compare( PHP_VERSION, '5.3', '<' ) ) {
+		$reason[] = __( 'please upgrade your PHP version to 5.3 or higher.', 'it-l10n-ithemes-exchange' );
+	}
+
+	$addons = it_exchange_get_addons_not_v2_ready();
+
+	if ( $addons ) {
+		$reason[] = sprintf(
+			__( 'the following add-ons must be updated to v2 or later: %s.', 'it-l10n-ithemes-exchange' ),
+			implode( ', ', wp_list_pluck( $addons, 'name' ) )
+		);
+	}
+
+	if ( ! $reason ) {
+		return;
+	}
+
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+
+	if ( get_user_setting( 'it_exchange_hide_v2_notice' ) ) {
+		return;
+	}
+
+	if ( count( $addons ) === 1 ) {
+		$message = sprintf(
+			__( 'You are currently running version %s of iThemes Exchange. To upgrade to version 2 %s' ),
+			$GLOBALS['IT_Exchange']->_version,
+			$reason[0]
+		);
+	} elseif ( count( $addons ) === 2 ) {
+		$message = sprintf(
+			__( 'You are currently running version %s of iThemes Exchange. To upgrade to version 2 %s and %s' ),
+			$GLOBALS['IT_Exchange']->_version,
+			$reason[0],
+			$reason[1]
+		);
+	} else {
+		return;
+	}
+
+	?>
+
+	<div class="notice notice-info is-dismissible it-exchange-v2">
+		<p><?php echo $message; ?></p>
+	</div>
+	<script type="text/javascript">
+		jQuery(document).ready(function($) {
+			$( document ).on( 'click', '.it-exchange-v2 .notice-dismiss', function() {
+				setUserSetting( 'it_exchange_hide_v2_notice', true );
+			} );
+		});
+	</script>
+<?php
+
+}
+
+add_action( 'admin_notices', 'it_exchange_v2_admin_notice' );
+
+/**
  * Override the displayed plugin version.
  *
  * @param array $plugins
