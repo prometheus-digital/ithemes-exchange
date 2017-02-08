@@ -9,17 +9,16 @@
 /**
  * Interface ITE_Update_Payment_Token_Handler
  */
-interface ITE_Update_Payment_Token_Handler {
+interface ITE_Update_Payment_Token_Handler extends ITE_Gateway_Request_Handler {
 
 	/**
-	 * Update a payment token.
+	 * Can this handler update a given field.
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param ITE_Payment_Token $token
-	 * @param array             $update
+	 * @param string $field
 	 *
-	 * @return ITE_Payment_Token|null
+	 * @return bool
 	 */
-	public function update_token( ITE_Payment_Token $token, array $update );
+	public function can_update_field( $field );
 }

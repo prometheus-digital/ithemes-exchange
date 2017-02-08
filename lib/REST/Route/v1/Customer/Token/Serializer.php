@@ -53,8 +53,9 @@ class Serializer {
 					'editable' => false,
 				);
 
-				if ( $token->gateway && ( $h = $token->gateway->get_handler_by_request_name( 'tokenize' ) ) ) {
-					$data['expiration']['editable'] = $h instanceof \ITE_Update_Payment_Token_Handler;
+				/** @var \ITE_Update_Payment_Token_Handler $h */
+				if ( $token->gateway && ( $h = $token->gateway->get_handler_by_request_name( 'update-payment-token' ) ) ) {
+					$data['expiration']['editable'] = $h->can_update_field( 'expiration_month' ) && $h->can_update_field( 'expiration_year' );
 				}
 			}
 		} elseif ( $token instanceof \ITE_Payment_Token_Bank_Account ) {

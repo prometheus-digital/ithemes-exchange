@@ -71,21 +71,25 @@ class Token extends Base implements Getable, Putable, Deletable, RouteObjectExpa
 
 		if ( $token instanceof \ITE_Payment_Token_Card && $request['expiration'] ) {
 
-			$handler = $token->gateway->get_handler_by_request_name( 'tokenize' );
+			$handler = $token->gateway->get_handler_by_request_name( 'update-payment-token' );
 
-			if ( $handler instanceof \ITE_Update_Payment_Token_Handler ) {
-				$update = array();
+			if ( $handler ) {
+
+				$changed = false;
+				$update  = new \ITE_Gateway_Update_Payment_Token_Request( $token );
 
 				if ( (int) $token->get_expiration_month() != $request['expiration']['month'] ) {
-					$update['expiration_month'] = $request['expiration']['month'];
+					$update->set_expiration_month( $request['expiration']['month'] );
+					$changed = true;
 				}
 
 				if ( (int) $token->get_expiration_year() != $request['expiration']['year'] ) {
-					$update['expiration_year'] = $request['expiration']['year'];
+					$update->set_expiration_year( $request['expiration']['year'] );
+					$changed = true;
 				}
 
-				if ( $update ) {
-					$token = $handler->update_token( $token, $update );
+				if ( $changed ) {
+					$token = $handler->handle( $update );
 
 					if ( ! $token ) {
 						return new \WP_Error(
