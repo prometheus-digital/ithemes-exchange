@@ -138,14 +138,7 @@ class IT_Exchange_SW_Shortcode {
 
 		$products = it_exchange_get_products( array(
 			'show_hidden'    => true,
-			'posts_per_page' => - 1,
-			'meta_query'     => array(
-				array(
-					'key'     => '_it_exchange_product_type',
-					'compare' => 'IN',
-					'value'   => array_keys( $product_types )
-				)
-			)
+			'posts_per_page' => 250,
 		) );
 		?>
 

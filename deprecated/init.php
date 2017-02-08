@@ -390,7 +390,7 @@ function it_exchange_pre_set_update_plugins_transient( $value ) {
 		return $value;
 	}
 
-	$current_version    = $GLOBALS['IT_Exchange']->_version;
+	$current_version        = $GLOBALS['IT_Exchange']->_version;
 	$new_deprecated_version = $matches[1];
 
 	if ( version_compare( $current_version, $new_deprecated_version, '<' ) ) {
