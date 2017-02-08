@@ -124,7 +124,6 @@ class Token extends Base implements Getable, Putable, Deletable, RouteObjectExpa
 			$saved = $token->save();
 		}
 
-
 		if ( ! $saved ) {
 			return new \WP_Error(
 				'it_exchange_rest_cannot_update',

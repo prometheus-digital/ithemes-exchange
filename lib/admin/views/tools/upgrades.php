@@ -33,7 +33,13 @@ $upgrader = it_exchange_make_upgrader();
 
 				<p class="description"><?php echo $upgrade->get_description(); ?></p>
 
-				<?php if ( ! $completed ) : ?>
+                <?php if ( $completed ): ?>
+                    <?php if ( $file = it_exchange_get_upgrade_log_file( $upgrade->get_slug() ) ) : ?>
+                        <p class="upgrade-file">
+			                <?php $esc = esc_url( $file ); printf( __( 'Download Log File: %s', 'it-l10n-ithemes-exchange' ), "<a href='$esc'>{$file}</a>" ); ?>
+                        </p>
+                    <?php endif; ?>
+				<?php else: ?>
 
 					<button class="button <?php echo $button; ?>">
 

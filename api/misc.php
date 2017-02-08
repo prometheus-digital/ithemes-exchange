@@ -1003,3 +1003,33 @@ function it_exchange_is_upgrade_complete( $upgrade ) {
 
 	return $upgrades[ $upgrade ];
 }
+
+/**
+ * Get the log file for an upgrade.
+ *
+ * @since 2.0.0
+ *
+ * @param string $upgrade
+ *
+ * @return string
+ */
+function it_exchange_get_upgrade_log_file( $upgrade ) {
+
+	if ( ! it_exchange_is_upgrade_complete( $upgrade ) ) {
+		return '';
+	}
+
+	it_classes_load( 'it-file-utility.php' );
+
+	$files = ITFileUtility::locate_file( "it-exchange-upgrade/{$upgrade}*" );
+
+	if ( empty( $files ) || is_wp_error( $files ) ) {
+		return '';
+	}
+
+	return add_query_arg(
+		'it-exchange-serve-upgrade-log',
+		$upgrade,
+		admin_url( 'admin.php?page=it-exchange-tools' )
+	);
+}

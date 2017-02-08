@@ -199,11 +199,7 @@ class IT_Exchange_Upgrade_Handler_Ajax {
 		$this->upgrader->complete( $upgrade );
 
 		wp_send_json_success( array(
-			'fileUrl' => add_query_arg(
-				'it-exchange-serve-upgrade-log',
-				$upgrade->get_slug(),
-				admin_url( 'admin.php?page=it-exchange-tools' )
-			)
+			'fileUrl' => it_exchange_get_upgrade_log_file( $upgrade->get_slug() )
 		) );
 	}
 }
