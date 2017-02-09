@@ -357,7 +357,7 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 
 		it_exchange_add_refund_to_transaction( $txn, $amt, $time );
 
-		$refund  = $txn->refunds->first();
+		$refund = $txn->refunds->first();
 
 		self::assertInstanceOf( 'ITE_Refund', $refund );
 		self::assertEquals( $amt, $refund->amount );
@@ -1203,6 +1203,46 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 			)
 		) );
 		$this->assertEqualSets( array( $t1, $t2 ), array_map( array( $this, '_map_id' ), $transactions ) );
+	}
+
+	public function test_session_deleted_when_transaction_completed() {
+
+		$gateway = $this->getMockBuilder( 'ITE_Gateway' )
+		                ->setMethods( array( 'get_slug', 'requires_cart_after_purchase' ) )
+		                ->getMockForAbstractClass();
+		$gateway->method( 'get_slug' )->willReturn( 'test-gateway' );
+		$gateway->method( 'requires_cart_after_purchase' )->willReturn( false );
+
+		$cart    = it_exchange_create_cart_and_session( it_exchange_get_customer( 1 ) );
+		$cart_id = $cart->get_id();
+		$cart->add_item( ITE_Cart_Product::create( self::product_factory()->create_and_get() ) );
+
+		self::transaction_factory()->create( array(
+			'method' => $gateway,
+			'cart'   => $cart,
+		) );
+
+		$this->assertNull( ITE_Session_Model::from_cart_id( $cart_id ) );
+	}
+
+	public function test_session_remains_when_transaction_completed_if_gateway_requires_cart() {
+
+		$gateway = $this->getMockBuilder( 'ITE_Gateway' )
+		                ->setMethods( array( 'get_slug', 'requires_cart_after_purchase' ) )
+		                ->getMockForAbstractClass();
+		$gateway->method( 'get_slug' )->willReturn( 'test-gateway' );
+		$gateway->method( 'requires_cart_after_purchase' )->willReturn( true );
+
+		$cart    = it_exchange_create_cart_and_session( it_exchange_get_customer( 1 ) );
+		$cart_id = $cart->get_id();
+		$cart->add_item( ITE_Cart_Product::create( self::product_factory()->create_and_get() ) );
+
+		self::transaction_factory()->create( array(
+			'method' => $gateway,
+			'cart'   => $cart,
+		) );
+
+		$this->assertNotNull( ITE_Session_Model::from_cart_id( $cart_id ) );
 	}
 
 	public function _map_id( $transaction ) {

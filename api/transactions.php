@@ -468,7 +468,7 @@ function it_exchange_delete_transient_transaction( $method, $temp_id ) {
  *
  * @since 0.3.3
  *
- * @param string $method Transaction method (e.g. paypal, stripe, etc)
+ * @param string|ITE_Gateway $method Transaction method slug, ex 'paypal-standard' or an ITE_Gateway instance.
  * @param string $method_id ID from transaction method
  * @param string $status Transaction status
  * @param IT_Exchange_Customer|int|ITE_Cart $customer_or_cart Customer or Cart
@@ -484,6 +484,13 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 		'payment_token'      => 0,
 	);
 	$args = wp_parse_args( $args, $defaults );
+
+	if ( $method instanceof ITE_Gateway ) {
+		$gateway = $method;
+		$method = $gateway->get_slug();
+	} else {
+		$gateway = ITE_Gateways::get( $method );
+	}
 
 	/** @var ITE_Gateway_Card $card */
 	$card          = empty( $args['card'] ) ? null : $args['card'];
@@ -553,8 +560,6 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 		} else {
 			$cart_id = null;
 		}
-
-		$gateway = ITE_Gateways::get( $method );
 
 		if ( $gateway && $gateway->is_sandbox_mode() ) {
 			$mode = ITE_Const::P_MODE_SANDBOX;
@@ -630,7 +635,7 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 		$r = apply_filters( 'it_exchange_add_transaction', $transaction_id, $method, $method_id, $status, $customer, $cart_object, $args );
 
 		if ( $cart ) {
-			if ( ( $g = ITE_Gateways::get( $method ) ) && ! $g->requires_cart_after_purchase() ) {
+			if ( $gateway && ! $gateway->requires_cart_after_purchase() ) {
 				if ( $cart->get_repository() instanceof ITE_Line_Item_Session_Repository ) {
 					$model = ITE_Session_Model::from_cart_id( $cart->get_id() );
 
