@@ -59,13 +59,13 @@ class ITE_Simple_Zone implements ITE_Zone, IteratorAggregate, ArrayAccess {
 	 */
 	public function contains( ITE_Location $location, $upper_bound = '' ) {
 
-		$priority = array( 'country', 'state', 'zip', 'city' );
+		$priority  = array( 'country', 'state', 'zip', 'city' );
+		$precision = $this->get_precision();
 
-		foreach ( $priority as $field ) {
+		foreach ( $priority as $i => $field ) {
 
-			// We've reached this zone's limit.
 			if ( ! isset( $this[ $field ] ) ) {
-				return true;
+				continue;
 			}
 
 			$value = $this[ $field ];
@@ -76,6 +76,11 @@ class ITE_Simple_Zone implements ITE_Zone, IteratorAggregate, ArrayAccess {
 			}
 
 			if ( $upper_bound === $field ) {
+				return true;
+			}
+
+			// We've reached this zone's limit.
+			if ( $field === $precision ) {
 				return true;
 			}
 		}
@@ -140,11 +145,16 @@ class ITE_Simple_Zone implements ITE_Zone, IteratorAggregate, ArrayAccess {
 	public function get_precision() {
 
 		$priority = array( 'country', 'state', 'zip', 'city' );
+		$last     = '';
 
-		foreach ( $priority as $i => $field ) {
-			if ( empty( $this[ $field ] ) || $this[ $field ] === self::WILD ) {
-				return $priority[ $i - 1 ];
+		foreach ( $priority as $field ) {
+			if ( isset( $this[ $field ] ) && $this[ $field ] !== ITE_Location::WILD ) {
+				$last = $field;
 			}
+		}
+
+		if ( $last ) {
+			return $last;
 		}
 
 		throw new UnexpectedValueException( 'Unable to determine zone precision.' );

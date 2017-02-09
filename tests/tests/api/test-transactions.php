@@ -543,6 +543,62 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 		$this->assertEquals( 'Doe', $saved['last-name'] );
 	}
 
+	public function test_address_record_shared() {
+
+		$address = array(
+			'first-name' => 'John',
+			'last-name'  => 'Doe',
+			'address1'   => '123 Main Street',
+		);
+
+		$t1 = self::transaction_factory()->create_and_get( array(
+			'billing_address'  => $address,
+			'shipping_address' => $address,
+		) );
+		$t2 = self::transaction_factory()->create_and_get( array(
+			'billing_address'  => $address,
+			'shipping_address' => $address,
+		) );
+
+		$s1 = $t1->get_shipping_address();
+		$b1 = $t1->get_billing_address();
+		$s2 = $t2->get_shipping_address();
+		$b2 = $t2->get_billing_address();
+
+		$this->assertInstanceOf( 'ITE_Saved_Address', $s1 );
+		$this->assertInstanceOf( 'ITE_Saved_Address', $b1 );
+		$this->assertInstanceOf( 'ITE_Saved_Address', $s2 );
+		$this->assertInstanceOf( 'ITE_Saved_Address', $b2 );
+
+		$this->assertTrue(
+			( $s1->ID === $s2->ID ) &&
+			( $s2->ID === $b1->ID ) &&
+			( $b1->ID === $b2->ID )
+		);
+	}
+
+	public function test_similar_address() {
+
+		$billing  = array(
+			'first-name' => 'John',
+			'last-name'  => 'Doe',
+			'address1'   => '123 Main Street',
+		);
+		$shipping = array(
+			'first-name' => 'John',
+			'last-name'  => 'Doe',
+			'address1'   => '123 Main Street',
+			'address2'   => '#4'
+		);
+
+		$txn = self::transaction_factory()->create_and_get( array(
+			'billing_address'  => $billing,
+			'shipping_address' => $shipping
+		) );
+
+		$this->assertNotEquals( $txn->get_billing_address(), $txn->get_shipping_address() );
+	}
+
 	public function test_get_transaction_products() {
 
 		$product = self::product_factory()->create_and_get();

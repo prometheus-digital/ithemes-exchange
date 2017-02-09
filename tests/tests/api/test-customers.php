@@ -113,6 +113,21 @@ class IT_Exchange_API_Customers_Test extends IT_Exchange_UnitTestCase {
 		$this->assertEquals( 'Doe', $saved['last-name'] );
 	}
 
+	public function test_save_customer_shipping_address() {
+
+		$address = array(
+			'first-name' => 'John',
+			'last-name'  => 'Doe'
+		);
+
+		it_exchange_save_shipping_address( $address, 1 );
+
+		$saved = it_exchange_get_customer_shipping_address( 1 );
+
+		$this->assertEquals( 'John', $saved['first-name'] );
+		$this->assertEquals( 'Doe', $saved['last-name'] );
+	}
+
 	public function test_get_customer_with_numeric_string() {
 
 		$customer = it_exchange_get_customer( '1' );

@@ -780,9 +780,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 		}
 
 		if ( $filtered && $raw !== $filtered ) {
-			foreach ( $filtered as $field => $value ) {
-				$address[ $field ] = $value;
-			}
+			$address = new ITE_In_Memory_Address( $filtered );
 		}
 
 		return $address;
@@ -811,9 +809,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 		}
 
 		if ( $filtered && $raw !== $filtered ) {
-			foreach ( $filtered as $field => $value ) {
-				$address[ $field ] = $value;
-			}
+			$address = new ITE_In_Memory_Address( $filtered );
 		}
 
 		return $address;
