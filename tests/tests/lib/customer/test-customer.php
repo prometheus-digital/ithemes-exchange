@@ -28,8 +28,9 @@ class Test_IT_Exchange_Customer extends IT_Exchange_UnitTestCase {
 			'country' => 'US'
 		) ) );
 
-		$this->assertInstanceOf( 'ITE_Location', $customer->data->billing_address );
-		$this->assertEquals( 'US', $customer->data->billing_address->offsetGet( 'country' ) );
+		$this->assertInternalType( 'array', $customer->data->billing_address );
+		$this->assertInstanceOf( 'ITE_Location', $customer->get_billing_address() );
+		$this->assertEquals( 'US', $customer->get_billing_address()->offsetGet( 'country' ) );
 	}
 
 	public function test_shipping_address() {
@@ -39,8 +40,9 @@ class Test_IT_Exchange_Customer extends IT_Exchange_UnitTestCase {
 			'country' => 'US'
 		) ) );
 
-		$this->assertInstanceOf( 'ITE_Location', $customer->data->shipping_address );
-		$this->assertEquals( 'US', $customer->data->shipping_address->offsetGet( 'country' ) );
+		$this->assertInternalType( 'array', $customer->data->shipping_address );
+		$this->assertInstanceOf( 'ITE_Location', $customer->get_shipping_address() );
+		$this->assertEquals( 'US', $customer->get_shipping_address()->offsetGet( 'country' ) );
 	}
 
 	public function test_arbitrary_data() {

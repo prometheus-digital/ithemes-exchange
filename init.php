@@ -59,7 +59,7 @@ function it_exchange_get_addons_not_v2_ready() {
 		return array();
 	}
 
-	if ( ! is_admin() ) {
+	if ( ! is_admin() && ! defined( 'WP_TESTS_TABLE_PREFIX' ) ) {
 		return $required === false ? array( array( 'name' => 'Filler' ) ) : $required;
 	}
 

@@ -396,7 +396,7 @@ class ITE_Cart {
 		if ( ! method_exists( $this, $method ) ) {
 			$add_new = true;
 			$success = $this->get_repository()->save( $item );
-		} elseif ( $success = $this->{$method}( $item, $add_new ) && $add_new ) {
+		} elseif ( ( $success = $this->{$method}( $item, $add_new ) ) && $add_new ) {
 			$this->get_repository()->save( $item );
 		}
 

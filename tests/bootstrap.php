@@ -27,6 +27,8 @@ if ( false !== getenv( 'WP_DEVELOP_DIR' ) ) {
 	$test_root = '../../../../tests/phpunit';
 } else if ( file_exists( '/tmp/wordpress-tests-lib/includes/bootstrap.php' ) ) {
 	$test_root = '/tmp/wordpress-tests-lib';
+} else {
+	die( 'No valid test root given.' . PHP_EOL );
 }
 
 require_once dirname( __FILE__ ) . '/../vendor/antecedent/patchwork/Patchwork.php';
@@ -40,18 +42,18 @@ if ( ! defined( 'COOKIEHASH' ) ) {
 }
 
 function _manually_load_plugin() {
-	require_once dirname( __FILE__ ) . '/../lib/sessions/interface.php';
-	require_once dirname( __FILE__ ) . '/../lib/sessions/class.in-memory.php';
-	$GLOBALS['it_exchange']['session'] = new IT_Exchange_In_Memory_Session( null );
-
 	require_once dirname( __FILE__ ) . '/../init.php';
+
+	add_action(  'it_libraries_loaded', function() {
+		$GLOBALS['it_exchange']['session'] = new IT_Exchange_In_Memory_Session( null );
+	} );
 }
 
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
 tests_add_filter( 'it_exchange_register_addons', function () {
 
-	tests_add_filter( 'it_exchange_get_enabled_addons', function ( $addons, $options ) {
+	tests_add_filter( 'it_exchange_get_enabled_addons', function ( $_, $options ) {
 		$addons = array_filter( it_exchange_get_addons(), function ( $addon ) {
 			return strpos( $addon['slug'], 'test' ) === false;
 		} );

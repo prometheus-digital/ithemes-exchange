@@ -318,6 +318,7 @@ function it_exchange_update_cart_product( $cart_product_id, $product ) {
 
 	if ( $cart_product->get_quantity() != $product['count'] ) {
 		$cart_product->set_quantity( $product['count'] );
+		it_exchange_get_current_cart()->get_repository()->save( $cart_product );
 	}
 
 	$bc = $cart_product->bc();

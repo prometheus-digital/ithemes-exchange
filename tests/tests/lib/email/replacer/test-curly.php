@@ -94,9 +94,10 @@ class Test_IT_Exchange_Email_Curly_Tag_Replacer extends IT_Exchange_UnitTestCase
 		$this->assertEquals( 'Test content', $replacer->replace( $content, array() ) );
 	}
 
+	/**
+	 * @expectedDeprecated it_exchange_email_notification_shortcode_functions
+	 */
 	public function test_deprecated_shortcode_functions() {
-
-		add_filter( 'it_exchange_deprecated_filter_trigger_error', '__return_false' );
 
 		$content = 'Test {{test}}';
 

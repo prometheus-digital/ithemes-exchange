@@ -152,12 +152,13 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 
 		$object = $this->cart( 1, true );
 
-		$customer = $this->getMockBuilder( 'IT_Exchange_Customer' )->disableOriginalConstructor()->getMock();
-		$customer->expects( $this->once() )->method( 'add_transaction_to_user' );
-		$customer->method( 'is_wp_user' )->willReturn( true );
-		$customer->id = 1;
+		$customer = 1;
 
-		it_exchange_add_transaction( 'test-method', 'test-method-id', 'pending', $customer, $object );
+		$txn = it_exchange_add_transaction( 'test-method', 'test-method-id', 'pending', $customer, $object );
+
+		$user_purchases = get_user_meta( $customer, '_it_exchange_transaction_id' );
+
+		$this->assertNotFalse( array_search( $txn, $user_purchases ) );
 	}
 
 	public function test_transaction_with_dupe_method_id_rejected() {
@@ -514,7 +515,8 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 
 		$shipping = array(
 			'first-name' => 'John',
-			'last-name'  => 'Doe'
+			'last-name'  => 'Doe',
+			'address1'   => '123 Main Street',
 		);
 
 		$txn = $this->transaction_factory->create( array( 'shipping_address' => $shipping ) );
@@ -529,7 +531,8 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 
 		$billing = array(
 			'first-name' => 'John',
-			'last-name'  => 'Doe'
+			'last-name'  => 'Doe',
+			'address1'   => '123 Main Street',
 		);
 
 		$txn = $this->transaction_factory->create( array( 'billing_address' => $billing ) );
