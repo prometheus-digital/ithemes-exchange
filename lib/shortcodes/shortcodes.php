@@ -57,7 +57,7 @@ class IT_Exchange_SW_Shortcode {
 	 */
 	public function register_feature() {
 
-		$desc = __( "Allows products to be embedded in a shortcode.", 'it-l10n-ithemes-exchange' );
+		$desc = __( 'Allows products to be embedded in a shortcode.', 'it-l10n-ithemes-exchange' );
 
 		it_exchange_register_product_feature( 'sw-shortcode', $desc );
 	}
@@ -112,6 +112,10 @@ class IT_Exchange_SW_Shortcode {
 	public function thickbox() {
 
 		$screen = get_current_screen();
+
+		if ( $screen && $screen->base !== 'post' && $screen->base !== 'add' ) {
+		    return;
+        }
 
 		$post_type = ! empty( $screen->post_type ) ? $screen->post_type : get_post_type();
 
