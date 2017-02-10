@@ -95,7 +95,7 @@ class ITE_Payment_Token extends ModelWithMeta implements ITE_Object, ITE_Gateway
 		/** @var static $other */
 		$other = static::query()
 		               ->where( 'customer', '=', $this->customer->ID )
-		               ->and_where( 'primary', '=', true )
+		               ->and_where( 'primary', '=', false )
 		               ->and_where( 'gateway', '=', $this->get_raw_attribute( 'gateway' ) )
 		               ->and_where( 'mode', '=', $this->mode )
 		               ->first();
@@ -104,7 +104,14 @@ class ITE_Payment_Token extends ModelWithMeta implements ITE_Object, ITE_Gateway
 			throw new InvalidArgumentException( 'At least one payment token must be primary.' );
 		}
 
-		$other->set_attribute( 'primary', false );
+		$other->set_attribute( 'primary', true );
+
+
+		if ( ! $other->save() ) {
+			return false;
+		}
+
+		$this->set_attribute( 'primary', false );
 
 		return $this->save();
 	}
@@ -131,6 +138,10 @@ class ITE_Payment_Token extends ModelWithMeta implements ITE_Object, ITE_Gateway
 	 * @return bool
 	 */
 	public function is_expiring_soon() {
+
+		if ( $this->is_expired() ) {
+			return false;
+		}
 
 		if ( ! $this->expires_at ) {
 			return false;
@@ -247,20 +258,11 @@ class ITE_Payment_Token extends ModelWithMeta implements ITE_Object, ITE_Gateway
 
 		$attributes['type'] = static::$token_type;
 
-		return parent::_do_create( $attributes );
-	}
+		if ( isset( $attributes['gateway'] ) && empty( $attributes['mode'] ) ) {
+			$attributes['mode'] = ITE_Gateways::get( $attributes['gateway'] )->is_sandbox_mode() ? 'sandbox' : 'live';
+		}
 
-	/**
-	 * Get all payment tokens for a customer.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @param \IT_Exchange_Customer $customer
-	 *
-	 * @return \IronBound\DB\Collection|ITE_Payment_Token[]
-	 */
-	public static function for_customer( IT_Exchange_Customer $customer ) {
-		return static::query()->where( 'customer', '=', $customer->ID )->results();
+		return parent::_do_create( $attributes );
 	}
 
 	/**
@@ -287,7 +289,7 @@ class ITE_Payment_Token extends ModelWithMeta implements ITE_Object, ITE_Gateway
 			$query->order_by( 'primary', 'DESC' );
 		} );
 
-		static::register_global_scope( 'expires_at', function( FluentQuery $query ) {
+		static::register_global_scope( 'expires_at', function ( FluentQuery $query ) {
 
 			$now = current_time( 'mysql', true );
 
