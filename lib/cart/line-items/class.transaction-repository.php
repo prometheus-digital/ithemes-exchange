@@ -322,7 +322,7 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 			$model = $done[ $item->get_type() . $item->get_id() ];
 
 			foreach ( $item->get_params() as $key => $value ) {
-				$model->update_meta( $key, $value );
+				$model->add_meta( $key, $value );
 			}
 		}
 
