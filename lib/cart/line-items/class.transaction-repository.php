@@ -96,51 +96,41 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 	}
 
 	/**
-	 * @inheritDoc
+	 * Save an item.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param \ITE_Line_Item $item
+	 * @param bool           $save_parent
+	 * @param array          $search
+	 *
+	 * @return bool
+	 *
+	 * @throws \IronBound\DB\Exception
+	 * @throws \UnexpectedValueException
 	 */
-	public function save( ITE_Line_Item $item, $recurse = true ) {
+	public function save( ITE_Line_Item $item, $save_parent = true, array $search = array() ) {
 
-		if ( $recurse && ( $item instanceof ITE_Aggregatable_Line_Item && $item->get_aggregate() ) ) {
-			$this->save( $item->get_aggregate(), false );
+		if ( $save_parent && ( $item instanceof ITE_Aggregatable_Line_Item && $item->get_aggregate() ) ) {
+			$this->save( $item->get_aggregate(), false, $search );
 		}
 
-		$old   = $this->get( $item->get_type(), $item->get_id() );
-		$model = $this->find_model_for_item( $item );
+		$old = $this->get( $item->get_type(), $item->get_id() );
 
-		$attributes = array(
-			'name'         => $item->get_name(),
-			'description'  => $item->get_description(),
-			'amount'       => $item->get_amount(),
-			'quantity'     => $item->get_quantity(),
-			'total'        => $item->frozen()->has_param( 'total' ) ? $item->frozen()->get_param( 'total' ) : $item->get_total(),
-			'summary_only' => $item->is_summary_only(),
-			'object_id'    => $item->get_object_id(),
-		);
+		if ( $search && array_key_exists( $item->get_type(), $search ) && array_key_exists( $item->get_id(), $search[ $item->get_type() ] ) ) {
+			$model = $search[ $item->get_type() ][ $item->get_id() ];
+		} else {
+			$model = $this->find_model_for_item( $item );
+		}
 
 		if ( $model ) {
-
-			foreach ( $attributes as $attribute => $value ) {
+			foreach ( $this->build_attributes_for_item( $item ) as $attribute => $value ) {
 				$model->set_attribute( $attribute, $value );
 			}
 
 			$model->save();
-
 		} else {
-
-			if ( $item instanceof ITE_Aggregatable_Line_Item && $item->get_aggregate() ) {
-				$parent = $this->find_model_for_item( $item->get_aggregate() );
-
-				if ( $parent ) {
-					$attributes['_parent'] = $parent->get_pk();
-				}
-			}
-
-			$attributes['id']          = $item->get_id();
-			$attributes['type']        = $item->get_type();
-			$attributes['_class']      = get_class( $item );
-			$attributes['transaction'] = $this->get_transaction()->ID;
-
-			$model = ITE_Transaction_Line_Item_Model::create( $attributes );
+			$model = ITE_Transaction_Line_Item_Model::create( $this->build_attributes_for_item( $item, true, empty( $search ) ? true : $search ) );
 
 			if ( ! $model ) {
 				throw new UnexpectedValueException( "Model failed to save for {$item->get_type()} {$item->get_id()}" );
@@ -152,7 +142,7 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 		}
 
 		if ( $item instanceof ITE_Aggregate_Line_Item ) {
-			$this->save_many( $item->get_line_items()->to_array(), false );
+			$this->save_many( $item->get_line_items()->to_array(), false, $search );
 		}
 
 		$this->events->on_save( $item, $old, $this );
@@ -161,11 +151,92 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 	}
 
 	/**
+	 * Build the model attributes for a line item.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param ITE_Line_Item                          $item
+	 * @param bool                                   $include_static_data
+	 * @param bool|ITE_Transaction_Line_Item_Model[] $search_for_parent
+	 *
+	 * @return array
+	 */
+	protected function build_attributes_for_item( ITE_Line_Item $item, $include_static_data = false, $search_for_parent = true ) {
+		$attributes = array(
+			'name'         => $item->get_name(),
+			'description'  => $item->get_description(),
+			'amount'       => $item->get_amount(),
+			'quantity'     => $item->get_quantity(),
+			'total'        => $item->frozen()->has_param( 'total' ) ? $item->frozen()->get_param( 'total' ) : $item->get_total(),
+			'summary_only' => $item->is_summary_only(),
+			'object_id'    => $item->get_object_id(),
+		);
+
+		if ( $include_static_data ) {
+
+			if ( $item instanceof ITE_Aggregatable_Line_Item && $item->get_aggregate() && $search_for_parent ) {
+
+				$parent = null;
+
+				if ( $search_for_parent === true ) {
+					$parent = $this->find_model_for_item( $item->get_aggregate() );
+				} elseif ( is_array( $search_for_parent ) ) {
+					$comp = $item->get_aggregate()->get_type() . $item->get_aggregate()->get_id();
+
+					foreach ( $search_for_parent as $maybe_parent ) {
+						if ( $comp === ( $maybe_parent->type . $maybe_parent->id ) ) {
+							$parent = $maybe_parent;
+							break;
+						}
+					}
+				}
+
+				if ( $parent ) {
+					$attributes['_parent'] = $parent->get_pk();
+				}
+			}
+
+			$attributes['id']          = $item->get_id();
+			$attributes['type']        = $item->get_type();
+			$attributes['_class']      = get_class( $item );
+			$attributes['transaction'] = $this->get_transaction()->ID;
+		}
+
+		return $attributes;
+	}
+
+	/**
 	 * @inheritDoc
 	 */
-	public function save_many( array $items, $recurse = true ) {
+	public function save_many( array $items, $recurse = true, array $search = array() ) {
+
+		$map = array();
+
 		foreach ( $items as $item ) {
-			$this->save( $item, $recurse );// this can be optimized
+
+			if ( $search && array_key_exists( $item->get_type(), $search ) && array_key_exists( $item->get_id(), $search[ $item->get_type() ] ) ) {
+				continue;
+			}
+
+			if ( ! isset( $map[ $item->get_type() ] ) ) {
+				$map[ $item->get_type() ] = array();
+			}
+
+			$map[ $item->get_type() ][] = $item->get_id();
+		}
+
+		$models = $this->find_model_for_items( $map, $all_empty );
+
+		if ( $search ) {
+			$models = array_merge_recursive( $models, $search );
+		}
+
+		if ( $all_empty ) {
+			return $this->create_many( $items );
+		}
+
+		foreach ( $items as $item ) {
+			$this->save( $item, $recurse, $models );
 		}
 	}
 
@@ -193,6 +264,121 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Create multiple items.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param ITE_Line_Item[] $items
+	 */
+	protected function create_many( array $items ) {
+
+		// Goal is to minimize writes. So we create records from the most parent down
+
+		$all = $items;
+
+		/** @var ITE_Transaction_Line_Item_Model[] $done */
+		$done = array();
+
+		while ( count( $items ) ) {
+
+			$to_insert = array();
+
+			foreach ( $items as $i => $item ) {
+				if ( ! $item instanceof ITE_Aggregatable_Line_Item ) {
+					// If this can't have a parent, we can insert at any time
+					$to_insert[ $i ] = $item;
+				} elseif ( ! $item->get_aggregate() ) {
+					// If this doesn't have a parent, we can insert at any time
+					$to_insert[ $i ] = $item;
+				} else {
+					// Or if the parent has already been inserted we can add it.
+					$key = $item->get_aggregate()->get_type() . $item->get_aggregate()->get_id();
+
+					if ( isset( $done[ $key ] ) ) {
+						$to_insert[ $i ] = $item;
+					}
+				}
+			}
+
+			$rows = array();
+
+			foreach ( $to_insert as $insert ) {
+				$rows[] = $this->build_attributes_for_item( $insert, true, $done );
+			}
+
+			$models = ITE_Transaction_Line_Item_Model::create_many( $rows );
+
+			foreach ( $models as $model ) {
+				$done[ $model->type . $model->id ] = $model;
+			}
+
+			$items = array_diff_key( $items, $to_insert );
+		}
+
+		foreach ( $all as $item ) {
+			$model = $done[ $item->get_type() . $item->get_id() ];
+
+			foreach ( $item->get_params() as $key => $value ) {
+				$model->update_meta( $key, $value );
+			}
+		}
+
+	}
+
+	/**
+	 * Find the models for a set of items.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param array $items Expects an array of item IDs keyed under their item types.
+	 *                     Ex. [ 'product' => [ id, id, id ], 'tax' => [id, id, id] ]
+	 * @param bool  $all_empty
+	 *
+	 * @return array An array of models keyed by their ID, keyed by the type.
+	 *               Ex. [ 'product' => [ id => model, id => model ], 'tax' => [ id => model ] ]
+	 */
+	protected final function find_model_for_items( array $items, &$all_empty ) {
+
+		$query = ITE_Transaction_Line_Item_Model::query();
+		$query->and_where( 'transaction', '=', $this->get_transaction()->ID );
+
+		// WHERE t1.transaction = 50 AND ( ( t1.type = 'product' AND t1.pk IN ( id, id ) ) OR ( t1.type = 'tax' AND t1.pk IN ( id, id ) ) )
+
+		$query->add_nested_where( function ( \IronBound\DB\Query\FluentQuery $query ) use ( $items ) {
+			foreach ( $items as $type => $ids ) {
+				$query->or_where( 'type', '=', $type, function ( \IronBound\DB\Query\FluentQuery $query ) use ( $ids ) {
+					$query->and_where( 'pk', '=', $ids );
+				} );
+			}
+		} );
+
+		$models    = $query->results();
+		$all_empty = $models->count() === 0;
+		$return    = array();
+
+		/** @var ITE_Transaction_Line_Item_Model $model */
+		foreach ( $models as $model ) {
+
+			if ( ! isset( $return[ $model->type ] ) ) {
+				$return[ $model->type ] = array();
+			}
+
+			$return[ $model->type ][ $model->id ] = $model;
+		}
+
+		foreach ( $items as $type => $ids ) {
+			if ( ! isset( $return[ $type ] ) ) {
+				$return[ $type ] = array_fill_keys( $ids, null );
+			} else {
+				$defaults        = array_fill_keys( $ids, null );
+				$return[ $type ] = array_merge( $defaults, $return[ $type ] );
+			}
+		}
+
+		return $return;
 	}
 
 	/**
@@ -323,7 +509,7 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 			return;
 		}
 
-		$children = ITE_Transaction_Line_Item_Model::query()->where( '_parent', true, $model->get_pk() )->results();
+		$children = $model->get_children();
 
 		foreach ( $children as $child ) {
 			$aggregatable = $this->model_to_item( $child, $item );

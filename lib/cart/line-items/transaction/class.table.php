@@ -88,6 +88,17 @@ class ITE_Transaction_Line_Item_Table extends BaseTable implements TimestampedTa
 	/**
 	 * @inheritDoc
 	 */
+	protected function get_keys() {
+
+		$keys = parent::get_keys();
+		$keys[] = 'KEY transaction__type__id (transaction,type,id)';
+
+		return $keys;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function get_created_at_column() {
 		return 'created_at';
 	}

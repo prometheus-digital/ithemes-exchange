@@ -4,7 +4,6 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2de9d30a15cc1b444eb8ed48f38bcfde",
     "content-hash": "6f808797d287b3e75bf8039bf4a3a48b",
     "packages": [
         {
@@ -113,7 +112,7 @@
                 "collections",
                 "iterator"
             ],
-            "time": "2015-04-14 22:21:58"
+            "time": "2015-04-14T22:21:58+00:00"
         },
         {
             "name": "doctrine/inflector",
@@ -180,7 +179,7 @@
                 "singularize",
                 "string"
             ],
-            "time": "2015-11-06 14:35:42"
+            "time": "2015-11-06T14:35:42+00:00"
         },
         {
             "name": "firebase/php-jwt",
@@ -223,7 +222,7 @@
             ],
             "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
             "homepage": "https://github.com/firebase/php-jwt",
-            "time": "2016-07-18 04:51:16"
+            "time": "2016-07-18T04:51:16+00:00"
         },
         {
             "name": "ironbound/cache",
@@ -256,7 +255,7 @@
                 }
             ],
             "description": "Provides wrappers for WordPress' object cache to make storing and retrieving models easier.",
-            "time": "2015-10-05 05:36:49"
+            "time": "2015-10-05T05:36:49+00:00"
         },
         {
             "name": "ironbound/db",
@@ -264,12 +263,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/iron-bound-designs/IronBound-DB.git",
-                "reference": "bf8bf6a193096d04f24a9777aa2daea686c23fed"
+                "reference": "b008376bb33327f3900278c19f4e24e322b60a92"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iron-bound-designs/IronBound-DB/zipball/bf8bf6a193096d04f24a9777aa2daea686c23fed",
-                "reference": "bf8bf6a193096d04f24a9777aa2daea686c23fed",
+                "url": "https://api.github.com/repos/iron-bound-designs/IronBound-DB/zipball/b008376bb33327f3900278c19f4e24e322b60a92",
+                "reference": "b008376bb33327f3900278c19f4e24e322b60a92",
                 "shasum": ""
             },
             "require": {
@@ -306,7 +305,7 @@
                 }
             ],
             "description": "Provides models and custom query objects for custom database tables in WordPress.",
-            "time": "2016-11-27 10:44:19"
+            "time": "2017-02-14 05:18:21"
         },
         {
             "name": "ironbound/wpevents",
@@ -347,20 +346,20 @@
                 }
             ],
             "description": "Object orineted events library for WordPRess",
-            "time": "2016-04-17 23:01:15"
+            "time": "2016-04-17T23:01:15+00:00"
         },
         {
             "name": "justinrainbow/json-schema",
-            "version": "4.0.1",
+            "version": "4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/justinrainbow/json-schema.git",
-                "reference": "10d1f6977f6be5f177dded8f585a11debdc27591"
+                "reference": "d39c56a46b3ebe1f3696479966cd2b9f50aaa24f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/justinrainbow/json-schema/zipball/10d1f6977f6be5f177dded8f585a11debdc27591",
-                "reference": "10d1f6977f6be5f177dded8f585a11debdc27591",
+                "url": "https://api.github.com/repos/justinrainbow/json-schema/zipball/d39c56a46b3ebe1f3696479966cd2b9f50aaa24f",
+                "reference": "d39c56a46b3ebe1f3696479966cd2b9f50aaa24f",
                 "shasum": ""
             },
             "require": {
@@ -413,7 +412,7 @@
                 "json",
                 "schema"
             ],
-            "time": "2016-11-09 16:32:33"
+            "time": "2016-12-22T16:43:46+00:00"
         },
         {
             "name": "windwalker/dom",
@@ -457,7 +456,7 @@
                 "framework",
                 "windwalker"
             ],
-            "time": "2016-02-12 15:36:22"
+            "time": "2016-02-12T15:36:22+00:00"
         }
     ],
     "packages-dev": [
@@ -497,7 +496,7 @@
                 "GPL-2.0+"
             ],
             "description": "A mocking library to take the pain out of unit testing for WordPress",
-            "time": "2015-03-31 18:55:45"
+            "time": "2015-03-31T18:55:45+00:00"
         },
         {
             "name": "antecedent/patchwork",
@@ -538,7 +537,7 @@
                 "runkit",
                 "testing"
             ],
-            "time": "2015-10-09 18:20:06"
+            "time": "2015-10-09T18:20:06+00:00"
         },
         {
             "name": "doctrine/instantiator",
@@ -592,7 +591,7 @@
                 "constructor",
                 "instantiate"
             ],
-            "time": "2015-06-14 21:17:01"
+            "time": "2015-06-14T21:17:01+00:00"
         },
         {
             "name": "hamcrest/hamcrest-php",
@@ -637,20 +636,20 @@
             "keywords": [
                 "test"
             ],
-            "time": "2015-05-11 14:41:42"
+            "time": "2015-05-11T14:41:42+00:00"
         },
         {
             "name": "mockery/mockery",
-            "version": "0.9.6",
+            "version": "0.9.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/padraic/mockery.git",
-                "reference": "65d4ca18e15cb02eeb1e5336f884e46b9b905be0"
+                "reference": "1e5e2ffdc4d71d7358ed58a6fdd30a4a0c506855"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/padraic/mockery/zipball/65d4ca18e15cb02eeb1e5336f884e46b9b905be0",
-                "reference": "65d4ca18e15cb02eeb1e5336f884e46b9b905be0",
+                "url": "https://api.github.com/repos/padraic/mockery/zipball/1e5e2ffdc4d71d7358ed58a6fdd30a4a0c506855",
+                "reference": "1e5e2ffdc4d71d7358ed58a6fdd30a4a0c506855",
                 "shasum": ""
             },
             "require": {
@@ -702,7 +701,7 @@
                 "test double",
                 "testing"
             ],
-            "time": "2016-09-30 12:09:40"
+            "time": "2017-02-09T13:29:38+00:00"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -751,7 +750,7 @@
                     "email": "mike.vanriel@naenius.com"
                 }
             ],
-            "time": "2015-02-03 12:10:50"
+            "time": "2015-02-03T12:10:50+00:00"
         },
         {
             "name": "phpspec/prophecy",
@@ -814,7 +813,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2016-11-21 14:58:47"
+            "time": "2016-11-21T14:58:47+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -876,7 +875,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-10-06 15:47:00"
+            "time": "2015-10-06T15:47:00+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -923,7 +922,7 @@
                 "filesystem",
                 "iterator"
             ],
-            "time": "2016-10-03 07:40:28"
+            "time": "2016-10-03T07:40:28+00:00"
         },
         {
             "name": "phpunit/php-text-template",
@@ -964,7 +963,7 @@
             "keywords": [
                 "template"
             ],
-            "time": "2015-06-21 13:50:34"
+            "time": "2015-06-21T13:50:34+00:00"
         },
         {
             "name": "phpunit/php-timer",
@@ -1008,7 +1007,7 @@
             "keywords": [
                 "timer"
             ],
-            "time": "2016-05-12 18:03:57"
+            "time": "2016-05-12T18:03:57+00:00"
         },
         {
             "name": "phpunit/php-token-stream",
@@ -1057,20 +1056,20 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2016-11-15 14:06:22"
+            "time": "2016-11-15T14:06:22+00:00"
         },
         {
             "name": "phpunit/phpunit",
-            "version": "4.8.29",
+            "version": "4.8.35",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "f19d481b468b76a7fb55eb2b772ed487e484891e"
+                "reference": "791b1a67c25af50e230f841ee7a9c6eba507dc87"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/f19d481b468b76a7fb55eb2b772ed487e484891e",
-                "reference": "f19d481b468b76a7fb55eb2b772ed487e484891e",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/791b1a67c25af50e230f841ee7a9c6eba507dc87",
+                "reference": "791b1a67c25af50e230f841ee7a9c6eba507dc87",
                 "shasum": ""
             },
             "require": {
@@ -1129,7 +1128,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2016-11-20 10:35:28"
+            "time": "2017-02-06T05:18:07+00:00"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -1185,20 +1184,20 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2015-10-02 06:51:40"
+            "time": "2015-10-02T06:51:40+00:00"
         },
         {
             "name": "sebastian/comparator",
-            "version": "1.2.2",
+            "version": "1.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/comparator.git",
-                "reference": "6a1ed12e8b2409076ab22e3897126211ff8b1f7f"
+                "reference": "2b7424b55f5047b47ac6e5ccb20b2aea4011d9be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/6a1ed12e8b2409076ab22e3897126211ff8b1f7f",
-                "reference": "6a1ed12e8b2409076ab22e3897126211ff8b1f7f",
+                "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/2b7424b55f5047b47ac6e5ccb20b2aea4011d9be",
+                "reference": "2b7424b55f5047b47ac6e5ccb20b2aea4011d9be",
                 "shasum": ""
             },
             "require": {
@@ -1249,7 +1248,7 @@
                 "compare",
                 "equality"
             ],
-            "time": "2016-11-19 09:18:40"
+            "time": "2017-01-29T09:50:25+00:00"
         },
         {
             "name": "sebastian/diff",
@@ -1301,7 +1300,7 @@
             "keywords": [
                 "diff"
             ],
-            "time": "2015-12-08 07:14:41"
+            "time": "2015-12-08T07:14:41+00:00"
         },
         {
             "name": "sebastian/environment",
@@ -1351,7 +1350,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2016-08-18 05:49:44"
+            "time": "2016-08-18T05:49:44+00:00"
         },
         {
             "name": "sebastian/exporter",
@@ -1418,7 +1417,7 @@
                 "export",
                 "exporter"
             ],
-            "time": "2016-06-17 09:04:28"
+            "time": "2016-06-17T09:04:28+00:00"
         },
         {
             "name": "sebastian/global-state",
@@ -1469,7 +1468,7 @@
             "keywords": [
                 "global state"
             ],
-            "time": "2015-10-12 03:26:01"
+            "time": "2015-10-12T03:26:01+00:00"
         },
         {
             "name": "sebastian/recursion-context",
@@ -1522,7 +1521,7 @@
             ],
             "description": "Provides functionality to recursively process PHP variables",
             "homepage": "http://www.github.com/sebastianbergmann/recursion-context",
-            "time": "2015-11-11 19:50:13"
+            "time": "2015-11-11T19:50:13+00:00"
         },
         {
             "name": "sebastian/version",
@@ -1557,20 +1556,20 @@
             ],
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
             "homepage": "https://github.com/sebastianbergmann/version",
-            "time": "2015-06-21 13:59:46"
+            "time": "2015-06-21T13:59:46+00:00"
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.8.14",
+            "version": "v2.8.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "befb26a3713c97af90d25dd12e75621ef14d91ff"
+                "reference": "322a8c2dfbca15ad6b1b27e182899f98ec0e0153"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/befb26a3713c97af90d25dd12e75621ef14d91ff",
-                "reference": "befb26a3713c97af90d25dd12e75621ef14d91ff",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/322a8c2dfbca15ad6b1b27e182899f98ec0e0153",
+                "reference": "322a8c2dfbca15ad6b1b27e182899f98ec0e0153",
                 "shasum": ""
             },
             "require": {
@@ -1606,7 +1605,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-11-14 16:15:57"
+            "time": "2017-01-21T16:40:50+00:00"
         }
     ],
     "aliases": [],
