@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "6f808797d287b3e75bf8039bf4a3a48b",
+    "content-hash": "a9294340013864339c8161a28a6f043a",
     "packages": [
         {
             "name": "asika/autolink",
@@ -259,16 +259,16 @@
         },
         {
             "name": "ironbound/db",
-            "version": "dev-master",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iron-bound-designs/IronBound-DB.git",
-                "reference": "b008376bb33327f3900278c19f4e24e322b60a92"
+                "reference": "d310a560356d0a91390f94edf8b75280454716de"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iron-bound-designs/IronBound-DB/zipball/b008376bb33327f3900278c19f4e24e322b60a92",
-                "reference": "b008376bb33327f3900278c19f4e24e322b60a92",
+                "url": "https://api.github.com/repos/iron-bound-designs/IronBound-DB/zipball/d310a560356d0a91390f94edf8b75280454716de",
+                "reference": "d310a560356d0a91390f94edf8b75280454716de",
                 "shasum": ""
             },
             "require": {
@@ -305,7 +305,7 @@
                 }
             ],
             "description": "Provides models and custom query objects for custom database tables in WordPress.",
-            "time": "2017-02-14 05:18:21"
+            "time": "2017-02-14T21:21:06+00:00"
         },
         {
             "name": "ironbound/wpevents",
@@ -1611,8 +1611,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "asika/autolink": 20,
-        "ironbound/db": 20
+        "asika/autolink": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
