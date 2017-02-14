@@ -125,6 +125,7 @@ class ITE_Tax_Manager implements ITE_Cart_Aware {
 	 */
 	public function hooks() {
 		add_action( 'it_exchange_add_line_item_to_cart', array( $this, 'on_add_item' ), 10, 2 );
+		add_action( 'it_exchange_remove_line_item_from_cart', array( $this, 'on_remove_item' ), 10, 2 );
 		add_action( 'it_exchange_finalize_cart_totals', array( $this, 'finalize_totals' ) );
 		add_action( 'it_exchange_set_cart_shipping_address', array( $this, 'shipping_updated' ) );
 		add_action( 'it_exchange_set_cart_billing_address', array( $this, 'billing_updated' ) );
@@ -141,11 +142,16 @@ class ITE_Tax_Manager implements ITE_Cart_Aware {
 	 */
 	public function on_add_item( ITE_Line_Item $item, ITE_Cart $cart ) {
 
-		if ( ! $item instanceof ITE_Taxable_Line_Item ) {
+		if ( $cart->get_id() !== $this->cart->get_id() ) {
 			return;
 		}
 
-		if ( $cart->get_id() !== $this->cart->get_id() ) {
+		// Check if adding an item to the cart caused the shipping address to be required.
+		if ( ! $this->use_shipping && $cart->requires_shipping() ) {
+			$this->handle_address_update( $cart->get_shipping_address() );
+		}
+
+		if ( ! $item instanceof ITE_Taxable_Line_Item ) {
 			return;
 		}
 
@@ -170,6 +176,26 @@ class ITE_Tax_Manager implements ITE_Cart_Aware {
 
 				return;
 			}
+		}
+	}
+
+	/**
+	 * Check if an address update needs to processed depending on the item removed.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param ITE_Line_Item $item
+	 * @param ITE_Cart      $cart
+	 */
+	public function on_remove_item( ITE_Line_Item $item, ITE_Cart $cart ) {
+
+		if ( $cart->get_id() !== $this->cart->get_id() ) {
+			return;
+		}
+
+		// Check if removing an item from the cart caused the shipping address to no longer be required
+		if ( $this->use_shipping && ! $cart->requires_shipping() ) {
+			$this->handle_address_update( $cart->get_billing_address() );
 		}
 	}
 
@@ -299,6 +325,8 @@ class ITE_Tax_Manager implements ITE_Cart_Aware {
 				$this->cart->get_items( 'tax', true )->with_only_instances_of( $provider->get_item_class() )->delete();
 			}
 		}
+
+		$this->current_location = $new_address;
 	}
 
 	/**
