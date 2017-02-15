@@ -52,6 +52,18 @@ class IT_Exchange {
 
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) || defined( 'WP_TESTS_TABLE_PREFIX' ) ) {
 			$versions        = get_option( 'it-exchange-versions', false );
+
+			if ( ! $versions ) {
+				// if this is a new install, mark all our upgrades as completed
+				require_once plugin_dir_path( __FILE__ ) . 'lib/upgrades/load.php';
+
+				$upgrader = it_exchange_make_upgrader();
+
+				foreach ( $upgrader->get_upgrades() as $upgrade ) {
+					$upgrader->complete( $upgrade );
+				}
+			}
+
 			$current_version = empty( $versions['current'] ) ? false : $versions['current'];
 
 			if ( self::VERSION !== $current_version ) {
@@ -238,34 +250,6 @@ function it_exchange_deactivate_migrated_plugins() {
 add_action( 'it_exchange_version_updated', 'it_exchange_deactivate_migrated_plugins' );
 
 /**
- * Sets up options to perform after activation
- *
- * @since 0.4.0
- *
- * @return void
- */
-function it_exchange_activation_hook() {
-	add_option( '_it-exchange-register-activation-hook', true );
-	add_option( '_it-exchange-flush-rewrites', true );
-
-	if ( ! get_option( 'it-exchange-versions', false ) ) {
-
-		// if this is a new install, mark all our upgrades as completed
-
-		require_once plugin_dir_path( __FILE__ ) . 'lib/upgrades/load.php';
-
-		$upgrader = it_exchange_make_upgrader();
-
-		foreach ( $upgrader->get_upgrades() as $upgrade ) {
-			$upgrader->complete( $upgrade );
-		}
-	}
-
-}
-
-register_activation_hook( __FILE__, 'it_exchange_activation_hook' );
-
-/**
  * Redirect users to the IT Exchange Setup page upon activation.
  *
  * @since 0.4.0
@@ -279,6 +263,8 @@ function it_exchange_register_activation_hook() {
 	if ( ! $do_activation ) {
 		return;
 	}
+
+	add_option( '_it-exchange-flush-rewrites', true );
 
 	if ( ! is_network_admin() ) {
 		delete_option( '_it-exchange-register-activation-hook' );

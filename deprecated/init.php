@@ -185,33 +185,6 @@ function load_it_exchange() {
 add_action( 'plugins_loaded', 'load_it_exchange' );
 
 /**
- * Sets up options to perform after activation
- *
- * @since 0.4.0
- *
- * @return void
-*/
-function it_exchange_activation_hook() {
-    add_option('_it-exchange-register-activation-hook', true);
-    add_option('_it-exchange-flush-rewrites', true );
-
-	if ( ! get_option( 'it-exchange-versions', false ) ) {
-
-		// if this is a new install, mark all our upgrades as completed
-
-		require_once plugin_dir_path( __FILE__ ) . 'lib/upgrades/load.php';
-
-		$upgrader = it_exchange_make_upgrader();
-
-		foreach ( $upgrader->get_upgrades() as $upgrade ) {
-			$upgrader->complete( $upgrade );
-		}
-	}
-
-}
-register_activation_hook( __FILE__, 'it_exchange_activation_hook' );
-
-/**
  * Redirect users to the IT Exchange Setup page upon activation.
  *
  * @since 0.4.0

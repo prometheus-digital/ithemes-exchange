@@ -181,6 +181,19 @@ function it_exchange_clear_v2_addon_check() {
 add_action( 'activate_plugin', 'it_exchange_clear_v2_addon_check' );
 add_action( 'deactivate_plugin', 'it_exchange_clear_v2_addon_check' );
 
+/**
+ * Sets up options to perform after activation
+ *
+ * @since 0.4.0
+ *
+ * @return void
+ */
+function it_exchange_activation_hook() {
+	add_option( '_it-exchange-register-activation-hook', true );
+}
+
+register_activation_hook( __FILE__, 'it_exchange_activation_hook' );
+
 if ( it_exchange_load_deprecated() ) {
 	require_once dirname( __FILE__ ) . '/deprecated/init.php';
 } else {
