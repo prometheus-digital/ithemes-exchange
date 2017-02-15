@@ -142,6 +142,10 @@ function it_exchange_addons_requiring_v2() {
 			'plugin' => 'exchange-addon-table-rate-shipping/exchange-addon-table-rate-shipping.php',
 			'name'   => 'Table Rate Shipping',
 		),
+		array(
+			'plugin' => 'exchange-addon-classes/exchange-addon-classes.php',
+			'name'   => 'Classes',
+		),
 	);
 }
 
@@ -164,6 +168,18 @@ function it_exchange_load_deprecated_is_toggleable() {
 
 	return true;
 }
+
+/**
+ * Clear the v2 addon check when a plugin is activated.
+ *
+ * @since 2.0.0
+ */
+function it_exchange_clear_v2_addon_check() {
+	delete_option( 'it_exchange_addons_not_met_v2_requirement' );
+}
+
+add_action( 'activate_plugin', 'it_exchange_clear_v2_addon_check' );
+add_action( 'deactivate_plugin', 'it_exchange_clear_v2_addon_check' );
 
 if ( it_exchange_load_deprecated() ) {
 	require_once dirname( __FILE__ ) . '/deprecated/init.php';
