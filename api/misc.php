@@ -102,7 +102,7 @@ function it_exchange_php_date_format_to_jquery_datepicker_format( $date_format )
  */
 function it_exchange_convert_php_to_moment( $format ) {
 
-	$replacements = [
+	$replacements = array(
 		'd' => 'DD',
 		'D' => 'ddd',
 		'j' => 'D',
@@ -140,7 +140,7 @@ function it_exchange_convert_php_to_moment( $format ) {
 		'c' => '', // no equivalent
 		'r' => '', // no equivalent
 		'U' => 'X',
-	];
+	);
 
 	$momentFormat = strtr( $format, $replacements );
 
