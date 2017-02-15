@@ -399,7 +399,7 @@ class Manager {
 		$factory       = new Factory(
 			$this->schema_storage,
 			$this->uri_retreiver,
-			Constraint::CHECK_MODE_TYPE_CAST
+			Constraint::CHECK_MODE_COERCE_TYPES | Constraint::CHECK_MODE_APPLY_DEFAULTS
 		);
 		$validator     = new Validator( $factory );
 		$schema_object = $this->schema_storage->getSchema( url_for_schema( $schema['title'] ) );
@@ -415,6 +415,10 @@ class Manager {
 			}
 		}
 
+		if ( empty( $to_validate ) ) {
+			return $response;
+		}
+
 		$to_validate = json_decode( json_encode( $to_validate ) );
 
 		if ( $request->get_method() === 'GET' ) {
@@ -424,7 +428,7 @@ class Manager {
 			) ) );
 		}
 
-		$validator->coerce( $to_validate, $schema_object );
+		$validator->validate( $to_validate, $schema_object );
 
 		foreach ( json_decode( json_encode( $to_validate ), true ) as $prop => $value ) {
 			$request[ $prop ] = $value;

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "a9294340013864339c8161a28a6f043a",
+    "content-hash": "e71cd86d0a2311367944ed18752899fc",
     "packages": [
         {
             "name": "asika/autolink",
@@ -350,16 +350,16 @@
         },
         {
             "name": "justinrainbow/json-schema",
-            "version": "4.1.0",
+            "version": "5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/justinrainbow/json-schema.git",
-                "reference": "d39c56a46b3ebe1f3696479966cd2b9f50aaa24f"
+                "reference": "9b6ebfeece6efaaeacb6cc061beb69cd007b75c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/justinrainbow/json-schema/zipball/d39c56a46b3ebe1f3696479966cd2b9f50aaa24f",
-                "reference": "d39c56a46b3ebe1f3696479966cd2b9f50aaa24f",
+                "url": "https://api.github.com/repos/justinrainbow/json-schema/zipball/9b6ebfeece6efaaeacb6cc061beb69cd007b75c1",
+                "reference": "9b6ebfeece6efaaeacb6cc061beb69cd007b75c1",
                 "shasum": ""
             },
             "require": {
@@ -412,7 +412,7 @@
                 "json",
                 "schema"
             ],
-            "time": "2016-12-22T16:43:46+00:00"
+            "time": "2017-02-15T16:21:39+00:00"
         },
         {
             "name": "windwalker/dom",
