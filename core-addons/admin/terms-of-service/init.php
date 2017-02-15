@@ -88,6 +88,10 @@ class Plugin {
 	}
 }
 
+if ( ! class_exists( 'ITETOS\Settings' ) ) {
+	return;
+}
+
 new Plugin();
 
 use ITETOS\Product\Feature\Base;
