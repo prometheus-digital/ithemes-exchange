@@ -49,7 +49,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 
 	/**
 	 * Current product in iThemes Exchange Global
-	 * @var object $product
+	 * @var IT_Exchange_Product $product
 	 * @since 0.4.0
 	*/
 	public $product;
@@ -192,42 +192,85 @@ class IT_Theme_API_Product implements IT_Theme_API {
 	function base_price( $options=array() ) {
 
 		// Return boolean if has flag was set
-		if ( $options['supports'] )
+		if ( $options['supports'] ) {
 			return it_exchange_product_supports_feature( $this->product->ID, 'base-price' );
+		}
 
 		// Return boolean if has flag was set
-		if ( $options['has'] )
+		if ( $options['has'] ) {
 			return it_exchange_product_has_feature( $this->product->ID, 'base-price' );
+		}
 
-		if ( it_exchange_product_supports_feature( $this->product->ID, 'base-price' )
-				&& it_exchange_product_has_feature( $this->product->ID, 'base-price' ) ) {
+		if ( $this->product->supports_feature( 'base-price' ) && $this->product->has_feature('base-price' ) ) {
 
 			$result     = '';
 			$defaults   = array(
-				'before' => '<span class="it-exchange-base-price">',
-				'after'  => '</span>',
-				'format' => 'html',
-				'price'  => false,
+				'before'     => '<span class="it-exchange-base-price">',
+				'after'      => '</span>',
+				'format'     => 'html',
+				'price'      => false,
 				'free-label' => __( 'Free', 'it-l10n-ithemes-exchange' ),
+                'show-sale'  => it_exchange_is_product_sale_active( $this->product ),
 			);
 			$options = ITUtility::merge_defaults( $options, $defaults );
 
 			// Grab product feature price
-			$base_price = empty( $options['price'] ) ? it_exchange_get_product_feature( $this->product->ID, 'base-price' ): $options['price'];
+			$base_price = empty( $options['price'] ) ? $this->product->get_feature( 'base-price' ) : $options['price'];
+			$show_sale = $options['show-sale'];
 
-			// Replace with Free label if needed
-			$db_price = (int) it_exchange_convert_to_database_number( $base_price );
+			if ( ( (float) $base_price === 0.00 || empty( $base_price ) ) && $options['free-label'] ) {
+				$price = "<span class='free-label'>{$options['free-label']}</span>";
+			} else {
+				$price = it_exchange_format_price( $base_price );
+			}
 
-			$price    = empty( $db_price ) ? '<span class="free-label">' . $options['free-label'] . '</span>' : it_exchange_format_price( $base_price );
-			$price    = ( empty( $options['free-label'] ) && empty( $db_price ) ) ? it_exchange_format_price( $base_price ) : $price;
+			/**
+			 * Filter the output of the product's purchase price.
+             *
+             * @since 1.0.0
+             * @since 2.0.0 Add `$sale` and `$show_sale` parameter.
+             *
+             * @param string $price      The price ready for output. May contain HTML.
+             * @param int    $product_id The product ID.
+             * @param bool   $sale       Whether this is filtering the sale price amount or base price amount.
+             * @param bool   $show_sale  Whether the sale price will be displayed.
+			 */
+			$price = apply_filters( 'it_exchange_api_theme_product_base_price', $price, $this->product->ID, false, $show_sale );
 
-			if ( 'html' == $options['format'] )
+			if ( $show_sale ) {
+                $sale_price = $this->product->get_feature( 'sale-price' );
+
+                if ( ( (float) $sale_price === 0.00 || empty( $sale_price ) ) && $options['free-label'] ) {
+                    $sale_price = "<span class='free-label'>{$options['free-label']}</span>";
+                } else {
+                    $sale_price = it_exchange_format_price( $sale_price );
+                }
+
+                // This filter is documented in api/theme/product.php
+                $sale_price = apply_filters( 'it_exchange_api_theme_product_base_price', $sale_price, $this->product->ID, true, $show_sale );
+
+                $price = "<del>{$price}</del>&nbsp;<ins>{$sale_price}</ins>";
+            }
+
+			if ( 'html' === $options['format'] ) {
 				$result .= $options['before'];
+			}
 
-			$result .= apply_filters( 'it_exchange_api_theme_product_base_price', $price, $this->product->ID );
+			/**
+			 * Filter the entire output of the product's purchase price.
+             *
+             * This includes both the sale price and base price parts.
+             *
+             * @since 2.0.0
+             *
+             * @param string $price      The price ready for output. May contain HTML.
+             * @param int    $product_id The product ID.
+			 */
+			$result .= apply_filters( 'it_exchange_api_theme_product_base_price_full', $price, $this->product->ID );
 
-			if ( 'html' == $options['format'] )
+			if ( 'html' === $options['format'] ) {
 				$result .= $options['after'];
+			}
 
 			return $result;
 		}

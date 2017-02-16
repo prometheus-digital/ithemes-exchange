@@ -52,6 +52,8 @@ function it_exchange_is_product_sale_active( $product ) {
  * Add sale information to the base price in the IT_Theme_API_Product class.
  *
  * @since 1.32.0
+ * @deprecated 2.0.0 Moved sale price formatting to Theme API directly. Bypassing issues with repeated information
+ *             due to the filter order.
  *
  * @param string $price
  * @param int    $product_id
@@ -59,6 +61,8 @@ function it_exchange_is_product_sale_active( $product ) {
  * @return string
  */
 function it_exchange_add_sale_information_to_base_price_theme( $price, $product_id ) {
+
+	_deprecated_function( __FUNCTION__, '2.0.0' );
 
 	if ( it_exchange_is_product_sale_active( $product_id ) ) {
 
@@ -80,5 +84,3 @@ function it_exchange_add_sale_information_to_base_price_theme( $price, $product_
 
 	return $price;
 }
-
-add_filter( 'it_exchange_api_theme_product_base_price', 'it_exchange_add_sale_information_to_base_price_theme', 20, 2 );
