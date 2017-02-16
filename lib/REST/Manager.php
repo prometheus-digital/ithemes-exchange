@@ -363,12 +363,12 @@ class Manager {
 	 *
 	 * @param \WP_Error|\WP_HTTP_Response|null $response
 	 * @param \WP_REST_Request                 $request
-	 * @param string                           $route
+	 * @param string                           $_
 	 * @param array                            $handler
 	 *
 	 * @return null|\WP_Error
 	 */
-	public function conform_request_to_schema( $response, $request, $route, $handler ) {
+	public function conform_request_to_schema( $response, $request, $_, $handler ) {
 
 		if ( $request->get_method() === 'DELETE' ) {
 			return $response;
@@ -473,7 +473,7 @@ class Manager {
 				$required[] = $property;
 			}
 
-			unset( $schema['properties'][$property]['required'] );
+			unset( $schema['properties'][ $property ]['required'] );
 
 			if ( isset( $config['type'] ) && $config['type'] === 'object' ) {
 				$schema['properties'][ $property ] = $this->transform_schema( $config );
@@ -493,7 +493,7 @@ class Manager {
 	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Route\v1 $route
-	 * @param string                       $verb
+	 * @param string                          $verb
 	 *
 	 * @return array
 	 */
@@ -587,7 +587,7 @@ class Manager {
 	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Route\v1 $route
-	 * @param array                        $args
+	 * @param array                           $args
 	 *
 	 * @return array
 	 */
