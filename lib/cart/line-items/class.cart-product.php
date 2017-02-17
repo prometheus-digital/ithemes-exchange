@@ -579,7 +579,17 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 
 		$base = $this->get_product()->get_feature( 'base-price' );
 
-		return apply_filters( 'it_exchange_get_cart_product_base_price', $base, $this->bc(), false );
+		/**
+		 * Filter the base cart product price.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param float            $base
+		 * @param array            $bc
+		 * @param bool             $format
+		 * @param ITE_Cart_Product $this
+		 */
+		return apply_filters( 'it_exchange_get_cart_product_base_price', $base, $this->bc(), false, $this );
 	}
 
 	/**

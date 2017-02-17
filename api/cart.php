@@ -733,10 +733,14 @@ function it_exchange_get_cart_product_base_price( $product, $format=true ) {
 	// Get the price from the DB
 	$db_base_price = it_exchange_get_product_feature( $db_product->ID, 'base-price' );
 
-	if ( $format )
+	if ( $format ) {
 		$db_base_price = it_exchange_format_price( $db_base_price );
+	}
 
-	return apply_filters( 'it_exchange_get_cart_product_base_price', $db_base_price, $product, $format );
+	$item = it_exchange_get_current_cart()->get_item( 'product', $product['product_cart_id'] );
+
+	// This filter is documented in lib/cart/line-items/class.cart-product.php
+	return apply_filters( 'it_exchange_get_cart_product_base_price', $db_base_price, $product, $format, $item );
 }
 
 /**
