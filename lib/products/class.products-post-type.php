@@ -382,43 +382,44 @@ class IT_Exchange_Product_Post_Type {
 						<?php endif; ?>
 					</div>
 
-                    <?php if ( $product && $post->post_status !== 'auto-draft' ): ?>
-                        <div class="misc-pub-section">
-                            <label><?php _e( 'Available Gateways:', 'it-l10n-ithemes-exchange' ) ?></label>
-                            <?php
-                            $useable  = array();
+                    <?php if ( $product && $post->post_status !== 'auto-draft' ):
+	                    $useable  = array();
 
-                            $item     = ITE_Cart_Product::create( $product );
-                            $optional = $item->optional_features_required();
+	                    $item     = ITE_Cart_Product::create( $product );
+	                    $optional = $item->optional_features_required();
 
-                            if ( $optional ) {
-                                /** @var ITE_Optionally_Supported_Feature_Requirement $requirement */
-	                            foreach ( $item->optional_features_required() as $requirement ) {
-		                            foreach ( ITE_Gateways::all() as $gateway ) {
-			                            if ( $gateway->supports_feature( $requirement->get_feature() ) ) {
-			                                $all_meet = true;
+	                    if ( $optional ) {
+		                    /** @var ITE_Optionally_Supported_Feature_Requirement $requirement */
+		                    foreach ( $item->optional_features_required() as $requirement ) {
+			                    foreach ( ITE_Gateways::all() as $gateway ) {
+				                    if ( $gateway->supports_feature( $requirement->get_feature() ) ) {
+					                    $all_meet = true;
 
-				                            foreach ( $requirement->get_requirement_details() as $slug => $detail ) {
-					                            if ( ! $gateway->supports_feature_and_detail( $requirement->get_feature(), $slug, $detail ) ) {
-						                            $all_meet = false;
+					                    foreach ( $requirement->get_requirement_details() as $slug => $detail ) {
+						                    if ( ! $gateway->supports_feature_and_detail( $requirement->get_feature(), $slug, $detail ) ) {
+							                    $all_meet = false;
 
-						                            break;
-					                            }
-				                            }
+							                    break;
+						                    }
+					                    }
 
-				                            if ( $all_meet ) {
-				                                $useable[] = $gateway->get_name();
-                                            }
-			                            }
-		                            }
-	                            }
-                            } else {
-                                $useable[] = array_map( function( $gateway ) { return $gateway->get_name(); }, ITE_Gateways::all() );
-                            }
+					                    if ( $all_meet ) {
+						                    $useable[] = $gateway->get_name();
+					                    }
+				                    }
+			                    }
+		                    }
+	                    } else {
+		                    $useable = array_map( function( $gateway ) { return $gateway->get_name(); }, ITE_Gateways::all() );
+	                    }
+	                    ?>
 
-                            ?>
-                           <span><?php echo implode( ', ', $useable ); ?></span>
-                        </div>
+                        <?php if ( $useable && is_array( $useable ) ) : ?>
+                            <div class="misc-pub-section">
+                                <label><?php _e( 'Available Gateways:', 'it-l10n-ithemes-exchange' ); ?></label>
+                               <span><?php echo implode( ', ', $useable ); ?></span>
+                            </div>
+                        <?php endif; ?>
                     <?php endif; ?>
 
 					<?php
