@@ -131,8 +131,14 @@ class IT_Exchange_Super_Widget_Ajax {
 					it_exchange_set_product( $this->product );
 				}
 
+				$state = $this->state;
+
+				if ( $state === 'cart' && ! it_exchange_is_current_product_in_cart() ) {
+				    $state = 'product';
+                }
+
 				// Allow 3rd party add-ons to filter
-				$state = apply_filters( 'it_exchange_get_sw_state_via_ajax_call', $this->state, $this->ajax_args );
+				$state = apply_filters( 'it_exchange_get_sw_state_via_ajax_call', $state, $this->ajax_args );
 
 				// If requesting checkout, make sure that all requirements are met first
 				if ( 'checkout' === $state ) {
