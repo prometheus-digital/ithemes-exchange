@@ -166,6 +166,7 @@ class ITE_Gateway_Offline_Payments extends ITE_Gateway {
 
 		switch ( $feature->get_feature_slug() ) {
 			case 'recurring-payments':
+			case 'one-time-fee':
 				return true;
 		}
 
@@ -178,6 +179,13 @@ class ITE_Gateway_Offline_Payments extends ITE_Gateway {
 	public function supports_feature_and_detail( ITE_Optionally_Supported_Feature $feature, $slug, $detail ) {
 
 		switch ( $feature->get_feature_slug() ) {
+			case 'one-time-fee':
+				switch ( $slug ) {
+					case 'discount':
+						return true;
+					default:
+						return false;
+				}
 			case 'recurring-payments':
 				switch ( $slug ) {
 					case 'auto-renew':

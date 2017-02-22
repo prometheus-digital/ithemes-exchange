@@ -157,9 +157,7 @@ add_filter( 'it_exchange_transaction_status_label_offline-payments', 'it_exchang
  * @return boolean
  */
 function it_exchange_offline_payments_transaction_is_cleared_for_delivery( $cleared, $transaction ) {
-	$valid_stati = array( 'succeeded', 'paid' );
-
-	return in_array( it_exchange_get_transaction_status( $transaction ), $valid_stati );
+	return in_array( it_exchange_get_transaction_status( $transaction ), array( 'succeeded', 'paid' ), true );
 }
 
 add_filter( 'it_exchange_offline-payments_transaction_is_cleared_for_delivery', 'it_exchange_offline_payments_transaction_is_cleared_for_delivery', 10, 2 );
@@ -316,13 +314,11 @@ function it_exchange_offline_payments_add_child_transaction( $parent_txn ) {
 		return false;
 	}
 
-	$total = $parent_txn->get_total( false );
-	$fee   = $parent_txn->get_items()->flatten()->with_only( 'fee' )
-	                    ->filter( function( ITE_Fee_Line_Item $fee ) { return ! $fee->is_recurring(); } )->first();
+	$total    = $parent_txn->get_total( false );
+	$one_time = $parent_txn->get_items()->flatten()->with_only( 'fee' )
+	                       ->filter( function ( ITE_Fee_Line_Item $fee ) { return ! $fee->is_recurring(); } );
 
-	if ( $fee ) {
-		$total += $fee->get_total() * -1;
-	}
+	$total -= $one_time->total() + $one_time->summary_only()->flatten()->total();
 
 	$uniqid = it_exchange_get_offline_transaction_uniqid();
 

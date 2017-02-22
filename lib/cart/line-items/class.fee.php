@@ -9,7 +9,7 @@
 /**
  * Class ITE_Fee_Line_Item
  */
-class ITE_Fee_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Line_Item, ITE_Line_Item_Repository_Aware {
+class ITE_Fee_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Line_Item, ITE_Line_Item_Repository_Aware, ITE_Requires_Optionally_Supported_Features {
 
 	/** @var ITE_Aggregate_Line_Item */
 	private $aggregate;
@@ -273,6 +273,33 @@ class ITE_Fee_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Line_I
 	 */
 	public function set_line_item_repository( ITE_Line_Item_Repository $repository ) {
 		$this->repository = $repository;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function optional_features_required() {
+
+		if ( $this->is_recurring() || $this->has_param( 'is_free_trial' ) ) {
+			return array();
+		}
+
+		$details = array();
+
+		if ( $this->get_amount() < 0 ) {
+			$details['discount'] = true;
+		}
+
+		$requirement = new ITE_Optionally_Supported_Feature_Requirement(
+			new ITE_Optionally_Supported_In_Memory_Feature(
+				'one-time-fee',
+				__( 'Fee', 'it-l10n-ithemes-exchange' ),
+				array( 'discount' )
+			),
+			$details
+		);
+
+		return array( $requirement );
 	}
 
 	/**

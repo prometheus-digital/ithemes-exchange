@@ -141,9 +141,9 @@ class ITE_PayPal_Standard_Gateway extends ITE_Gateway {
 				'tooltip' => __( 'We need this to tie payments to your account.', 'it-l10n-ithemes-exchange' )
 			),
 			array(
-				'type'    => 'check_box',
-				'label'   => __( 'Enable PayPal Sandbox Mode', 'it-l10n-ithemes-exchange' ),
-				'slug'    => 'sandbox-mode',
+				'type'  => 'check_box',
+				'label' => __( 'Enable PayPal Sandbox Mode', 'it-l10n-ithemes-exchange' ),
+				'slug'  => 'sandbox-mode',
 			),
 			array(
 				'type'    => 'email',
@@ -169,6 +169,7 @@ class ITE_PayPal_Standard_Gateway extends ITE_Gateway {
 
 		switch ( $feature->get_feature_slug() ) {
 			case 'recurring-payments':
+			case 'one-time-fee':
 				return true;
 		}
 
@@ -181,6 +182,13 @@ class ITE_PayPal_Standard_Gateway extends ITE_Gateway {
 	public function supports_feature_and_detail( ITE_Optionally_Supported_Feature $feature, $slug, $detail ) {
 
 		switch ( $feature->get_feature_slug() ) {
+			case 'one-time-fee':
+				switch ( $slug ) {
+					case 'discount':
+						return true;
+					default:
+						return false;
+				}
 			case 'recurring-payments':
 				switch ( $slug ) {
 					case 'profile':
