@@ -206,7 +206,9 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 		$one_time = $cart->get_items( 'fee', true )->filter( function ( ITE_Fee_Line_Item $fee ) { return ! $fee->is_recurring(); } );
 
 		// Remove any one time fees ( that should only be charged on first payment ) from the recurring amount
-		$recurring_amount = $total - $one_time->total();
+		$otf_total        = $one_time->total();
+		$otf_sum          = $one_time->flatten()->summary_only()->total();
+		$recurring_amount = $total - ( $otf_total + $otf_sum );
 
 		// https://developer.paypal.com/docs/classic/paypal-payments-standard/integration-guide/Appx_websitestandard_htmlvariables/
 		//a1, t1, p1 are for the first trial periods which is not supported with the Recurring Payments add-on
@@ -225,7 +227,7 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 		);
 
 		if ( $trial_unit && $t_duration ) {
-			$args['a1'] = $one_time->total() ? number_format( $one_time->total(), 2, '.', '' ) : '0';
+			$args['a1'] = $total ? number_format( $total, 2, '.', '' ) : '0';
 			$args['p1'] = $t_duration;
 			$args['t1'] = $trial_unit;
 		} elseif ( $one_time->total() ) {

@@ -346,7 +346,7 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 		$one_time = $cart->get_items( 'fee', true )->filter( function ( ITE_Fee_Line_Item $fee ) { return ! $fee->is_recurring(); } );
 
 		if ( $trial_duration_1 ) {
-			$button_vars['a1'] = $one_time->total() ? number_format( $one_time->total(), 2, '.', '' ) : '0';
+			$button_vars['a1'] = $total ? number_format( $total, 2, '.', '' ) : '0';
 			$button_vars['p1'] = $trial_duration_1; //Trial period.
 			$button_vars['t1'] = $trial_unit_1;
 		} elseif ( $one_time->total() ) {
@@ -362,7 +362,9 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 		}
 
 		// Remove any one time fees ( that should only be charged on first payment ) from the recurring amount
-		$recurring_amount = $total - $one_time->total();
+		$otf_total        = $one_time->total();
+		$otf_sum          = $one_time->flatten()->summary_only()->total();
+		$recurring_amount = $total - ( $otf_total + $otf_sum );
 
 		// Regular subscription price.
 		$button_vars['a3'] = number_format( $recurring_amount, 2, '.', '' );
