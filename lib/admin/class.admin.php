@@ -1884,7 +1884,7 @@ class IT_Exchange_Admin {
 		wp_register_script( 'it-exchange-if-visible', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/ifvisible.min.js', array(), '1.0.6', true );
 
 		if ( isset( $post_type ) && 'it_exchange_prod' === $post_type ) {
-			$deps = array( 'post', 'jquery-ui-sortable', 'jquery-ui-droppable', 'jquery-ui-tabs', 'jquery-ui-tooltip', 'jquery-ui-datepicker', 'autosave', 'it-exchange-dialog' );
+			$deps = array( 'post', 'jquery-ui-sortable', 'jquery-ui-droppable', 'jquery-ui-tabs', 'jquery-ui-tooltip', 'jquery-ui-datepicker', 'autosave', 'it-exchange-dialog', 'it-exchange-common' );
 			wp_enqueue_script( 'it-exchange-add-edit-product', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/add-edit-product.js', $deps );
 			wp_localize_script( 'it-exchange-add-edit-product', 'addEditProductL10n', array(
 					'mediaManagerTitle'     => __( 'Select Images', 'it-l10n-ithemes-exchange' ),
