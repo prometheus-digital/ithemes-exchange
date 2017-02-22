@@ -215,6 +215,35 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	}
 
 	/**
+	 * Get all items not having a given parameter.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param array|string $param,... Param to check for. If multiple, only one must not match.
+	 *
+	 * @return \ITE_Line_Item_Collection
+	 */
+	public function not_having_param( $param ) {
+
+		if ( is_string( $param ) ) {
+			$params = func_get_args();
+		} else {
+			$params = $param;
+		}
+
+		return $this->filter( function ( ITE_Line_Item $item ) use ( $params ) {
+
+			foreach ( $params as $param ) {
+				if ( ! $item->has_param( $param ) ) {
+					return true;
+				}
+			}
+
+			return false;
+		} );
+	}
+
+	/**
 	 * Clone this collection with only items that pass the given callback.
 	 *
 	 * @since 2.0.0
@@ -485,6 +514,19 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 		}
 
 		return null;
+	}
+
+	/**
+	 * Merge a collection with this one.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param ITE_Line_Item_Collection $collection
+	 *
+	 * @return ITE_Line_Item_Collection Returns a fresh collection object.
+	 */
+	public function merge( ITE_Line_Item_Collection $collection ) {
+		return new ITE_Line_Item_Collection( array_merge( $this->items, $collection->items ), $this->repository );
 	}
 
 	/**

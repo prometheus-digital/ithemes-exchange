@@ -342,28 +342,30 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 			}
 		}
 
+		$total    = $cart->get_total();
+		$one_time = $cart->get_items( 'fee', true )->filter( function ( ITE_Fee_Line_Item $fee ) { return ! $fee->is_recurring(); } );
+
 		if ( $trial_duration_1 ) {
-			$button_vars['a1'] = '0'; //Free trial subscription price.
+			$button_vars['a1'] = $one_time->total() ? number_format( $one_time->total(), 2, '.', '' ) : '0';
 			$button_vars['p1'] = $trial_duration_1; //Trial period.
 			$button_vars['t1'] = $trial_unit_1;
+		} elseif ( $one_time->total() ) {
+			$button_vars['a1'] = number_format( $total, 2, '.', '' );
+			$button_vars['p1'] = $duration;
+			$button_vars['t1'] = $unit;
 		}
+
 		if ( $trial_duration_2 ) {
 			$button_vars['a2'] = '0.01'; //Free trial subscription price. (needs to be greater than 0)
 			$button_vars['p2'] = $trial_duration_2; //Trial period.
 			$button_vars['t2'] = $trial_unit_2;
 		}
 
-		$total = $cart->get_total();
-		$fee   = $cart_product->get_line_items()->with_only( 'fee' )
-		                      ->filter( function ( ITE_Fee_Line_Item $fee ) { return ! $fee->is_recurring(); } )
-		                      ->first();
-
-		if ( $fee ) {
-			$total += $fee->get_total() * - 1;
-		}
+		// Remove any one time fees ( that should only be charged on first payment ) from the recurring amount
+		$recurring_amount = $total - $one_time->total();
 
 		// Regular subscription price.
-		$button_vars['a3'] = number_format( $total, 2, '.', '' );
+		$button_vars['a3'] = number_format( $recurring_amount, 2, '.', '' );
 
 		// Subscription duration. Specify an integer value in the allowable range for the units of duration that you specify with t3.
 		$button_vars['p3'] = $duration;

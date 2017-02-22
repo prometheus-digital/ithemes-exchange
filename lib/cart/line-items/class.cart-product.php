@@ -489,7 +489,7 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 		} else {
 			$title = $this->get_param( 'product_name' );
 
-			return apply_filters( 'it_exchange_get_cart_product_title', $title, $this->bc() );
+			return apply_filters( 'it_exchange_get_cart_product_title', $title, $this->bc(), $this );
 		}
 	}
 

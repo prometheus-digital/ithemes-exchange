@@ -202,14 +202,11 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 			}
 		}
 
-		$total = $cart->get_total();
-		$fee   = $cart_product->get_line_items()->with_only( 'fee' )
-		                      ->filter( function ( ITE_Fee_Line_Item $fee ) { return ! $fee->is_recurring(); } )
-		                      ->first();
+		$total    = $cart->get_total();
+		$one_time = $cart->get_items( 'fee', true )->filter( function ( ITE_Fee_Line_Item $fee ) { return ! $fee->is_recurring(); } );
 
-		if ( $fee ) {
-			$total += $fee->get_total() * - 1;
-		}
+		// Remove any one time fees ( that should only be charged on first payment ) from the recurring amount
+		$recurring_amount = $total - $one_time->total();
 
 		// https://developer.paypal.com/docs/classic/paypal-payments-standard/integration-guide/Appx_websitestandard_htmlvariables/
 		//a1, t1, p1 are for the first trial periods which is not supported with the Recurring Payments add-on
@@ -217,7 +214,7 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 		//a3, t3, p3 are required for the actual subscription details
 		$args = array(
 			'cmd' => '_xclick-subscriptions',
-			'a3'  => number_format( $total, 2, '.', '' ),
+			'a3'  => number_format( $recurring_amount, 2, '.', '' ),
 			//Regular subscription price.
 			'p3'  => $duration,
 			//Subscription duration. Specify an int value in the allowed range for the duration units specified in t3
@@ -227,10 +224,14 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 			//Recurring payments.
 		);
 
-		if ( ! empty( $trial_unit ) && ! empty( $t_duration ) ) {
-			$args['a1'] = 0;
+		if ( $trial_unit && $t_duration ) {
+			$args['a1'] = $one_time->total() ? number_format( $one_time->total(), 2, '.', '' ) : '0';
 			$args['p1'] = $t_duration;
 			$args['t1'] = $trial_unit;
+		} elseif ( $one_time->total() ) {
+			$args['a1'] = number_format( $total, 2, '.', '' );
+			$args['p1'] = $duration;
+			$args['t1'] = $unit;
 		}
 
 		return $args;

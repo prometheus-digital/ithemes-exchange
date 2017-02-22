@@ -142,8 +142,12 @@ class ITE_Simple_Tax_Line_Item extends ITE_Line_Item implements ITE_Tax_Line_Ite
 			return $this->frozen->get_param( 'amount' );
 		}
 
-		if ( $this->get_aggregate() ) {
-			return $this->get_aggregate()->get_taxable_amount() * $this->get_aggregate()->get_quantity() * ( $this->get_rate() / 100 );
+		if ( $aggregate = $this->get_aggregate() ) {
+
+			$taxable = $aggregate->get_taxable_amount() * $aggregate->get_quantity();
+			$rate    = $this->get_rate() / 100;
+
+			return $taxable * $rate;
 		} else {
 			return 0;
 		}

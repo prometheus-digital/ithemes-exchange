@@ -47,6 +47,21 @@ class ITE_Fee_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Line_I
 	}
 
 	/**
+	 * Create a new One Time Fee.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $name
+	 * @param float  $amount
+	 * @param bool   $is_taxable
+	 *
+	 * @return ITE_Fee_Line_Item
+	 */
+	public static function one_time( $name, $amount, $is_taxable = true ) {
+		return self::create( $name, $amount, $is_taxable, false );
+	}
+
+	/**
 	 * Generate the ID.
 	 *
 	 * @since 2.0.0

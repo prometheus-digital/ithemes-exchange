@@ -875,38 +875,77 @@ function it_exchange_get_cart_description( $options = array() ) {
 		return '';
 	}
 
-	$description = array();
-	$items       = $cart->get_items()->non_summary_only();
+	$items = $cart->get_items()->non_summary_only();
 
 	if ( ! $items->count() ) {
 		return '';
 	}
 
-	foreach ( $items as $item ) {
-		$string = $item->get_name();
+	$parts = it_exchange_get_line_item_collection_description( $items, $cart, false );
 
-		if ( 1 < $count = $item->get_quantity() ) {
-			$string .= ' (' . $count . ')';
-		}
+	return apply_filters( 'it_exchange_get_cart_description', implode( ', ', $parts ), $parts, $options );
+}
 
-		if ( $item instanceof ITE_Cart_Product ) {
-			$string = apply_filters( 'it_exchange_get_cart_description_for_product', $string, $item->bc() );
-		}
+/**
+ * Get the description for a line item collection.
+ *
+ * @since 2.0.0
+ *
+ * @param ITE_Line_Item_Collection $collection
+ * @param ITE_Cart|null            $cart
+ * @param bool                     $as_string  Whether to return the description as a string or as an array of parts.
+ *
+ * @return array|string
+ */
+function it_exchange_get_line_item_collection_description( ITE_Line_Item_Collection $collection, ITE_Cart $cart = null, $as_string = true ) {
 
-		/**
-		 * Filter the description for an item.
-		 *
-		 * @since 2.0.0
-		 *
-		 * @param string         $string
-		 * @param \ITE_Line_Item $item
-		 */
-		$string = apply_filters( 'it_exchange_get_cart_description_for_item', $string, $item );
+	$cart = $cart ?: it_exchange_get_current_cart();
 
-		$description[] = $string;
+	if ( ! $cart ) {
+		return $as_string ? '' : array();
 	}
 
-	return apply_filters( 'it_exchange_get_cart_description', implode( ', ', $description ), $description, $options );
+	$parts = array();
+
+	foreach ( $collection as $item ) {
+		$parts[] = it_exchange_get_cart_item_description( $item, $cart );
+	}
+
+	return $as_string ? implode( ', ', $parts ) : $parts;
+}
+
+/**
+ * Get the description for an individual cart item.
+ *
+ * @since 2.0.0
+ *
+ * @param ITE_Line_Item $item
+ * @param ITE_Cart      $cart
+ *
+ * @return string
+ */
+function it_exchange_get_cart_item_description( ITE_Line_Item $item, ITE_Cart $cart ) {
+
+	$description = $item->get_name();
+
+	if ( 1 < $count = $item->get_quantity() ) {
+		$description .= ' (' . $count . ')';
+	}
+
+	if ( $item instanceof ITE_Cart_Product ) {
+		$description = apply_filters( 'it_exchange_get_cart_description_for_product', $description, $item->bc() );
+	}
+
+	/**
+	 * Filter the description for an item.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string         $description
+	 * @param \ITE_Line_Item $item
+	 * @param \ITE_Cart      $cart
+	 */
+	return apply_filters( 'it_exchange_get_cart_description_for_item', $description, $item, $cart );
 }
 
 /**
