@@ -150,6 +150,8 @@ function it_exchange() {
 
 		// Set the object
 		$object = new $class_name();
+	} else {
+		$class_name = get_class( $object );
 	}
 
 	// Is the requested tag mapped to a method

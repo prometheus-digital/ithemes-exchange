@@ -801,14 +801,6 @@ button.it-exchange-customer-addresses-address-action--primary:hover {
     border-right: 1px solid #DDDDDD
 }
 
-#it-exchange-cart-totals .it-exchange-cart-totals-total .it-exchange-table-column-inner {
-    border-bottom: 1px solid #DDDDDD;
-}
-
-#it-exchange-cart-totals .it-exchange-cart-totals-total .it-exchange-table-column-inner {
-    padding-bottom: 10px;
-}
-
 #it-exchange-cart-totals .it-exchange-cart-total {
     font-weight: bold;
 }
