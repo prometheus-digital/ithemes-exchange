@@ -1111,7 +1111,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 		$posts = get_children( $args );
 
 		if ( $return_transactions ) {
-			$posts = array_map( 'it_exchange_get_transaction', $posts );
+			$posts = array_filter( array_map( 'it_exchange_get_transaction', $posts ) );
 		}
 
 		return $posts;

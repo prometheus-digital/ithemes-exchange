@@ -713,7 +713,7 @@ function it_exchange_add_child_transaction( $method, $method_id, $status = 'pend
 		'post_status'        => 'publish',
 	);
 	$args = wp_parse_args( $args, $defaults );
-	
+
 	/** @var ITE_Gateway_Card $card */
 	$card          = empty( $args['card'] ) ? null : $args['card'];
 
