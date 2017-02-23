@@ -89,7 +89,7 @@ class IT_Exchange_Txn_Renewal_Activity extends IT_Exchange_Txn_AbstractActivity 
 	public function get_description() {
 
 		if ( ! $this->get_renewal_transaction() ) {
-			return '';
+			return __(  'Renewal payment.', 'it-l10n-ithemes-exchange' );
 		}
 
 		$link = get_edit_post_link( $this->get_renewal_transaction()->ID );
