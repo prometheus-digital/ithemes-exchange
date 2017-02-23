@@ -494,7 +494,13 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 
 	/** @var ITE_Gateway_Card $card */
 	$card          = empty( $args['card'] ) ? null : $args['card'];
+
+	/** @var ITE_Payment_Token $payment_token */
 	$payment_token = empty( $args['payment_token'] ) ? 0 : $args['payment_token'];
+
+	if ( $payment_token && $payment_token->get_raw_attribute( 'gateway' ) !== $method ) {
+		$payment_token = 0;
+	}
 
 	unset( $args['payment_token'], $args['card'] );
 
@@ -707,10 +713,16 @@ function it_exchange_add_child_transaction( $method, $method_id, $status = 'pend
 		'post_status'        => 'publish',
 	);
 	$args = wp_parse_args( $args, $defaults );
-
+	
 	/** @var ITE_Gateway_Card $card */
 	$card          = empty( $args['card'] ) ? null : $args['card'];
+
+	/** @var ITE_Payment_Token $payment_token */
 	$payment_token = empty( $args['payment_token'] ) ? 0 : $args['payment_token'];
+
+	if ( $payment_token && $payment_token->get_raw_attribute( 'gateway' ) !== $method ) {
+		$payment_token = 0;
+	}
 
 	unset( $args['payment_token'], $args['card'] );
 
