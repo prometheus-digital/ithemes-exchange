@@ -45,7 +45,7 @@
 
 	$loops[] = 'totals-taxes';
 
-	if ( it_exchange_get_cart_subtotal( false ) !== it_exchange_get_cart_total( false ) )
+	if ( it_exchange_get_product_feature( it_exchange_get_the_product_id(), 'base-price' ) !== it_exchange_get_cart_total( false ) )
 		$loops[] = 'cart-total';
 	foreach( it_exchange_get_template_part_loops( 'super-widget-checkout', 'after-cart-items', $loops ) as $loop ) :
 		it_exchange_get_template_part( 'super-widget-checkout/loops/' . $loop );
