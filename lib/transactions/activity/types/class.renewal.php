@@ -70,10 +70,8 @@ class IT_Exchange_Txn_Renewal_Activity extends IT_Exchange_Txn_AbstractActivity 
 	public function get_actor() {
 		$actor = parent::get_actor();
 
-		if ( is_null( $actor ) ) {
-			$actor = new IT_Exchange_Txn_Activity_Customer_Actor(
-				it_exchange_get_transaction_customer( $this->get_renewal_transaction() )
-			);
+		if ( $actor === null && $txn = $this->get_renewal_transaction() ) {
+			$actor = new IT_Exchange_Txn_Activity_Customer_Actor( $txn->get_customer() );
 		}
 
 		return $actor;
@@ -89,6 +87,10 @@ class IT_Exchange_Txn_Renewal_Activity extends IT_Exchange_Txn_AbstractActivity 
 	 * @return string
 	 */
 	public function get_description() {
+
+		if ( ! $this->get_renewal_transaction() ) {
+			return '';
+		}
 
 		$link = get_edit_post_link( $this->get_renewal_transaction()->ID );
 		$link = "<a href=\"$link\">" . $this->get_renewal_transaction()->get_order_number() . '</a>';
