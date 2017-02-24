@@ -156,14 +156,20 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 	 * @inheritDoc
 	 */
 	public function get_shipping_address() {
-		return new ITE_In_Memory_Address( $this->get_shipping_address_data_for_customer( $this->customer ) );
+
+		$data = $this->get_shipping_address_data_for_customer( $this->customer );
+
+		return $data && is_array( $data ) ? new ITE_In_Memory_Address( $data ) : null;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function get_billing_address() {
-		return new ITE_In_Memory_Address( $this->get_billing_address_data_for_customer( $this->customer ) );
+
+		$data = $this->get_billing_address_data_for_customer( $this->customer );
+
+		return $data && is_array( $data ) ? new ITE_In_Memory_Address( $data ) : null;
 	}
 
 	/**

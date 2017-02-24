@@ -267,7 +267,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 			}
 		}
 
-		return new ITE_In_Memory_Address( is_array( $filtered ) ? $filtered : array() );
+		return $filtered && is_array( $filtered ) ? new ITE_In_Memory_Address( $filtered ) : null;
 	}
 
 	/**
@@ -309,7 +309,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 			}
 		}
 
-		return new ITE_In_Memory_Address( is_array( $filtered ) ? $filtered : array() );
+		return $filtered && is_array( $filtered ) ? new ITE_In_Memory_Address( $filtered ) : null;
 	}
 
 	/**

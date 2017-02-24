@@ -255,6 +255,11 @@ class ITE_Cart {
 	 * @return ITE_Location|null
 	 */
 	public function get_shipping_address() {
+
+		if ( ! $this->requires_shipping() ) {
+			return null;
+		}
+
 		return $this->get_repository()->get_shipping_address();
 	}
 
