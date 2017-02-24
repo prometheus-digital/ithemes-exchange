@@ -408,6 +408,11 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 		foreach ( $this->get_taxes() as $tax ) {
 			$this->remove_tax( $tax->get_id() );
 		}
+
+		/** @var ITE_Taxable_Line_Item $item */
+		foreach ( $this->get_line_items()->taxable() as $item ) {
+			$item->remove_all_taxes();
+		}
 	}
 
 	/**
