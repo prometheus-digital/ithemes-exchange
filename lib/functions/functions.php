@@ -119,7 +119,7 @@ function it_exchange_format_price( $price, $show_symbol = true ) {
 	}
 
 	if ( $price < 0 ) {
-		$before = '&minus;' . $before;
+		$before = '−' . $before;
 		$price  = abs( $price );
 	}
 
