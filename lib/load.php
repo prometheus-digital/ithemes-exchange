@@ -105,3 +105,5 @@ require_once dirname( __FILE__ ) . '/REST/load.php';
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
 	require_once dirname( __FILE__ ) . '/cli/load.php';
 }
+
+add_filter( 'it_exchange_is_customer_eligible_for_trial', '__return_true' );
