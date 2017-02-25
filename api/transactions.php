@@ -795,7 +795,7 @@ function it_exchange_add_child_transaction( $method, $method_id, $status = 'pend
 			$cart->with_new_repository( new ITE_Line_Item_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction ) );
 		}
 
-		do_action( 'it_exchange_add_child_transaction_success', $transaction_id );
+		do_action( 'it_exchange_add_child_transaction_success', $transaction_id, $cart );
 
 		$r = apply_filters(
 			'it_exchange_add_child_transaction', $transaction_id, $method, $method_id, $status, $customer_id, $parent_tx_id, $txn_object, $args
