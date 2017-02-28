@@ -195,7 +195,10 @@ function it_exchange_register_email_notifications() {
 						$r->format_tag( 'customer_fullname' ), $r->format_tag( 'receipt_id' ), $r->format_tag( 'order_table' ) ),
 				),
 				'group'    => __( 'Core', 'it-l10n-ithemes-exchange' ),
-				'previous' => empty( $settings['admin-email-template'] ) ? '' : $settings['admin-email-template']
+				'previous' => array(
+					'subject' => empty( $settings['admin-email-subject'] ) ? '' : $settings['admin-email-subject'],
+					'body'    => empty( $settings['admin-email-template'] ) ? '' : $settings['admin-email-template'],
+				),
 			)
 		) )
 		->register_notification( new IT_Exchange_Customer_Email_Notification(
@@ -208,10 +211,12 @@ function it_exchange_register_email_notifications() {
 				'description' =>
 					__( "The customer's shipping and billing address, as well as the cart details, payment method, download links, total and purchase date are already included in the template.",
 						'it-l10n-ithemes-exchange' ),
-				'previous' => empty( $settings['receipt-email-template'] ) ? '' : $settings['receipt-email-template']
+				'previous'    => array(
+					'subject' => empty( $settings['receipt-email-subject'] ) ? '' : $settings['receipt-email-subject'],
+					'body'    => empty( $settings['receipt-email-template'] ) ? '' : $settings['receipt-email-template'],
+				),
 			)
-		) )
-	;
+		) );
 
 	/**
 	 * Filter whether child transactions are being used.
@@ -231,20 +236,22 @@ function it_exchange_register_email_notifications() {
 				'description' =>
 					__( "The customer's shipping and billing address, as well as the cart details, payment method, download links, total and purchase date are already included in the template.",
 						'it-l10n-ithemes-exchange' ),
-				'previous'    => empty( $settings['receipt-email-template'] ) ? '' : $settings['receipt-email-template']
+				'previous'    => array(
+					'body' => empty( $settings['receipt-email-template'] ) ? '' : $settings['receipt-email-template'],
+				),
 			)
 		) );
 	}
 
 	$notifications->register_notification( new IT_Exchange_Customer_Email_Notification(
 		__( 'New Public Transaction Activity', 'it-l10n-ithemes-exchange' ), 'customer-order-note', new IT_Exchange_Email_Template( 'order-note' ), array(
-			'defaults' => array(
+			'defaults'    => array(
 				'subject' => sprintf( __( 'New note about your order %s', 'it-l10n-ithemes-exchange' ), $r->format_tag( 'receipt_id' ) ),
 				'body'    => sprintf( __( "Hello %s, \r\n\r\n A new note has been added to your order.", 'it-l10n-ithemes-exchange' ), $r->format_tag( 'first_name' ) )
 			),
-			'group'    => __( 'Core', 'it-l10n-ithemes-exchange' ),
+			'group'       => __( 'Core', 'it-l10n-ithemes-exchange' ),
 			'description' =>
-				__( "The order note and cart details are already included in the template.", 'it-l10n-ithemes-exchange' ),
+				__( 'The order note and cart details are already included in the template.', 'it-l10n-ithemes-exchange' ),
 		)
 	) );
 

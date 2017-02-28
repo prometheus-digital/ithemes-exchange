@@ -52,9 +52,9 @@ abstract class IT_Exchange_Email_Notification {
 	private $group;
 
 	/**
-	 * @var string
+	 * @var array
 	 */
-	private $previous = '';
+	private $previous = array();
 
 	/**
 	 * @var array
@@ -88,8 +88,25 @@ abstract class IT_Exchange_Email_Notification {
 
 		$this->setup_properties( $data );
 
-		if ( empty( $data['upgraded'] ) && ! empty( $args['previous'] ) ) {
-			$this->set_body( $this->convert_to_curly( $args['previous'] ) );
+		if ( ! empty( $args['previous'] ) ) {
+			$this->previous           = $args['previous'];
+			$config                   = isset( $this->previous['config'] ) ? $this->previous['config'] : array();
+			$this->previous['config'] = ITUtility::merge_defaults( $config, array(
+				'tag'     => 'it_exchange_email',
+				'attr'    => 'show',
+				'replace' => array(),
+			) );
+		}
+
+		if ( $this->previous && empty( $data['upgraded'] ) ) {
+
+			if ( isset( $this->previous['subject'] ) ) {
+				$this->set_subject( $this->convert_to_curly( $this->previous['subject'] ) );
+			}
+
+			if ( isset( $this->previous['body'] ) ) {
+				$this->set_body( $this->convert_to_curly( $this->previous['body'] ) );
+			}
 
 			$emails = it_exchange_get_option( 'emails', true );
 
@@ -110,10 +127,6 @@ abstract class IT_Exchange_Email_Notification {
 
 		if ( ! empty( $args['group'] ) ) {
 			$this->group = $args['group'];
-		}
-
-		if ( ! empty( $args['previous'] ) ) {
-			$this->previous = $args['previous'];
 		}
 
 		$this->args = $args;
@@ -384,17 +397,31 @@ abstract class IT_Exchange_Email_Notification {
 	 */
 	protected function convert_to_curly( $content ) {
 
+		$config = $this->previous['config'];
+
 		$backup = $GLOBALS['shortcode_tags'];
 
 		$GLOBALS['shortcode_tags'] = array();
 
-		add_shortcode( 'it_exchange_email', function ( $atts ) {
+		add_shortcode( $config['tag'], function ( $atts ) use ( $config ) {
 
-			if ( empty( $atts['show'] ) ) {
+			if ( empty( $atts[ $config['attr'] ] ) ) {
 				return '';
 			}
 
-			return '{{' . $atts['show'] . '}}';
+			$attr = $atts[ $config['attr'] ];
+
+			if ( isset( $config['replace'][ $attr ] ) ) {
+				$replace = $config['replace'][ $attr ];
+			} else {
+				$replace = str_replace( '-', '_', $attr );
+			}
+
+			if ( $replace === false ) {
+				return '';
+			}
+
+			return '{{' . $replace . '}}';
 		} );
 
 		$converted = do_shortcode( $content );
