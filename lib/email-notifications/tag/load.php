@@ -107,6 +107,12 @@ class IT_Exchange_Email_Register_Default_Tags {
 				'context'   => array( 'transaction' ),
 				'available' => array( 'admin-order', 'receipt' )
 			),
+			'name'          => array(
+				'name'      => __( 'First Name', 'it-l10n-ithemes-exchange' ),
+				'desc'      => __( "The recipient's first name, or display name if none given.", 'it-l10n-ithemes-exchange' ),
+				'context'   => array( 'recipient' ),
+				'available' => array()
+			),
 			'first_name'          => array(
 				'name'      => __( 'First Name', 'it-l10n-ithemes-exchange' ),
 				'desc'      => __( "The recipient's first name, or display name if none given.", 'it-l10n-ithemes-exchange' ),
@@ -188,6 +194,12 @@ class IT_Exchange_Email_Register_Default_Tags {
 			'company_name'        => array(
 				'name'      => __( 'Company Name', 'it-l10n-ithemes-exchange' ),
 				'desc'      => __( 'The name of your company specified in the general settings.' ),
+				'context'   => array(),
+				'available' => array()
+			),
+			'sitename'      => array(
+				'name'      => __( 'Site Name', 'it-l10n-ithemes-exchange' ),
+				'desc'      => __( 'The name of your website specified in the WordPress general settings.' ),
 				'context'   => array(),
 				'available' => array()
 			)
@@ -309,6 +321,19 @@ class IT_Exchange_Email_Register_Default_Tags {
 		} else {
 			return ob_get_clean();
 		}
+	}
+
+	/**
+	 * Replace the first name tag.
+	 *
+	 * @since 1.0
+	 *
+	 * @param array $context
+	 *
+	 * @return string Replaced value
+	 */
+	public function name( $context ) {
+		return $context['recipient']->get_first_name();
 	}
 
 	/**
