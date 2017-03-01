@@ -1176,6 +1176,39 @@ function it_exchange_set_content_width_on_product_pages() {
 add_action( 'template_redirect', 'it_exchange_set_content_width_on_product_pages', 100 );
 
 /**
+ * Log in the user from account/log-in if in compatibility mode.
+ *
+ * @since 2.0.0
+ */
+function it_exchange_process_compatibility_mode_login() {
+
+    if ( ! apply_filters( 'it_exchange_login_page_use_compatibility_mode', true ) ) {
+        return;
+    }
+
+    if ( isset( $_POST['pwd'], $_POST['log'] ) ) {
+        $errors = wp_signon();
+
+        if ( is_wp_error( $errors ) ) {
+            foreach ( $errors->get_error_messages() as $message ) {
+                it_exchange_add_message( 'error', $message );
+            }
+        } else {
+            if ( isset( $_REQUEST['redirect_to'] ) ) {
+                wp_safe_redirect( $_REQUEST['redirect_to'] );
+            } else {
+                wp_redirect( it_exchange_get_page_url( 'account' ) );
+            }
+
+            die();
+        }
+    }
+
+}
+
+add_action( 'init', 'it_exchange_process_compatibility_mode_login' );
+
+/**
  * Redirects to Exchange Login page if login fails
  *
  * Technically, we're hijacking a filter to use it for an action.

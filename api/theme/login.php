@@ -99,14 +99,23 @@ class IT_Theme_API_Login implements IT_Theme_API {
 			it_exchange_clear_session_data( 'login_redirect' );
 		}
 
-		if ( it_exchange_in_superwidget() )
-			$class= empty( $options['class'] ) ? 'it-exchange-sw-log-in' : 'it-exchange-sw-log-in ' . esc_attr( $class );
-		else
-			$class= empty( $options['class'] ) ? 'it-exchange-log-in' : 'it-exchange-log-in ' . esc_attr( $class );
+		if ( it_exchange_in_superwidget() ) {
+			$class = empty( $options['class'] ) ? 'it-exchange-sw-log-in' : 'it-exchange-sw-log-in ' . esc_attr( $options['class'] );
+		} else {
+			$class = empty( $options['class'] ) ? 'it-exchange-log-in' : 'it-exchange-log-in ' . esc_attr( $options['class'] );
+		}
+
+		$action = site_url( 'wp-login.php', 'login_post' );
+
+		if ( apply_filters( 'it_exchange_login_page_use_compatibility_mode', false ) ) {
+			$action = it_exchange_get_page_url( 'login' );
+		}
+
+		$action = add_query_arg( 'redirect_to', urlencode( $options['redirect'] ), $action );
 
 		// WP-Engine only plays with the 'login_post' schema, so we cannot use wp_login_url()
 		// At least until we can modify the schema with that function
-		return '<form id="loginform" class="' . $class . '" action="' . esc_url( add_query_arg( 'redirect_to', urlencode( $options['redirect'] ), site_url( 'wp-login.php', 'login_post' ) ) ) . '" method="post">';
+		return '<form id="loginform" class="' . $class . '" action="' . esc_url( $action ) . '" method="post">';
 	}
 
 	/**
