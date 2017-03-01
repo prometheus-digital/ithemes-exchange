@@ -8,6 +8,7 @@
 
 namespace iThemes\Exchange\REST\Route\v1\Cart;
 
+use iThemes\Exchange\REST\Auth\AuthScope;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Putable;
 use iThemes\Exchange\REST\Request;
@@ -34,7 +35,7 @@ class Meta extends Base implements Getable, Putable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_get( Request $request, AuthScope $scope ) {
 		return true;
 	}
 
@@ -73,7 +74,7 @@ class Meta extends Base implements Getable, Putable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_put( Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_put( Request $request, AuthScope $scope ) {
 		return true;
 	}
 

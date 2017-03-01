@@ -8,6 +8,7 @@
 
 namespace iThemes\Exchange\REST\Route\v1;
 
+use iThemes\Exchange\REST\Auth\AuthScope;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
@@ -42,7 +43,7 @@ class Dataset extends Base implements Getable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_get( Request $request, AuthScope $scope ) {
 		return true;
 	}
 

@@ -9,6 +9,7 @@
 namespace iThemes\Exchange\REST\Route\v1\Cart;
 
 use iThemes\Exchange\REST as r;
+use iThemes\Exchange\REST\Auth\AuthScope;
 use iThemes\Exchange\REST\Deletable;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Putable;
@@ -46,8 +47,8 @@ class Cart extends r\Route\Base implements Getable, Putable, Deletable, r\RouteO
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) {
-		return $this->permission_check( $request, $user );
+	public function user_can_get( Request $request, AuthScope $scope ) {
+		return $this->permission_check( $request, $scope );
 	}
 
 	/**
@@ -58,11 +59,11 @@ class Cart extends r\Route\Base implements Getable, Putable, Deletable, r\RouteO
 		/** @var \ITE_Cart $cart */
 		$cart = $request->get_route_object( 'cart_id' );
 
-		if ( $e = $this->handle_address_update( $cart, $request['billing_address'], 'billing') ) {
+		if ( $e = $this->handle_address_update( $cart, $request['billing_address'], 'billing' ) ) {
 			return $e;
 		}
 
-		if ( $e = $this->handle_address_update( $cart, $request['shipping_address'], 'shipping') ) {
+		if ( $e = $this->handle_address_update( $cart, $request['shipping_address'], 'shipping' ) ) {
 			return $e;
 		}
 
@@ -123,8 +124,8 @@ class Cart extends r\Route\Base implements Getable, Putable, Deletable, r\RouteO
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_put( Request $request, \IT_Exchange_Customer $user = null ) {
-		return $this->permission_check( $request, $user );
+	public function user_can_put( Request $request, AuthScope $scope ) {
+		return $this->permission_check( $request, $scope );
 	}
 
 	/**
@@ -142,8 +143,8 @@ class Cart extends r\Route\Base implements Getable, Putable, Deletable, r\RouteO
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_delete( Request $request, \IT_Exchange_Customer $user = null ) {
-		return $this->permission_check( $request, $user );
+	public function user_can_delete( Request $request, AuthScope $scope ) {
+		return $this->permission_check( $request, $scope );
 	}
 
 	/**
@@ -182,11 +183,11 @@ class Cart extends r\Route\Base implements Getable, Putable, Deletable, r\RouteO
 	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Request $request
-	 * @param \IT_Exchange_Customer          $user
+	 * @param AuthScope                      $scope
 	 *
 	 * @return bool|\WP_Error
 	 */
-	protected function permission_check( Request $request, \IT_Exchange_Customer $user = null ) {
+	protected function permission_check( Request $request, AuthScope $scope ) {
 
 		/** @var \ITE_Cart $cart */
 		if ( ! $cart = $request->get_route_object( 'cart_id' ) ) {
@@ -197,21 +198,15 @@ class Cart extends r\Route\Base implements Getable, Putable, Deletable, r\RouteO
 			);
 		}
 
-		if ( $cart->is_guest() ) {
-			if ( $user instanceof \IT_Exchange_Guest_Customer && $user->get_email() === $cart->get_customer()->get_email() ) {
-				return true;
-			}
+		if ( ! $scope->can( 'it_edit_cart', $cart ) ) {
+			return new \WP_Error(
+				'it_exchange_rest_forbidden_context',
+				__( 'Sorry, you are not allowed to access this cart.', 'it-l10n-ithemes-exchange' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
 		}
 
-		if ( $cart->get_customer() && $user && $cart->get_customer()->id === $user->id ) {
-			return true;
-		}
-
-		return new \WP_Error(
-			'it_exchange_rest_forbidden_context',
-			__( 'Sorry, you are not allowed to access this cart.', 'it-l10n-ithemes-exchange' ),
-			array( 'status' => rest_authorization_required_code() )
-		);
+		return true;
 	}
 
 	/**

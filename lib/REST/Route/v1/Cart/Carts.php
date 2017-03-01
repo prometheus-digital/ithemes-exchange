@@ -9,6 +9,7 @@
 namespace iThemes\Exchange\REST\Route\v1\Cart;
 
 use iThemes\Exchange\REST as r;
+use iThemes\Exchange\REST\Auth\AuthScope;
 use iThemes\Exchange\REST\Postable;
 use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
@@ -132,8 +133,8 @@ class Carts extends Base implements Postable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_post( Request $request, \IT_Exchange_Customer $user = null ) {
-		return (bool) $user && $user->id;
+	public function user_can_post( Request $request, AuthScope $scope ) {
+		return $scope->can( 'it_create_carts' );
 	}
 
 	/**

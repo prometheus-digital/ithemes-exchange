@@ -8,6 +8,7 @@
 
 namespace iThemes\Exchange\REST\Route\v1\Customer;
 
+use iThemes\Exchange\REST\Auth\AuthScope;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Putable;
 use iThemes\Exchange\REST\Request;
@@ -112,15 +113,7 @@ class Customer extends Route\Base implements Getable, Putable, RouteObjectExpand
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) {
-
-		if ( ! $user || $user instanceof \IT_Exchange_Guest_Customer ) {
-			return new \WP_Error(
-				'it_exchange_rest_forbidden_context',
-				__( 'Sorry, you are not allowed to access this customer.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
-		}
+	public function user_can_get( Request $request, AuthScope $scope ) {
 
 		$customer = $request->get_route_object( 'customer_id' );
 
@@ -132,7 +125,7 @@ class Customer extends Route\Base implements Getable, Putable, RouteObjectExpand
 			);
 		}
 
-		if ( ! user_can( $user->wp_user, 'edit_user', $customer->ID ) ) {
+		if ( ! $scope->can( 'edit_user', $customer->ID ) ) {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you are not allowed to access this customer.', 'it-l10n-ithemes-exchange' ),
@@ -232,9 +225,7 @@ class Customer extends Route\Base implements Getable, Putable, RouteObjectExpand
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_put( Request $request, \IT_Exchange_Customer $user = null ) {
-		return true; // Cascades
-	}
+	public function user_can_put( Request $request, AuthScope $scope ) { return true; }
 
 	/**
 	 * @inheritDoc

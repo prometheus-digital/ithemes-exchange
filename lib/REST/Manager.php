@@ -8,6 +8,9 @@
 
 namespace iThemes\Exchange\REST;
 
+use iThemes\Exchange\REST\Auth\CustomerAuthScope;
+use iThemes\Exchange\REST\Auth\GuestAuthScope;
+use iThemes\Exchange\REST\Auth\PublicAuthScope;
 use iThemes\Exchange\REST\Middleware\Stack;
 use iThemes\Exchange\REST\Route\Base;
 use JsonSchema\Constraints\Constraint;
@@ -282,7 +285,15 @@ class Manager {
 				$exchange_request = Request::from_wp( $request );
 				$exchange_request->set_matched_route_controller( $route );
 
-				$user = it_exchange_get_current_customer() ?: null;
+				$current_customer = it_exchange_get_current_customer();
+
+				if ( $current_customer instanceof \IT_Exchange_Guest_Customer ) {
+					$auth = new GuestAuthScope( $current_customer );
+				} elseif ( $current_customer ) {
+					$auth = new CustomerAuthScope( $current_customer );
+				} else {
+					$auth = new PublicAuthScope();
+				}
 
 				foreach ( $parents as $parent ) {
 
@@ -296,14 +307,14 @@ class Manager {
 						}
 					}
 
-					if ( ( $r = call_user_func( $callback, $exchange_request, $user ) ) !== true ) {
+					if ( ( $r = call_user_func( $callback, $exchange_request, $auth ) ) !== true ) {
 						return $r;
 					}
 				}
 
 				$callback = array( $route, 'user_can_' . strtolower( $verb ) );
 
-				return call_user_func( $callback, $exchange_request, $user );
+				return call_user_func( $callback, $exchange_request, $auth );
 			};
 
 			$middleware = $this->get_middleware();
@@ -657,23 +668,28 @@ class Manager {
 			return $authed;
 		}
 
-		if (
-			! empty( $_SERVER['PHP_AUTH_USER'] ) &&
-			( empty( $_SERVER['PHP_AUTH_PW'] ) || trim( $_SERVER['PHP_AUTH_PW'] ) === '' ) &&
-			is_email( $_SERVER['PHP_AUTH_USER'] ) &&
-			function_exists( 'it_exchange_guest_checkout_generate_guest_user_object' )
-		) {
-			$email = $_SERVER['PHP_AUTH_USER'];
-
-			$GLOBALS['current_user'] = it_exchange_guest_checkout_generate_guest_user_object( $email );
-
-			add_filter( 'it_exchange_get_current_customer', function () use ( $email ) {
-				return it_exchange_get_customer( $email );
-			} );
-
-			return true;
+		if ( ! function_exists( 'it_exchange_guest_checkout_generate_guest_user_object' ) ) {
+			return false;
 		}
 
-		return $authed;
+		$authorization = trim( wp_unslash( $_SERVER['HTTP_AUTHORIZATION'] ) );
+		$regex         = '/ITHEMES-EXCHANGE-GUEST\s?email="(\S+)"/i';
+
+		if ( ! preg_match( $regex, $authorization, $matches ) ) {
+			return false;
+		}
+
+		if ( empty( $matches[1] ) || ! is_email( $matches[1] ) ) {
+			return false;
+		}
+
+		$email                   = $matches[1];
+		$GLOBALS['current_user'] = it_exchange_guest_checkout_generate_guest_user_object( $email );
+
+		add_filter( 'it_exchange_get_current_customer', function () use ( $email ) {
+			return it_exchange_get_customer( $email );
+		} );
+
+		return true;
 	}
 }

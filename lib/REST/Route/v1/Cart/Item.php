@@ -9,6 +9,7 @@
 namespace iThemes\Exchange\REST\Route\v1\Cart;
 
 use iThemes\Exchange\REST as r;
+use iThemes\Exchange\REST\Auth\AuthScope;
 use iThemes\Exchange\REST\Deletable;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Putable;
@@ -31,7 +32,7 @@ class Item extends Base implements Getable, Putable, Deletable {
 	/**
 	 * Item constructor.
 	 *
-	 * @param \ITE_Line_Item_Type                               $type
+	 * @param \ITE_Line_Item_Type                                  $type
 	 * @param \iThemes\Exchange\REST\Route\v1\Cart\Item_Serializer $serializer
 	 */
 	public function __construct( \ITE_Line_Item_Type $type, Item_Serializer $serializer ) {
@@ -60,8 +61,8 @@ class Item extends Base implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) {
-		return $this->permission_check( $request, $user );
+	public function user_can_get( Request $request, AuthScope $scope ) {
+		return $this->permission_check( $request, $scope );
 	}
 
 	/**
@@ -94,7 +95,7 @@ class Item extends Base implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_put( Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_put( Request $request, AuthScope $scope ) {
 		if ( ! $this->type->is_editable_in_rest() ) {
 			return new \WP_Error(
 				'it_exchange_rest_non_editable_item',
@@ -103,7 +104,7 @@ class Item extends Base implements Getable, Putable, Deletable {
 			);
 		}
 
-		return $this->permission_check( $request, $user );
+		return $this->permission_check( $request, $scope );
 	}
 
 	/**
@@ -121,7 +122,7 @@ class Item extends Base implements Getable, Putable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_delete( Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_delete( Request $request, AuthScope $scope ) {
 		if ( ! $this->type->is_editable_in_rest() ) {
 			return new \WP_Error(
 				'it_exchange_rest_non_editable_item',
@@ -130,7 +131,7 @@ class Item extends Base implements Getable, Putable, Deletable {
 			);
 		}
 
-		return $this->permission_check( $request, $user );
+		return $this->permission_check( $request, $scope );
 	}
 
 	/**
@@ -139,11 +140,11 @@ class Item extends Base implements Getable, Putable, Deletable {
 	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Request $request
-	 * @param \IT_Exchange_Customer          $user
+	 * @param AuthScope                      $scope
 	 *
 	 * @return bool|\WP_Error
 	 */
-	protected function permission_check( Request $request, \IT_Exchange_Customer $user = null ) {
+	protected function permission_check( Request $request, AuthScope $scope ) {
 
 		/** @var \ITE_Cart $cart */
 		$cart = $request->get_route_object( 'cart_id' );

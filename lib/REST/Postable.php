@@ -7,6 +7,7 @@
  */
 
 namespace iThemes\Exchange\REST;
+use iThemes\Exchange\REST\Auth\AuthScope;
 
 /**
  * Interface Postable
@@ -32,9 +33,9 @@ interface Postable extends Route {
 	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Request $request
-	 * @param \IT_Exchange_Customer          $user
+	 * @param AuthScope                      $scope
 	 *
 	 * @return bool
 	 */
-	public function user_can_post( Request $request, \IT_Exchange_Customer $user = null );
+	public function user_can_post( Request $request, AuthScope $scope );
 }

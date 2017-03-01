@@ -134,7 +134,30 @@ class IT_Exchange_Capabilities {
 
 				// Necessary for a manual admin purchase
 				return array( 'it_use_others_payment_tokens' );
+			case 'it_create_carts':
+				return array();
+			case 'it_read_cart':
+			case 'it_edit_cart':
 
+				$cart = null;
+
+				if ( ! isset( $args[0] ) ) {
+					$cart = it_exchange_get_current_cart( false );
+				} elseif ( $args[0] instanceof \ITE_Cart ) {
+					$cart = $args[0];
+				} elseif ( is_string( $args[0] ) ) {
+					$cart = it_exchange_get_cart( $args[0] );
+				}
+
+				if ( ! $cart || $cart->is_guest() || ! $cart->get_customer() ) {
+					return array( 'do_not_allow' );
+				}
+
+				if ( $cart->get_customer()->get_ID() == $user_id ) {
+					return array();
+				}
+
+				return array( 'do_not_allow' );
 		}
 
 		return $caps;

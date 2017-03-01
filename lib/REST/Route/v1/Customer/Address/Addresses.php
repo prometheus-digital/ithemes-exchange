@@ -8,6 +8,7 @@
 
 namespace iThemes\Exchange\REST\Route\v1\Customer\Address;
 
+use iThemes\Exchange\REST\Auth\AuthScope;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Postable;
 use iThemes\Exchange\REST\Request;
@@ -48,16 +49,7 @@ class Addresses extends Base implements Getable, Postable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) {
-
-		if ( ! $user ) {
-			return new \WP_Error(
-				'it_exchange_rest_invalid_permissions',
-				__( 'You must be logged-in to view addresses.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::UNAUTHORIZED )
-			);
-		}
-
+	public function user_can_get( Request $request, AuthScope $scope ) {
 		return true; // Cascades to Customer route.
 	}
 
@@ -98,7 +90,7 @@ class Addresses extends Base implements Getable, Postable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_post( Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_post( Request $request, AuthScope $scope ) {
 		return true;
 	}
 

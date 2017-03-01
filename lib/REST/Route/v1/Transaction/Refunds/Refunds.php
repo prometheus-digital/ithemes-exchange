@@ -8,6 +8,7 @@
 
 namespace iThemes\Exchange\REST\Route\v1\Transaction\Refunds;
 
+use iThemes\Exchange\REST\Auth\AuthScope;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Postable;
 use iThemes\Exchange\REST\Request;
@@ -15,6 +16,7 @@ use iThemes\Exchange\REST\Route\Base;
 
 /**
  * Class Refunds
+ *
  * @package iThemes\Exchange\REST\Route\v1\Transaction
  */
 class Refunds extends Base implements Getable, Postable {
@@ -29,7 +31,7 @@ class Refunds extends Base implements Getable, Postable {
 	 * Transaction constructor.
 	 *
 	 * @param \iThemes\Exchange\REST\Route\v1\Transaction\Refunds\Serializer $serializer
-	 * @param \ITE_Gateway_Request_Factory                                $request_factory
+	 * @param \ITE_Gateway_Request_Factory                                   $request_factory
 	 */
 	public function __construct( Serializer $serializer, \ITE_Gateway_Request_Factory $request_factory ) {
 		$this->serializer      = $serializer;
@@ -69,8 +71,8 @@ class Refunds extends Base implements Getable, Postable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) {
-		return $this->permissions_check( $request, $user );
+	public function user_can_get( Request $request, AuthScope $scope ) {
+		return $this->permissions_check( $request, $scope );
 	}
 
 	/**
@@ -101,8 +103,7 @@ class Refunds extends Base implements Getable, Postable {
 
 		try {
 			$refund = $handler->handle( $refund_request );
-		}
-		catch ( \Exception $e ) {
+		} catch ( \Exception $e ) {
 
 		}
 
@@ -131,8 +132,8 @@ class Refunds extends Base implements Getable, Postable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_post( Request $request, \IT_Exchange_Customer $user = null ) {
-		return $this->permissions_check( $request, $user );
+	public function user_can_post( Request $request, AuthScope $scope ) {
+		return $this->permissions_check( $request, $scope );
 	}
 
 	/**
@@ -141,13 +142,13 @@ class Refunds extends Base implements Getable, Postable {
 	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Request $request
-	 * @param \IT_Exchange_Customer|null     $user
+	 * @param AuthScope                      $scope
 	 *
 	 * @return bool|\WP_Error
 	 */
-	protected function permissions_check( Request $request, \IT_Exchange_Customer $user = null ) {
+	protected function permissions_check( Request $request, AuthScope $scope ) {
 
-		if ( ! $user || ! user_can( $user->wp_user, 'edit_it_transaction', $request->get_route_object( 'transaction_id' ) ) ) {
+		if ( ! $scope->can( 'edit_it_transaction', $request->get_route_object( 'transaction_id' ) ) ) {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( "Sorry, you are not allowed to view this transaction's refunds.", 'it-l10n-ithemes-exchange' ),

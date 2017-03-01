@@ -9,6 +9,7 @@
 namespace iThemes\Exchange\REST\Route\v1\Cart;
 
 use ITE_Gateway_Purchase_Request;
+use iThemes\Exchange\REST\Auth\AuthScope;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Postable;
 use iThemes\Exchange\REST\Request;
@@ -68,7 +69,7 @@ class Purchase extends Base implements Getable, Postable, VariableSchema {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) { return true; }
+	public function user_can_get( Request $request, AuthScope $scope ) { return true; }
 
 	/**
 	 * @inheritDoc
@@ -164,7 +165,7 @@ class Purchase extends Base implements Getable, Postable, VariableSchema {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_post( Request $request, \IT_Exchange_Customer $user = null ) { return true; }
+	public function user_can_post( Request $request, AuthScope $scope ) { return true; }
 
 	/**
 	 * @inheritDoc

@@ -8,6 +8,7 @@
 
 namespace iThemes\Exchange\REST\Route\v1\Customer\Address;
 
+use iThemes\Exchange\REST\Auth\AuthScope;
 use iThemes\Exchange\REST\Deletable;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Putable;
@@ -46,7 +47,7 @@ class Address extends Base implements Getable, Putable, Deletable, RouteObjectEx
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_get( Request $request, AuthScope $scope ) {
 
 		/** @var \ITE_Saved_Address $address */
 		$address = $request->get_route_object( 'address_id' );
@@ -59,15 +60,7 @@ class Address extends Base implements Getable, Putable, Deletable, RouteObjectEx
 			);
 		}
 
-		if ( ! $user ) {
-			return new \WP_Error(
-				'it_exchange_rest_invalid_permissions',
-				__( 'You must be logged-in to view this address.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::UNAUTHORIZED )
-			);
-		}
-
-		if ( ! $address->customer && ! user_can( $user->wp_user, 'edit_users' ) ) {
+		if ( ! $address->customer && ! $scope->can( 'edit_users' ) ) {
 			return new \WP_Error(
 				'it_exchange_rest_invalid_permissions',
 				__( 'You do not have permission to view this address.', 'it-l10n-ithemes-exchange' ),
@@ -75,7 +68,7 @@ class Address extends Base implements Getable, Putable, Deletable, RouteObjectEx
 			);
 		}
 
-		if ( ! user_can( $user->wp_user, 'edit_user', $address->customer->get_ID() ) ) {
+		if ( $address->customer && ! $scope->can( 'edit_user', $address->customer->get_ID() ) ) {
 			return new \WP_Error(
 				'it_exchange_rest_invalid_permissions',
 				__( 'You do not have permission to view this address.', 'it-l10n-ithemes-exchange' ),
@@ -136,9 +129,7 @@ class Address extends Base implements Getable, Putable, Deletable, RouteObjectEx
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_put( Request $request, \IT_Exchange_Customer $user = null ) {
-		return true;
-	}
+	public function user_can_put( Request $request, AuthScope $scope ) { return true; }
 
 	/**
 	 * @inheritDoc
@@ -154,7 +145,7 @@ class Address extends Base implements Getable, Putable, Deletable, RouteObjectEx
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_delete( Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_delete( Request $request, AuthScope $scope ) {
 		return true; // Cascade to get.
 	}
 

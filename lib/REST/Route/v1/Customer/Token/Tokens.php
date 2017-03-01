@@ -8,6 +8,7 @@
 
 namespace iThemes\Exchange\REST\Route\v1\Customer\Token;
 
+use iThemes\Exchange\REST\Auth\AuthScope;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Postable;
 use iThemes\Exchange\REST\Request;
@@ -30,7 +31,7 @@ class Tokens extends Base implements Getable, Postable {
 	 * Tokens constructor.
 	 *
 	 * @param \iThemes\Exchange\REST\Route\v1\Customer\Token\Serializer $serializer
-	 * @param \ITE_Gateway_Request_Factory                           $request_factory
+	 * @param \ITE_Gateway_Request_Factory                              $request_factory
 	 */
 	public function __construct( Serializer $serializer, \ITE_Gateway_Request_Factory $request_factory ) {
 		$this->serializer      = $serializer;
@@ -53,12 +54,12 @@ class Tokens extends Base implements Getable, Postable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) {
-		if ( ( $r = $this->permissions_check( $request, $user ) ) !== true ) {
+	public function user_can_get( Request $request, AuthScope $scope ) {
+		if ( ( $r = $this->permissions_check( $request, $scope ) ) !== true ) {
 			return $r;
 		}
 
-		if ( ! user_can( $user->wp_user, 'it_list_payment_tokens', $request->get_param( 'customer_id', 'URL' ) ) ) {
+		if ( ! $scope->can( 'it_list_payment_tokens', $request->get_param( 'customer_id', 'URL' ) ) ) {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( "Sorry, you are not allowed to view this customer's payment tokens.", 'it-l10n-ithemes-exchange' ),
@@ -99,12 +100,12 @@ class Tokens extends Base implements Getable, Postable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_post( Request $request, \IT_Exchange_Customer $user = null ) {
-		if ( ( $r = $this->permissions_check( $request, $user ) ) !== true ) {
+	public function user_can_post( Request $request, AuthScope $scope ) {
+		if ( ( $r = $this->permissions_check( $request, $scope ) ) !== true ) {
 			return $r;
 		}
 
-		if ( ! user_can( $user->wp_user, 'it_create_payment_tokens', $request->get_param( 'customer_id', 'URL' ) ) ) {
+		if ( ! $scope->can( 'it_create_payment_tokens', $request->get_param( 'customer_id', 'URL' ) ) ) {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you are not allowed to create payment tokens for this customer.', 'it-l10n-ithemes-exchange' ),
@@ -121,30 +122,11 @@ class Tokens extends Base implements Getable, Postable {
 	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Request $request
-	 * @param \IT_Exchange_Customer|null     $user
+	 * @param AuthScope                      $scope
 	 *
 	 * @return bool|\WP_Error
 	 */
-	protected function permissions_check( Request $request, \IT_Exchange_Customer $user = null ) {
-
-		if ( ! $user || $user instanceof \IT_Exchange_Guest_Customer ) {
-			return new \WP_Error(
-				'it_exchange_rest_forbidden_context',
-				__( 'Sorry, you are not allowed to access this customer.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
-		}
-
-		$customer = it_exchange_get_customer( $request->get_param( 'customer_id', 'URL' ) );
-
-		if ( ! $customer ) {
-			return new \WP_Error(
-				'it_exchange_rest_invalid_customer',
-				__( 'Invalid customer.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::NOT_FOUND )
-			);
-		}
-
+	protected function permissions_check( Request $request, AuthScope $scope ) {
 		return true;
 	}
 

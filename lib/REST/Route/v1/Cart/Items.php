@@ -9,6 +9,7 @@
 namespace iThemes\Exchange\REST\Route\v1\Cart;
 
 use iThemes\Exchange\REST as r;
+use iThemes\Exchange\REST\Auth\AuthScope;
 use iThemes\Exchange\REST\Deletable;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Postable;
@@ -56,7 +57,7 @@ class Items extends Base implements Getable, Postable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_get( Request $request, AuthScope $scope ) {
 
 		if ( ! $this->type->is_show_in_rest() ) {
 			return new \WP_Error(
@@ -107,7 +108,7 @@ class Items extends Base implements Getable, Postable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_post( Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_post( Request $request, AuthScope $scope ) {
 		if ( ! $this->type->is_editable_in_rest() ) {
 			return new \WP_Error(
 				'it_exchange_rest_invalid_type',
@@ -134,7 +135,7 @@ class Items extends Base implements Getable, Postable, Deletable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_delete( Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_delete( Request $request, AuthScope $scope ) {
 		if ( ! $this->type->is_editable_in_rest() ) {
 			return new \WP_Error(
 				'it_exchange_rest_invalid_type',

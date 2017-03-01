@@ -8,6 +8,7 @@
 
 namespace iThemes\Exchange\REST\Route\v1\Transaction;
 
+use iThemes\Exchange\REST\Auth\AuthScope;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
@@ -114,17 +115,9 @@ class Transactions extends Base implements Getable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_get( Request $request, AuthScope $scope ) {
 
-		if ( ! $user ) {
-			return new \WP_Error(
-				'it_exchange_rest_forbidden_context',
-				__( 'Sorry, you must be logged-in to view transactions.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
-		}
-
-		if ( ! $request['transaction_id'] && $request['customer'] !== $user->ID && ! user_can( $user->wp_user, 'list_it_transactions' ) ) {
+		if ( ! $request['transaction_id'] && ! $scope->can( 'edit_user', $request['customer'] ) ) {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( "Sorry, you are not allowed to list other customer's transactions.", 'it-l10n-ithemes-exchange' ),
@@ -132,7 +125,7 @@ class Transactions extends Base implements Getable {
 			);
 		}
 
-		if ( $request['parent'] && ! user_can( $user->wp_user, 'edit_it_transaction', $request['parent'] ) ) {
+		if ( $request['parent'] && ! $scope->can( 'edit_it_transaction', $request['parent'] ) ) {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you cannot edit that prent transaction.' ),
@@ -140,7 +133,8 @@ class Transactions extends Base implements Getable {
 			);
 
 		}
-		if ( $request['method_id'] && ! user_can( $user->wp_user, 'list_it_transactions' ) ) {
+
+		if ( $request['method_id'] && ! $scope->can( 'list_it_transactions' ) ) {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you cannot filter transactions by method id.' ),

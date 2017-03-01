@@ -8,6 +8,7 @@
 
 namespace iThemes\Exchange\REST\Route\v1\Cart;
 
+use iThemes\Exchange\REST\Auth\AuthScope;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
@@ -63,9 +64,7 @@ class Types extends Base implements Getable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) {
-		return true;
-	}
+	public function user_can_get( Request $request, AuthScope $scope ) { return true; }
 
 	/**
 	 * @inheritDoc

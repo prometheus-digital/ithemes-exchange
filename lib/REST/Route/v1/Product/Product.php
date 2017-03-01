@@ -8,6 +8,7 @@
 
 namespace iThemes\Exchange\REST\Route\v1\Product;
 
+use iThemes\Exchange\REST\Auth\AuthScope;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
@@ -53,7 +54,7 @@ class Product extends Base implements Getable {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) {
+	public function user_can_get( Request $request, AuthScope $scope ) {
 
 		$product_id = $request->get_param( 'product_id', 'URL' );
 
@@ -62,14 +63,6 @@ class Product extends Base implements Getable {
 		if ( get_post_status( $product_id ) !== 'published' ) {
 
 			$cap = 'edit_it_product';
-
-			if ( ! $user ) {
-				return new \WP_Error(
-					'it_exchange_rest_forbidden_context',
-					__( 'Sorry, you are not allowed to access this product.', 'it-l10n-ithemes-exchange' ),
-					array( 'status' => rest_authorization_required_code() )
-				);
-			}
 		}
 
 		if ( $request['context'] === 'edit' ) {
@@ -80,7 +73,7 @@ class Product extends Base implements Getable {
 			return true;
 		}
 
-		if ( ! $user || ! user_can( $user->wp_user, $cap, $product_id ) ) {
+		if ( ! $scope->can( $cap, $product_id ) ) {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you are not allowed to access this product.', 'it-l10n-ithemes-exchange' ),

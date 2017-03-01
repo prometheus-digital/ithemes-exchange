@@ -36,11 +36,8 @@ class Serializer {
 			'reason'     => $refund->reason,
 			'issued_by'  => $refund->issued_by ? $refund->issued_by->ID : 0,
 			'created_at' => \iThemes\Exchange\REST\format_rfc339( $refund->created_at ),
+			'gateway_id' => $refund->gateway_id,
 		);
-
-		if ( user_can( $user->wp_user, 'edit_it_transaction', $refund->transaction->ID ) ) {
-			$data['gateway_id'] = $refund->gateway_id;
-		}
 
 		return $data;
 	}
@@ -105,7 +102,7 @@ class Serializer {
 				'gateway_id' => array(
 					'description' => __( 'The gateway ID that implemented the refund.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'string',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'edit' ),
 					'readonly'    => true,
 				),
 				'issued_by'  => array(

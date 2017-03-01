@@ -8,6 +8,7 @@
 
 namespace iThemes\Exchange\REST\Route\v1\Customer\Token;
 
+use iThemes\Exchange\REST\Auth\AuthScope;
 use iThemes\Exchange\REST\Deletable;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Putable;
@@ -45,12 +46,12 @@ class Token extends Base implements Getable, Putable, Deletable, RouteObjectExpa
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_get( Request $request, \IT_Exchange_Customer $user = null ) {
-		if ( ( $r = $this->permissions_check( $request, $user ) ) !== true ) {
+	public function user_can_get( Request $request, AuthScope $scope ) {
+		if ( ( $r = $this->permissions_check( $request, $scope ) ) !== true ) {
 			return $r;
 		}
 
-		if ( ! user_can( $user->wp_user, 'it_read_payment_token', $request->get_route_object( 'token_id' ) ) ) {
+		if ( ! $scope->can( 'it_read_payment_token', $request->get_route_object( 'token_id' ) ) ) {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you are not allowed to view this payment token.', 'it-l10n-ithemes-exchange' ),
@@ -138,12 +139,12 @@ class Token extends Base implements Getable, Putable, Deletable, RouteObjectExpa
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_put( Request $request, \IT_Exchange_Customer $user = null ) {
-		if ( ( $r = $this->permissions_check( $request, $user ) ) !== true ) {
+	public function user_can_put( Request $request, AuthScope $scope ) {
+		if ( ( $r = $this->permissions_check( $request, $scope ) ) !== true ) {
 			return $r;
 		}
 
-		if ( ! user_can( $user->wp_user, 'it_edit_payment_token', $request->get_route_object( 'token_id' ) ) ) {
+		if ( ! $scope->can( 'it_edit_payment_token', $request->get_route_object( 'token_id' ) ) ) {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you are not allowed to edit this payment token.', 'it-l10n-ithemes-exchange' ),
@@ -167,12 +168,12 @@ class Token extends Base implements Getable, Putable, Deletable, RouteObjectExpa
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_delete( Request $request, \IT_Exchange_Customer $user = null ) {
-		if ( ( $r = $this->permissions_check( $request, $user ) ) !== true ) {
+	public function user_can_delete( Request $request, AuthScope $scope) {
+		if ( ( $r = $this->permissions_check( $request, $scope ) ) !== true ) {
 			return $r;
 		}
 
-		if ( ! user_can( $user->wp_user, 'it_delete_payment_token', $request->get_route_object( 'token_id' ) ) ) {
+		if ( ! $scope->can( 'it_delete_payment_token', $request->get_route_object( 'token_id' ) ) ) {
 			return new \WP_Error(
 				'it_exchange_rest_forbidden_context',
 				__( 'Sorry, you are not allowed to delete this payment token.', 'it-l10n-ithemes-exchange' ),
@@ -189,11 +190,11 @@ class Token extends Base implements Getable, Putable, Deletable, RouteObjectExpa
 	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Request $request
-	 * @param \IT_Exchange_Customer|null     $user
+	 * @param AuthScope                      $scope
 	 *
 	 * @return bool|\WP_Error
 	 */
-	protected function permissions_check( Request $request, \IT_Exchange_Customer $user = null ) {
+	protected function permissions_check( Request $request, AuthScope $scope ) {
 
 		$token = $request->get_route_object( 'token_id' );
 
