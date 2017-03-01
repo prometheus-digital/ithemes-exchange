@@ -98,27 +98,8 @@ abstract class IT_Exchange_Email_Notification {
 			) );
 		}
 
-		if ( $this->previous && empty( $data['upgraded'] ) ) {
-
-			if ( isset( $this->previous['subject'] ) ) {
-				$this->set_subject( $this->convert_to_curly( $this->previous['subject'] ) );
-			}
-
-			if ( isset( $this->previous['body'] ) ) {
-				$this->set_body( $this->convert_to_curly( $this->previous['body'] ) );
-			}
-
-			$emails = it_exchange_get_option( 'emails', true );
-
-			if ( ! is_array( $emails ) ) {
-				$emails = array();
-			}
-
-			$emails[ $this->get_slug() ] = $this->get_data_to_save();
-
-			$emails[ $this->get_slug() ]['upgraded'] = true;
-
-			it_exchange_save_option( 'emails', $emails, true );
+		if ( empty( $data['upgraded'] ) ) {
+			$this->maybe_upgrade_previous();
 		}
 
 		if ( ! empty( $args['description'] ) ) {
@@ -143,6 +124,38 @@ abstract class IT_Exchange_Email_Notification {
 		$this->set_subject( isset( $data['subject'] ) ? $data['subject'] : '' );
 		$this->set_body( isset( $data['body'] ) ? $data['body'] : '' );
 		$this->set_active( isset( $data['active'] ) ? (bool) $data['active'] : true );
+	}
+
+	/**
+	 * Maybe upgrade this email notification's previous configuration to the new curly bracket format.
+	 *
+	 * @since 2.0.0
+	 */
+	protected function maybe_upgrade_previous() {
+
+		if ( empty( $this->previous['subject'] ) && empty( $this->previous['body'] ) ) {
+			return;
+		}
+
+		if ( isset( $this->previous['subject'] ) ) {
+			$this->set_subject( $this->convert_to_curly( $this->previous['subject'] ) );
+		}
+
+		if ( isset( $this->previous['body'] ) ) {
+			$this->set_body( $this->convert_to_curly( $this->previous['body'] ) );
+		}
+
+		$emails = it_exchange_get_option( 'emails', true );
+
+		if ( ! is_array( $emails ) ) {
+			$emails = array();
+		}
+
+		$emails[ $this->get_slug() ] = $this->get_data_to_save();
+
+		$emails[ $this->get_slug() ]['upgraded'] = true;
+
+		it_exchange_save_option( 'emails', $emails, true );
 	}
 
 	/**
