@@ -413,6 +413,11 @@ class ITE_Line_Item_Transaction_Object_Converter {
 		$coupons_total /= count( $products ) / count( $coupons );
 
 		foreach ( $coupons as $coupon_data ) {
+
+			if ( empty( $coupon_data['id'] ) ) {
+				continue;
+			}
+
 			$coupon = it_exchange_get_coupon( $coupon_data['id'] );
 
 			if ( ! $coupon ) {
