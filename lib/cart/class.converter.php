@@ -165,6 +165,10 @@ class ITE_Line_Item_Transaction_Object_Converter {
 			foreach ( $data as $tax_type ) {
 				$code = '';
 
+				if ( ! isset( $settings['tax-rates'][$state] ) ) {
+					return false;
+				}
+
 				foreach ( $settings['tax-rates'][ $state ] as $index => $rate_data ) {
 					if ( $rate_data['type'] == $tax_type['type'] ) {
 						$code = "$state:$index";
