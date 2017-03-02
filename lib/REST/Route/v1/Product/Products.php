@@ -10,6 +10,7 @@
 namespace iThemes\Exchange\REST\Route\v1\Product;
 
 use iThemes\Exchange\REST\Auth\AuthScope;
+use iThemes\Exchange\REST\Errors;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
@@ -108,11 +109,7 @@ class Products extends Base implements Getable {
 	public function user_can_get( Request $request, AuthScope $scope ) {
 
 		if ( $request['visible_only'] !== true && ! $scope->can( 'edit_it_products' ) ) {
-			return new \WP_Error(
-				'it_exchange_rest_invalid_context',
-				__( "Sorry, you aren't allowed to filter products by their visibility.", 'it-l10n-ithemes-exchange' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
+			return Errors::cannot_use_query_var( 'visible_only' );
 		}
 
 		return true;

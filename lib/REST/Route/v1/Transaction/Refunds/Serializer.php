@@ -23,12 +23,11 @@ class Serializer {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param \ITE_Refund           $refund
-	 * @param \IT_Exchange_Customer $user
+	 * @param \ITE_Refund $refund
 	 *
 	 * @return array
 	 */
-	public function serialize( \ITE_Refund $refund, \IT_Exchange_Customer $user ) {
+	public function serialize( \ITE_Refund $refund ) {
 
 		$data = array(
 			'id'         => $refund->ID,

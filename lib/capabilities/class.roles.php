@@ -49,23 +49,29 @@ class IT_Exchange_Roles {
 		/** @var WP_Roles $wp_roles */
 		global $wp_roles;
 
+		$administrator = $wp_roles->get_role( 'administrator' );
+
 		foreach ( $this->capabilities->get_caps_for_product() as $cap ) {
-			$wp_roles->get_role( 'administrator' )->add_cap( $cap );
+			$administrator->add_cap( $cap );
 		}
 
 		foreach ( $this->capabilities->get_caps_for_transaction() as $cap ) {
-			$wp_roles->get_role( 'administrator' )->add_cap( $cap );
+			$administrator->add_cap( $cap );
 		}
 
 		foreach ( $this->capabilities->get_caps_for_coupons() as $cap ) {
-			$wp_roles->get_role( 'administrator' )->add_cap( $cap );
+			$administrator->add_cap( $cap );
 		}
 
-		$wp_roles->get_role( 'administrator' )->add_cap( 'it_perform_upgrades' );
+		$administrator->add_cap( 'it_perform_upgrades' );
 
-		$wp_roles->get_role( 'administrator' )->add_cap( 'it_list_others_payment_tokens' );
-		$wp_roles->get_role( 'administrator' )->add_cap( 'it_create_others_payment_tokens' );
-		$wp_roles->get_role( 'administrator' )->add_cap( 'it_edit_others_payment_tokens' );
+		$administrator->add_cap( 'it_list_others_payment_tokens' );
+		$administrator->add_cap( 'it_create_others_payment_tokens' );
+		$administrator->add_cap( 'it_edit_others_payment_tokens' );
+
+		$administrator->add_cap( 'it_edit_refunds' );
+		$administrator->add_cap( 'it_list_refunds' );
+		$administrator->add_cap( 'it_list_transaction_refunds' );
 
 		/**
 		 * Fires when custom capabilities should be added to roles.

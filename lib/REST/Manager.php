@@ -8,6 +8,7 @@
 
 namespace iThemes\Exchange\REST;
 
+use iThemes\Exchange\REST\Auth\AuthScope;
 use iThemes\Exchange\REST\Auth\CustomerAuthScope;
 use iThemes\Exchange\REST\Auth\GuestAuthScope;
 use iThemes\Exchange\REST\Auth\PublicAuthScope;
@@ -27,6 +28,8 @@ use JsonSchema\Validator;
  * @package iThemes\Exchange\REST
  */
 class Manager {
+
+	const AUTH_STOP_CASCADE = 1;
 
 	/** @var string */
 	private $namespace;
@@ -51,6 +54,9 @@ class Manager {
 
 	/** @var array */
 	private $shared_schemas;
+
+	/** @var AuthScope */
+	private $auth_scope;
 
 	/** @var array */
 	private static $interfaces = array(
@@ -243,6 +249,41 @@ class Manager {
 	}
 
 	/**
+	 * Get the auth scope.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return AuthScope
+	 */
+	public function get_auth_scope() {
+
+		if ( $this->auth_scope === null ) {
+			$current_customer = it_exchange_get_current_customer();
+
+			if ( $current_customer instanceof \IT_Exchange_Guest_Customer ) {
+				$this->set_auth_scope( new GuestAuthScope( $current_customer ) );
+			} elseif ( $current_customer ) {
+				$this->set_auth_scope( new CustomerAuthScope( $current_customer ) );
+			} else {
+				$this->set_auth_scope( new PublicAuthScope() );
+			}
+		}
+
+		return $this->auth_scope;
+	}
+
+	/**
+	 * Set the auth scope.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param AuthScope $scope
+	 */
+	public function set_auth_scope( AuthScope $scope ) {
+		$this->auth_scope = $scope;
+	}
+
+	/**
 	 * Register a route with the server.
 	 *
 	 * @since 2.0.0
@@ -279,21 +320,14 @@ class Manager {
 			}
 
 			$exchange_request = null;
+			$manager          = $this;
 
-			$permission = function ( \WP_REST_Request $request ) use ( $verb, $route, $parents, &$exchange_request ) {
+			$permission = function ( \WP_REST_Request $request ) use ( $manager, $verb, $route, $parents, &$exchange_request ) {
 
 				$exchange_request = Request::from_wp( $request );
 				$exchange_request->set_matched_route_controller( $route );
 
-				$current_customer = it_exchange_get_current_customer();
-
-				if ( $current_customer instanceof \IT_Exchange_Guest_Customer ) {
-					$auth = new GuestAuthScope( $current_customer );
-				} elseif ( $current_customer ) {
-					$auth = new CustomerAuthScope( $current_customer );
-				} else {
-					$auth = new PublicAuthScope();
-				}
+				$auth = $manager->get_auth_scope();
 
 				foreach ( $parents as $parent ) {
 
@@ -307,9 +341,17 @@ class Manager {
 						}
 					}
 
-					if ( ( $r = call_user_func( $callback, $exchange_request, $auth ) ) !== true ) {
-						return $r;
+					$allowed = call_user_func( $callback, $exchange_request, $auth );
+
+					if ( $allowed === true ) {
+						continue;
 					}
+
+					if ( $allowed === Manager::AUTH_STOP_CASCADE ) {
+						return true;
+					}
+
+					return $allowed;
 				}
 
 				$callback = array( $route, 'user_can_' . strtolower( $verb ) );

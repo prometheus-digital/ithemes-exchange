@@ -9,7 +9,9 @@
 namespace iThemes\Exchange\REST\Route\v1\Transaction\Refunds;
 
 use iThemes\Exchange\REST\Auth\AuthScope;
+use iThemes\Exchange\REST\Errors;
 use iThemes\Exchange\REST\Getable;
+use iThemes\Exchange\REST\Manager;
 use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
 use iThemes\Exchange\REST\RouteObjectExpandable;
@@ -39,8 +41,7 @@ class Refund extends Base implements Getable, RouteObjectExpandable {
 		/** @var \ITE_Refund $refund */
 		$refund = $request->get_route_object( 'refund_id' );
 
-		$user     = it_exchange_get_current_customer();
-		$response = new \WP_REST_Response( $this->serializer->serialize( $refund, $user ) );
+		$response = new \WP_REST_Response( $this->serializer->serialize( $refund ) );
 
 		foreach ( $this->serializer->generate_links( $refund, $this->get_manager() ) as $rel => $links ) {
 			foreach ( $links as $link ) {
@@ -62,14 +63,18 @@ class Refund extends Base implements Getable, RouteObjectExpandable {
 		$refund = $request->get_route_object( 'refund_id' );
 
 		if ( ! $refund || ! $refund->transaction || $refund->transaction->ID !== (int) $transaction_id ) {
-			return new \WP_Error(
-				'it_exchange_rest_forbidden_context',
-				__( 'Sorry, you are not allowed to access this refund.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
+			return Errors::not_found();
 		}
 
-		return true;
+		if ( ! $scope->can( 'it_read_refund', $refund ) ) {
+			return Errors::cannot_view();
+		}
+
+		if ( $request['context'] === 'edit' && ! $scope->can( 'it_edit_refund', $refund ) ) {
+			return Errors::forbidden_context( 'edit' );
+		}
+
+		return Manager::AUTH_STOP_CASCADE;
 	}
 
 	/**

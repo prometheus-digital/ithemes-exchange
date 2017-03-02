@@ -9,6 +9,7 @@
 namespace iThemes\Exchange\REST\Route\v1\Transaction;
 
 use iThemes\Exchange\REST\Auth\AuthScope;
+use iThemes\Exchange\REST\Errors;
 use iThemes\Exchange\REST\Postable;
 use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
@@ -64,11 +65,7 @@ class Send_Receipt extends Base implements Postable {
 	public function user_can_post( Request $request, AuthScope $scope ) {
 
 		if ( ! $scope->can( 'edit_it_transaction', $request->get_route_object( 'transaction_id' ) ) ) {
-			return new \WP_Error(
-				'it_exchange_rest_forbidden_context',
-				__( 'Sorry, you are not allowed to edit this transaction.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
+			return Errors::cannot_edit();
 		}
 
 		return true;

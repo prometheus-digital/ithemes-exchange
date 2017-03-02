@@ -11,6 +11,7 @@ namespace iThemes\Exchange\REST\Route\v1\Cart;
 use iThemes\Exchange\REST as r;
 use iThemes\Exchange\REST\Auth\AuthScope;
 use iThemes\Exchange\REST\Deletable;
+use iThemes\Exchange\REST\Errors;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Putable;
 use iThemes\Exchange\REST\Request;
@@ -62,7 +63,7 @@ class Item extends Base implements Getable, Putable, Deletable {
 	 * @inheritDoc
 	 */
 	public function user_can_get( Request $request, AuthScope $scope ) {
-		return $this->permission_check( $request, $scope );
+		return $this->exists_check( $request, $scope );
 	}
 
 	/**
@@ -98,13 +99,13 @@ class Item extends Base implements Getable, Putable, Deletable {
 	public function user_can_put( Request $request, AuthScope $scope ) {
 		if ( ! $this->type->is_editable_in_rest() ) {
 			return new \WP_Error(
-				'it_exchange_rest_non_editable_item',
+				'it_exchange_rest_non_editable_line_item_type',
 				__( 'Item not editable in REST.', 'it-l10n-ithemes-exchange' ),
-				400
+				array( 'status' => \WP_Http::METHOD_NOT_ALLOWED )
 			);
 		}
 
-		return $this->permission_check( $request, $scope );
+		return $this->exists_check( $request, $scope );
 	}
 
 	/**
@@ -125,13 +126,13 @@ class Item extends Base implements Getable, Putable, Deletable {
 	public function user_can_delete( Request $request, AuthScope $scope ) {
 		if ( ! $this->type->is_editable_in_rest() ) {
 			return new \WP_Error(
-				'it_exchange_rest_non_editable_item',
+				'it_exchange_rest_non_editable_line_item_type',
 				__( 'Item not editable in REST.', 'it-l10n-ithemes-exchange' ),
-				400
+				array( 'status' => \WP_Http::METHOD_NOT_ALLOWED )
 			);
 		}
 
-		return $this->permission_check( $request, $scope );
+		return $this->exists_check( $request, $scope );
 	}
 
 	/**
@@ -144,17 +145,13 @@ class Item extends Base implements Getable, Putable, Deletable {
 	 *
 	 * @return bool|\WP_Error
 	 */
-	protected function permission_check( Request $request, AuthScope $scope ) {
+	protected function exists_check( Request $request, AuthScope $scope ) {
 
 		/** @var \ITE_Cart $cart */
 		$cart = $request->get_route_object( 'cart_id' );
 
 		if ( ! $cart->get_item( $this->type->get_type(), $request->get_param( 'item_id', 'URL' ) ) ) {
-			return new \WP_Error(
-				'it_exchange_rest_invalid_item',
-				__( 'Invalid item id.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => 404 )
-			);
+			return Errors::not_found();
 		}
 
 		return true;

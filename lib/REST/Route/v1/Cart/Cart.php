@@ -11,6 +11,7 @@ namespace iThemes\Exchange\REST\Route\v1\Cart;
 use iThemes\Exchange\REST as r;
 use iThemes\Exchange\REST\Auth\AuthScope;
 use iThemes\Exchange\REST\Deletable;
+use iThemes\Exchange\REST\Errors;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Putable;
 use iThemes\Exchange\REST\Request;
@@ -191,19 +192,11 @@ class Cart extends r\Route\Base implements Getable, Putable, Deletable, r\RouteO
 
 		/** @var \ITE_Cart $cart */
 		if ( ! $cart = $request->get_route_object( 'cart_id' ) ) {
-			return new \WP_Error(
-				'it_exchange_rest_invalid_cart',
-				__( 'Invalid cart id.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => 404 )
-			);
+			return Errors::not_found();
 		}
 
 		if ( ! $scope->can( 'it_edit_cart', $cart ) ) {
-			return new \WP_Error(
-				'it_exchange_rest_forbidden_context',
-				__( 'Sorry, you are not allowed to access this cart.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
+			return Errors::cannot_edit();
 		}
 
 		return true;

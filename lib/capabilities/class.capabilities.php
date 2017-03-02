@@ -134,6 +134,34 @@ class IT_Exchange_Capabilities {
 
 				// Necessary for a manual admin purchase
 				return array( 'it_use_others_payment_tokens' );
+			case 'it_create_refunds':
+
+				if ( empty( $args[0]) || ! it_exchange_get_transaction( $args[0] ) ) {
+					return array( 'do_not_allow' );
+				}
+
+				return array( 'it_create_refunds' );
+			case 'it_list_transaction_refunds':
+
+				if ( empty( $args[0] ) || ! it_exchange_get_transaction( $args[0] ) ) {
+					return array( 'do_not_allow' );
+				}
+
+				return array( 'it_list_transaction_refunds' );
+			case 'it_read_refund':
+
+				if ( empty( $args[0] ) || ! ( $refund = ITE_Refund::get( $args[0] ) ) || ! $refund->transaction ) {
+					return array( 'do_not_allow' );
+				}
+
+				return array( 'it_list_transaction_refunds' );
+			case 'it_edit_refund':
+
+				if ( empty( $args[0] ) || ! ( $refund = ITE_Refund::get( $args[0] ) ) || ! $refund->transaction ) {
+					return array( 'do_not_allow' );
+				}
+
+				return array( 'it_edit_refunds' );
 			case 'it_create_carts':
 				return array();
 			case 'it_read_cart':

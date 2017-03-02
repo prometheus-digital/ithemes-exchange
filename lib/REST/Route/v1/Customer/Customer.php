@@ -9,6 +9,7 @@
 namespace iThemes\Exchange\REST\Route\v1\Customer;
 
 use iThemes\Exchange\REST\Auth\AuthScope;
+use iThemes\Exchange\REST\Errors;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Putable;
 use iThemes\Exchange\REST\Request;
@@ -118,19 +119,15 @@ class Customer extends Route\Base implements Getable, Putable, RouteObjectExpand
 		$customer = $request->get_route_object( 'customer_id' );
 
 		if ( ! $customer ) {
-			return new \WP_Error(
-				'it_exchange_rest_invalid_customer',
-				__( 'Invalid customer.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::NOT_FOUND )
-			);
+			return Errors::not_found();
 		}
 
 		if ( ! $scope->can( 'edit_user', $customer->ID ) ) {
-			return new \WP_Error(
-				'it_exchange_rest_forbidden_context',
-				__( 'Sorry, you are not allowed to access this customer.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
+			return Errors::cannot_view();
+		}
+
+		if ( $request['context'] === 'stats' && ! $scope->can( 'list_it_transactions' ) ) {
+			return Errors::forbidden_context( 'stats' );
 		}
 
 		return true;

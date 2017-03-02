@@ -10,7 +10,9 @@ namespace iThemes\Exchange\REST\Route\v1\Transaction\Activity;
 
 use iThemes\Exchange\REST\Auth\AuthScope;
 use iThemes\Exchange\REST\Deletable;
+use iThemes\Exchange\REST\Errors;
 use iThemes\Exchange\REST\Getable;
+use iThemes\Exchange\REST\Manager;
 use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
 use iThemes\Exchange\REST\RouteObjectExpandable;
@@ -51,23 +53,23 @@ class Item extends Base implements Getable, Deletable, RouteObjectExpandable {
 		/** @var \IT_Exchange_Txn_Activity $item */
 		$item = $request->get_route_object( 'activity_id' );
 
-		if ( ! $item || $item->get_transaction()->get_ID() !== $request->get_param( 'transaction_id', 'URL' ) ) {
-			return new \WP_Error(
-				'it_exchange_rest_invalid_activity',
-				__( 'Invalid activity item.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::NOT_FOUND )
-			);
+		if ( ! $item || ! $item->get_transaction() || $item->get_transaction()->get_ID() !== $request->get_param( 'transaction_id', 'URL' ) ) {
+			return Errors::not_found();
+		}
+
+		if ( $item->is_public() && ! $scope->can( 'read_it_transaction', $item->get_transaction() ) ) {
+			return Errors::cannot_view();
 		}
 
 		if ( ! $item->is_public() && ! $scope->can( 'edit_it_transaction', $item->get_transaction() ) ) {
-			return new \WP_Error(
-				'it_exchange_rest_forbidden_context',
-				__( 'Sorry, you are not allowed to access this activity item.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
+			return Errors::cannot_view();
 		}
 
-		return true;
+		if ( $request['context'] === 'edit' && ! $scope->can( 'edit_it_transaction', $item->get_transaction() ) ) {
+			return Errors::forbidden_context( 'edit' );
+		}
+
+		return Manager::AUTH_STOP_CASCADE;
 	}
 
 	/**
@@ -90,23 +92,15 @@ class Item extends Base implements Getable, Deletable, RouteObjectExpandable {
 		/** @var \IT_Exchange_Txn_Activity $item */
 		$item = $request->get_route_object( 'activity_id' );
 
-		if ( ! $item ) {
-			return new \WP_Error(
-				'it_exchange_rest_invalid_activity',
-				__( 'Invalid activity item.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::NOT_FOUND )
-			);
+		if ( ! $item || $item->get_transaction()->get_ID() !== $request->get_param( 'transaction_id', 'URL' ) ) {
+			return Errors::not_found();
 		}
 
 		if ( ! $scope->can( 'edit_it_transaction', $item->get_transaction() ) ) {
-			return new \WP_Error(
-				'it_exchange_rest_forbidden_context',
-				__( 'Sorry, you are not allowed to delete this activity item.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
+			return Errors::cannot_delete();
 		}
 
-		return true;
+		return Manager::AUTH_STOP_CASCADE;
 	}
 
 	/**

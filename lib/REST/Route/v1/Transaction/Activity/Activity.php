@@ -9,7 +9,9 @@
 namespace iThemes\Exchange\REST\Route\v1\Transaction\Activity;
 
 use iThemes\Exchange\REST\Auth\AuthScope;
+use iThemes\Exchange\REST\Errors;
 use iThemes\Exchange\REST\Getable;
+use iThemes\Exchange\REST\Manager;
 use iThemes\Exchange\REST\Postable;
 use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
@@ -60,16 +62,10 @@ class Activity extends Base implements Getable, Postable {
 	 */
 	public function user_can_get( Request $request, AuthScope $scope ) {
 
-		if (
-			! $request['activity_id'] &&
-			$request['public_only'] !== true &&
-			! $scope->can( 'edit_it_transaction', $request->get_route_object( 'transaction_id' ) )
-		) {
-			return new \WP_Error(
-				'it_exchange_rest_forbidden_context',
-				__( 'Sorry, you are not allowed to list non-public transaction activity.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
+		$transaction = $request->get_route_object( 'transaction_id' );
+
+		if ( $request['public_only'] !== true && ! $scope->can( 'edit_it_transaction', $transaction ) ) {
+			return Errors::cannot_use_query_var( 'public_only' );
 		}
 
 		return true;
@@ -119,14 +115,10 @@ class Activity extends Base implements Getable, Postable {
 	public function user_can_post( Request $request, AuthScope $scope ) {
 
 		if ( ! $scope->can( 'edit_it_transaction', $request->get_route_object( 'transaction_id' ) ) ) {
-			return new \WP_Error(
-				'it_exchange_rest_forbidden_context',
-				__( 'Sorry, you are not allowed to create transaction activity.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
+			return Errors::cannot_create();
 		}
 
-		return true;
+		return Manager::AUTH_STOP_CASCADE;
 	}
 
 	/**

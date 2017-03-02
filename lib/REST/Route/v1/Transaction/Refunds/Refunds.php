@@ -9,7 +9,9 @@
 namespace iThemes\Exchange\REST\Route\v1\Transaction\Refunds;
 
 use iThemes\Exchange\REST\Auth\AuthScope;
+use iThemes\Exchange\REST\Errors;
 use iThemes\Exchange\REST\Getable;
+use iThemes\Exchange\REST\Manager;
 use iThemes\Exchange\REST\Postable;
 use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
@@ -47,11 +49,10 @@ class Refunds extends Base implements Getable, Postable {
 		$transaction = $request->get_route_object( 'transaction_id' );
 		$refunds     = $transaction->refunds;
 
-		$user = it_exchange_get_current_customer();
 		$data = array();
 
 		foreach ( $refunds as $refund ) {
-			$serialized = $this->serializer->serialize( $refund, $user );
+			$serialized = $this->serializer->serialize( $refund );
 			$links      = $this->serializer->generate_links( $refund, $this->get_manager() );
 
 			foreach ( $links as $rel => $rel_links ) {
@@ -72,7 +73,16 @@ class Refunds extends Base implements Getable, Postable {
 	 * @inheritDoc
 	 */
 	public function user_can_get( Request $request, AuthScope $scope ) {
-		return $this->permissions_check( $request, $scope );
+
+		if ( ! $scope->can( 'it_list_transaction_refunds', $request->get_route_object( 'transaction_id' ) ) ) {
+			return Errors::cannot_list();
+		}
+
+		if ( $request['context'] === 'edit' && ! $scope->can( 'it_edit_refunds' ) ) {
+			return Errors::forbidden_context( 'edit' );
+		}
+
+		return Manager::AUTH_STOP_CASCADE;
 	}
 
 	/**
@@ -115,10 +125,7 @@ class Refunds extends Base implements Getable, Postable {
 			);
 		}
 
-		$response = new \WP_REST_Response(
-			$this->serializer->serialize( $refund, it_exchange_get_current_customer() ),
-			\WP_Http::CREATED
-		);
+		$response = new \WP_REST_Response( $this->serializer->serialize( $refund ),	\WP_Http::CREATED );
 
 		$location = \iThemes\Exchange\REST\get_rest_url(
 			$this->get_manager()->get_first_route( 'iThemes\Exchange\REST\Route\v1\Transaction\Refunds\Refund' ),
@@ -133,27 +140,9 @@ class Refunds extends Base implements Getable, Postable {
 	 * @inheritDoc
 	 */
 	public function user_can_post( Request $request, AuthScope $scope ) {
-		return $this->permissions_check( $request, $scope );
-	}
 
-	/**
-	 * Perform a permissions request.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @param \iThemes\Exchange\REST\Request $request
-	 * @param AuthScope                      $scope
-	 *
-	 * @return bool|\WP_Error
-	 */
-	protected function permissions_check( Request $request, AuthScope $scope ) {
-
-		if ( ! $scope->can( 'edit_it_transaction', $request->get_route_object( 'transaction_id' ) ) ) {
-			return new \WP_Error(
-				'it_exchange_rest_forbidden_context',
-				__( "Sorry, you are not allowed to view this transaction's refunds.", 'it-l10n-ithemes-exchange' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
+		if ( ! $scope->can( 'it_create_refunds', $request->get_route_object( 'transaction_id' ) ) ) {
+			return Errors::cannot_create();
 		}
 
 		return true;

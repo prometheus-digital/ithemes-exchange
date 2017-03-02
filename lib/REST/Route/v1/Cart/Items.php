@@ -61,7 +61,7 @@ class Items extends Base implements Getable, Postable, Deletable {
 
 		if ( ! $this->type->is_show_in_rest() ) {
 			return new \WP_Error(
-				'it_exchange_rest_invalid_type',
+				'it_exchange_rest_invalid_line_item_type',
 				__( 'Invalid line item type.', 'it-l10n-ithemes-exchange' ),
 				array( 'status' => 404 )
 			);
@@ -111,7 +111,7 @@ class Items extends Base implements Getable, Postable, Deletable {
 	public function user_can_post( Request $request, AuthScope $scope ) {
 		if ( ! $this->type->is_editable_in_rest() ) {
 			return new \WP_Error(
-				'it_exchange_rest_invalid_type',
+				'it_exchange_rest_invalid_line_item_type',
 				__( 'Line item type cannot be added.', 'it-l10n-ithemes-exchange' ),
 				array( 'status' => 404 )
 			);
@@ -138,7 +138,7 @@ class Items extends Base implements Getable, Postable, Deletable {
 	public function user_can_delete( Request $request, AuthScope $scope ) {
 		if ( ! $this->type->is_editable_in_rest() ) {
 			return new \WP_Error(
-				'it_exchange_rest_invalid_type',
+				'it_exchange_rest_invalid_line_item_type',
 				__( 'Line item type cannot be edited.', 'it-l10n-ithemes-exchange' ),
 				array( 'status' => 404 )
 			);

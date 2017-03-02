@@ -9,8 +9,9 @@
 namespace iThemes\Exchange\REST\Route\v1\Transaction;
 
 use iThemes\Exchange\REST\Auth\AuthScope;
+use iThemes\Exchange\REST\Errors;
 use iThemes\Exchange\REST\Getable;
-use iThemes\Exchange\REST\Postable;
+use iThemes\Exchange\REST\Manager;
 use iThemes\Exchange\REST\Putable;
 use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\RouteObjectExpandable;
@@ -57,17 +58,21 @@ class Transaction extends Base implements Getable, Putable, RouteObjectExpandabl
 	 */
 	public function user_can_get( Request $request, AuthScope $scope ) {
 
-		$cap = $request['context'] === 'view' ? 'read_it_transaction' : 'edit_it_transaction';
+		$transaction = $request->get_route_object( 'transaction_id' );
 
-		if ( ! $scope->can( $cap, $request->get_route_object( 'transaction_id' ) ) ) {
-			return new \WP_Error(
-				'it_exchange_rest_forbidden_context',
-				__( 'Sorry, you are not allowed to access this transaction.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
+		if ( ! $transaction && $scope->can( 'list_it_transactions' ) ) {
+			return Errors::not_found();
 		}
 
-		return true;
+		if ( $request['context'] === 'edit' && ! $scope->can( 'edit_it_transaction', $transaction ) ) {
+			return Errors::forbidden_context( 'edit' );
+		}
+
+		if ( ! $scope->can( 'read_it_transaction', $request->get_route_object( 'transaction_id' ) ) ) {
+			return Errors::cannot_view();
+		}
+
+		return Manager::AUTH_STOP_CASCADE;
 	}
 
 	/**
@@ -101,11 +106,7 @@ class Transaction extends Base implements Getable, Putable, RouteObjectExpandabl
 	public function user_can_put( Request $request, AuthScope $scope ) {
 
 		if ( ! $scope->can( 'edit_it_transaction', $request->get_route_object( 'transaction_id' ) ) ) {
-			return new \WP_Error(
-				'it_exchange_rest_forbidden_context',
-				__( 'Sorry, you are not allowed to access this transaction.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
+			return Errors::cannot_edit();
 		}
 
 		return true;

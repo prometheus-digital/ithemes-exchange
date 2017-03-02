@@ -10,6 +10,7 @@ namespace iThemes\Exchange\REST\Route\v1\Customer\Address;
 
 use iThemes\Exchange\REST\Auth\AuthScope;
 use iThemes\Exchange\REST\Deletable;
+use iThemes\Exchange\REST\Errors;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Putable;
 use iThemes\Exchange\REST\Request;
@@ -52,28 +53,8 @@ class Address extends Base implements Getable, Putable, Deletable, RouteObjectEx
 		/** @var \ITE_Saved_Address $address */
 		$address = $request->get_route_object( 'address_id' );
 
-		if ( ! $address ) {
-			return new \WP_Error(
-				'it_exchange_rest_not_found',
-				__( 'Address not found.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::NOT_FOUND )
-			);
-		}
-
-		if ( ! $address->customer && ! $scope->can( 'edit_users' ) ) {
-			return new \WP_Error(
-				'it_exchange_rest_invalid_permissions',
-				__( 'You do not have permission to view this address.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::FORBIDDEN )
-			);
-		}
-
-		if ( $address->customer && ! $scope->can( 'edit_user', $address->customer->get_ID() ) ) {
-			return new \WP_Error(
-				'it_exchange_rest_invalid_permissions',
-				__( 'You do not have permission to view this address.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::FORBIDDEN )
-			);
+		if ( ! $address || ! $address->customer || $address->customer->get_ID() !== (int) $request->get_param( 'customer_id', 'URL' ) ) {
+			return Errors::not_found();
 		}
 
 		return true;
@@ -146,7 +127,14 @@ class Address extends Base implements Getable, Putable, Deletable, RouteObjectEx
 	 * @inheritDoc
 	 */
 	public function user_can_delete( Request $request, AuthScope $scope ) {
-		return true; // Cascade to get.
+
+		$address = $request->get_route_object( 'address_id' );
+
+		if ( ! $address || ! $address->customer || $address->customer->get_ID() !== (int) $request->get_param( 'customer_id', 'URL' ) ) {
+			return Errors::not_found();
+		}
+
+		return true;
 	}
 
 	/**

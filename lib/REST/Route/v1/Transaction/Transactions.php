@@ -9,6 +9,7 @@
 namespace iThemes\Exchange\REST\Route\v1\Transaction;
 
 use iThemes\Exchange\REST\Auth\AuthScope;
+use iThemes\Exchange\REST\Errors;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
@@ -117,29 +118,28 @@ class Transactions extends Base implements Getable {
 	 */
 	public function user_can_get( Request $request, AuthScope $scope ) {
 
-		if ( ! $request['transaction_id'] && ! $scope->can( 'edit_user', $request['customer'] ) ) {
-			return new \WP_Error(
-				'it_exchange_rest_forbidden_context',
-				__( "Sorry, you are not allowed to list other customer's transactions.", 'it-l10n-ithemes-exchange' ),
-				array( 'status' => rest_authorization_required_code() )
+		if ( $request['customer'] && ! $scope->can( 'edit_user', $request['customer'] ) ) {
+			return Errors::cannot_list(
+				__( "Sorry, you are not allowed to list that customer's transactions.", 'it-l10n-ithemes-exchange' )
 			);
+		}
+
+		if ( ! $request['customer'] && ! $scope->can( 'list_it_transactions' ) ) {
+			return Errors::cannot_list(
+				__( "Sorry, you are not allowed to list other customer's transactions.", 'it-l10n-ithemes-exchange' )
+			);
+		}
+
+		if ( $request['context'] === 'edit' && ! $scope->can( 'edit_others_it_transactions' ) ) {
+			return Errors::forbidden_context( 'edit' );
 		}
 
 		if ( $request['parent'] && ! $scope->can( 'edit_it_transaction', $request['parent'] ) ) {
-			return new \WP_Error(
-				'it_exchange_rest_forbidden_context',
-				__( 'Sorry, you cannot edit that prent transaction.' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
-
+			return Errors::invalid_query_var_usage( 'parent' );
 		}
 
 		if ( $request['method_id'] && ! $scope->can( 'list_it_transactions' ) ) {
-			return new \WP_Error(
-				'it_exchange_rest_forbidden_context',
-				__( 'Sorry, you cannot filter transactions by method id.' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
+			return Errors::cannot_use_query_var( 'method_id' );
 		}
 
 		return true;
