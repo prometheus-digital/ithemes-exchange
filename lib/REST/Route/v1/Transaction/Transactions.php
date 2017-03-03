@@ -44,6 +44,7 @@ class Transactions extends Base implements Getable {
 			'posts_per_page' => $per_page,
 			'paged'          => $page,
 			'parent'         => $request['parent'],
+			'orderby'        => 'ID',
 		);
 
 		if ( $request['order_number'] ) {
@@ -59,13 +60,11 @@ class Transactions extends Base implements Getable {
 		}
 
 		$transactions = it_exchange_get_transactions( $args, $total );
-
-		$user = it_exchange_get_current_customer();
-		$data = array();
+		$data         = array();
 
 		foreach ( $transactions as $transaction ) {
-			$serialized = $this->serializer->serialize( $transaction, $user );
-			$links      = $this->serializer->generate_links( $transaction, $this->get_manager(), $user );
+			$serialized = $this->serializer->serialize( $transaction );
+			$links      = $this->serializer->generate_links( $transaction, $this->get_manager() );
 
 			foreach ( $links as $rel => $rel_links ) {
 				$serialized['_links'][ $rel ] = array();
@@ -134,8 +133,16 @@ class Transactions extends Base implements Getable {
 			return Errors::forbidden_context( 'edit' );
 		}
 
-		if ( $request['parent'] && ! $scope->can( 'edit_it_transaction', $request['parent'] ) ) {
-			return Errors::invalid_query_var_usage( 'parent' );
+		if ( $request['parent'] ) {
+			$parent = it_exchange_get_transaction( $request['parent'] );
+
+			if ( $parent && ! $scope->can( 'edit_it_transaction', $parent ) ) {
+				return Errors::cannot_use_query_var( 'parent' );
+			} elseif ( ! $parent && $scope->can( 'edit_others_it_transactions' ) ) {
+				return Errors::invalid_query_var_usage( 'parent' );
+			} elseif ( ! $parent ) {
+				return Errors::cannot_use_query_var( 'parent' );
+			}
 		}
 
 		if ( $request['method_id'] && ! $scope->can( 'list_it_transactions' ) ) {

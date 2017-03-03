@@ -24,12 +24,11 @@ class Serializer {
 	 * @since 2.0.0
 	 *
 	 * @param \IT_Exchange_Transaction $transaction
-	 * @param \IT_Exchange_Customer    $user
 	 * @param int                      $size
 	 *
 	 * @return array
 	 */
-	public function serialize( \IT_Exchange_Transaction $transaction, \IT_Exchange_Customer $user, $size = 96 ) {
+	public function serialize( \IT_Exchange_Transaction $transaction, $size = 96 ) {
 		$t = $transaction;
 
 		$payment = array();
@@ -83,11 +82,10 @@ class Serializer {
 	 *
 	 * @param \IT_Exchange_Transaction       $transaction
 	 * @param \iThemes\Exchange\REST\Manager $manager
-	 * @param \IT_Exchange_Customer          $user
 	 *
 	 * @return array
 	 */
-	public function generate_links( \IT_Exchange_Transaction $transaction, Manager $manager, \IT_Exchange_Customer $user ) {
+	public function generate_links( \IT_Exchange_Transaction $transaction, Manager $manager ) {
 
 		$t = $transaction;
 

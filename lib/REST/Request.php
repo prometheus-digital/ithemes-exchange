@@ -58,6 +58,19 @@ class Request extends \WP_REST_Request {
 	}
 
 	/**
+	 * Create a request from a path.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $path
+	 *
+	 * @return Request|null
+	 */
+	public static function from_path( $path ) {
+		return static::from_url( rest_url( $path ) );
+	}
+
+	/**
 	 * Get the matched route controller.
 	 *
 	 * @since 2.0.0

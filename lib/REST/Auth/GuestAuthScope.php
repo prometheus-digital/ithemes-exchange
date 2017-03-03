@@ -53,8 +53,8 @@ class GuestAuthScope implements AuthScope {
 				}
 
 				return $cart->get_customer()->get_email() === $this->customer->get_email();
+			default:
+				return false;
 		}
-
-		return false;
 	}
 }

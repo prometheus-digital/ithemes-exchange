@@ -41,10 +41,9 @@ class Transaction extends Base implements Getable, Putable, RouteObjectExpandabl
 	public function handle_get( Request $request ) {
 
 		$t        = $request->get_route_object( 'transaction_id' );
-		$user     = it_exchange_get_current_customer();
-		$response = new \WP_REST_Response( $this->serializer->serialize( $t, $user ) );
+		$response = new \WP_REST_Response( $this->serializer->serialize( $t ) );
 
-		foreach ( $this->serializer->generate_links( $t, $this->get_manager(), $user ) as $rel => $links ) {
+		foreach ( $this->serializer->generate_links( $t, $this->get_manager() ) as $rel => $links ) {
 			foreach ( $links as $link ) {
 				$response->add_link( $rel, $link['href'], $link );
 			}
@@ -87,10 +86,11 @@ class Transaction extends Base implements Getable, Putable, RouteObjectExpandabl
 			$t->update_status( is_array( $request['status'] ) ? $request['status']['slug'] : $request['status'] );
 		}
 
-		$user     = it_exchange_get_current_customer();
-		$response = new \WP_REST_Response( $this->serializer->serialize( $t, $user ) );
+		$request['context'] = 'edit';
 
-		foreach ( $this->serializer->generate_links( $t, $this->get_manager(), $user ) as $rel => $links ) {
+		$response = new \WP_REST_Response( $this->serializer->serialize( $t ) );
+
+		foreach ( $this->serializer->generate_links( $t, $this->get_manager() ) as $rel => $links ) {
 			foreach ( $links as $link ) {
 				$response->add_link( $rel, $link['href'], $link );
 			}

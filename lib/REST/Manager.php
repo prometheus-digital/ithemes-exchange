@@ -329,6 +329,26 @@ class Manager {
 
 				$auth = $manager->get_auth_scope();
 
+				$callback = array( $route, 'user_can_' . strtolower( $verb ) );
+
+				if ( ! is_callable( $callback ) ) {
+					return false;
+				}
+
+				$allowed = call_user_func( $callback, $exchange_request, $auth );
+
+				if ( $allowed === Manager::AUTH_STOP_CASCADE ) {
+					return true;
+				}
+
+				if ( $allowed !== true ) {
+					return $allowed;
+				}
+
+				if ( empty( $parents ) ) {
+					return $allowed;
+				}
+
 				foreach ( $parents as $parent ) {
 
 					$callback = array( $parent, 'user_can_' . strtolower( $verb ) );
@@ -354,9 +374,7 @@ class Manager {
 					return $allowed;
 				}
 
-				$callback = array( $route, 'user_can_' . strtolower( $verb ) );
-
-				return call_user_func( $callback, $exchange_request, $auth );
+				return $allowed;
 			};
 
 			$middleware = $this->get_middleware();
@@ -733,5 +751,19 @@ class Manager {
 		} );
 
 		return true;
+	}
+
+	/**
+	 * Reset the Manager.
+	 *
+	 * @since 2.0.0
+	 */
+	public function _reset() {
+		$this->initialized = false;
+		$this->routes      = array();
+		$this->auth_scope  = null;
+
+		remove_filter( 'rest_authentication_errors', array( $this, 'authenticate' ), 20 );
+		remove_filter( 'rest_dispatch_request', array( $this, 'conform_request_to_schema' ), 10 );
 	}
 }

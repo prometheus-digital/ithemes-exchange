@@ -136,7 +136,7 @@ class IT_Exchange_Capabilities {
 				return array( 'it_use_others_payment_tokens' );
 			case 'it_create_refunds':
 
-				if ( empty( $args[0]) || ! it_exchange_get_transaction( $args[0] ) ) {
+				if ( empty( $args[0] ) || ! it_exchange_get_transaction( $args[0] ) ) {
 					return array( 'do_not_allow' );
 				}
 
