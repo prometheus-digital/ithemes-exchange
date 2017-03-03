@@ -213,6 +213,10 @@ final class IT_Exchange_Txn_Activity_Builder {
 
 		$activity = $factory->make( $ID );
 
+		if ( ! $activity ) {
+			return null;
+		}
+
 		/**
 		 * Fires when a txn activity is created.
 		 *

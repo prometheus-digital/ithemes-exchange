@@ -11,35 +11,7 @@
  *
  * @group rest-api
  */
-class Test_IT_Exchange_v1_Transactions_Route extends IT_Exchange_UnitTestCase {
-
-	/** @var Spy_REST_Server */
-	protected $server;
-
-	/** @var \iThemes\Exchange\REST\Manager */
-	protected $manager;
-
-	/**
-	 * @inheritDoc
-	 */
-	public function setUp() {
-		parent::setUp();
-
-		wp_set_current_user( 0 );
-		$this->manager = \iThemes\Exchange\REST\get_rest_manager();
-		$this->server  = $GLOBALS['wp_rest_server'] = new Spy_REST_Server;
-
-		do_action( 'rest_api_init' );
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function tearDown() {
-		parent::tearDown();
-
-		$this->manager->_reset();
-	}
+class Test_IT_Exchange_v1_Transactions_Route extends Test_IT_Exchange_REST_Route {
 
 	public function test_route_registered() {
 
@@ -420,5 +392,46 @@ class Test_IT_Exchange_v1_Transactions_Route extends IT_Exchange_UnitTestCase {
 
 		$this->assertEquals( 'paid', it_exchange_get_transaction_status( $txn ), 'Status not updated.' );
 		$this->assertEquals( 'paid', $response->data['status']['slug'], 'New status not returned from response.' );
+	}
+
+	public function test_object_not_found_issues_cannot_view_for_public() {
+
+		$request = \iThemes\Exchange\REST\Request::from_path( '/it_exchange/v1/transactions/500' );
+		$scope   = new \iThemes\Exchange\REST\Auth\PublicAuthScope();
+		$this->manager->set_auth_scope( $scope );
+
+		$response = $this->server->dispatch( $request );
+		$this->assertEquals( rest_authorization_required_code(), $response->get_status() );
+	}
+
+	public function test_object_not_found_issues_cannot_view_for_guest() {
+
+		$request = \iThemes\Exchange\REST\Request::from_path( '/it_exchange/v1/transactions/500' );
+		$scope   = new \iThemes\Exchange\REST\Auth\GuestAuthScope( it_exchange_get_customer( 'guest@example.org' ) );
+		$this->manager->set_auth_scope( $scope );
+
+		$response = $this->server->dispatch( $request );
+		$this->assertEquals( rest_authorization_required_code(), $response->get_status() );
+	}
+
+	public function test_object_not_found_issues_cannot_view_for_customer() {
+
+		$request  = \iThemes\Exchange\REST\Request::from_path( '/it_exchange/v1/transactions/500' );
+		$customer = it_exchange_get_customer( self::factory()->user->create( array( 'role' => 'subscriber' ) ) );
+		$scope    = new \iThemes\Exchange\REST\Auth\CustomerAuthScope( $customer );
+		$this->manager->set_auth_scope( $scope );
+
+		$response = $this->server->dispatch( $request );
+		$this->assertEquals( rest_authorization_required_code(), $response->get_status() );
+	}
+
+	public function test_object_not_found_issues_404_for_administrator() {
+
+		$request = \iThemes\Exchange\REST\Request::from_path( '/it_exchange/v1/transactions/500' );
+		$scope   = new \iThemes\Exchange\REST\Auth\CustomerAuthScope( it_exchange_get_customer(1 ) );
+		$this->manager->set_auth_scope( $scope );
+
+		$response = $this->server->dispatch( $request );
+		$this->assertEquals( 404, $response->get_status() );
 	}
 }

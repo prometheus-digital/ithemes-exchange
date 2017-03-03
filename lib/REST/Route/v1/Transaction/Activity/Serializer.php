@@ -75,7 +75,8 @@ class Serializer {
 					'description' => __( 'The text of this activity item.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit', 'embed' ),
-					'readonly'    => true,
+					'required'    => true,
+					'minLength'   => 1,
 				),
 				'type'        => array(
 					'description' => __( 'The activity item type.', 'it-l10n-ithemes-exchange' ),
@@ -116,18 +117,18 @@ class Serializer {
 					'context'     => array( 'view', 'edit', 'embed' ),
 					'readonly'    => true,
 					'properties'  => array(
-						'name'     => array(
+						'name'       => array(
 							'description' => __( 'The name of the actor.', 'it-l10n-ithemes-exchange' ),
 							'type'        => 'string',
 							'context'     => array( 'view', 'edit', 'embed' ),
 						),
-						'type'     => array(
+						'type'       => array(
 							'description' => __( 'The type of the actor.', 'it-l10n-ithemes-exchange' ),
 							'type'        => 'string',
 							'enum'        => it_exchange_get_txn_activity_actor_factory()->get_types(),
 							'context'     => array( 'view', 'edit' ),
 						),
-						'icon_url' => array(
+						'icon_url'   => array(
 							'description' => __( 'The icon representing the the actor.', 'it-l10n-ithemes-exchange' ),
 							'type'        => 'string',
 							'format'      => 'url',

@@ -53,7 +53,7 @@ class Item extends Base implements Getable, Deletable, RouteObjectExpandable {
 		/** @var \IT_Exchange_Txn_Activity $item */
 		$item = $request->get_route_object( 'activity_id' );
 
-		if ( ! $item || ! $item->get_transaction() || $item->get_transaction()->get_ID() !== $request->get_param( 'transaction_id', 'URL' ) ) {
+		if ( ! $this->check_exists( $request ) ) {
 			return Errors::not_found();
 		}
 
@@ -92,7 +92,7 @@ class Item extends Base implements Getable, Deletable, RouteObjectExpandable {
 		/** @var \IT_Exchange_Txn_Activity $item */
 		$item = $request->get_route_object( 'activity_id' );
 
-		if ( ! $item || $item->get_transaction()->get_ID() !== $request->get_param( 'transaction_id', 'URL' ) ) {
+		if ( ! $this->check_exists( $request ) ) {
 			return Errors::not_found();
 		}
 
@@ -101,6 +101,22 @@ class Item extends Base implements Getable, Deletable, RouteObjectExpandable {
 		}
 
 		return Manager::AUTH_STOP_CASCADE;
+	}
+
+	/**
+	 * Check that the activity item exists.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param Request $request
+	 *
+	 * @return bool
+	 */
+	protected function check_exists( Request $request ) {
+		/** @var \IT_Exchange_Txn_Activity $item */
+		$item = $request->get_route_object( 'activity_id' );
+
+		return $item && $item->get_transaction() && $item->get_transaction()->get_ID() === (int) $request->get_param( 'transaction_id', 'URL' );
 	}
 
 	/**

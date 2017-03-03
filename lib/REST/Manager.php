@@ -288,7 +288,7 @@ class Manager {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param \iThemes\Exchange\REST\Route\v1 $route
+	 * @param \iThemes\Exchange\REST\Route $route
 	 *
 	 * @return bool
 	 */
@@ -304,7 +304,7 @@ class Manager {
 
 		do {
 			if ( $building !== $route ) {
-				array_unshift( $parents, $building );
+				$parents[] = $building;
 			}
 
 			$path = $building->get_path() . $path;
