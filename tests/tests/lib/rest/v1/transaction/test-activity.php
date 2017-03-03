@@ -13,6 +13,14 @@
  */
 class Test_IT_Exchange_v1_Transaction_Activity_Route extends Test_IT_Exchange_REST_Route {
 
+	public function test_route_registered() {
+
+		$routes = $this->server->get_routes();
+
+		$this->assertArrayHasKey( '/it_exchange/v1/transactions/(?P<transaction_id>\d+)/activity', $routes );
+		$this->assertArrayHasKey( '/it_exchange/v1/transactions/(?P<transaction_id>\d+)/activity/(?P<activity_id>\d+)', $routes );
+	}
+
 	public function test_collection_forbidden_for_public() {
 
 		$txn     = self::transaction_factory()->create();
@@ -149,6 +157,33 @@ class Test_IT_Exchange_v1_Transaction_Activity_Route extends Test_IT_Exchange_RE
 
 		$response = $this->server->dispatch( $request );
 		$this->assertEquals( rest_authorization_required_code(), $response->get_status() );
+	}
+
+	public function test_collection() {
+
+		$customer = it_exchange_get_customer( self::factory()->user->create( array( 'role' => 'subscriber' ) ) );
+		$txn      = self::transaction_factory()->create( array( 'customer' => $customer ) );
+
+		$builder = new \IT_Exchange_Txn_Activity_Builder( it_exchange_get_transaction( $txn ), 'note' );
+		$builder->set_description( 'Test' );
+		$a1 = $builder->build( it_exchange_get_txn_activity_factory() );
+
+		$builder = new \IT_Exchange_Txn_Activity_Builder( it_exchange_get_transaction( $txn ), 'note' );
+		$builder->set_description( 'Test' );
+		$a2 = $builder->build( it_exchange_get_txn_activity_factory() );
+
+		$request = \iThemes\Exchange\REST\Request::from_path( "/it_exchange/v1/transactions/{$txn}/activity" );
+		$request->set_param( 'orderby', 'ID' );
+
+		$scope = new \iThemes\Exchange\REST\Auth\CustomerAuthScope( it_exchange_get_customer( 1 ) );
+		$this->manager->set_auth_scope( $scope );
+
+		$response = $this->server->dispatch( $request );
+		$data     = $response->get_data();
+		$this->assertEquals( 200, $response->get_status() );
+		$this->assertCount( 2, $data );
+		$this->assertEquals( $a1->get_ID(), $data[1]['id'] );
+		$this->assertEquals( $a2->get_ID(), $data[0]['id'] );
 	}
 
 	public function test_create_allowed_for_administrator() {

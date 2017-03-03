@@ -46,6 +46,8 @@ class Activity extends Base implements Getable, Postable {
 			'page'      => $request['page'],
 			'is_public' => $request['public_only'] ? true : null,
 			'type'      => $request['type'],
+			'order'     => $request['order'],
+			'orderby'   => $request['orderby'],
 		) );
 
 		$data = array();
@@ -166,6 +168,18 @@ class Activity extends Base implements Getable, Postable {
 				'type'        => 'string',
 				'default'     => 'any',
 				'enum'        => array_merge( array_keys( it_exchange_get_txn_activity_factory()->get_types() ), array( 'any' ) ),
+			),
+			'order'       => array(
+				'description' => __( 'Order direction.', 'it-l10n-ithemes-exchange' ),
+				'type'        => 'string',
+				'default'     => 'DESC',
+				'enum'        => array( 'ASC', 'DESC' ),
+			),
+			'orderby'     => array(
+				'description' => __( 'Column to order results by.', 'it-l10n-ithemes-exchange' ),
+				'type'        => 'string',
+				'default'     => 'date',
+				'enum'        => array( 'date', 'ID' ),
 			),
 		);
 	}

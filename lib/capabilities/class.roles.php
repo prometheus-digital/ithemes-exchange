@@ -69,6 +69,7 @@ class IT_Exchange_Roles {
 		$administrator->add_cap( 'it_create_others_payment_tokens' );
 		$administrator->add_cap( 'it_edit_others_payment_tokens' );
 
+		$administrator->add_cap( 'it_create_refunds' );
 		$administrator->add_cap( 'it_edit_refunds' );
 		$administrator->add_cap( 'it_list_refunds' );
 		$administrator->add_cap( 'it_list_transaction_refunds' );

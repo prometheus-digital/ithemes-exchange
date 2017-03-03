@@ -36,7 +36,8 @@ class IT_Exchange_Test_Factory_For_Products extends WP_UnitTest_Factory_For_Post
 	function create_object( $args ) {
 
 		$args = wp_parse_args( $args, array(
-			'type' => 'simple-product-type'
+			'type'       => 'simple-product-type',
+			'base-price' => 5.00
 		) );
 
 		return it_exchange_add_product( $args );

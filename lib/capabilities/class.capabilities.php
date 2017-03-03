@@ -150,7 +150,13 @@ class IT_Exchange_Capabilities {
 				return array( 'it_list_transaction_refunds' );
 			case 'it_read_refund':
 
-				if ( empty( $args[0] ) || ! ( $refund = ITE_Refund::get( $args[0] ) ) || ! $refund->transaction ) {
+				if ( empty( $args[0] ) ) {
+					return array( 'do_not_allow' );
+				}
+
+				$refund = $args[0] instanceof ITE_Refund ? $args[0] : ITE_Refund::get( $args[0] );
+
+				if ( ! $refund ) {
 					return array( 'do_not_allow' );
 				}
 
