@@ -14,6 +14,7 @@ use IronBound\DB\Query\FluentQuery;
  * @property int                   $ID
  * @property \IT_Exchange_Customer $customer
  * @property string                $label
+ * @property \DateTime             $deleted_at
  */
 class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 
@@ -412,6 +413,10 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 
 		static::register_global_scope( 'trash', function ( FluentQuery $query ) use ( $table ) {
 			$query->and_where( $table->get_deleted_at_column(), true, null );
+		} );
+
+		static::register_global_scope( 'order', function ( FluentQuery $query ) {
+			$query->order_by( 'ID', 'ASC' );
 		} );
 	}
 

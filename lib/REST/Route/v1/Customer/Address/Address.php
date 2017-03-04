@@ -50,10 +50,7 @@ class Address extends Base implements Getable, Putable, Deletable, RouteObjectEx
 	 */
 	public function user_can_get( Request $request, AuthScope $scope ) {
 
-		/** @var \ITE_Saved_Address $address */
-		$address = $request->get_route_object( 'address_id' );
-
-		if ( ! $address || ! $address->customer || $address->customer->get_ID() !== (int) $request->get_param( 'customer_id', 'URL' ) ) {
+		if ( ! $this->check_exists( $request ) ) {
 			return Errors::not_found();
 		}
 
@@ -110,7 +107,14 @@ class Address extends Base implements Getable, Putable, Deletable, RouteObjectEx
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_put( Request $request, AuthScope $scope ) { return true; }
+	public function user_can_put( Request $request, AuthScope $scope ) {
+
+		if ( ! $this->check_exists( $request ) ) {
+			return Errors::not_found();
+		}
+
+		return true;
+	}
 
 	/**
 	 * @inheritDoc
@@ -128,13 +132,28 @@ class Address extends Base implements Getable, Putable, Deletable, RouteObjectEx
 	 */
 	public function user_can_delete( Request $request, AuthScope $scope ) {
 
-		$address = $request->get_route_object( 'address_id' );
-
-		if ( ! $address || ! $address->customer || $address->customer->get_ID() !== (int) $request->get_param( 'customer_id', 'URL' ) ) {
+		if ( ! $this->check_exists( $request ) ) {
 			return Errors::not_found();
 		}
 
 		return true;
+	}
+
+	/**
+	 * Check if the address exists.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param Request $request
+	 *
+	 * @return bool
+	 */
+	protected function check_exists( Request $request ) {
+
+		/** @var \ITE_Saved_Address $address */
+		$address = $request->get_route_object( 'address_id' );
+
+		return $address && $address->customer && $address->customer->get_ID() === (int) $request->get_param( 'customer_id', 'URL' );
 	}
 
 	/**
