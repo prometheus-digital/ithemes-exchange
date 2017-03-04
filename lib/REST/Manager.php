@@ -759,9 +759,12 @@ class Manager {
 	 * @since 2.0.0
 	 */
 	public function _reset() {
-		$this->initialized = false;
-		$this->routes      = array();
-		$this->auth_scope  = null;
+		$this->initialized    = false;
+		$this->routes         = array();
+		$this->auth_scope     = null;
+		$this->schemas        = array();
+		$this->schema_storage = null;
+		$this->uri_retreiver  = null;
 
 		remove_filter( 'rest_authentication_errors', array( $this, 'authenticate' ), 20 );
 		remove_filter( 'rest_dispatch_request', array( $this, 'conform_request_to_schema' ), 10 );

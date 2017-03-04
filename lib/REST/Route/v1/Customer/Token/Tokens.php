@@ -57,8 +57,14 @@ class Tokens extends Base implements Getable, Postable {
 	 */
 	public function user_can_get( Request $request, AuthScope $scope ) {
 
-		if ( ! $scope->can( 'it_list_payment_tokens', $request->get_param( 'customer_id', 'URL' ) ) ) {
+		$customer = $request->get_route_object( 'customer_id' );
+
+		if ( ! $scope->can( 'it_list_payment_tokens', $customer ) ) {
 			return Errors::cannot_list();
+		}
+
+		if ( $request['context'] === 'edit' && ! $scope->can( 'it_edit_customer_payment_tokens', $customer ) ) {
+			return Errors::forbidden_context( 'edit' );
 		}
 
 		return true;
@@ -86,9 +92,21 @@ class Tokens extends Base implements Getable, Postable {
 			'primary'  => $request['primary'],
 		) );
 
+		/** @var \ITE_Payment_Token $token */
 		$token = $gateway->get_handler_for( $tokenize )->handle( $tokenize );
 
-		return new \WP_REST_Response( $this->serializer->serialize( $token ) );
+		$request['context'] = 'edit';
+
+		$response = new \WP_REST_Response( $this->serializer->serialize( $token ), 201 );
+		$response->header(
+			'Location',
+			\iThemes\Exchange\REST\get_rest_url(
+				$this->get_manager()->get_first_route( 'iThemes\Exchange\REST\Route\v1\Customer\Token\Token' ),
+				array( 'customer_id' => $token->customer, 'token_id' => $token->get_ID() )
+			)
+		);
+
+		return $response;
 	}
 
 	/**

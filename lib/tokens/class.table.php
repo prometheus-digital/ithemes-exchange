@@ -6,6 +6,7 @@
  * @license GPLv2
  */
 use IronBound\DB\Extensions\Trash\TrashTable;
+use IronBound\DB\Table\Column\Boolean;
 use IronBound\DB\Table\Column\DateTime;
 use IronBound\DB\Table\Column\Enum;
 use IronBound\DB\Table\Column\ForeignUser;
@@ -46,7 +47,7 @@ class ITE_Payment_Tokens_Table extends \IronBound\DB\Table\BaseTable implements 
 			'token'      => new StringBased( 'VARCHAR', 'token', array(), array( 255 ) ),
 			'label'      => new StringBased( 'VARCHAR', 'label', array(), array( 255 ) ),
 			'redacted'   => new StringBased( 'VARCHAR', 'redacted', array(), array( 32 ) ),
-			'primary'    => new IntegerBased( 'TINYINT', 'primary', array( 'unsigned' ), array( 1 ) ),
+			'primary'    => new Boolean( 'primary' ),
 			'gateway'    => new StringBased( 'VARCHAR', 'gateway', array(), array( 64 ) ),
 			'type'       => new StringBased( 'VARCHAR', 'type', array(), array( 32 ) ),
 			'mode'       => new Enum( array( 'live', 'sandbox' ), 'mode' ),

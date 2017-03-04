@@ -22,6 +22,7 @@ use IronBound\DB\Query\FluentQuery;
  * @property-read bool                  $primary
  * @property-read string                $mode
  * @property \DateTime                  $expires_at
+ * @property \DateTime                  $deleted
  */
 class ITE_Payment_Token extends ModelWithMeta implements ITE_Object, ITE_Gateway_Payment_Source {
 
@@ -93,11 +94,12 @@ class ITE_Payment_Token extends ModelWithMeta implements ITE_Object, ITE_Gateway
 		}
 
 		/** @var static $other */
-		$other = static::query()
+		$other = static::without_global_scope( 'active' )
 		               ->where( 'customer', '=', $this->customer->ID )
 		               ->and_where( 'primary', '=', false )
 		               ->and_where( 'gateway', '=', $this->get_raw_attribute( 'gateway' ) )
 		               ->and_where( 'mode', '=', $this->mode )
+		               ->and_where( 'ID', '!=', $this->get_ID() )
 		               ->first();
 
 		if ( ! $other ) {
@@ -105,7 +107,6 @@ class ITE_Payment_Token extends ModelWithMeta implements ITE_Object, ITE_Gateway
 		}
 
 		$other->set_attribute( 'primary', true );
-
 
 		if ( ! $other->save() ) {
 			return false;

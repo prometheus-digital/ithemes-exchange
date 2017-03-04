@@ -21,6 +21,11 @@ abstract class Test_IT_Exchange_REST_Route extends IT_Exchange_UnitTestCase {
 		parent::setUp();
 
 		wp_set_current_user( 0 );
+		$this->initialize_server();
+	}
+
+	protected function initialize_server() {
+
 		$this->manager = \iThemes\Exchange\REST\get_rest_manager();
 		$this->server  = $GLOBALS['wp_rest_server'] = new Spy_REST_Server;
 

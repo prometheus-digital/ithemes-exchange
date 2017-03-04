@@ -48,8 +48,9 @@ class Token extends Base implements Getable, Putable, Deletable, RouteObjectExpa
 	 * @inheritDoc
 	 */
 	public function user_can_get( Request $request, AuthScope $scope ) {
-		if ( ( $r = $this->exists_check( $request, $scope ) ) !== true ) {
-			return $r;
+
+		if ( ! $this->token_exists( $request ) ) {
+			return Errors::not_found();
 		}
 
 		if ( ! $scope->can( 'it_read_payment_token', $request->get_route_object( 'token_id' ) ) ) {
@@ -106,17 +107,19 @@ class Token extends Base implements Getable, Putable, Deletable, RouteObjectExpa
 			$token->label = $label;
 		}
 
-		if ( ! $token->primary && $request['primary'] ) {
-			$saved = $token->make_primary();
-		} elseif ( $token->primary && ! $request['primary'] ) {
-			try {
-				$saved = $token->make_non_primary();
-			} catch ( \InvalidArgumentException $e ) {
-				return new \WP_Error(
-					'it_exchange_rest_cannot_make_token_primary',
-					__( 'The token could not be updated to primary.', 'it-l10n-ithemes-exchange' ),
-					array( 'status' => \WP_Http::BAD_REQUEST )
-				);
+		if ( $request->has_param( 'primary' ) && $request['primary'] !== $token->primary ) {
+			if ( ! $token->primary ) {
+				$saved = $token->make_primary();
+			} else {
+				try {
+					$saved = $token->make_non_primary();
+				} catch ( \InvalidArgumentException $e ) {
+					return new \WP_Error(
+						'it_exchange_rest_cannot_make_token_primary',
+						__( 'The token could not be updated to primary.', 'it-l10n-ithemes-exchange' ),
+						array( 'status' => \WP_Http::BAD_REQUEST )
+					);
+				}
 			}
 		} else {
 			$saved = $token->save();
@@ -130,6 +133,8 @@ class Token extends Base implements Getable, Putable, Deletable, RouteObjectExpa
 			);
 		}
 
+		$request['context'] = 'edit';
+
 		return new \WP_REST_Response( $this->serializer->serialize( $token ) );
 	}
 
@@ -137,8 +142,9 @@ class Token extends Base implements Getable, Putable, Deletable, RouteObjectExpa
 	 * @inheritDoc
 	 */
 	public function user_can_put( Request $request, AuthScope $scope ) {
-		if ( ( $r = $this->exists_check( $request, $scope ) ) !== true ) {
-			return $r;
+
+		if ( ! $this->token_exists( $request ) ) {
+			return Errors::not_found();
 		}
 
 		if ( ! $scope->can( 'it_edit_payment_token', $request->get_route_object( 'token_id' ) ) ) {
@@ -161,9 +167,10 @@ class Token extends Base implements Getable, Putable, Deletable, RouteObjectExpa
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_delete( Request $request, AuthScope $scope) {
-		if ( ( $r = $this->exists_check( $request, $scope ) ) !== true ) {
-			return $r;
+	public function user_can_delete( Request $request, AuthScope $scope ) {
+
+		if ( ! $this->token_exists( $request ) ) {
+			return Errors::not_found();
 		}
 
 		if ( ! $scope->can( 'it_delete_payment_token', $request->get_route_object( 'token_id' ) ) ) {
@@ -179,20 +186,15 @@ class Token extends Base implements Getable, Putable, Deletable, RouteObjectExpa
 	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Request $request
-	 * @param AuthScope                      $scope
 	 *
 	 * @return bool|\WP_Error
 	 */
-	protected function exists_check( Request $request, AuthScope $scope ) {
+	protected function token_exists( Request $request ) {
 
 		/** @var \ITE_Payment_Token $token */
 		$token = $request->get_route_object( 'token_id' );
 
-		if ( ! $token || ! $token->customer || $token->customer->get_ID() !== (int) $request->get_param( 'customer_id', 'URL' ) ) {
-			return Errors::not_found();
-		}
-
-		return true;
+		return $token && $token->customer && $token->customer->get_ID() === (int) $request->get_param( 'customer_id', 'URL' );
 	}
 
 	/**

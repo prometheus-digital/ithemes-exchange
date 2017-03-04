@@ -68,7 +68,11 @@ class IT_Exchange_Capabilities {
 				return array( 'edit_others_it_transactions' );
 			case 'it_list_payment_tokens':
 
-				if ( ! empty( $args[0] ) && (int) $user_id === (int) $args[0] ) {
+				if ( empty( $args[0] ) || ! $customer = it_exchange_get_customer( $args[0] ) ) {
+					return array( 'do_not_allow' );
+				}
+
+				if ( (int) $user_id === (int) $customer->get_ID() ) {
 					return array();
 				}
 
@@ -113,6 +117,17 @@ class IT_Exchange_Capabilities {
 
 				if ( $token->customer && $token->customer->ID === (int) $user_id ) {
 					return array(); // a user can edit their own payment tokens
+				}
+
+				return array( 'it_edit_others_payment_tokens' );
+			case 'it_edit_customer_payment_tokens':
+
+				if ( ! $user_id || empty( $args[0] ) || ! $customer = it_exchange_get_customer( $args[0] ) ) {
+					return array( 'do_not_allow' );
+				}
+
+				if ( (int) $customer->get_ID() === (int) $user_id ) {
+					return array();
 				}
 
 				return array( 'it_edit_others_payment_tokens' );

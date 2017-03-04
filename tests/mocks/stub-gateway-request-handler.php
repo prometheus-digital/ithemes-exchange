@@ -44,6 +44,11 @@ class IT_Exchange_Stub_Gateway_Request_Handler implements ITE_Gateway_Request_Ha
 	/**
 	 * @inheritDoc
 	 */
+	public function __call( $name, $arguments ) { return true; }
+
+	/**
+	 * @inheritDoc
+	 */
 	public static function can_handle( $request_name ) {
 		return true;
 	}
