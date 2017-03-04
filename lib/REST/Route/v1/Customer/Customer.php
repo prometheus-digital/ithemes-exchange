@@ -118,8 +118,10 @@ class Customer extends Route\Base implements Getable, Putable, RouteObjectExpand
 
 		$customer = $request->get_route_object( 'customer_id' );
 
-		if ( ! $customer ) {
+		if ( ! $customer && $scope->can( 'edit_users' ) ) {
 			return Errors::not_found();
+		} elseif ( ! $customer ) {
+			return Errors::cannot_view();
 		}
 
 		if ( ! $scope->can( 'edit_user', $customer->ID ) ) {
