@@ -98,11 +98,7 @@ class Item extends Base implements Getable, Putable, Deletable {
 	 */
 	public function user_can_put( Request $request, AuthScope $scope ) {
 		if ( ! $this->type->is_editable_in_rest() ) {
-			return new \WP_Error(
-				'it_exchange_rest_non_editable_line_item_type',
-				__( 'Item not editable in REST.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::METHOD_NOT_ALLOWED )
-			);
+			return Errors::edit_line_item_not_supported( $this->type->get_type() );
 		}
 
 		return $this->exists_check( $request, $scope );
@@ -125,11 +121,7 @@ class Item extends Base implements Getable, Putable, Deletable {
 	 */
 	public function user_can_delete( Request $request, AuthScope $scope ) {
 		if ( ! $this->type->is_editable_in_rest() ) {
-			return new \WP_Error(
-				'it_exchange_rest_non_editable_line_item_type',
-				__( 'Item not editable in REST.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => \WP_Http::METHOD_NOT_ALLOWED )
-			);
+			return Errors::delete_line_item_not_supported( $this->type->get_type() );
 		}
 
 		return $this->exists_check( $request, $scope );
@@ -150,7 +142,7 @@ class Item extends Base implements Getable, Putable, Deletable {
 		/** @var \ITE_Cart $cart */
 		$cart = $request->get_route_object( 'cart_id' );
 
-		if ( ! $cart->get_item( $this->type->get_type(), $request->get_param( 'item_id', 'URL' ) ) ) {
+		if ( ! $cart || ! $cart->get_item( $this->type->get_type(), $request->get_param( 'item_id', 'URL' ) ) ) {
 			return Errors::not_found();
 		}
 

@@ -229,7 +229,10 @@ add_action( 'it_exchange_register_line_item_types', function ( ITE_Line_Item_Typ
 
 			if ( is_array( $request['coupon'] ) && isset( $request['coupon']['code'] ) ) {
 				$code = $request['coupon']['code'];
-				$type = $request['coupon']['type'] ?: 'cart';
+
+				if ( isset( $request['coupon']['type'] ) ) {
+					$type = $request['coupon']['type'];
+				}
 			} else {
 				$code = $request['coupon'];
 			}
