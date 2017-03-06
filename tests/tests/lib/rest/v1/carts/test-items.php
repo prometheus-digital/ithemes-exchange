@@ -160,13 +160,15 @@ class Test_IT_Exchange_v1_Cart_Items_Route extends Test_IT_Exchange_REST_Route {
 
 		$this->assertCount( 1, it_exchange_get_cart( $cart->get_id() )->get_items( 'fee' ) );
 	}
-	
-	/*public function test_get_coupon_collection() {
 
-		$coupon  = self::coupon_factory()->create_and_get();
+	public function test_get_coupon_collection() {
+
+		$coupon   = self::coupon_factory()->create_and_get();
+		$product  = self::product_factory()->create_and_get();
 		$customer = it_exchange_get_customer( self::factory()->user->create( array( 'role' => 'subscriber' ) ) );
 		$cart     = it_exchange_create_cart_and_session( $customer );
 
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
 		$item = ITE_Coupon_Line_Item::create( $coupon );
 		$cart->add_item( $item );
 
@@ -182,20 +184,23 @@ class Test_IT_Exchange_v1_Cart_Items_Route extends Test_IT_Exchange_REST_Route {
 		$this->assertCount( 1, $data );
 
 		$this->assertEquals( $item->get_id(), $data[0]['id'] );
+		$this->assertEquals( - 1.00, $data[0]['total'] );
 	}
 
 	public function test_create_coupon() {
 
-		$coupon  = self::coupon_factory()->create_and_get();
+		/** @var IT_Exchange_Coupon $coupon */
+		$coupon   = self::coupon_factory()->create_and_get();
+		$product  = self::product_factory()->create_and_get();
 		$customer = it_exchange_get_customer( self::factory()->user->create( array( 'role' => 'subscriber' ) ) );
 		$cart     = it_exchange_create_cart_and_session( $customer );
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
 
 		$request = \iThemes\Exchange\REST\Request::from_path( "/it_exchange/v1/carts/{$cart->get_id()}/items/coupon" );
 		$request->set_method( 'POST' );
 		$request->add_header( 'content-type', 'application/json' );
 		$request->set_body( wp_json_encode( array(
-			'coupon'  => $coupon->ID,
-			'quantity' => 2,
+			'coupon' => $coupon->get_code(),
 		) ) );
 
 		$scope = new \iThemes\Exchange\REST\Auth\CustomerAuthScope( $customer );
@@ -206,16 +211,19 @@ class Test_IT_Exchange_v1_Cart_Items_Route extends Test_IT_Exchange_REST_Route {
 
 		$this->assertEquals( 201, $response->get_status() );
 		$this->assertNotEmpty( $data['id'] );
-		$this->assertEquals( 2, $data['quantity']['selected'] );
+		$this->assertEquals( $coupon->get_code(), $data['coupon']['code'] );
+		$this->assertEquals( $coupon->get_type(), $data['coupon']['type'] );
 		$cart = it_exchange_get_cart( $cart->get_id() );
 		$this->assertInstanceOf( 'ITE_Coupon_Line_Item', $cart->get_item( 'coupon', $data['id'] ) );
 	}
 
 	public function test_delete_coupon_collection() {
 
-		$coupon  = self::coupon_factory()->create_and_get();
+		$coupon   = self::coupon_factory()->create_and_get();
+		$product  = self::product_factory()->create_and_get();
 		$customer = it_exchange_get_customer( self::factory()->user->create( array( 'role' => 'subscriber' ) ) );
 		$cart     = it_exchange_create_cart_and_session( $customer );
+		$cart->add_item( ITE_Cart_Product::create( $product ) );
 
 		$item = ITE_Coupon_Line_Item::create( $coupon );
 		$cart->add_item( $item );
@@ -230,6 +238,6 @@ class Test_IT_Exchange_v1_Cart_Items_Route extends Test_IT_Exchange_REST_Route {
 
 		$this->assertEquals( 204, $response->get_status() );
 		$this->assertEmpty( $response->get_data() );
-		$this->assertCount( 0, it_exchange_get_cart( $cart->get_id() )->get_items( 'coupon' ) );
-	}*/
+		$this->assertCount( 0, it_exchange_get_cart( $cart->get_id() )->get_items( 'coupon', true ) );
+	}
 }

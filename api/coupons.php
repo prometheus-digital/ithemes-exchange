@@ -382,9 +382,14 @@ function it_exchange_remove_coupon( $type, $code, $options = array() ) {
 
 	if ( ( $coupon = it_exchange_get_coupon_from_code( $code, $type ) ) && $coupon->get_type() ) {
 		try {
-			$cart->get_items( 'coupon', true )->filter( function ( ITE_Coupon_Line_Item $item ) use ( $coupon ) {
-				return $item->get_coupon()->get_code() === $coupon->get_code();
-			} )->delete();
+			$item = ITE_Coupon_Line_Item::create( $coupon );
+
+			if ( ! $cart->remove_item( 'coupon', $item->get_id() ) ) {
+				$cart->get_feedback()->add_error(
+					__( 'Sorry, the coupon could not be removed.', 'it-l10n-ithemes-exchange' ),
+					$item
+				);
+			}
 		} catch ( Exception $e ) {
 			$cart->get_feedback()->add_error( $e->getMessage() );
 

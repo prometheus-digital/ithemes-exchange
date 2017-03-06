@@ -283,6 +283,10 @@ class ITE_Coupon_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Lin
 			return $this->frozen->get_param( 'amount' );
 		}
 
+		if ( ! $this->get_aggregate() ) {
+			return 0.00;
+		}
+
 		if ( $this->get_aggregate() && ! $this->get_coupon()->valid_for_product( $this->get_aggregate() ) ) {
 			return 0.00;
 		}

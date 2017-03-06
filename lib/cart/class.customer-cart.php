@@ -396,7 +396,6 @@ class ITE_Cart {
 
 		$method  = "add_{$item->get_type()}_item";
 		$add_new = true;
-		$success = true;
 
 		if ( ! method_exists( $this, $method ) ) {
 			$add_new = true;
@@ -501,28 +500,42 @@ class ITE_Cart {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param string     $type
-	 * @param string|int $id
+	 * @param string|ITE_Line_Item $type_or_item Either the line item type, or line item object.
+	 * @param string|int           $id           Empty if passing an object, or the item id if searching.
 	 *
-	 * @return bool False if item could not be found.
+	 * @return bool False if item could not be found or removed.
 	 *
 	 * @throws \InvalidArgumentException If invalid type given.
 	 */
-	public function remove_item( $type, $id ) {
+	public function remove_item( $type_or_item, $id = '' ) {
 
-		$item = $this->get_item( $type, $id );
+		$item = $type_or_item instanceof ITE_Line_Item ? $type_or_item : $this->get_item( $type_or_item, $id );
 
 		if ( ! $item ) {
 			return false;
 		}
 
-		if ( $this->get_items()->count() === 1 ) {
+		$method      = "remove_{$item->get_type()}_item";
+		$remove_item = true;
+		$deleted     = true;
+
+		if ( method_exists( $this, $method ) ) {
+			$deleted = $this->{$method}( $item, $remove_item );
+
+			if ( ! $deleted ) {
+				return false;
+			}
+		}
+
+		/*if ( $this->get_items()->flatten()->count() === 1 ) {
 			$this->empty_cart();
 
 			return $this->get_items()->count() === 0;
-		}
+		}*/
 
-		$deleted = $this->get_repository()->delete( $item );
+		if ( $remove_item ) {
+			$deleted = $this->get_repository()->delete( $item );
+		}
 
 		if ( $deleted ) {
 			/**
@@ -566,13 +579,7 @@ class ITE_Cart {
 	public function remove_all( $type = '', $flatten = false ) {
 
 		foreach ( $this->get_items( $type, $flatten ) as $item ) {
-			$this->get_repository()->delete( $item );
-
-			// This hook is documented in lib/cart/class.customer-cart.php
-			do_action( 'it_exchange_remove_line_item_from_cart', $item, $this );
-
-			// This hook is documented in lib/cart/class.customer-cart.php
-			do_action( "it_exchange_remove_{$item->get_type()}_from_cart", $item, $this );
+			$this->remove_item( $item );
 		}
 
 		return true;
@@ -763,15 +770,48 @@ class ITE_Cart {
 			return false;
 		}
 
+		$products = $this->get_items( 'product' );
+
+		if ( ! $products->count() ) {
+			return false;
+		}
+
 		/** @var ITE_Cart_Product $product */
-		foreach ( $this->get_items( 'product' ) as $product ) {
+		foreach ( $products as $product ) {
 			if ( $coupon->get_coupon()->valid_for_product( $product ) ) {
 				$product->add_item( $coupon->create_scoped_for_product( $product ) );
 				$this->get_repository()->save( $product );
 			}
 		}
 
-		$add_item = false;
+		$add_item = true;
+
+		return true;
+	}
+
+	/**
+	 * When a top level coupon is removed, remove all coupons items for it.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param ITE_Coupon_Line_Item $coupon
+	 * @param bool                 $remove_item
+	 *
+	 * @return bool
+	 */
+	protected function remove_coupon_item( ITE_Coupon_Line_Item $coupon, &$remove_item ) {
+
+		if ( $coupon->get_aggregate() ) {
+			return true;
+		}
+
+		$aggregatables = $this->get_items( 'coupon', true )->filter( function ( ITE_Coupon_Line_Item $item ) use ( $coupon ) {
+			return $item->get_id() !== $coupon->get_id() && $item->get_coupon()->get_code() === $coupon->get_coupon()->get_code();
+		} );
+
+		foreach ( $aggregatables as $aggregatable ) {
+			$this->remove_item( $aggregatable );
+		}
 
 		return true;
 	}

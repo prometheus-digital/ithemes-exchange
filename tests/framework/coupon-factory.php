@@ -18,7 +18,7 @@ class IT_Exchange_Test_Factory_For_Basic_Coupons extends WP_UnitTest_Factory_For
 	 *
 	 * @param WP_UnitTest_Factory $factory
 	 */
-	function __construct( $factory = null ) {
+	public function __construct( $factory = null ) {
 		parent::__construct( $factory );
 
 		$this->default_generation_definitions['post_type']  = 'it_exchange_coupon';
@@ -26,7 +26,9 @@ class IT_Exchange_Test_Factory_For_Basic_Coupons extends WP_UnitTest_Factory_For
 			'Coupon title %s'
 		);
 
-		$this->default_generation_definitions['code'] = new WP_UnitTest_Generator_Sequence( 'CODE%s' );
+		$this->default_generation_definitions['amount']      = '1.00';
+		$this->default_generation_definitions['amount_type'] = 'amount';
+		$this->default_generation_definitions['code']        = new WP_UnitTest_Generator_Sequence( 'CODE%s' );
 	}
 
 	/**
@@ -36,11 +38,13 @@ class IT_Exchange_Test_Factory_For_Basic_Coupons extends WP_UnitTest_Factory_For
 	 *
 	 * @return int|WP_Error
 	 */
-	function create_object( $args ) {
+	public function create_object( $args ) {
 
 		$args['post_meta']['_it-basic-code'] = $args['code'];
+		$args['post_meta']['_it-basic-amount-number'] = it_exchange_convert_to_database_number( $args['amount'] );
+		$args['post_meta']['_it-basic-amount-type'] = $args['amount_type'];
 
-		unset( $args['code'] );
+		unset( $args['code'], $args['amount'], $args['amount_type'] );
 
 		return it_exchange_add_coupon( $args );
 	}
@@ -54,7 +58,7 @@ class IT_Exchange_Test_Factory_For_Basic_Coupons extends WP_UnitTest_Factory_For
 	 *
 	 * @return bool|IT_Exchange_Coupon
 	 */
-	function get_object_by_id( $post_id ) {
+	public function get_object_by_id( $post_id ) {
 		return it_exchange_get_coupon( $post_id );
 	}
 }
