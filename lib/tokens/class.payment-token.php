@@ -287,7 +287,7 @@ class ITE_Payment_Token extends ModelWithMeta implements ITE_Object, ITE_Gateway
 		} );
 
 		static::register_global_scope( 'order', function ( FluentQuery $query ) {
-			$query->order_by( 'primary', 'DESC' );
+			$query->order_by( 'primary', 'DESC' )->order_by( 'ID', 'ASC' );
 		} );
 
 		static::register_global_scope( 'expires_at', function ( FluentQuery $query ) {

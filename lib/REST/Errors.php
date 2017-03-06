@@ -160,4 +160,72 @@ class Errors {
 			array( 'status' => \WP_Http::BAD_REQUEST, 'query_var' => $var )
 		);
 	}
+
+	/**
+	 * When a given line item type does not support viewing items.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $type
+	 *
+	 * @return \WP_Error
+	 */
+	public static function view_line_item_not_supported( $type ) {
+		return new \WP_Error(
+			'it_exchange_rest_view_line_item_not_supported',
+			sprintf( __( "Sorry, the '%s' line item type does not support reading.", 'it-l10n-ithemes-exchange' ), $type ),
+			array( 'status' => \WP_Http::METHOD_NOT_ALLOWED )
+		);
+	}
+
+	/**
+	 * When a given line item type does not support creating items.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $type
+	 *
+	 * @return \WP_Error
+	 */
+	public static function create_line_item_not_supported( $type ) {
+		return new \WP_Error(
+			'it_exchange_rest_create_line_item_not_supported',
+			sprintf( __( "Sorry, the '%s' line item type does not support creation.", 'it-l10n-ithemes-exchange' ), $type ),
+			array( 'status' => \WP_Http::METHOD_NOT_ALLOWED )
+		);
+	}
+
+	/**
+	 * When a given line item type does not support editing items.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $type
+	 *
+	 * @return \WP_Error
+	 */
+	public static function edit_line_item_not_supported( $type ) {
+		return new \WP_Error(
+			'it_exchange_rest_edit_line_item_not_supported',
+			sprintf( __( "Sorry, the '%s' line item type does not support editing.", 'it-l10n-ithemes-exchange' ), $type ),
+			array( 'status' => \WP_Http::METHOD_NOT_ALLOWED )
+		);
+	}
+
+	/**
+	 * When a given line item type does not support deleting items.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $type
+	 *
+	 * @return \WP_Error
+	 */
+	public static function delete_line_item_not_supported( $type ) {
+		return new \WP_Error(
+			'it_exchange_rest_delete_line_item_not_supported',
+			sprintf( __( "Sorry, the '%s' line item type does not support deletion.", 'it-l10n-ithemes-exchange' ), $type ),
+			array( 'status' => \WP_Http::METHOD_NOT_ALLOWED )
+		);
+	}
 }

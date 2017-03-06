@@ -795,7 +795,11 @@ class ITE_Cart {
 		}
 
 		foreach ( $items as $item ) {
-			if ( ! $item instanceof ITE_Cart_Product || empty( $options['feature'] ) || $item->get_product()->get_feature( $options['feature'] ) ) {
+			if (
+				! $item instanceof ITE_Cart_Product ||
+				empty( $options['feature'] ) ||
+				$item->get_product()->get_feature( $options['feature'] )
+			) {
 				$subtotal += $item->get_total();
 			}
 		}
@@ -980,7 +984,7 @@ class ITE_Cart {
 
 		if ( $for ) {
 
-			$old_method = $this->get_shipping_method( $for );
+			$old_method = $this->get_shipping_method( $for, false );
 			$old_method = $old_method ? $old_method->slug : false;
 
 			$for->get_line_items()->with_only( 'shipping' )->delete();
@@ -997,52 +1001,69 @@ class ITE_Cart {
 
 			$args = it_exchange_get_registered_shipping_method_args( $method );
 
-			if ( ! empty( $args['provider'] ) ) {
-				$provider = it_exchange_get_registered_shipping_provider( $args['provider'] );
-				$method   = it_exchange_get_registered_shipping_method( $method );
-
-				if ( $method === false ) {
-					return false;
-				}
-
-				$for->add_item( ITE_Base_Shipping_Line_Item::create( $method, $provider ) );
-				$this->add_item( ITE_Base_Shipping_Line_Item::create( $method, $provider, true ) );
-				$this->get_repository()->save( $for );
-
-				return true;
-			}
-		} else {
-			$this->remove_all( 'shipping', true );
-
-			if ( $method === 'multiple-methods' ) {
-				return true;
+			if ( empty( $args['provider'] ) ) {
+				return false;
 			}
 
-			$args = it_exchange_get_registered_shipping_method_args( $method );
+			$provider = it_exchange_get_registered_shipping_provider( $args['provider'] );
+			$method   = it_exchange_get_registered_shipping_method( $method );
 
-			if ( ! empty( $args['provider'] ) ) {
-				$provider = it_exchange_get_registered_shipping_provider( $args['provider'] );
-				$method   = it_exchange_get_registered_shipping_method( $method );
+			if ( ! $method ) {
+				return false;
+			}
 
-				if ( $method === false ) {
-					return false;
-				}
+			$for->add_item( ITE_Base_Shipping_Line_Item::create( $method, $provider ) );
+			$this->add_item( ITE_Base_Shipping_Line_Item::create( $method, $provider, true ) );
+			$this->get_repository()->save( $for );
 
-				/** @var ITE_Cart_Product $item */
-				foreach ( $this->get_items( 'product' ) as $item ) {
-					if ( $item->get_product()->has_feature( 'shipping' ) ) {
-						$item->add_item( ITE_Base_Shipping_Line_Item::create( $method, $provider ) );
-						$this->get_repository()->save( $item );
-					}
-				}
+			if ( $this->is_current() ) {
+				it_exchange_update_multiple_shipping_method_for_cart_product(
+					$for->get_id(), $method->slug
+				);
+			}
 
-				$this->add_item( ITE_Base_Shipping_Line_Item::create( $method, $provider, true ) );
+			return true;
+		}
 
-				return true;
+		$this->remove_all( 'shipping', true );
+
+		if ( $this->is_current() ) {
+			it_exchange_update_cart_data( 'shipping-method', $method );
+		}
+
+		if ( $method === 'multiple-methods' ) {
+
+			if ( $this->is_current() ) {
+				it_exchange_remove_cart_data( 'multiple-shipping-methods' );
+			}
+
+			return true;
+		}
+
+		$args = it_exchange_get_registered_shipping_method_args( $method );
+
+		if ( empty( $args['provider'] ) ) {
+			return false;
+		}
+
+		$provider = it_exchange_get_registered_shipping_provider( $args['provider'] );
+		$method   = it_exchange_get_registered_shipping_method( $method );
+
+		if ( ! $method ) {
+			return false;
+		}
+
+		/** @var ITE_Cart_Product $item */
+		foreach ( $this->get_items( 'product' ) as $item ) {
+			if ( $item->get_product()->has_feature( 'shipping' ) ) {
+				$item->add_item( ITE_Base_Shipping_Line_Item::create( $method, $provider ) );
+				$this->get_repository()->save( $item );
 			}
 		}
 
-		return false;
+		$this->add_item( ITE_Base_Shipping_Line_Item::create( $method, $provider, true ) );
+
+		return true;
 	}
 
 	/**
@@ -1051,39 +1072,78 @@ class ITE_Cart {
 	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item $for
+	 * @param bool           $find_default Find and set the default shipping method if none is selected.
 	 *
 	 * @return \IT_Exchange_Shipping_Method|null|\stdClass
 	 */
-	public function get_shipping_method( \ITE_Line_Item $for = null ) {
+	public function get_shipping_method( \ITE_Line_Item $for = null, $find_default = true ) {
 
 		if ( $for ) {
 			if ( $for instanceof ITE_Cart_Product ) {
 				$slug = it_exchange_get_multiple_shipping_method_for_cart_product( $for, $this );
 
-				return it_exchange_get_registered_shipping_method( $slug );
+				$method = it_exchange_get_registered_shipping_method( $slug );
+			} else {
+				$method = it_exchange_get_shipping_method_for_item( $for );
 			}
+		} else {
 
-			return it_exchange_get_shipping_method_for_item( $for );
+			$items   = $this->get_items( 'shipping', true );
+			$uniqued = $items->unique( function ( ITE_Shipping_Line_Item $item ) {
+				return $item->get_method()->slug;
+			} );
+
+			if ( $uniqued->count() === 0 ) {
+				$method = null;
+			} elseif ( $uniqued->count() === 1 ) {
+				$method = $uniqued->first()->get_method();
+			} else {
+
+				$method        = new stdClass();
+				$method->slug  = 'multiple-methods';
+				$method->label = __( 'Multiple Shipping Methods', 'it-l10n-ithemes-exchange' );
+			}
 		}
 
-		$items = $this->get_items( 'shipping', true );
+		if ( $method || ! $find_default ) {
+			return $method;
+		}
 
-		$uniqued = $items->unique( function ( ITE_Shipping_Line_Item $item ) {
-			return $item->get_method()->slug;
-		} );
-
-		if ( $uniqued->count() === 0 ) {
+		if ( ! $this->requires_shipping() ) {
 			return null;
-		} elseif ( $uniqued->count() === 1 ) {
-			return $uniqued->first()->get_method();
-		} else {
+		}
+
+		// If there is only one possible shipping method for the cart, set it and return it.
+		$cart_methods    = it_exchange_get_available_shipping_methods_for_cart( true, $this );
+		$product_methods = it_exchange_get_available_shipping_methods_for_cart_products( $this );
+
+		$cart_methods_count         = count( $cart_methods );
+		$cart_product_methods_count = count( $product_methods );
+
+		if ( $cart_product_methods_count === 1 && $cart_methods_count ) {
+			$method = reset( $cart_methods );
+			$this->set_shipping_method( $method->slug );
+		} elseif ( $cart_methods_count === 0 ) {
+
+			$this->set_shipping_method( 'multiple-methods' );
+
+			/** @var ITE_Cart_Product $product */
+			foreach ( $this->get_items( 'product' ) as $product ) {
+				$enabled_methods = it_exchange_get_enabled_shipping_methods_for_product(
+					$product->get_product(), 'slug', $this
+				);
+
+				if ( is_array( $enabled_methods ) && count( $enabled_methods ) === 1 ) {
+					$this->set_shipping_method( reset( $enabled_methods ), $product );
+				}
+			}
 
 			$method        = new stdClass();
 			$method->slug  = 'multiple-methods';
 			$method->label = __( 'Multiple Shipping Methods', 'it-l10n-ithemes-exchange' );
-
-			return $method;
 		}
+
+		return $method;
 	}
 
 	/**
@@ -1354,11 +1414,7 @@ class ITE_Cart {
 	 * @since 2.0.0
 	 */
 	public function destroy() {
-
-		if ( $this->is_current() ) {
-			it_exchange_remove_cart_id();
-		}
-
+		$this->repository->destroy( $this->cart_id );
 		$this->cart_id = null;
 	}
 

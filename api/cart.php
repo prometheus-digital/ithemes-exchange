@@ -95,12 +95,17 @@ function it_exchange_get_cart( $cart_id ) {
  */
 function it_exchange_create_cart_and_session( IT_Exchange_Customer $user, $is_main = true, \DateTime $expires = null ) {
 
-	$session = \ITE_Session_Model::create( array(
-		'ID'         => it_exchange_create_unique_hash(),
-		'customer'   => $user->get_ID(),
-		'is_main'    => $is_main,
-		'expires_at' => $expires,
-	) );
+	$data = array(
+		'ID'       => it_exchange_create_unique_hash(),
+		'customer' => $user->get_ID(),
+		'is_main'  => $is_main,
+	);
+
+	if ( $expires ) {
+		$data['expires_at'] = $expires;
+	}
+
+	$session = \ITE_Session_Model::create( $data );
 
 	$repo = \ITE_Line_Item_Cached_Session_Repository::from_session_id( $user, $session->ID );
 	$cart = \ITE_Cart::create( $repo, $user );
@@ -736,6 +741,7 @@ function it_exchange_get_cart_product_base_price( $product, $format=true ) {
 	if ( $format ) {
 		$db_base_price = it_exchange_format_price( $db_base_price );
 	}
+
 
 	$item = it_exchange_get_current_cart()->get_item( 'product', $product['product_cart_id'] );
 

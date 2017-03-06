@@ -212,21 +212,18 @@ class IT_Exchange_Shipping {
 			return false;
 		}
 
-		if ( $method === 'multiple-methods' ) {
-			$methods = it_exchange_get_session_data( 'multiple-shipping-methods' );
-			$methods = array_filter( $methods );
-			$cart_product_ids = array();
+		if ( $method !== 'multiple-methods' ) {
+		    return true;
+        }
 
-			foreach ( it_exchange_get_current_cart()->get_items( 'product' ) as $product ) {
-				if ( $product->get_product()->has_feature( 'shipping' ) ) {
-					$cart_product_ids[] = $product->get_id();
-				}
-			}
+        $cart = it_exchange_get_current_cart();
 
-			$diff = array_diff( $cart_product_ids, array_keys( $methods ) );
-
-			return count( $diff ) === 0;
-		}
+		/** @var ITE_Cart_Product $product */
+		foreach ( $cart->get_items( 'product' ) as $product ) {
+		    if ( $product->get_product()->has_feature( 'shipping' ) && ! $cart->get_shipping_method( $product ) ) {
+		        return false;
+            }
+        }
 
 		return true;
 	}
@@ -758,12 +755,16 @@ class IT_Exchange_Shipping {
 	 * Adjusts the cart total
 	 *
 	 * @since 1.0.0
+     * @deprecated 2.0.0
 	 *
-	 * @param $total the total passed to us by Exchange.
+	 * @param float $total The total passed to us by Exchange.
 	 *
-	 * @return
+	 * @return float
 	 */
 	public function modify_shipping_total( $total ) {
+
+	    _deprecated_function( __FUNCTION__, '2.0.0' );
+
 		$shipping = it_exchange_get_cart_shipping_cost( false, false );
 
 		return $total + $shipping;
@@ -842,7 +843,11 @@ class IT_Exchange_Shipping {
 		die();
 	}
 
-	// Update cart shipping mehtod
+	/**
+	 * Update the cart's shipping method.
+     *
+     * @since 2.0.0
+	 */
 	public function update_cart_shipping_method() {
 
 		if ( ! empty( $_GET['ite-checkout-refresh'] ) ) {
@@ -855,22 +860,13 @@ class IT_Exchange_Shipping {
 			$item = $cart->get_item( 'product', $cart_product_id );
 			$cart->set_shipping_method( $shipping_method, $item );
 
-			if ( $cart_product_id ) {
-				it_exchange_update_multiple_shipping_method_for_cart_product( $cart_product_id, $shipping_method );
-			} else {
-				it_exchange_update_cart_data( 'shipping-method', $shipping_method );
-				it_exchange_remove_cart_data( 'multiple-shipping-methods' );
+			if ( $shipping_method === 'multiple-methods' ) {
+				/** @var ITE_Cart_Product $product */
+				foreach ( $cart->get_items( 'product' ) as $product ) {
+					$enabled_methods = it_exchange_get_enabled_shipping_methods_for_product( $product->get_product(), 'slug' );
 
-				if ( $shipping_method === 'multiple-methods' ) {
-					/** @var ITE_Cart_Product $product */
-					foreach ( $cart->get_items( 'product' ) as $product ) {
-						$enabled_methods = it_exchange_get_enabled_shipping_methods_for_product( $product->get_product() );
-
-						if ( is_array( $enabled_methods ) && count( $enabled_methods ) === 1 ) {
-							$method = key( $enabled_methods );
-							$cart->set_shipping_method( $method, $product );
-							it_exchange_update_multiple_shipping_method_for_cart_product( $product->get_id(), $method );
-						}
+					if ( is_array( $enabled_methods ) && count( $enabled_methods ) === 1 ) {
+						$cart->set_shipping_method( reset( $enabled_methods ), $product );
 					}
 				}
 			}
@@ -880,7 +876,7 @@ class IT_Exchange_Shipping {
 		}
 		// TEMP LOGIC
 		if ( isset( $_POST['it-exchange-shipping-method'] ) ) {
-			it_exchange_update_cart_data( 'shipping-method', $_POST['it-exchange-shipping-method'] );
+		    it_exchange_get_current_cart()->set_shipping_method( $_POST['it-exchange-shipping-method'] );
 			it_exchange_add_message( 'notice', __( 'Shipping method updated', 'it-l10n-ithemes-exchange' ) );
 		}
 	}

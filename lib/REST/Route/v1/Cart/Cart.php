@@ -37,11 +37,6 @@ class Cart extends r\Route\Base implements Getable, Putable, Deletable, r\RouteO
 	 * @inheritDoc
 	 */
 	public function handle_get( Request $request ) {
-
-		if ( ! $request->get_route_object( 'cart_id' ) ) {
-			return new \WP_REST_Response( array(), 500 );
-		}
-
 		return $this->prepare_item_for_response( $request->get_route_object( 'cart_id' ) );
 	}
 
@@ -138,7 +133,7 @@ class Cart extends r\Route\Base implements Getable, Putable, Deletable, r\RouteO
 		$cart = $request->get_route_object( 'cart_id' );
 		$cart->empty_cart();
 
-		return new \WP_HTTP_Response( '', 204 );
+		return new \WP_REST_Response( '', 204 );
 	}
 
 	/**

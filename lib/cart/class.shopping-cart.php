@@ -22,7 +22,6 @@ class IT_Exchange_Shopping_Cart {
 		add_action( 'template_redirect', array( $this, 'convert_feedback_to_notices' ) );
 		add_action( 'it_exchange_update_cart', array( $this, 'convert_feedback_to_notices' ), 100 );
 		add_action( 'it_exchange_add_transaction_success', array( $this, 'clear_cart_meta_session_on_transaction' ), 10, 2 );
-		add_action( 'it_exchange_emptied_cart', array( $this, 'clear_cart_meta_session_on_clear' ), 10, 2 );
 
 		// Filters to sync cart across devices
 		add_action( 'wp_login', array( $this, 'merge_session' ), 10, 2 );
@@ -721,19 +720,6 @@ class IT_Exchange_Shopping_Cart {
 	 */
 	public function clear_cart_meta_session_on_transaction( $transaction_id, ITE_Cart $cart = null ) {
 		if ( $cart && $cart->is_current() ) {
-			it_exchange_clear_session_data( 'cart_meta' );
-		}
-	}
-
-	/**
-	 * Clear cart meta when the cart is emptied.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @param \ITE_Cart $cart
-	 */
-	public function clear_cart_meta_session_on_clear( ITE_Cart $cart ) {
-		if ( $cart->is_current() ) {
 			it_exchange_clear_session_data( 'cart_meta' );
 		}
 	}

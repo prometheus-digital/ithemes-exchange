@@ -343,67 +343,23 @@ function it_exchange_is_shipping_address_valid() {
  *
  * @since 1.4.0
  *
- * @return string method slug
+ * @return string|false method slug
 */
 function it_exchange_get_cart_shipping_method() {
-	$method = it_exchange_get_cart_data( 'shipping-method' );
-	$method = empty( $method[0] ) ? false : $method[0];
 
-	// If there is only one possible shippign method for the cart, set it and return it.
-	$cart_methods         = it_exchange_get_available_shipping_methods_for_cart();
-	$cart_product_methods = it_exchange_get_available_shipping_methods_for_cart_products();
+	$cart = it_exchange_get_current_cart( false );
 
-	$cart_methods_count = count( $cart_methods );
-	$cart_product_methods_count = count( $cart_product_methods );
-
-	$single_method = reset( $cart_methods );
-	
-	if ( 1 === $cart_product_methods_count && $cart_methods_count && $single_method->slug !== $method ) {
-		it_exchange_update_cart_data( 'shipping-method', $single_method->slug );
-		it_exchange_get_current_cart()->set_shipping_method( $single_method->slug );
-
-		return $single_method->slug;
-	} elseif ( 0 === $cart_methods_count && ! $method && it_exchange_cart_contains_shippable_product() ) {
-
-		$cart = it_exchange_get_current_cart();
-
-		it_exchange_update_cart_data( 'shipping-method', 'multiple-methods' );
-		$cart->set_shipping_method( 'multiple-methods' );
-		it_exchange_remove_cart_data( 'multiple-shipping-methods' );
-
-		/** @var ITE_Cart_Product $product */
-		foreach ( $cart->get_items( 'product' ) as $product ) {
-			$enabled_methods = it_exchange_get_enabled_shipping_methods_for_product( $product->get_product() );
-
-			if ( is_array( $enabled_methods ) && count( $enabled_methods ) === 1 ) {
-				$method = key( $enabled_methods );
-				$cart->set_shipping_method( $method, $product );
-				it_exchange_update_multiple_shipping_method_for_cart_product( $product->get_id(), key( $enabled_methods ) );
-			}
-		}
-
-		return 'multiple-methods';
+	if ( ! $cart ) {
+		return false;
 	}
 
-	return $method;
-}
+	$method = $cart->get_shipping_method();
 
-/**
- * Check if the cart contains any shippable products.
- *
- * @since 2.0.0
- *
- * @param \ITE_Cart|null $cart
- *
- * @return bool
- */
-function it_exchange_cart_contains_shippable_product( ITE_Cart $cart = null ) {
+	if ( ! $method ) {
+		return false;
+	}
 
-	$cart = $cart ?: it_exchange_get_current_cart();
-
-	return $cart->get_items( 'product' )->filter( function( ITE_Cart_Product $product ) {
-		return $product->get_product()->has_feature( 'shipping' );
-	} )->count() > 0;
+	return $method->slug;
 }
 
 /**
@@ -510,10 +466,10 @@ function it_exchange_get_available_shipping_methods_for_cart_products( ITE_Cart 
  *
  * @return bool
  */
-function it_exchange_cart_requires_shipping( ITE_Cart $cart ) {
-	return $cart->get_items( 'product' )->filter( function( ITE_Cart_Product $product ) {
-		return $product->get_product()->has_feature( 'shipping' );
-	} )->count() > 0;
+function it_exchange_cart_requires_shipping( ITE_Cart $cart = null ) {
+	$cart = it_exchange_get_current_cart( false ) ?: $cart;
+
+	return $cart && $cart->requires_shipping();
 }
 
 /**
@@ -641,7 +597,7 @@ function it_exchange_get_shipping_method_cost_for_cart_item( $method_slug, $cart
  *
  * @since 1.4.0
  *
- * @param string|ITE_Cart $product the product_cart_id in the cart session. NOT the database ID of the product
+ * @param string          $product The product_cart_id in the cart session. NOT the database ID of the product.
  * @param \ITE_Cart|null  $cart
  *
  * @return string
@@ -654,9 +610,11 @@ function it_exchange_get_multiple_shipping_method_for_cart_product( $product, IT
 
 	if ( is_string( $product ) ) {
 		$product = $cart->get_item( 'product', $product );
+	} elseif ( is_array( $product ) && isset( $product['product_cart_id'] ) ) {
+		$product = $cart->get_item( 'product', $product['product_cart_id'] );
 	}
 
-	if ( ! $product ) {
+	if ( ! $product instanceof ITE_Cart_Product ) {
 		return false;
 	}
 
@@ -682,6 +640,8 @@ function it_exchange_get_multiple_shipping_method_for_cart_product( $product, IT
  * Only applicable when the cart is using multiple shipping methods for multiple products
  *
  * @since 1.4.0
+ *
+ * @internal ITE_Cart::set_shipping_method( 'method', $cart_product_item ) should be used instead.
  *
  * @param string $product_cart_id the product_cart_id in the cart session. NOT the database ID of the product
  * @param string $method_slug     the slug of the method this cart product will use

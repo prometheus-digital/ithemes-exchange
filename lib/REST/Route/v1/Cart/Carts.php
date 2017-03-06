@@ -135,7 +135,11 @@ class Carts extends Base implements Postable {
 	 * @inheritDoc
 	 */
 	public function user_can_post( Request $request, AuthScope $scope ) {
-		return Errors::cannot_create();
+		if ( ! $scope->can( 'it_create_carts' ) ) {
+			return Errors::cannot_create();
+		}
+
+		return true;
 	}
 
 	/**

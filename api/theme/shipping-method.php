@@ -137,8 +137,10 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 			<div class="it-exchange-itemized-checkout-methods it-exchange-clearfix">
 				<?php
 				foreach ( it_exchange_get_current_cart()->get_items( 'product' ) as $product ) {
-					if ( ! $product->get_product()->has_feature( 'shipping' ) )
+
+					if ( ! $product->get_product()->has_feature( 'shipping' ) ) {
 						continue;
+					}
 
 					echo '<div class="it-exchange-itemized-checkout-method">';
 
@@ -148,7 +150,8 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 
 						if ( count( $enabled_shipping_methods ) > 1 ) {
 							?>
-							<select class="it-exchange-multiple-shipping-methods-select it-exchange-right" data-it-exchange-product-cart-id="<?php esc_attr_e( $product->get_id() ); ?>" name="it-exchange-shipping-method-for-<?php esc_attr_e( $product->get_id() ); ?>" >
+							<select class="it-exchange-multiple-shipping-methods-select it-exchange-right" data-it-exchange-product-cart-id="<?php esc_attr_e( $product->get_id() ); ?>"
+                                    name="it-exchange-shipping-method-for-<?php esc_attr_e( $product->get_id() ); ?>">
 								<option value="0"><?php _e( 'Select a shipping method', 'it-l10n-ithemes-exchange' ); ?></option>
 								<?php foreach( $enabled_shipping_methods as $product_method ) : ?>
 									<?php if ( empty( $product_method->slug ) ) continue; ?>
@@ -161,8 +164,8 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 							<?php
 						} else {
 							$product_method = reset( $enabled_shipping_methods );
-							it_exchange_update_multiple_shipping_method_for_cart_product( $product->get_id(), $product_method->slug );
-							echo '<span class="it-exchange-right">' . $product_method->label . ' (' . it_exchange_get_shipping_method_cost_for_cart_item( $product_method->slug, $product->bc(), true ) . ')</span>';
+							$cost = it_exchange_get_shipping_method_cost_for_cart_item( $product_method->slug, $product->bc(), true );
+							echo "<span class=\"it-exchange-right\">{$product_method->label} ({$cost})</span>";
 						}
 
 					echo '</div>';

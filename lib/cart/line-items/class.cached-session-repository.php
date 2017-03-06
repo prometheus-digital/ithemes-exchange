@@ -220,4 +220,17 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 			array( 'use_cached_customer_cart' => $this->get_cart_id() )
 		), '2.0.0' );
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function destroy( $cart_id ) {
+		$model = ITE_Session_Model::from_cart_id( $cart_id );
+
+		if ( $model ) {
+			$model->delete();
+		}
+
+		return true;
+	}
 }

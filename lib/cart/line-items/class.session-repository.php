@@ -677,6 +677,22 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 	 * @inheritDoc
 	 */
 	public function expires_at() {
-		return $this->session;
+
+		if ( ! $this->backed_by_active_session() ) {
+			return parent::expires_at();
+		}
+
+		return IT_Exchange_DB_Sessions::get_instance()->expires_at();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function destroy( $cart_id ) {
+
+		it_exchange_clear_session_data( 'cart_meta' );
+		it_exchange_remove_cart_id();
+
+		return true;
 	}
 }

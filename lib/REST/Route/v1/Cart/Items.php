@@ -11,6 +11,7 @@ namespace iThemes\Exchange\REST\Route\v1\Cart;
 use iThemes\Exchange\REST as r;
 use iThemes\Exchange\REST\Auth\AuthScope;
 use iThemes\Exchange\REST\Deletable;
+use iThemes\Exchange\REST\Errors;
 use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Postable;
 use iThemes\Exchange\REST\Request;
@@ -59,12 +60,9 @@ class Items extends Base implements Getable, Postable, Deletable {
 	 */
 	public function user_can_get( Request $request, AuthScope $scope ) {
 
+		// Sanity check, an Items route should not be instantiated with a Item Type that cannot be shown in rest.
 		if ( ! $this->type->is_show_in_rest() ) {
-			return new \WP_Error(
-				'it_exchange_rest_invalid_line_item_type',
-				__( 'Invalid line item type.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => 404 )
-			);
+			return Errors::view_line_item_not_supported( $this->type->get_type() );
 		}
 
 		return true;
@@ -110,11 +108,7 @@ class Items extends Base implements Getable, Postable, Deletable {
 	 */
 	public function user_can_post( Request $request, AuthScope $scope ) {
 		if ( ! $this->type->is_editable_in_rest() ) {
-			return new \WP_Error(
-				'it_exchange_rest_invalid_line_item_type',
-				__( 'Line item type cannot be added.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => 404 )
-			);
+			return Errors::create_line_item_not_supported( $this->type->get_type() );
 		}
 
 		return true;
@@ -129,7 +123,7 @@ class Items extends Base implements Getable, Postable, Deletable {
 		$cart = $request->get_route_object( 'cart_id' );
 		$cart->remove_all( $this->type->get_type() );
 
-		return new \WP_REST_Response( '', 204 );
+		return new \WP_REST_Response( null, 204 );
 	}
 
 	/**
@@ -137,11 +131,7 @@ class Items extends Base implements Getable, Postable, Deletable {
 	 */
 	public function user_can_delete( Request $request, AuthScope $scope ) {
 		if ( ! $this->type->is_editable_in_rest() ) {
-			return new \WP_Error(
-				'it_exchange_rest_invalid_line_item_type',
-				__( 'Line item type cannot be edited.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => 404 )
-			);
+			return Errors::delete_line_item_not_supported( $this->type->get_type() );
 		}
 
 		return true;

@@ -35,8 +35,8 @@ class Serializer {
 			'is_main'          => $cart->is_main(),
 			'shipping_address' => null,
 			'billing_address'  => null,
-			'subtotal'         => it_exchange_get_cart_subtotal( false, array( 'cart' => $cart ) ),
-			'total'            => it_exchange_get_cart_total( false, array( 'cart' => $cart ) ),
+			'subtotal'         => $cart->get_subtotal(),
+			'total'            => $cart->get_total(),
 			'expires_at'       => $cart->expires_at() ? \iThemes\Exchange\REST\format_rfc339( $cart->expires_at() ) : '',
 		);
 
@@ -137,7 +137,6 @@ class Serializer {
 					'description' => __( 'Is this the main cart for the customer.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'boolean',
 					'context'     => array( 'view', 'edit', 'embed' ),
-					'readonly'    => true,
 					'default'     => true,
 				),
 				'billing_address'  => array(

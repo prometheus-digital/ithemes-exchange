@@ -185,4 +185,15 @@ abstract class ITE_Line_Item_Repository {
 	 * @return \DateTime|null
 	 */
 	public function expires_at() { return null; }
+
+	/**
+	 * Destroy the repository.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $cart_id
+	 *
+	 * @return bool
+	 */
+	public function destroy( $cart_id ) { return true; }
 }
