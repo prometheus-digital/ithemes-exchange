@@ -586,6 +586,19 @@ class ITE_Cart {
 	}
 
 	/**
+	 * Fetch a new instance of a line item object.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param ITE_Line_Item $item
+	 *
+	 * @return ITE_Line_Item|null
+	 */
+	public function refresh_item( ITE_Line_Item $item ) {
+		return $this->get_item( $item->get_type(), $item->get_id() );
+	}
+
+	/**
 	 * Get the currency code the cart is being purchased in.
 	 *
 	 * For example, USD, EUR.
@@ -1138,7 +1151,6 @@ class ITE_Cart {
 			} elseif ( $uniqued->count() === 1 ) {
 				$method = $uniqued->first()->get_method();
 			} else {
-
 				$method        = new stdClass();
 				$method->slug  = 'multiple-methods';
 				$method->label = __( 'Multiple Shipping Methods', 'it-l10n-ithemes-exchange' );
@@ -1146,7 +1158,7 @@ class ITE_Cart {
 		}
 
 		if ( $method || ! $find_default ) {
-			return $method;
+			return $method ?: null;
 		}
 
 		if ( ! $this->requires_shipping() ) {
@@ -1183,7 +1195,7 @@ class ITE_Cart {
 			$method->label = __( 'Multiple Shipping Methods', 'it-l10n-ithemes-exchange' );
 		}
 
-		return $method;
+		return $method ?: null;
 	}
 
 	/**

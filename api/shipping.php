@@ -135,8 +135,8 @@ function it_exchange_get_registered_shipping_method( $slug, $product_id=false ) 
 		return false;
 	}
 		
-	if ( apply_filters( 'it_exchange_get_registered_shipping_method', false, $slug, $product_id, $class, $args ) ) {
-		return false;
+	if ( $r = apply_filters( 'it_exchange_get_registered_shipping_method', false, $slug, $product_id, $class, $args ) ) {
+		return $r;
 	}
 
 	// Init the class
@@ -271,11 +271,21 @@ function it_exchange_get_available_shipping_methods_for_product( $product, ITE_C
 
 	// Loop through provider methods and only use the ones that are available for this product
 	$provider_methods = apply_filters( 'it_exchange_get_available_shipping_methods_for_product_provider_methods', $provider_methods, $product, $cart );
-	foreach( $provider_methods as $slug ) {
-		if ( $method = it_exchange_get_registered_shipping_method( $slug, $product->ID ) ) {
-			if ( apply_filters( 'it_exchange_get_registered_shipping_method_available', $method->available, $slug, $method, $product ) )
-				$available_methods[$slug] = $method;
+
+	foreach( (array) $provider_methods as $slug ) {
+		$method = it_exchange_get_registered_shipping_method( $slug, $product->ID );
+
+		if ( ! $method ) {
+			continue;
 		}
+
+		$available = apply_filters( 'it_exchange_get_registered_shipping_method_available', $method->available, $slug, $method, $product );
+
+		if ( ! $available ) {
+			continue;
+		}
+
+		$available_methods[ $slug ] = $method;
 	}
 
 	return apply_filters( 'it_exchange_get_available_shipping_methods_for_product', $available_methods, $product, $cart );

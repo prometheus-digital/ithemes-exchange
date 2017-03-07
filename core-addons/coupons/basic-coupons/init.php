@@ -148,13 +148,15 @@ add_filter( 'it_exchange_get_applied_cart_coupons', 'it_exchange_basic_coupons_a
  *
  * @since 0.4.0
  *
- * @param mixed $incoming sent from WP filter. Discarded here.
- * @return boolean
+ * @param bool     $_    Sent from WP filter. Discarded here.
+ * @param ITE_Cart $cart Cart to check against.
+ *
+ * @return bool
 */
-function it_exchange_basic_coupons_accepting_cart_coupons( $incoming=false ) {
-	return ! (boolean) it_exchange_get_applied_coupons( 'cart' );
+function it_exchange_basic_coupons_accepting_cart_coupons( $_ = false, $cart = null ) {
+	return ! (bool) it_exchange_get_applied_coupons( 'cart', $cart );
 }
-add_filter( 'it_exchange_accepting_cart_coupons', 'it_exchange_basic_coupons_accepting_cart_coupons' );
+add_filter( 'it_exchange_accepting_cart_coupons', 'it_exchange_basic_coupons_accepting_cart_coupons', 10, 2 );
 
 /**
  * Return the form field for applying a coupon code to a cart

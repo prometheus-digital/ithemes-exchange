@@ -35,6 +35,9 @@ abstract class IT_Exchange_Shipping_Method {
 	 */
 	public $settings = array();
 
+	/** @var string */
+	protected $settings_key = '';
+
 	/**
 	 * Class constructor
 	 *
@@ -47,6 +50,9 @@ abstract class IT_Exchange_Shipping_Method {
 		// Set slug
 		$this->set_slug();
 
+		// Set the settings
+		$this->set_settings();
+
 		// Set label
 		$this->set_label();
 
@@ -58,9 +64,6 @@ abstract class IT_Exchange_Shipping_Method {
 
 		// Set the availability of this method to this product
 		$this->set_availability();
-
-		// Set the settings
-		$this->set_settings();
 
 		// Set the shipping features for this method
 		$this->set_features();
@@ -114,6 +117,47 @@ abstract class IT_Exchange_Shipping_Method {
 			$this->product = false;
 		}
 	}
+
+	/**
+	 * Get the settings mixed with the defaults provided by the setting fields.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param bool $break_cache
+	 *
+	 * @return array
+	 */
+	public function get_settings( $break_cache = false ) {
+
+		if ( ! $this->settings_key ) {
+			return array();
+		}
+
+		$settings = it_exchange_get_option( $this->settings_key, $break_cache );
+
+		foreach ( $this->get_settings_fields() as $field ) {
+			if ( array_key_exists( $field['slug'], $settings ) ) {
+				continue;
+			}
+
+			if ( $field['type'] === 'heading' ) {
+				continue;
+			}
+
+			$settings[ $field['slug'] ] = isset( $field['default'] ) ? $field['default'] : '';
+		}
+
+		return $settings;
+	}
+
+	/**
+	 * Get the settings fields.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return array
+	 */
+	public function get_settings_fields() { return $this->settings; }
 
 	/**
 	 * Is this method available to this product

@@ -19,7 +19,7 @@ use iThemes\Exchange\REST\Route\Base;
  *
  * @package iThemes\Exchange\REST\Route\v1\Cart
  */
-class Shipping_Methods extends Base implements Getable, Putable {
+class Shipping extends Base implements Getable, Putable {
 
 	/**
 	 * @inheritDoc
@@ -48,9 +48,10 @@ class Shipping_Methods extends Base implements Getable, Putable {
 
 		$cart_method          = $cart->get_shipping_method();
 		$cart_method          = $cart_method ? $cart_method->slug : '';
+		$is_eligible          = it_exchange_cart_is_eligible_for_multiple_shipping_methods( $cart );
 		$switched_to_multiple = false;
 
-		if ( it_exchange_cart_is_eligible_for_multiple_shipping_methods( $cart ) ) {
+		if ( $is_eligible && is_array( $request['per_item'] ) ) {
 			foreach ( $request['per_item'] as $item ) {
 
 				$line_item = $cart->get_item( $item['item']['type'], $item['item']['id'] );
@@ -59,11 +60,23 @@ class Shipping_Methods extends Base implements Getable, Putable {
 					continue;
 				}
 
-				$current = $cart->get_shipping_method( $line_item );
-				$current = $current ? $current->slug : '';
+				$available = it_exchange_get_enabled_shipping_methods_for_product( $line_item->get_product(), 'slug', $cart );
+				$current   = $cart->get_shipping_method( $line_item );
+				$current   = $current ? $current->slug : '';
 
 				foreach ( $item['methods'] as $method ) {
 					if ( $method['selected'] && $method['id'] !== $current ) {
+
+						if ( ! isset( $available[ $method['id'] ] ) ) {
+							return new \WP_Error(
+								'it_exchange_rest_invalid_shipping_method',
+								sprintf(
+									__( "The '%s' shipping method is not available for the '%s' product.", 'it-l10n-ithemes-exchange' ),
+									$method['id'], $line_item->get_name()
+								),
+								array( 'status' => 400 )
+							);
+						}
 
 						if ( ! $switched_to_multiple ) {
 							$cart->set_shipping_method( 'multiple-methods' );
@@ -71,16 +84,30 @@ class Shipping_Methods extends Base implements Getable, Putable {
 						}
 
 						$cart->set_shipping_method( $method['id'], $line_item );
-
 						break;
 					}
 				}
 			}
 		}
 
-		if ( ! $switched_to_multiple ) {
+		if ( ! $switched_to_multiple && is_array( $request['cart_wide'] ) ) {
+
+			$available = it_exchange_get_available_shipping_methods_for_cart( true, $cart );
+
 			foreach ( $request['cart_wide'] as $method ) {
 				if ( $method['selected'] && $method['id'] !== $cart_method ) {
+
+					if ( ( ! $is_eligible && $method['id'] === 'multiple-methods' ) || ! isset( $available[ $method['id'] ] ) ) {
+						return new \WP_Error(
+							'it_exchange_rest_invalid_shipping_method',
+							sprintf(
+								__( "The '%s' shipping method is not available for this cart.", 'it-l10n-ithemes-exchange' ),
+								$method['id']
+							),
+							array( 'status' => 400 )
+						);
+					}
+
 					$cart->set_shipping_method( $method['id'] );
 				}
 			}
@@ -180,7 +207,7 @@ class Shipping_Methods extends Base implements Getable, Putable {
 	/**
 	 * @inheritDoc
 	 */
-	public function get_path() { return 'shipping_methods/'; }
+	public function get_path() { return 'shipping/'; }
 
 	/**
 	 * @inheritDoc
@@ -212,9 +239,12 @@ class Shipping_Methods extends Base implements Getable, Putable {
 						),
 						'total'    => array(
 							'description' => __( 'The total cost of this shipping method.', 'it-l10n-ithemes-exchange' ),
-							'type'        => 'number',
 							'readonly'    => true,
-							'context'     => array( 'view', 'edit' )
+							'context'     => array( 'view', 'edit' ),
+							'oneOf'       => array(
+								array( 'type' => 'number' ),
+								array( 'type' => 'null' ),
+							),
 						),
 						'selected' => array(
 							'description' => __( 'Whether this is the selected shipping method..', 'it-l10n-ithemes-exchange' ),

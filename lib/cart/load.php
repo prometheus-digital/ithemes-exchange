@@ -245,12 +245,19 @@ add_action( 'it_exchange_register_line_item_types', function ( ITE_Line_Item_Typ
 				);
 			}
 
-			$item = ITE_Coupon_Line_Item::create(
-				$coupon
-			);
-
 			/** @var \ITE_Cart $cart */
 			$cart = $request->get_route_object( 'cart_id' );
+
+			if ( ! it_exchange_accepting_coupon_type( $type, $cart ) ) {
+				return new WP_Error(
+					'it_exchange_rest_not_accepting_coupons',
+					sprintf( __( "Sorry, coupons of type '%s' are not being accepted.", 'it-l10n-ithemes-exchange' ), $type ),
+					array( 'status' => 400 )
+				);
+			}
+
+			$item = ITE_Coupon_Line_Item::create( $coupon );
+
 			$cart->add_item( $item );
 
 			return $item;

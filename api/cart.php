@@ -694,7 +694,7 @@ function it_exchange_cart_is_eligible_for_multiple_shipping_methods( ITE_Cart $c
 
 	$cart = $cart ?: it_exchange_get_current_cart();
 
-	$items_with_shipping = $cart->get_items('product')->filter( function( ITE_Cart_Product $product ) {
+	$items_with_shipping = $cart->get_items( 'product' )->filter( function( ITE_Cart_Product $product ) {
 		return $product->get_product()->has_feature( 'shipping' );
 	} );
 
@@ -710,11 +710,20 @@ function it_exchange_cart_is_eligible_for_multiple_shipping_methods( ITE_Cart $c
 
 	$eligible = count( it_exchange_get_available_shipping_methods_for_cart_products( $cart ) ) > 1;
 
-	if ( $eligible ) {
-		return apply_filters( 'it_exchange_shipping_method_form_multiple_shipping_methods_allowed', $eligible );
+	if ( ! $eligible ) {
+		return false;
 	}
 
-	return false;
+	/**
+	 * Filter whether a customer is eligible to use multiple shipping methods for a cart.
+	 *
+	 * @since 1.4.0
+	 * @since 2.0.0 Add $cart parameter.
+	 *
+	 * @param bool      $eligible
+	 * @param \ITE_Cart $cart
+	 */
+	return apply_filters( 'it_exchange_shipping_method_form_multiple_shipping_methods_allowed', $eligible, $cart );
 }
 
 /**

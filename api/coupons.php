@@ -277,13 +277,31 @@ function it_exchange_get_applied_coupons( $type = false, ITE_Cart $cart = null )
  * We're going to ask the add-ons for this info. Default is no.
  *
  * @since 0.4.0
+ * @since 2.0.0 Added $cart parameter.
  *
- * @param string $type the type of coupon to check for
+ * @param string $type         The type of coupon to check for
+ * @param \ITE_Cart|null $cart The cart to check against.
  *
  * @return boolean
 */
-function it_exchange_accepting_coupon_type( $type ) {
-	return (boolean) apply_filters( 'it_exchange_accepting_' . $type . '_coupons', false );
+function it_exchange_accepting_coupon_type( $type, ITE_Cart $cart = null ) {
+
+	$cart = $cart ?: it_exchange_get_current_cart( false );
+
+	if ( ! $cart ) {
+		return false;
+	}
+
+	/**
+	 * Filter whether the cart is accepting coupons of a given type.
+	 *
+	 * @since 0.4.0
+	 * @since 2.0.0 Added $cart parameter.
+	 *
+	 * @param bool      $accepting
+	 * @param \ITE_Cart $cart
+	 */
+	return (bool) apply_filters( 'it_exchange_accepting_' . $type . '_coupons', false, $cart );
 }
 
 /**

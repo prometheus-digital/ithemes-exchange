@@ -212,7 +212,7 @@ class Cart extends r\Route\Base implements Getable, Putable, Deletable, r\RouteO
 
 		$response = new \WP_REST_Response( $data );
 
-		$shipping_methods = new Shipping_Methods();
+		$shipping_methods = new Shipping();
 		$shipping_methods->set_parent( $this );
 		$response->add_link( 'shipping_methods', r\get_rest_url( $shipping_methods, array( 'cart_id' => $cart->get_id() ) ) );
 

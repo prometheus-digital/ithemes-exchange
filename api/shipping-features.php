@@ -67,27 +67,35 @@ function it_exchange_do_shipping_feature_boxes( $product ) {
  *
  * @since 1.4.0
  *
- * @param string $slug feature slug
- * @param int|bool $product_id
+ * @param string                  $slug feature slug
+ * @param int|IT_Exchange_Product $product
  * @param array $args Option arguments to pass to features class
  *
- * @return object
+ * @return IT_Exchange_Shipping_Feature|false
 */
-function it_exchange_get_registered_shipping_feature( $slug, $product_id=false, $args=array() ) {
-	if ( ! $features = it_exchange_get_registered_shipping_features() )
-		return false;
+function it_exchange_get_registered_shipping_feature( $slug, $product = 0, $args=array() ) {
 
-	if ( empty( $features[$slug] ) )
+	if ( ! $features = it_exchange_get_registered_shipping_features() ) {
 		return false;
-
-	$class = $features[$slug];
-	if ( class_exists( $class ) ) {
-		if ( empty( $args ) ) {
-			return new $class( $product_id );
-		} else {
-			return new $class( $product_id, $args );
-		}
 	}
+
+	if ( empty( $features[ $slug ] ) ) {
+		return false;
+	}
+
+	$class = $features[ $slug ];
+
+	if ( ! class_exists( $class ) ) {
+		return false;
+	}
+
+	$product = $product instanceof IT_Exchange_Product ? $product->ID : $product;
+
+	if ( $args ) {
+		return new $class( $product, $args );
+	}
+
+	return new $class( $product );
 }
 
 /**
@@ -122,14 +130,14 @@ function it_exchange_get_shipping_features_for_product( $product ) {
 	$features = array_values( array_unique( $features ) );
 	
 	// Grab registered feature details
-	$registered_features = it_exchange_get_registered_shipping_features( $features );
+	$registered_features = it_exchange_get_registered_shipping_features();
 	
 	// Init return array
 	$shipping_features = array();
 
 	// Loop through array and init objects
 	foreach( $registered_features as $slug => $class ) {
-		if ( in_array( $slug, $features ) && $feature = it_exchange_get_registered_shipping_feature( $slug, $product->ID ) ) {
+		if ( in_array( $slug, $features ) && $feature = it_exchange_get_registered_shipping_feature( $slug, $product ) ) {
 			$shipping_features[$slug] = $feature;
 		}
 	}
@@ -142,20 +150,33 @@ function it_exchange_get_shipping_features_for_product( $product ) {
  *
  * @since 1.4.0
  *
- * @param string  $feature    the registered feature slug
- * @param integer $product_id the wordpress post id for the product
- * @param array $args         Optional arguments to pass to the shipping feature
+ * @param string                  $feature The registered feature slug
+ * @param int|IT_Exchange_Product $product The product model or product ID.
+ * @param array $args                      Optional arguments to pass to the shipping feature
  *
- * @return mixed
+ * @return mixed|false
 */
-function it_exchange_get_shipping_feature_for_product( $feature, $product_id, $args=array() ) {
-	if ( ! $product = it_exchange_get_product( $product_id ) )
+function it_exchange_get_shipping_feature_for_product( $feature, $product, $args=array() ) {
+
+	if ( ! $product = it_exchange_get_product( $product ) ) {
 		return false;
+	}
 		
 	$features = it_exchange_get_registered_shipping_features();
-	if ( !empty( $features[$feature] ) ) {
-		if ( $shipping_feature = it_exchange_get_registered_shipping_feature( $feature, $product_id, $args ) ) {
-			return ( empty( $shipping_feature->enabled ) || empty( $shipping_feature->values ) ) ? false : $shipping_feature->values;
-		}
+
+	if ( empty( $features[ $feature ] ) ) {
+		return false;
 	}
+
+	$shipping_feature = it_exchange_get_registered_shipping_feature( $feature, $product, $args );
+
+	if ( ! $shipping_feature ) {
+		return false;
+	}
+
+	if ( empty( $shipping_feature->enabled ) || empty( $shipping_feature->values ) ) {
+		return false;
+	}
+
+	return $shipping_feature->values;
 }

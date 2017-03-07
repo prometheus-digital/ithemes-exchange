@@ -24,6 +24,8 @@ class IT_Exchange_Simple_Shipping_Free_Method extends IT_Exchange_Shipping_Metho
 	 * @param int|bool $product_id optional product id for current product
 	*/
 	function __construct( $product_id=false ) {
+		$this->settings_key = 'simple-shipping';
+
 		parent::__construct( $product_id );
 	}
 
@@ -46,7 +48,7 @@ class IT_Exchange_Simple_Shipping_Free_Method extends IT_Exchange_Shipping_Metho
 	 * @return void
 	*/
 	function set_label() {
-		$settings = it_exchange_get_option( 'simple-shipping' );
+		$settings = $this->get_settings();
 		$this->label = empty( $settings['free-shipping-label'] ) ? __( 'Free Shipping', 'it-l10n-ithemes-exchange' ) : $settings['free-shipping-label'];
 	}
 
@@ -58,8 +60,7 @@ class IT_Exchange_Simple_Shipping_Free_Method extends IT_Exchange_Shipping_Metho
 	 * @return void
 	*/
 	function set_features() {
-		$this->shipping_features = array(
-		);
+		$this->shipping_features = array();
 	}
 
 	/**
@@ -71,7 +72,7 @@ class IT_Exchange_Simple_Shipping_Free_Method extends IT_Exchange_Shipping_Metho
 	*/
 	function set_enabled() {
 		$break_cache   = is_admin() && ! empty( $_POST );
-		$options       = it_exchange_get_option( 'simple-shipping', $break_cache );
+		$options       = $this->get_settings( $break_cache );
 		$this->enabled = ! empty( $options['enable-free-shipping'] );
 	}
 
