@@ -38,6 +38,7 @@ class Serializer {
 			'subtotal'         => $cart->get_subtotal(),
 			'total'            => $cart->get_total(),
 			'expires_at'       => $cart->expires_at() ? \iThemes\Exchange\REST\format_rfc339( $cart->expires_at() ) : '',
+			'meta'             => array(),
 		);
 
 		if ( $cart->get_billing_address() ) {
@@ -90,6 +91,12 @@ class Serializer {
 
 		$data['total_lines'] = $totals_info;
 
+		foreach ( $cart->get_all_meta() as $key => $value ) {
+			if ( ( $config = \ITE_Cart_Meta_Registry::get( $key ) ) && $config->show_in_rest() ) {
+				$data['meta'][ $key ] = $value;
+			}
+		}
+
 		return $data;
 	}
 
@@ -114,6 +121,12 @@ class Serializer {
 			$title       = $item_schema['title'];
 
 			$item_references[]['$ref'] = \iThemes\Exchange\REST\url_for_schema( $title );
+		}
+
+		$meta_properties = array();
+
+		foreach ( \ITE_Cart_Meta_Registry::shows_in_rest() as $meta ) {
+			$meta_properties[ $meta->get_key() ] = $meta->get_schema();
 		}
 
 		$this->schema = array(
@@ -234,6 +247,15 @@ class Serializer {
 				),
 			),
 		);
+
+		if ( $meta_properties ) {
+			$this->schema['properties']['meta'] = array(
+				'description' => __( 'Cart meta fields.', 'it-l10n-ithemes-exchange' ),
+				'context'     => array( 'view', 'edit' ),
+				'type'        => 'object',
+				'properties'  => $meta_properties,
+			);
+		}
 
 		return $this->schema;
 	}

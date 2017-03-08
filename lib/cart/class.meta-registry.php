@@ -41,6 +41,17 @@ class ITE_Cart_Meta_Registry {
 	}
 
 	/**
+	 * Remove the meta entry.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $key
+	 */
+	public static function remove( $key ) {
+		unset( static::$meta[ $key ] );
+	}
+
+	/**
 	 * Get all meta values from the registry.
 	 *
 	 * @since 2.0.0
@@ -49,6 +60,25 @@ class ITE_Cart_Meta_Registry {
 	 */
 	public static function all() {
 		return array_values( static::$meta );
+	}
+
+	/**
+	 * Get all meta that is viewable in REST.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return ITE_Cart_Meta[]
+	 */
+	public static function shows_in_rest() {
+		$r = array();
+
+		foreach ( static::all() as $entry ) {
+			if ( $entry->show_in_rest() ) {
+				$r[] = $entry;
+			}
+		}
+
+		return $r;
 	}
 
 	/**

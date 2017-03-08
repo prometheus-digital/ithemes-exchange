@@ -74,11 +74,9 @@ add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 
 	$shipping_methods = new Route\v1\Cart\Shipping();
 	$purchase         = new Route\v1\Cart\Purchase( new \ITE_Gateway_Request_Factory(), new Route\v1\Cart\PurchaseSerializer() );
-	$meta             = new Route\v1\Cart\Meta();
 
 	$manager->register_route( $shipping_methods->set_parent( $cart ) );
 	$manager->register_route( $purchase->set_parent( $cart ) );
-	$manager->register_route( $meta->set_parent( $cart ) );
 
 	// --- Customers --- //
 	$customer = new Customer( new CustomerSerializer() );

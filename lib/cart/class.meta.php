@@ -26,14 +26,24 @@ class ITE_Cart_Meta {
 	 *
 	 * @param string $key
 	 * @param array  $args
+	 *
+	 * @throws \InvalidArgumentException
 	 */
 	public function __construct( $key, array $args ) {
 		$this->key  = $key;
 		$this->args = wp_parse_args( $args, array(
 			'show_in_rest'     => false,
 			'editable_in_rest' => false,
-			'type'             => 'string',
+			'schema'           => array(),
 		) );
+
+		if ( empty( $this->args['schema'] ) && ( $this->show_in_rest() || $this->editable_in_rest() ) ) {
+			throw new InvalidArgumentException( "'schema' argument is required." );
+		}
+
+		if ( ! $this->editable_in_rest() ) {
+			$this->args['schema']['readonly'] = true;
+		}
 	}
 
 	/**
@@ -70,15 +80,13 @@ class ITE_Cart_Meta {
 	}
 
 	/**
-	 * Get the meta type.
-	 *
-	 * ie, 'string' or 'integer'.
+	 * Get the schema for the meta field.
 	 *
 	 * @since 2.0.0
 	 *
 	 * @return string
 	 */
-	public function get_type() {
-		return $this->args['type'];
+	public function get_schema() {
+		return $this->args['schema'];
 	}
 }

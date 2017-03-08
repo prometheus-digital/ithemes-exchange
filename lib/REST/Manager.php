@@ -467,12 +467,6 @@ class Manager {
 			return $response;
 		}
 
-		$factory       = new Factory(
-			$this->schema_storage,
-			$this->uri_retreiver,
-			Constraint::CHECK_MODE_COERCE_TYPES | Constraint::CHECK_MODE_APPLY_DEFAULTS
-		);
-		$validator     = new Validator( $factory );
 		$schema_object = $this->schema_storage->getSchema( url_for_schema( $schema['title'] ) );
 
 		$to_validate = array();
@@ -490,8 +484,6 @@ class Manager {
 			return $response;
 		}
 
-		$to_validate = json_decode( json_encode( $to_validate ) );
-
 		if ( $request->get_method() === 'GET' ) {
 			$schema_object = json_decode( json_encode( array(
 				'type'       => 'object',
@@ -499,14 +491,44 @@ class Manager {
 			) ) );
 		}
 
-		$validator->validate( $to_validate, $schema_object );
+		$data_or_error = $this->validate_params( $to_validate, $schema_object );
 
-		foreach ( json_decode( json_encode( $to_validate ), true ) as $prop => $value ) {
-			$request[ $prop ] = $value;
+		if ( is_wp_error( $data_or_error ) ) {
+			return $data_or_error;
 		}
 
+		foreach ( $data_or_error as $key => $value ) {
+			$request[ $key ] = $value;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Validate parameters.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param $to_validate
+	 * @param $schema_object
+	 *
+	 * @return array|\WP_Error
+	 */
+	public function validate_params( $to_validate, $schema_object ) {
+
+		$to_validate = json_decode( json_encode( $to_validate ) );
+		$validator   = $this->make_validator();
+
+		$validator->validate( $to_validate, $schema_object );
+
 		if ( $validator->isValid() ) {
-			return null;
+			$return = array();
+
+			foreach ( json_decode( json_encode( $to_validate ), true ) as $prop => $value ) {
+				$return[ $prop ] = $value;
+			}
+
+			return $return;
 		}
 
 		$invalid_params = array();
@@ -520,6 +542,23 @@ class Manager {
 			sprintf( __( 'Invalid parameter(s): %s' ), implode( ', ', array_keys( $invalid_params ) ) ),
 			array( 'status' => 400, 'params' => $invalid_params )
 		);
+	}
+
+	/**
+	 * Make a Schema validator.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return Validator
+	 */
+	protected function make_validator() {
+		$factory = new Factory(
+			$this->schema_storage,
+			$this->uri_retreiver,
+			Constraint::CHECK_MODE_COERCE_TYPES | Constraint::CHECK_MODE_APPLY_DEFAULTS
+		);
+
+		return new Validator( $factory );
 	}
 
 	/**

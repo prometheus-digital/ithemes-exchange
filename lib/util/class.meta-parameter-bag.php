@@ -103,7 +103,7 @@ class ITE_Meta_Parameter_Bag implements ITE_Parameter_Bag {
 	 * @inheritDoc
 	 */
 	public function set_param( $param, $value ) {
-		return (bool) update_metadata( $this->type, $this->ID, $this->to_key( $param ), $value );
+		return (bool) update_metadata( $this->type, $this->ID, $this->to_key( $param ), wp_slash( $value ) );
 	}
 
 	/**

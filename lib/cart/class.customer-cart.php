@@ -1242,8 +1242,8 @@ class ITE_Cart {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param string $key
-	 * @param mixed  $value
+	 * @param string $key   Meta key.
+	 * @param mixed  $value Values should be unslashed.
 	 *
 	 * @return bool
 	 */

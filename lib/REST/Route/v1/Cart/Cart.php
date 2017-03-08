@@ -63,6 +63,14 @@ class Cart extends r\Route\Base implements Getable, Putable, Deletable, r\RouteO
 			return $e;
 		}
 
+		if ( ! empty( $request['meta'] ) ) {
+			foreach ( $request['meta'] as $key => $value ) {
+				if ( ( $config = \ITE_Cart_Meta_Registry::get( $key ) ) && $config->editable_in_rest() ) {
+					$value === null ? $cart->remove_meta( $key ) : $cart->set_meta( $key, $value );
+				}
+			}
+		}
+
 		return $this->prepare_item_for_response( $cart );
 	}
 

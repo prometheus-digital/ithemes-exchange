@@ -50,7 +50,7 @@ interface ITE_Parameter_Bag {
 	 * @since 2.0.0
 	 *
 	 * @param string $param
-	 * @param mixed  $value
+	 * @param mixed  $value Values should be unslashed.
 	 *
 	 * @return bool
 	 */
