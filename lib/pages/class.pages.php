@@ -441,7 +441,7 @@ class IT_Exchange_Pages {
 				}
 
 				if ( isset( $_REQUEST['redirect_to'] ) ) {
-					wp_safe_redirect( add_query_arg( 'transaction_id', $transaction_id, $_REQUEST['redirect_to'] ) );
+					wp_safe_redirect( add_query_arg( 'transaction_id', $transaction_id, rawurldecode( $_REQUEST['redirect_to'] ) ) );
 					die();
 				}
 

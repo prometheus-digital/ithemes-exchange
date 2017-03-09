@@ -66,6 +66,11 @@ class Cart_Feedback implements Middleware {
 			$response->set_data( $data );
 		} else {
 			$data = $response->get_error_data();
+
+			if ( ! is_array( $data ) ) {
+				$data = array();
+			}
+
 			$data['feedback'] = $feedback;
 			$response->add_data( $data );
 		}

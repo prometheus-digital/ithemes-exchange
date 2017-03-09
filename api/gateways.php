@@ -56,3 +56,33 @@ function it_exchange_is_gateway_in_sandbox_mode( $gateway ) {
 
 	return $gateway->is_sandbox_mode();
 }
+
+/**
+ * Get the payment button label for a gateway.
+ *
+ * @since 2.0.0
+ *
+ * @param ITE_Gateway|string $gateway
+ *
+ * @return string
+ */
+function it_exchange_get_payment_button_label( $gateway ) {
+
+	$gateway = $gateway instanceof ITE_Gateway ? $gateway : ITE_Gateways::get( $gateway );
+
+	if ( $gateway ) {
+		$label = $gateway->get_payment_button_label();
+	} else {
+		$label = __( 'Purchase', 'it-l10n-ithemes-exchange' );
+	}
+
+	/**
+	 * Filter the payment button label.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string           $label
+	 * @param ITE_Gateway|null $gateway
+	 */
+	return apply_filters( 'it_exchange_get_payment_button_label', $label, $gateway );
+}

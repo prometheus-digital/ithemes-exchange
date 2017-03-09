@@ -14,6 +14,7 @@ use iThemes\Exchange\REST\Getable;
 use iThemes\Exchange\REST\Postable;
 use iThemes\Exchange\REST\Request;
 use iThemes\Exchange\REST\Route\Base;
+use iThemes\Exchange\REST\Route\v1\Transaction\Serializer as TransactionSerializer;
 use iThemes\Exchange\REST\VariableSchema;
 
 /**
@@ -50,6 +51,7 @@ class Purchase extends Base implements Getable, Postable, VariableSchema {
 
 		$cart->prepare_for_purchase();
 
+		/** @var ITE_Gateway_Purchase_Request $purchase_request */
 		$purchase_request = $this->request_factory->make( 'purchase', array(
 			'cart'        => $cart,
 			'redirect_to' => $request['redirect_to'],
@@ -103,22 +105,12 @@ class Purchase extends Base implements Getable, Postable, VariableSchema {
 			return $error;
 		}
 
-		$token = (int) $request['token'];
-
-		if ( $token && ! current_user_can( 'it_use_payment_token', $token ) ) {
-			return new \WP_Error(
-				'rest_invalid_param',
-				__( 'You cannot use that payment token.', 'it-l10n-ithemes-exchange' ),
-				array( 'status' => rest_authorization_required_code() )
-			);
-		}
-
 		try {
 			$purchase_request = $this->request_factory->make( 'purchase', array(
 				'cart'           => $cart,
 				'nonce'          => $request['nonce'],
 				'card'           => $request['card'],
-				'token'          => $token,
+				'token'          => (int) $request['token'],
 				'tokenize'       => $request['tokenize'],
 				'one_time_token' => $request['one_time_token'],
 				'redirect_to'    => $request['redirect_to']
@@ -155,8 +147,8 @@ class Purchase extends Base implements Getable, Postable, VariableSchema {
 		$route = $this->get_manager()->get_first_route( 'iThemes\Exchange\REST\Route\v1\Transaction\Transaction' );
 		$url   = \iThemes\Exchange\REST\get_rest_url( $route, array( 'transaction_id' => $transaction->ID ) );
 
-		$response = new \WP_REST_Response();
-		$response->set_status( \WP_Http::SEE_OTHER );
+		$txn_serializer = new TransactionSerializer();
+		$response       = new \WP_REST_Response( $txn_serializer->serialize( $transaction ), \WP_Http::CREATED );
 		$response->header( 'Location', $url );
 
 		return $response;
@@ -165,7 +157,24 @@ class Purchase extends Base implements Getable, Postable, VariableSchema {
 	/**
 	 * @inheritDoc
 	 */
-	public function user_can_post( Request $request, AuthScope $scope ) { return true; }
+	public function user_can_post( Request $request, AuthScope $scope ) {
+
+		if ( $request['token'] && ! $scope->can( 'it_use_payment_token', $request['token'] ) ) {
+
+			return new \WP_Error(
+				'rest_invalid_param',
+				sprintf( __( 'Invalid parameter(s): %s', 'it-l10n-ithemes-exchange' ), 'token' ),
+				array(
+					'status' => rest_authorization_required_code(),
+					'params' => array(
+						'token' => __( 'Sorry, you are not authorized to use that payment token.', 'it-l10n-ithemes-exchange' ),
+					)
+				)
+			);
+		}
+
+		return true;
+	}
 
 	/**
 	 * @inheritDoc
@@ -187,9 +196,8 @@ class Purchase extends Base implements Getable, Postable, VariableSchema {
 				'format'      => 'uri',
 				'description' => __( 'A location to redirect the customer to after purchase. Useful for redirect methods.', 'it-l10n-ithemes-exchange' ),
 				'arg_options' => array(
-					'sanitize_callback' => 'wp_sanitize_redirect',
 					'validate_callback' => function ( $param ) {
-						return wp_validate_redirect( $param );
+						return wp_validate_redirect( wp_sanitize_redirect( $param ), false );
 					},
 				),
 			),
@@ -232,9 +240,8 @@ class Purchase extends Base implements Getable, Postable, VariableSchema {
 					'format'      => 'uri',
 					'description' => __( 'A location to redirect the customer to after purchase. Useful for redirect methods.', 'it-l10n-ithemes-exchange' ),
 					'arg_options' => array(
-						'sanitize_callback' => 'wp_sanitize_redirect',
 						'validate_callback' => function ( $param ) {
-							return wp_validate_redirect( $param );
+							return wp_validate_redirect( wp_sanitize_redirect( $param ), false );
 						},
 					),
 				),
@@ -259,14 +266,21 @@ class Purchase extends Base implements Getable, Postable, VariableSchema {
 					),
 				)
 			),
-			'oneOf'      => array(
-				// Set it up so that only one card, token, or tokenize option may be used in conjunction.
-				// May also pass none, for things like Offline Payments
-				array( 'required' => array( 'id', 'nonce', 'card' ) ),
-				array( 'required' => array( 'id', 'nonce', 'token' ) ),
-				array( 'required' => array( 'id', 'nonce', 'one_time_token' ) ),
-				array( 'required' => array( 'id', 'nonce', 'tokenize' ) ),
-				array( 'required' => array( 'id', 'nonce' ) ),
+
+			'anyOf' => array(
+				array(
+					'oneOf' => array(
+						// Set it up so that only one card, token, or tokenize option may be used in conjunction.
+						// May also pass none, for things like Offline Payments
+						array( 'required' => array( 'card' ) ),
+						array( 'required' => array( 'token' ) ),
+						array( 'required' => array( 'one_time_token' ) ),
+						array( 'required' => array( 'tokenize' ) ),
+					),
+				),
+				array(
+					'required' => array( 'id', 'nonce' )
+				)
 			),
 		);
 	}

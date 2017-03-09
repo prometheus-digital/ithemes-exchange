@@ -493,13 +493,15 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 	}
 
 	/** @var ITE_Gateway_Card $card */
-	$card          = empty( $args['card'] ) ? null : $args['card'];
+	$card = empty( $args['card'] ) ? null : $args['card'];
 
-	/** @var ITE_Payment_Token $payment_token */
 	if ( empty( $args['payment_token'] ) ) {
 		$payment_token = null;
-	} elseif ( is_numeric( $payment_token ) ) {
+	} elseif ( is_numeric( $args['payment_token'] ) ) {
 		$payment_token = ITE_Payment_Token::get( $args['payment_token'] );
+	} else {
+		/** @var ITE_Payment_Token $payment_token */
+		$payment_token = $args['payment_token'];
 	}
 
 	if ( $payment_token && $payment_token->get_raw_attribute( 'gateway' ) !== $method ) {
@@ -719,13 +721,15 @@ function it_exchange_add_child_transaction( $method, $method_id, $status = 'pend
 	$args = wp_parse_args( $args, $defaults );
 
 	/** @var ITE_Gateway_Card $card */
-	$card          = empty( $args['card'] ) ? null : $args['card'];
+	$card = empty( $args['card'] ) ? null : $args['card'];
 
-	/** @var ITE_Payment_Token $payment_token */
 	if ( empty( $args['payment_token'] ) ) {
 		$payment_token = null;
-	} elseif ( is_numeric( $payment_token ) ) {
+	} elseif ( is_numeric( $args['payment_token'] ) ) {
 		$payment_token = ITE_Payment_Token::get( $args['payment_token'] );
+	} else {
+		/** @var ITE_Payment_Token $payment_token */
+		$payment_token = $args['payment_token'];
 	}
 
 	if ( $payment_token && $payment_token->get_raw_attribute( 'gateway' ) !== $method ) {

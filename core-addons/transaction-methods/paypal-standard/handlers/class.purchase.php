@@ -66,7 +66,7 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 		}
 
 		if ( $request->get_redirect_to() ) {
-			$return_args['redirect_to'] = $request->get_redirect_to();
+			$return_args['redirect_to'] = rawurlencode( $request->get_redirect_to() );
 		}
 
 		$return_url = add_query_arg( $return_args, it_exchange_get_page_url( 'transaction' ) );

@@ -52,6 +52,18 @@ class ITE_PayPal_Standard_Gateway extends ITE_Gateway {
 	/**
 	 * @inheritDoc
 	 */
+	public function get_payment_button_label() {
+
+		if ( $this->settings()->has( 'purchase-button-label' ) ) {
+			return $this->settings()->get( 'purchase-button-label' );
+		}
+
+		return parent::get_payment_button_label();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function is_sandbox_mode() { return $this->settings()->get( 'sandbox-mode' ); }
 
 	/**
@@ -132,7 +144,8 @@ class ITE_PayPal_Standard_Gateway extends ITE_Gateway {
 				'type'    => 'text_box',
 				'label'   => __( 'Purchase Button Label', 'it-l10n-ithemes-exchange' ),
 				'slug'    => 'purchase-button-label',
-				'tooltip' => __( 'This is the text inside the button your customers will press to purchase with PayPal Standard.', 'it-l10n-ithemes-exchange' )
+				'tooltip' => __( 'This is the text inside the button your customers will press to purchase with PayPal Standard.', 'it-l10n-ithemes-exchange' ),
+				'default' => __( 'Pay with PayPal', 'it-l10n-ithemes-exchange' ),
 			),
 			array(
 				'type'    => 'email',

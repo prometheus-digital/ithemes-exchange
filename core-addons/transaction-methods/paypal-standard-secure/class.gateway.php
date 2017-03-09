@@ -65,6 +65,18 @@ class ITE_PayPal_Standard_Secure_Gateway extends ITE_Gateway {
 	/**
 	 * @inheritDoc
 	 */
+	public function get_payment_button_label() {
+
+		if ( $this->settings()->has( 'purchase-button-label' ) ) {
+			return $this->settings()->get( 'purchase-button-label' );
+		}
+
+		return parent::get_payment_button_label();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function requires_cart_after_purchase() { return true; }
 
 	/**
@@ -227,7 +239,8 @@ class ITE_PayPal_Standard_Secure_Gateway extends ITE_Gateway {
 				'type'    => 'text_box',
 				'label'   => __( 'Purchase Button Label', 'it-l10n-ithemes-exchange' ),
 				'slug'    => 'purchase-button-label',
-				'tooltip' => __( 'This is the text inside the button your customers will press to purchase with PayPal.', 'it-l10n-ithemes-exchange' )
+				'tooltip' => __( 'This is the text inside the button your customers will press to purchase with PayPal.', 'it-l10n-ithemes-exchange' ),
+				'default' => __( 'Pay with PayPal', 'it-l10n-ithemes-exchange' ),
 			),
 			array(
 				'type'    => 'check_box',

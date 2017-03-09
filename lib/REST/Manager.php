@@ -14,6 +14,7 @@ use iThemes\Exchange\REST\Auth\GuestAuthScope;
 use iThemes\Exchange\REST\Auth\PublicAuthScope;
 use iThemes\Exchange\REST\Middleware\Stack;
 use iThemes\Exchange\REST\Route\Base;
+use iThemes\Exchange\REST\Route\v1\Cart\Purchase;
 use JsonSchema\Constraints\Constraint;
 use JsonSchema\Constraints\Factory;
 use JsonSchema\SchemaStorage;
@@ -296,6 +297,14 @@ class Manager {
 
 		if ( $schema = $route->get_schema() ) {
 			$this->schemas[ $schema['title'] ] = json_encode( $this->transform_schema( $schema ) );
+
+			if ( $route instanceof VariableSchema ) {
+				foreach ( $route->schema_varies_on() as $method ) {
+					$method_schema = $route->get_schema_for_method( $method );
+
+					$this->schemas[ $method_schema['title'] . '-' . strtolower( $method ) ] = json_encode( $method_schema );
+				}
+			}
 		}
 
 		$path     = '';
@@ -324,7 +333,7 @@ class Manager {
 
 			$permission = function ( \WP_REST_Request $request ) use ( $manager, $verb, $route, $parents, &$exchange_request ) {
 
-				$exchange_request = Request::from_wp( $request );
+				$exchange_request = $request instanceof Request ? $request : Request::from_wp( $request );
 				$exchange_request->set_matched_route_controller( $route );
 
 				$auth = $manager->get_auth_scope();
@@ -456,8 +465,15 @@ class Manager {
 		/** @var Route $route */
 		$route      = $handler['ite_route'];
 		$request    = Request::from_wp( $request );
-		$schema     = $route->get_schema();
 		$query_args = $route->get_query_args();
+
+		if ( $route instanceof VariableSchema && in_array( $request->get_method(), $route->schema_varies_on(), true ) ) {
+			$schema = $route->get_schema_for_method( $request->get_method() );
+			$title  = $schema['title'] . '-' . strtolower( $request->get_method() );
+		} else {
+			$schema = $route->get_schema();
+			$title  = isset( $schema['title'] ) ? $schema['title'] : '';
+		}
 
 		if ( ! $schema && ( $request->get_method() === 'POST' || $request->get_method() === 'PUT' ) ) {
 			return $response;
@@ -467,7 +483,7 @@ class Manager {
 			return $response;
 		}
 
-		$schema_object = $this->schema_storage->getSchema( url_for_schema( $schema['title'] ) );
+		$schema_object = $this->schema_storage->getSchema( url_for_schema( $title ) );
 
 		$to_validate = array();
 
@@ -539,7 +555,7 @@ class Manager {
 
 		return new \WP_Error(
 			'rest_invalid_param',
-			sprintf( __( 'Invalid parameter(s): %s' ), implode( ', ', array_keys( $invalid_params ) ) ),
+			sprintf( __( 'Invalid parameter(s): %s', 'it-l10n-ithemes-exchange' ), implode( ', ', array_keys( $invalid_params ) ) ),
 			array( 'status' => 400, 'params' => $invalid_params )
 		);
 	}
@@ -602,8 +618,8 @@ class Manager {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param \iThemes\Exchange\REST\Route\v1 $route
-	 * @param string                          $verb
+	 * @param \iThemes\Exchange\REST\Route $route
+	 * @param string                       $verb
 	 *
 	 * @return array
 	 */
@@ -667,7 +683,7 @@ class Manager {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param \iThemes\Exchange\REST\Route\v1 $route
+	 * @param \iThemes\Exchange\REST\Route $route
 	 *
 	 * @return array
 	 */
@@ -676,13 +692,19 @@ class Manager {
 		$args            = $route->get_query_args();
 		$args['context'] = $this->get_context_param( $route, array( 'default' => 'view' ) );
 
-		foreach ( $args as $arg ) {
+		foreach ( $args as &$arg ) {
 			if ( ! isset( $arg['sanitize_callback'] ) ) {
 				$arg['sanitize_callback'] = false;
 			}
 
 			if ( ! isset( $arg['validate_callback'] ) ) {
 				$arg['validate_callback'] = false;
+			}
+
+			if ( isset( $arg['arg_options'] ) ) {
+				$options = $arg['arg_options'];
+				unset( $arg['arg_options'] );
+				$arg = array_merge( $args, $options );
 			}
 		}
 
@@ -767,6 +789,10 @@ class Manager {
 			return $authed;
 		}
 
+		if ( empty( $_SERVER['HTTP_AUTHORIZATION'] ) ) {
+			return false;
+		}
+
 		if ( ! function_exists( 'it_exchange_guest_checkout_generate_guest_user_object' ) ) {
 			return false;
 		}
@@ -782,7 +808,9 @@ class Manager {
 			return false;
 		}
 
-		$email                   = $matches[1];
+		$email = $matches[1];
+
+		$this->set_auth_scope( new GuestAuthScope( it_exchange_get_customer( $email ) ) );
 		$GLOBALS['current_user'] = it_exchange_guest_checkout_generate_guest_user_object( $email );
 
 		add_filter( 'it_exchange_get_current_customer', function () use ( $email ) {

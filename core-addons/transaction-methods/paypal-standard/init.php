@@ -468,6 +468,7 @@ function it_exchange_save_paypal_standard_wizard_settings( $errors ) {
  * Default settings for paypal_standard
  *
  * @since 0.4.0
+ * @deprecated 2.0.0
  *
  * @param array $values
  *
@@ -481,8 +482,6 @@ function it_exchange_paypal_standard_addon_default_settings( $values ) {
 
 	return ITUtility::merge_defaults( $values, $defaults );
 }
-
-add_filter( 'it_storage_get_defaults_exchange_addon_paypal_standard', 'it_exchange_paypal_standard_addon_default_settings' );
 
 /**
  * Returns the button for making the PayPal faux payment button
@@ -514,26 +513,6 @@ function it_exchange_paypal_standard_addon_make_payment_button( $options ) {
 }
 
 //add_filter( 'it_exchange_get_paypal-standard_make_payment_button', 'it_exchange_paypal_standard_addon_make_payment_button', 10, 2 );
-
-/**
- * Override the payment method button name.
- *
- * @since 2.0.0
- *
- * @param string $name
- *
- * @return string
- */
-function it_exchange_paypal_standard_override_method_name( $name ) {
-
-	if ( $g = ITE_Gateways::get('paypal-standard') ) {
-		$name = $g->settings()->get( 'purchase-button-label' );
-	}
-
-	return $name;
-}
-
-add_filter( 'it_exchange_get_transaction_method_name_paypal-standard', 'it_exchange_paypal_standard_override_method_name' );
 
 /**
  * Process the faux PayPal Standard form

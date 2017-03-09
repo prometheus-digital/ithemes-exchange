@@ -182,7 +182,7 @@ HTML;
 	 * @return string
 	 */
 	public function get_payment_button_label() {
-		return it_exchange_get_transaction_method_name_from_slug( $this->get_gateway()->get_slug() );
+		return it_exchange_get_payment_button_label( $this->get_gateway() );
 	}
 
 	/**

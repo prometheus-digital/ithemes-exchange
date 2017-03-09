@@ -56,7 +56,7 @@ abstract class ITE_Redirect_Purchase_Request_Handler extends ITE_Purchase_Reques
 		$this->redirect( $this->factory->make( 'purchase', array(
 			'cart'        => $cart,
 			'nonce'       => $nonce,
-			'redirect_to' => isset( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '',
+			'redirect_to' => isset( $_REQUEST['redirect_to'] ) ? rawurldecode( $_REQUEST['redirect_to'] ) : '',
 		) ) );
 	}
 
@@ -94,7 +94,7 @@ abstract class ITE_Redirect_Purchase_Request_Handler extends ITE_Purchase_Reques
 		}
 
 		if ( $request->get_redirect_to() ) {
-			$query_args['redirect_to'] = $request->get_redirect_to();
+			$query_args['redirect_to'] = rawurlencode( $request->get_redirect_to() );
 		}
 
 		$url = it_exchange_get_page_url( 'transaction' );
