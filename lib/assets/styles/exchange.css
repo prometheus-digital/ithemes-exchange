@@ -810,6 +810,9 @@ button.it-exchange-customer-addresses-address-action--primary:hover {
     overflow: hidden;
     clear: both;
     text-align: right;
+    width: 50%;
+    float: right;
+    min-width: 300px;
 }
 
 #it-exchange-cart-actions .it-exchange-cart-apply-coupons {
@@ -940,7 +943,9 @@ button.it-exchange-customer-addresses-address-action--primary:hover {
 }
 
 /** -----------------------------------------------------:[ transaction methods ]:---------- */
-.it-exchange-checkout .it-exchange-checkout-transaction-methods form {
+
+.it-exchange-checkout .it-exchange-checkout-transaction-methods form,
+.it-exchange-checkout .it-exchange-checkout-transaction-methods .it-exchange-purchase-dialog-trigger {
     margin-top: .5em;
 }
 
@@ -1483,6 +1488,10 @@ button.it-exchange-customer-addresses-address-action--primary:hover {
 .it-exchange-visual-cc .it-exchange-visual-cc-code input {
     width: 100%;
     font-family: Consolas, Monaco, Lucida Console, monospace;
+}
+
+.it-exchange-purchase-dialog .it-exchange-payment-tokens-selector--list {
+    margin: 0 0 .5em 0;
 }
 
 /** -----------------------------------------------------:[ colorbox ]:---------- */

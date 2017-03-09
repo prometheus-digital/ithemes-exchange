@@ -67,7 +67,7 @@ abstract class ITE_IFrame_Purchase_Request_Handler extends ITE_Purchase_Request_
 		}
 
 		$method = $this->get_gateway()->get_slug();
-		$html   = "<div class=\"it-exchange-credit-card-selector\" style=\"display: none\" data-method=\"{$method}\">";
+		$html   = "<div class=\"it-exchange-payment-tokens-selector--list\" style=\"display: none\" data-method=\"{$method}\">";
 
 		foreach ( $tokens as $token ) {
 
@@ -75,14 +75,18 @@ abstract class ITE_IFrame_Purchase_Request_Handler extends ITE_Purchase_Request_
 
 			$selected = checked( $token->primary, true, false );
 
+			$html .= '<div class="it-exchange-payment-tokens-selector--payment-token">';
 			$html .= "<label><input type='radio' name='purchase_token' value='{$token->ID}' {$selected}>&nbsp;{$label}</label>";
+			$html .= '</div>';
 		}
 
 		$new_method = __( 'New Payment Method', 'it-l10n-ithemes-exchange' );
 
+		$html .= '<div class="it-exchange-payment-tokens-selector--payment-token it-exchange-payment-tokens-selector--add-new">';
 		$html .= "<label><input type='radio' name='purchase_token' value='new_method' id='new-method-{$this->get_gateway()->get_slug()}'> ";
 		$html .= $new_method;
 		$html .= '</label>';
+		$html .= '</div>';
 
 		$label = __( 'Complete Purchase', 'it-l10n-ithemes-exchange' );
 		$html .= "<input type=\"submit\" class=\"it-exchange-checkout-complete-purchase\" value=\"{$label}\"><br>";

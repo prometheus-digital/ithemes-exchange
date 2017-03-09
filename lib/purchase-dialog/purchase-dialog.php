@@ -293,6 +293,40 @@ class IT_Exchange_Purchase_Dialog{
 	}
 
 	/**
+	 * Get the saved cards that should be shown.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return \IronBound\DB\Collection|ITE_Payment_Token[]|null
+	 */
+	public function get_saved_cards_to_show() {
+
+		if ( ! $this->show_saved ) {
+			return null;
+		}
+
+		$gateway = ITE_Gateways::get( $this->addon_slug );
+
+		if ( ! $gateway || ! $gateway->can_handle( 'tokenize' ) )  {
+			return null;
+		}
+
+		$customer = it_exchange_get_current_customer();
+
+		if ( ! $customer ) {
+			return null;
+		}
+
+		$cards = $customer->get_tokens( array( 'gateway' => $this->addon_slug ) );
+
+		if ( ! $cards || ! $cards->count() ) {
+			return null;
+		}
+
+		return $cards;
+	}
+
+	/**
 	 * Get saved cards selector.
 	 *
 	 * @since 2.0.0
@@ -301,29 +335,13 @@ class IT_Exchange_Purchase_Dialog{
 	 */
 	public function get_saved_cards() {
 
-		if ( ! $this->show_saved ) {
+		$cards = $this->get_saved_cards_to_show();
+
+		if ( ! $cards ) {
 			return '';
 		}
 
-		$gateway = ITE_Gateways::get( $this->addon_slug );
-
-		if ( ! $gateway || ! $gateway->can_handle( 'tokenize' ) )  {
-			return '';
-		}
-
-		$customer = it_exchange_get_current_customer();
-
-		if ( ! $customer ) {
-			return '';
-		}
-
-		$cards = $customer->get_tokens( array( 'gateway' => $this->addon_slug ) );
-
-		if ( ! $cards || ! $cards->count() ) {
-			return '';
-		}
-
-		$html = '<div class="it-exchange-credit-card-selector">';
+		$html = '<div class="it-exchange-payment-tokens-selector--list">';
 
 		foreach ( $cards as $card ) {
 
@@ -331,13 +349,17 @@ class IT_Exchange_Purchase_Dialog{
 
 			$selected = checked( $card->primary, true, false );
 
+			$html .= '<div class="it-exchange-payment-tokens-selector--payment-token">';
 			$html .= "<label><input type='radio' name='purchase_token' value='{$card->ID}' {$selected}>&nbsp;{$label}</label>";
+			$html .= '</div>';
 		}
 
 		$new_method = __( 'New Payment Method', 'it-l10n-ithemes-exchange' );
 
+		$html .= '<div class="it-exchange-payment-tokens-selector--payment-token it-exchange-payment-tokens-selector--add-new">';
 		$html .= "<label><input type='radio' name='purchase_token' value='new_method' id='new-method-{$this->addon_slug}'>";
 		$html .= ' ' . $new_method . '</label>';
+		$html .= '</div>';
 		$html .= '</div>';
 
 		return $html;

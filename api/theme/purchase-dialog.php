@@ -28,6 +28,9 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	*/
 	private $_transaction_method= '';
 
+	/** @var IT_Exchange_Purchase_Dialog */
+	private $dialog;
+
 	/**
 	 * Maps api tags to methods
 	 * @var array $_tag_map
@@ -42,6 +45,7 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 		'ccexpirationyear'      => 'cc_expiration_year',
 		'cccode'                => 'cc_code',
 		'fields'                => 'fields',
+		'wrapattributes'        => 'wrap_attributes'
 	);
 
 	/**
@@ -51,7 +55,7 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 	 * @todo get working for admins looking at other users profiles
 	*/
 	function __construct() {
-		$dialog = it_exchange_get_current_purchase_dialog();
+		$this->dialog = $dialog = it_exchange_get_current_purchase_dialog();
 		$this->_transaction_method = empty( $GLOBALS['it_exchange']['purchase-dialog']['transaction-method-slug'] ) ? '' : $GLOBALS['it_exchange']['purchase-dialog']['transaction-method-slug'];
 		$this->_required_fields = empty( $dialog->required_cc_fields ) ? array() : $dialog->required_cc_fields;
 	}
@@ -304,5 +308,21 @@ class IT_Theme_API_Purchase_Dialog implements IT_Theme_API {
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Add additional attributes to the .it-exchange-visual-cc-wrap element.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return string
+	 */
+	public function wrap_attributes() {
+
+		if ( ! $this->dialog->get_saved_cards_to_show() ) {
+			return '';
+		}
+
+		return 'style="display:none;" ';
 	}
 }

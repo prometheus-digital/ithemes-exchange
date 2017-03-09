@@ -1,4 +1,4 @@
-<div class="it-exchange-visual-cc-wrap it-exchange-clearfix">
+<div class="it-exchange-visual-cc-wrap it-exchange-clearfix" <?php it_exchange( 'purchase-dialog', 'wrap-attributes' ); ?>>
 	<div class="it-exchange-visual-cc">
 		<div class="it-exchange-visual-cc-line-1 it-exchange-visual-cc-holder it-exchange-columns-wrapper">
 			<div class="it-exchange-cc-holder-first-name it-exchange-column">
