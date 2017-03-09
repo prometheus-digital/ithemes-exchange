@@ -482,7 +482,7 @@ class IT_Exchange_Admin {
 	*/
 	function print_email_settings_tab_link( $current_tab ) {
 		$active = 'email' == $current_tab ? 'nav-tab-active' : '';
-		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-settings&tab=email' ); ?>"><?php _e( 'Email Settings', 'it-l10n-ithemes-exchange' ); ?></a><?php
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-settings&tab=email' ); ?>"><?php _e( 'Email', 'it-l10n-ithemes-exchange' ); ?></a><?php
 	}
 
 	/**

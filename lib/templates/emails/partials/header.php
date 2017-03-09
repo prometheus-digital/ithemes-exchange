@@ -35,7 +35,12 @@ $table_class = $layout == 'full' ? '' : 'header-bkg';
 		<table id="header" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 640px; background: <?php echo $table_bkg; ?>; margin: <?php echo $table_top; ?> auto 0 auto; <?php echo it_exchange( 'email', 'has-header-image' ) ? 'min-height:225px;' : ''; ?>" class="<?php echo $table_class; ?>">
 			<?php do_action( 'it_exchange_email_template_before_header_row' ); ?>
 			<tr>
-				<td align="center" valign="top" style="padding: 54px 25px;
+				<td align="center" valign="top" style="
+                    <?php if ( it_exchange( 'email', 'get-header-transparent' ) ) : ?>
+                        padding: 0 25px;
+                    <?php else: ?>
+                        padding: 54px 25px;
+                    <?php endif; ?>
 					background-image: url(<?php it_exchange( 'email', 'header-image' ); ?>);
 					background-position: top center; background-repeat: no-repeat; background-size: cover;
 					border-top: 5px solid <?php it_exchange( 'email', 'header-background' ); ?>; border-bottom: 0; border-radius: 5px 5px 0 0;"

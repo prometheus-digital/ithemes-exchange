@@ -42,6 +42,7 @@ class IT_Theme_API_Email implements IT_Theme_API {
 		'headerstorenamecolor'    => 'header_store_name_color',
 		'headerimage'             => 'header_image',
 		'headerbackground'        => 'header_background',
+		'headertransparent'       => 'header_transparent',
 		'bodyfont'                => 'body_font',
 		'bodytextcolor'           => 'body_text_color',
 		'bodyhighlightcolor'      => 'body_highlight_color',
@@ -336,7 +337,18 @@ class IT_Theme_API_Email implements IT_Theme_API {
 	public function header_background( $options = array() ) {
 		$color = IT_Exchange_Email_Customizer::get_setting( 'header_background' );
 
-		return $color ? $color : 'transparent';
+		return $color ?: 'transparent';
+	}
+
+	/**
+	 * Check if the header is transparent.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return bool
+	 */
+	public function header_transparent() {
+		return ! IT_Exchange_Email_Customizer::get_setting( 'header_background' ) && ! IT_Exchange_Email_Customizer::get_setting( 'header_image' );
 	}
 
 	/**
