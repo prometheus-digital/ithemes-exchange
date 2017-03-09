@@ -136,7 +136,7 @@ add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
  * @since 2.0.0
  *
  * @param \iThemes\Exchange\REST\Route\v1 $route
- * @param array                        $path_parameters
+ * @param array                           $path_parameters
  *
  * @return string
  */

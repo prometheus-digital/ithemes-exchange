@@ -216,6 +216,14 @@ class Test_IT_Exchange_v1_Cart_Purchase_Route extends Test_IT_Exchange_REST_Rout
 		$this->assertEquals( rest_url( "/it_exchange/v1/transactions/{$data['id']}" ), $headers['Location'] );
 
 		$this->assertInstanceOf( 'IT_Exchange_Transaction', it_exchange_get_transaction( $data['id'] ) );
+
+		$links = $response->get_links();
+		$this->assertNotEmpty( $links );
+		$this->assertArrayHasKey( 'alternate', $links );
+		$this->assertEquals(
+			it_exchange_get_transaction_confirmation_url( $data['id'] ),
+			$links['alternate'][0]['href']
+		);
 	}
 
 	public function test_purchase_with_card() {

@@ -150,6 +150,7 @@ class Purchase extends Base implements Getable, Postable, VariableSchema {
 		$txn_serializer = new TransactionSerializer();
 		$response       = new \WP_REST_Response( $txn_serializer->serialize( $transaction ), \WP_Http::CREATED );
 		$response->header( 'Location', $url );
+		$response->add_links( $txn_serializer->generate_links( $transaction, $this->get_manager() ) );
 
 		return $response;
 	}

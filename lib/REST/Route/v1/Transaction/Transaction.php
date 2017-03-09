@@ -42,12 +42,9 @@ class Transaction extends Base implements Getable, Putable, RouteObjectExpandabl
 
 		$t        = $request->get_route_object( 'transaction_id' );
 		$response = new \WP_REST_Response( $this->serializer->serialize( $t ) );
-
-		foreach ( $this->serializer->generate_links( $t, $this->get_manager() ) as $rel => $links ) {
-			foreach ( $links as $link ) {
-				$response->add_link( $rel, $link['href'], $link );
-			}
-		}
+		$response->add_links(
+			$this->serializer->generate_links( $t, $this->get_manager())
+		);
 
 		return $response;
 	}
