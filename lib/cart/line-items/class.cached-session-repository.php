@@ -227,7 +227,7 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 	public function destroy( $cart_id ) {
 		$model = ITE_Session_Model::from_cart_id( $cart_id );
 
-		if ( $model ) {
+		if ( $model && ! $model->purchased_at ) {
 			$model->delete();
 		}
 

@@ -1004,9 +1004,19 @@ class ITE_Cart {
 	 * @return bool
 	 */
 	public function requires_shipping() {
-		return $this->get_items( 'product' )->filter( function ( ITE_Cart_Product $item ) {
+		$has_product = $this->get_items( 'product' )->filter( function ( ITE_Cart_Product $item ) {
 				return $item->get_product()->has_feature( 'shipping' );
 			} )->count() > 0;
+
+		if ( $has_product ) {
+			return true;
+		}
+
+		if ( $this->is_current() && apply_filters( 'it_exchange_shipping_address_purchase_requirement_enabled', false ) ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**

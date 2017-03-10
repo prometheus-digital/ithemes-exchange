@@ -41,8 +41,14 @@ class IT_Exchange_Test_Factory_For_Basic_Coupons extends WP_UnitTest_Factory_For
 	public function create_object( $args ) {
 
 		$args['post_meta']['_it-basic-code'] = $args['code'];
-		$args['post_meta']['_it-basic-amount-number'] = it_exchange_convert_to_database_number( $args['amount'] );
-		$args['post_meta']['_it-basic-amount-type'] = $args['amount_type'];
+
+		if ( ! isset( $args['post_meta']['_it-basic-amount-number'] ) ) {
+			$args['post_meta']['_it-basic-amount-number'] = it_exchange_convert_to_database_number( $args['amount'] );
+		}
+
+		if ( ! isset( $args['post_meta']['_it-basic-amount-type'] ) ) {
+			$args['post_meta']['_it-basic-amount-type'] = $args['amount_type'];
+		}
 
 		unset( $args['code'], $args['amount'], $args['amount_type'] );
 

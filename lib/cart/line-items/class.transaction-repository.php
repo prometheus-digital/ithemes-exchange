@@ -342,6 +342,12 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 	 */
 	protected final function find_model_for_items( array $items, &$all_empty ) {
 
+		if ( empty( $items ) ) {
+			$all_empty = true;
+
+			return array();
+		}
+
 		$query = ITE_Transaction_Line_Item_Model::query();
 		$query->and_where( 'transaction', '=', $this->get_transaction()->ID );
 

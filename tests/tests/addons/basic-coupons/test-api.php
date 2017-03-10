@@ -64,7 +64,7 @@ class IT_Exchange_Addons_Basic_Coupons_API_Test extends IT_Exchange_UnitTestCase
 		$coupon = $this->coupon_factory->create_and_get();
 
 		WP_Mock::wpFunction( 'it_exchange_get_applied_coupons', array(
-			'args'   => array( 'cart' ),
+			'args'   => array( 'cart', '*' ),
 			'return' => array( $coupon )
 		) );
 

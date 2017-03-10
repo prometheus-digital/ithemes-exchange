@@ -12,14 +12,31 @@
  * @group coupons-api
  */
 class IT_Exchange_API_Coupons_Test extends IT_Exchange_UnitTestCase {
+
+	private $types_backup;
+	private $meta_backup;
+
 	/**
 	 * Do custom initialization.
 	 */
 	public function setUp() {
 		parent::setUp();
 
+		$this->types_backup = $GLOBALS['it_exchange']['coupon_types'];
+		$this->meta_backup  = $GLOBALS['it_exchange']['coupon_types_meta'];
+
 		$GLOBALS['it_exchange']['coupon_types']      = array();
 		$GLOBALS['it_exchange']['coupon_types_meta'] = array();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	function tearDown() {
+		parent::tearDown();
+
+		$GLOBALS['it_exchange']['coupon_types']      = $this->types_backup;
+		$GLOBALS['it_exchange']['coupon_types_meta'] = $this->meta_backup;
 	}
 
 	public function test_get_coupon() {

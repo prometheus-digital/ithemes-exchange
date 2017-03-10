@@ -659,15 +659,7 @@ class IT_Exchange_API_Cart_Test extends IT_Exchange_UnitTestCase {
 
 	public function test_get_cart_shipping_address_defaults() {
 
-		$properties = array(
-			'requirement-met'        => 'it_exchange_get_customer_shipping_address', // This is a PHP callback
-			'sw-template-part'       => 'shipping-address',
-			'checkout-template-part' => 'shipping-address',
-			'notification'           => __( 'You must enter a shipping address before you can checkout', 'it-l10n-ithemes-exchange' ),
-			'priority'               => 5.12
-		);
-
-		it_exchange_register_purchase_requirement( 'shipping-address', $properties );
+		add_filter( 'it_exchange_shipping_address_purchase_requirement_enabled', '__return_true' );
 
 		wp_set_current_user( 1 );
 		$user = wp_get_current_user();

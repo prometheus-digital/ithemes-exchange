@@ -73,7 +73,7 @@ add_action( 'it_exchange_enabled_addons_loaded', function () {
 	 * @param ITE_Line_Item_Types $types
 	 */
 	do_action( 'it_exchange_register_line_item_types', new ITE_Line_Item_Types() );
-} );
+}, 20 );
 
 add_action( 'it_exchange_register_line_item_types', function ( ITE_Line_Item_Types $types ) {
 

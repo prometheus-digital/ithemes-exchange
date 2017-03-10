@@ -163,6 +163,7 @@ class Test_IT_Exchange_v1_Cart_Items_Route extends Test_IT_Exchange_REST_Route {
 
 	public function test_get_coupon_collection() {
 
+		/** @var IT_Exchange_Coupon $coupon */
 		$coupon   = self::coupon_factory()->create_and_get();
 		$product  = self::product_factory()->create_and_get();
 		$customer = it_exchange_get_customer( self::factory()->user->create( array( 'role' => 'subscriber' ) ) );

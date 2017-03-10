@@ -519,7 +519,7 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 			'address1'   => '123 Main Street',
 		);
 
-		$txn = $this->transaction_factory->create( array( 'shipping_address' => $shipping ) );
+		$txn = $this->transaction_factory->create( array( 'shipping_address' => $shipping, 'make_current_cart' => true, ) );
 
 		$saved = it_exchange_get_transaction_shipping_address( $txn );
 
@@ -545,6 +545,8 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 
 	public function test_address_record_shared() {
 
+		add_filter( 'it_exchange_shipping_address_purchase_requirement_enabled', '__return_true' );
+
 		$address = array(
 			'first-name' => 'John',
 			'last-name'  => 'Doe',
@@ -554,10 +556,12 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 		$t1 = self::transaction_factory()->create_and_get( array(
 			'billing_address'  => $address,
 			'shipping_address' => $address,
+			'make_current_cart' => true,
 		) );
 		$t2 = self::transaction_factory()->create_and_get( array(
 			'billing_address'  => $address,
 			'shipping_address' => $address,
+			'make_current_cart' => true,
 		) );
 
 		$s1 = $t1->get_shipping_address();
@@ -1292,6 +1296,8 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 		$cart    = it_exchange_create_cart_and_session( it_exchange_get_customer( 1 ) );
 		$cart_id = $cart->get_id();
 		$cart->add_item( ITE_Cart_Product::create( self::product_factory()->create_and_get() ) );
+
+		$this->assertNotNull( ITE_Session_Model::from_cart_id( $cart_id ), 'Sanity check' );
 
 		self::transaction_factory()->create( array(
 			'method' => $gateway,

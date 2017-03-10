@@ -62,10 +62,23 @@ class IT_Exchange_Test_Factory_For_Transactions extends WP_UnitTest_Factory_For_
 			$cart_object = $args['cart'];
 		} else {
 			$product_factory = new IT_Exchange_Test_Factory_For_Products();
-			$cart_object     = ITE_Cart::create(
-				new ITE_Line_Item_Session_Repository( new IT_Exchange_In_Memory_Session( null ), new ITE_Line_Item_Repository_Events() ),
-				it_exchange_get_customer( $args['customer'] )
-			);
+
+			if ( empty( $args['make_current_cart'] ) ) {
+				$cart_object = ITE_Cart::create(
+					new ITE_Line_Item_Session_Repository( new IT_Exchange_In_Memory_Session( null ), new ITE_Line_Item_Repository_Events() ),
+					it_exchange_get_customer( $args['customer'] )
+				);
+			} else {
+				wp_set_current_user( it_exchange_get_customer( $args['customer'] )->get_ID() );
+				$cart_object = it_exchange_get_current_cart( false );
+
+				if ( $cart_object ) {
+					$cart_object->destroy();
+				}
+
+				$cart_object = it_exchange_get_current_cart();
+			}
+
 			$cart_object->add_item( ITE_Cart_Product::create( $product_factory->create_and_get() ) );
 
 			if ( ! empty( $args['shipping_address'] ) ) {

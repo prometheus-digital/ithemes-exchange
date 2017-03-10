@@ -670,7 +670,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 	 * @return bool
 	 */
 	public function backed_by_active_session() {
-		return $this->session instanceof IT_Exchange_Session;
+		return $this->session === it_exchange_get_session();
 	}
 
 	/**

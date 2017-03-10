@@ -24,13 +24,8 @@ function it_exchange_get_current_cart( $create_if_not_started = true ) {
 	/** @var ITE_Cart $cart */
 	static $cart = null;
 
-	$cart_id = it_exchange_get_cart_id( $create_if_not_started );
-
-	if ( $cart_id && ( $cart === null || ! $cart->get_id() ) ) {
-		$cart = new \ITE_Cart(
-			new ITE_Line_Item_Session_Repository( it_exchange_get_session(), new ITE_Line_Item_Repository_Events() ),
-			$cart_id
-		);
+	if ( $create_if_not_started && ( $cart === null || ! $cart->get_id() ) ) {
+		$cart = ITE_Cart::create();
 
 		/**
 		 * Fires when a cart is constructed.

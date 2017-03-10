@@ -44,7 +44,7 @@ if ( ! defined( 'COOKIEHASH' ) ) {
 function _manually_load_plugin() {
 	require_once dirname( __FILE__ ) . '/../init.php';
 
-	add_action(  'it_libraries_loaded', function() {
+	add_action( 'it_libraries_loaded', function() {
 		$GLOBALS['it_exchange']['session'] = new IT_Exchange_In_Memory_Session( null );
 	} );
 }

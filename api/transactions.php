@@ -655,6 +655,14 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 						$model->delete();
 					}
 				}
+			} elseif ( $gateway && $gateway->requires_cart_after_purchase() ) {
+				if ( $cart->get_repository() instanceof ITE_Line_Item_Session_Repository ) {
+					$model = ITE_Session_Model::from_cart_id( $cart->get_id() );
+
+					if ( $model && ! $model->purchased_at ) {
+						$model->mark_purchased();
+					}
+				}
 			}
 
 			$cart->destroy();
@@ -814,12 +822,20 @@ function it_exchange_add_child_transaction( $method, $method_id, $status = 'pend
 		);
 
 		if ( $cart ) {
-			if ( ( $g = ITE_Gateways::get( $method ) ) && ! $g->requires_cart_after_purchase() ) {
+			if ( $gateway && ! $gateway->requires_cart_after_purchase() ) {
 				if ( $cart->get_repository() instanceof ITE_Line_Item_Session_Repository ) {
 					$model = ITE_Session_Model::from_cart_id( $cart->get_id() );
 
 					if ( $model ) {
 						$model->delete();
+					}
+				}
+			} elseif ( $gateway && $gateway->requires_cart_after_purchase() ) {
+				if ( $cart->get_repository() instanceof ITE_Line_Item_Session_Repository ) {
+					$model = ITE_Session_Model::from_cart_id( $cart->get_id() );
+
+					if ( $model && ! $model->purchased_at ) {
+						$model->mark_purchased();
 					}
 				}
 			}
