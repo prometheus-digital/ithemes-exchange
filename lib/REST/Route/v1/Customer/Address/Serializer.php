@@ -28,6 +28,7 @@ class Serializer {
 		return array_merge( array(
 			'id'    => $address->get_pk(),
 			'label' => $address->label,
+			'type'  => $address->get_type(),
 		), $address->to_array() );
 	}
 
@@ -40,10 +41,11 @@ class Serializer {
 	 */
 	public function get_schema() {
 		return array(
-			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => 'address',
-			'type'       => 'object',
-			'properties' => array(
+			'$schema'              => 'http://json-schema.org/draft-04/schema#',
+			'title'                => 'address',
+			'type'                 => 'object',
+			'additionalProperties' => false,
+			'properties'           => array(
 				'id'           => array(
 					'description' => __( 'The unique identifier for the address.', 'it-l10n-ithemes-exchange' ),
 					'type'        => 'integer',
@@ -119,6 +121,12 @@ class Serializer {
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit', 'embed' ),
 				),
+				'type'         => array(
+					'description' => __( 'The address type.', 'it-l10n-ithemes-exchange' ),
+					'type'        => 'string',
+					'context'     => array( 'edit' ),
+					'enum'        => array( '', 'both', 'billing', 'shipping' ),
+				)
 			)
 		);
 	}

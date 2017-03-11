@@ -297,7 +297,7 @@ class IT_Exchange_Customer implements ITE_Object {
 	 *
 	 * @param \ITE_Location $location
 	 *
-	 * @return \ITE_Location
+	 * @return \ITE_Saved_Address
 	 * @throws \InvalidArgumentException
 	 */
 	public function set_shipping_address( ITE_Location $location ) {
@@ -341,7 +341,7 @@ class IT_Exchange_Customer implements ITE_Object {
 					'customer' => $this->get_ID(),
 				) ) );
 
-			} else {
+			} elseif ( ! $this->get_customer_meta( $type === 'shipping' ? 'primary_billing' : 'primary_shipping' ) ) {
 				$address = ITE_Saved_Address::query()->and_where( 'customer', '=', $this->get_ID() )->take( 1 )->first();
 			}
 

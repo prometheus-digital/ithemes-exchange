@@ -226,7 +226,6 @@ function it_exchange_print_shipping_address_value( $field, $customer_id=false ) 
 /**
  * Formats the Shipping Address for display
  *
- * @todo this function sucks. Lets make a function for formatting any address. ^gta
  * @since 1.4.0
  *
  * @param array|bool $shipping_address
@@ -236,6 +235,10 @@ function it_exchange_print_shipping_address_value( $field, $customer_id=false ) 
 function it_exchange_get_formatted_shipping_address( $shipping_address=false ) {
 
 	$shipping = empty( $shipping_address ) ? it_exchange_get_cart_shipping_address() : $shipping_address;
+
+	if ( empty( $shipping['address1'] ) ) {
+		$shipping = array();
+	}
 
 	$formatted = it_exchange_format_address( $shipping );
 

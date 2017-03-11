@@ -69,15 +69,17 @@ class Address extends Base implements Getable, Putable, Deletable, RouteObjectEx
 		$current = \ITE_Saved_Address::get( $address_id );
 		$address = \ITE_Saved_Address::get( $address_id );
 
-		foreach ( $request->get_json_params() as $key => $value ) {
-			$address[ $key ] = $value;
+		$address->fill( $request->get_json_params() );
+
+		$type = $current->get_type();
+
+		if ( $type === 'both' && $request['type'] && $request['type'] !== $type ) {
+			$type = $request['type'];
+		} else {
+			$type = '';
 		}
 
-		if ( $request['label'] !== null ) {
-			$address->label = $request['label'];
-		}
-
-		$saved = \ITE_Saved_Address::convert_to_saved( $address, $current, $address->customer );
+		$saved = \ITE_Saved_Address::convert_to_saved( $address, $current, $address->customer, $type );
 
 		if ( ! $saved ) {
 			return new \WP_Error(
@@ -87,8 +89,7 @@ class Address extends Base implements Getable, Putable, Deletable, RouteObjectEx
 			);
 		}
 
-		if ( $saved->get_pk() != $current->get_pk() ) {
-			$current->delete();
+		if ( $saved->get_pk() !== $current->get_pk() ) {
 			$response = new \WP_REST_Response( null, \WP_Http::SEE_OTHER );
 			$response->header(
 				'Location',

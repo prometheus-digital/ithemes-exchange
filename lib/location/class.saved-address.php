@@ -125,6 +125,28 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 	}
 
 	/**
+	 * Get the address type.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return string
+	 */
+	public function get_type() {
+		$pb = $this->is_primary_billing();
+		$ps = $this->is_primary_shipping();
+
+		if ( $pb && $ps ) {
+			return 'both';
+		} elseif ( $pb ) {
+			return 'billing';
+		} elseif ( $ps ) {
+			return 'shipping';
+		} else {
+			return '';
+		}
+	}
+
+	/**
 	 * @inheritDoc
 	 */
 	public function get_pk() {
@@ -260,9 +282,9 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 	) {
 
 		if ( ! $type && $location instanceof ITE_Saved_Address ) {
-			$type = $location->is_primary_billing() ? 'billing' : 'shipping';
+			$type = $location->get_type();
 		} elseif ( ! $type && $current instanceof ITE_Saved_Address ) {
-			$type = $current->is_primary_billing() ? 'billing' : 'shipping';
+			$type = $current->get_type();
 		}
 
 		$cid = $customer ? $customer->ID : 0;
@@ -283,20 +305,26 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 			$fields['label'] = $current->label;
 		}
 
-		if ( $current && $location instanceof ITE_Saved_Address ) {
+		if ( $current && $location instanceof ITE_Saved_Address && $customer ) {
 
 			// This is an update to an address that is shared amongst
 			// multiple transactions. So as not to affect those other
 			// transactions we split this into a new record.
-			if ( $location->is_address_shared() ) {
-				$new = ITE_Saved_Address::create( $fields );
+			if ( ( $ctype = $current->get_type() ) === 'both' || $location->is_address_used() ) {
 
-				if ( $location->is_primary_billing() ) {
-					$customer->set_billing_address( $new );
+				/** @var ITE_Saved_Address $new */
+				$new = ITE_Saved_Address::with_trashed()->first_or_create( array_filter( $fields ) );
+
+				if ( $new->is_trashed() ) {
+					$new->untrash();
 				}
 
-				if ( $location->is_primary_shipping() ) {
-					$customer->set_shipping_address( $new );
+				if ( $type && $type !== 'both' ) {
+					$customer->{"set_{$type}_address"}( $new );
+				}
+
+				if ( $ctype !== 'both' ) {
+					$current->delete();
 				}
 
 				return $new;
@@ -317,31 +345,39 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 				}
 
 				$location->customer = $cid;
+				$location->save();
 
 				return $location;
 			}
 		} elseif ( $location instanceof ITE_Saved_Address ) {
 			$location->customer = $cid;
+			$location->save();
 
 			return $location;
 		}
 
 		if ( $cid ) {
-			/** @noinspection PhpIncompatibleReturnTypeInspection */
-			return ITE_Saved_Address::query()->first_or_create( $fields );
+			/** @var ITE_Saved_Address $new */
+			$new = ITE_Saved_Address::with_trashed()->first_or_create( array_filter( $fields ) );
+
+			if ( $new->is_trashed() ) {
+				$new->untrash();
+			}
+
+			return $new;
 		} else { // We don't want to share addresses amongst guest customers.
 			return ITE_Saved_Address::create( $fields );
 		}
 	}
 
 	/**
-	 * Is this address shared among different transactions.
+	 * Is this address in use.
 	 *
 	 * @since 2.0.0
 	 *
 	 * @return bool
 	 */
-	public function is_address_shared() {
+	public function is_address_used() {
 		$results = IT_Exchange_Transaction::query_with_no_global_scopes()
 		                                  ->where( 'billing', '=', $this->get_pk() )
 		                                  ->or_where( 'shipping', '=', $this->get_pk() )
@@ -375,7 +411,7 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 			}
 		}
 
-		if ( ! $customer_id ) {
+		if ( ! $customer_id || $type === 'both' ) {
 			return $location;
 		}
 
@@ -426,6 +462,10 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 	}
 
 	protected function _mutate_customer( $value ) {
+
+		if ( $this->get_raw_attribute( 'customer' ) ) {
+			return $this->get_raw_attribute( 'customer' );
+		}
 
 		if ( $value instanceof IT_Exchange_Customer ) {
 			$value = $value->wp_user;

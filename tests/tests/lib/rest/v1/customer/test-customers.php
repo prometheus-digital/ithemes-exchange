@@ -226,7 +226,6 @@ class Test_IT_Exchange_v1_Customers_Route extends Test_IT_Exchange_REST_Route {
 		$request->add_header( 'content-type', 'application/json' );
 		$request->set_body( wp_json_encode( array(
 			'billing_address' => array(
-				'customer'   => $customer,
 				'first-name' => 'John',
 				'last-name'  => 'Doe',
 				'address1'   => '123 Main Street'

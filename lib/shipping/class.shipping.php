@@ -136,9 +136,7 @@ class IT_Exchange_Shipping {
 			'priority'               => 5.12
 		);
 
-		$enabled = apply_filters( 'it_exchange_shipping_address_purchase_requirement_enabled', false );
-
-		if ( $enabled || it_exchange_get_current_cart()->requires_shipping() ) {
+		if ( it_exchange_get_current_cart()->requires_shipping() ) {
 			it_exchange_register_purchase_requirement( 'shipping-address', $properties );
 		}
 	}
