@@ -843,25 +843,6 @@ function it_exchange_add_customer_shortcode( $atts ) {
 add_shortcode( 'it_exchange_customer', 'it_exchange_add_customer_shortcode' );
 
 /**
- * Clear the sessions when multi-item carts are enabled
- *
- * @todo  replace when we introduce on enable an on diable hooks
- *
- * @since 0.4.11
- *
- * @param array $addon_slug name of addon being enabled.
- *
- * @return void
- */
-function it_exchange_clear_sessions_when_multi_item_cart_is_enabled( $addon_slug ) {
-	if ( 'multi-item-cart-option' == $addon_slug['slug'] ) {
-		it_exchange_db_delete_all_sessions();
-	}
-}
-
-add_action( 'it_exchange_add_on_enabled', 'it_exchange_clear_sessions_when_multi_item_cart_is_enabled' );
-
-/**
  * Registers our default purchase requirements
  *
  * @since 1.2.0
@@ -1153,6 +1134,25 @@ function it_exchange_clean_duplicate_user_post_meta( $versions ) {
 }
 
 add_action( 'it_exchange_version_updated', 'it_exchange_clean_duplicate_user_post_meta' );
+
+/**
+ * Drop cached cart and active cart user meta upon upgrading to v2.
+ *
+ * @since 2.0.0
+ *
+ * @param array $versions
+ */
+function it_exchange_delete_cached_cart_user_meta_on_upgrade( $versions ) {
+
+    if ( version_compare( '2.0.0', $versions['previous'], '>=' ) ) {
+        return;
+    }
+
+    delete_metadata( 'user', 0, '_it_exchange_active_user_carts', '', true );
+	delete_metadata( 'user', 0, '_it_exchange_cached_cart', '', true );
+}
+
+add_action( 'it_exchange_version_updated', 'it_exchange_delete_cached_cart_user_meta_on_upgrade' );
 
 /**
  * Change the content_width global if we are viewing
