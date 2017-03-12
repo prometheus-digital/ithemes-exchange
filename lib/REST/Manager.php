@@ -781,31 +781,39 @@ class Manager {
 	 */
 	public function authenticate( $authed ) {
 
+		if ( $authed === true || is_wp_error( $authed ) ) {
+			return $authed;
+		}
+
 		if ( ! $this->is_our_endpoint() ) {
 			return $authed;
 		}
 
-		if ( $authed === true ) {
-			return $authed;
-		}
-
 		if ( empty( $_SERVER['HTTP_AUTHORIZATION'] ) ) {
-			return false;
-		}
-
-		if ( ! function_exists( 'it_exchange_guest_checkout_generate_guest_user_object' ) ) {
-			return false;
+			return $authed;
 		}
 
 		$authorization = trim( wp_unslash( $_SERVER['HTTP_AUTHORIZATION'] ) );
 		$regex         = '/ITHEMES-EXCHANGE-GUEST\s?email="(\S+)"/i';
 
 		if ( ! preg_match( $regex, $authorization, $matches ) ) {
-			return false;
+			return $authed;
+		}
+
+		if ( ! it_exchange_is_guest_checkout_enabled() ) {
+			return new \WP_Error(
+				'it_exchange_rest_guest_checkout_disabled',
+				__( 'Guest Checkout is disabled.', 'it-l10n-ithemes-exchange' ),
+				array( 'status' => 401 )
+			);
 		}
 
 		if ( empty( $matches[1] ) || ! is_email( $matches[1] ) ) {
-			return false;
+			return new \WP_Error(
+				'it_exchange_rest_authentication_failed',
+				__( 'Invalid guest email address provided.', 'it-l10n-ithemes-exchange' ),
+				array( 'status' => 400 )
+			);
 		}
 
 		$email = $matches[1];

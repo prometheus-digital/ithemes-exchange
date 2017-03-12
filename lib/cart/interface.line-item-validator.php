@@ -51,7 +51,6 @@ interface ITE_Line_Item_Validator {
 	 *
 	 * @param \ITE_Line_Item     $item
 	 * @param \ITE_Cart          $cart
-	 *
 	 * @param \ITE_Cart_Feedback $feedback
 	 *
 	 * @return bool True if the line item was coerced, false if not.

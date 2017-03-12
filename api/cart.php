@@ -32,7 +32,7 @@ function it_exchange_get_current_cart( $create_if_not_started = true ) {
 			$cart = new ITE_Cart(
 				new ITE_Line_Item_Session_Repository( it_exchange_get_session(), new ITE_Line_Item_Repository_Events() ),
 				$cart_id,
-				it_exchange_get_current_customer()
+				it_exchange_get_current_customer() ?: null
 			);
 		} else {
 			$cart = ITE_Cart::create();
@@ -119,6 +119,8 @@ function it_exchange_create_cart_and_session( IT_Exchange_Customer $user, $is_ma
 	if ( ! $cart ) {
 		return null;
 	}
+
+	$session = ITE_Session_Model::get( $session->ID );
 
 	$session->cart_id = $cart->get_id();
 	$session->data    = array_merge( $session->data, array( 'cart_id' => $cart->get_id() ) );
@@ -1143,8 +1145,81 @@ function it_exchange_remove_cart_id() {
  * @return boolean
  */
 function it_exchange_doing_guest_checkout() {
+
+	if ( ! it_exchange_is_guest_checkout_enabled() ) {
+		return false;
+	}
+
 	$data = it_exchange_get_cart_data( 'guest-checkout' );
 	return ! empty( $data[0] );
+}
+
+
+/**
+ * Check whether guest checkout is enabled.
+ *
+ * @since 2.0.0
+ *
+ * @return bool
+ */
+function it_exchange_is_guest_checkout_enabled() {
+
+	if ( ! function_exists( 'it_exchange_guest_checkout_generate_guest_user_object' ) ) {
+		return false;
+	}
+
+	/**
+	 * Filter whether guest checkout is enabled.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param bool $enabled
+	 */
+	return apply_filters( 'it_exchange_guest_checkout_enabled', true );
+}
+
+/**
+ * Can the cart be purchased by a guest customer.
+ *
+ * @since 2.0.0
+ *
+ * @param ITE_Cart|null $cart
+ *
+ * @return bool
+ */
+function it_exchange_can_cart_be_purchased_by_guest( ITE_Cart $cart = null ) {
+
+	$cart = $cart ?: it_exchange_get_current_cart( false );
+
+	if ( ! $cart ) {
+		return it_exchange_is_guest_checkout_enabled();
+	}
+
+	return $cart->can_be_purchased_by_guest();
+}
+
+/**
+ * Can a given line item be purchased by a guest customer.
+ *
+ * @since 2.0.0
+ *
+ * @param ITE_Line_Item $item
+ * @param ITE_Cart      $cart
+ *
+ * @return bool
+ */
+function it_exchange_can_line_item_be_purchased_by_guest( ITE_Line_Item $item, ITE_Cart $cart ) {
+
+	/**
+	 * Filter whether a Guest Customer can purchase this line item.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param bool          $can_be_purchased
+	 * @param ITE_Line_Item $item
+	 * @param ITE_Cart      $cart
+	 */
+	return apply_filters( 'it_exchange_can_line_item_be_purchased_by_guest', true, $item, $cart );
 }
 
 /**

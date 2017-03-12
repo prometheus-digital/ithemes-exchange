@@ -31,7 +31,7 @@ class Serializer {
 
 		$data = array(
 			'id'               => $cart->get_id(),
-			'customer'         => $cart->get_customer() ? $cart->get_customer()->id : 0,
+			'customer'         => 0,
 			'is_main'          => $cart->is_main(),
 			'shipping_address' => null,
 			'billing_address'  => null,
@@ -40,6 +40,12 @@ class Serializer {
 			'expires_at'       => $cart->expires_at() ? \iThemes\Exchange\REST\format_rfc339( $cart->expires_at() ) : '',
 			'meta'             => array(),
 		);
+
+		if ( $cart->get_customer() instanceof \IT_Exchange_Guest_Customer ) {
+			$data['customer'] = $cart->get_customer()->get_email();
+		} elseif ( $cart->get_customer() ) {
+			$data['customer'] = $cart->get_customer()->get_ID();
+		}
 
 		if ( $cart->get_billing_address() ) {
 			$data['billing_address'] = $cart->get_billing_address()->to_array();

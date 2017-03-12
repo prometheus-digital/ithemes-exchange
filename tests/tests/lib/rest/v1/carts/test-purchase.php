@@ -226,6 +226,83 @@ class Test_IT_Exchange_v1_Cart_Purchase_Route extends Test_IT_Exchange_REST_Rout
 		);
 	}
 
+	public function test_rest_purchase_as_guest() {
+
+		$customer = it_exchange_get_customer( 'guest@example.org' );
+		$cart     = it_exchange_create_cart_and_session( $customer );
+		$cart->add_item( $item = ITE_Cart_Product::create( self::product_factory()->create_and_get() ) );
+
+		$request = \iThemes\Exchange\REST\Request::from_path( "/it_exchange/v1/carts/{$cart->get_id()}/purchase" );
+		$request->set_method( 'POST' );
+		$request->add_header( 'content-type', 'application/json' );
+		$request->set_body( wp_json_encode( array(
+			'id'    => 'offline-payments',
+			'nonce' => wp_create_nonce( 'offline-payments-purchase' ),
+		) ) );
+
+		$scope = new \iThemes\Exchange\REST\Auth\GuestAuthScope( $customer );
+		$this->manager->set_auth_scope( $scope );
+		add_filter( 'it_exchange_get_current_customer', function () use ( $customer ) {
+			return $customer;
+		} );
+
+		$response = $this->server->dispatch( $request );
+		$headers  = $response->get_headers();
+		$data     = $response->get_data();
+		$this->assertEquals( 201, $response->get_status() );
+
+		$this->assertArrayHasKey( 'id', $data );
+		$this->assertNotEmpty( $data['id'] );
+
+		$this->assertArrayHasKey( 'Location', $headers );
+		$this->assertEquals( rest_url( "/it_exchange/v1/transactions/{$data['id']}" ), $headers['Location'] );
+
+		$transaction = it_exchange_get_transaction( $data['id'] );
+		$this->assertInstanceOf( 'IT_Exchange_Transaction', $transaction );
+
+		$links = $response->get_links();
+		$this->assertNotEmpty( $links );
+		$this->assertArrayHasKey( 'alternate', $links );
+		$this->assertEquals(
+			it_exchange_get_transaction_confirmation_url( $data['id'] ),
+			$links['alternate'][0]['href']
+		);
+
+		$this->assertTrue( $transaction->is_guest_purchase() );
+		$this->assertEquals( 'guest@example.org', $transaction->customer_email );
+		$this->assertInstanceOf( 'IT_Exchange_Guest_Customer', $transaction->get_customer() );
+		$this->assertEquals( 'guest@example.org', $transaction->get_customer()->get_email() );
+		$this->assertEmpty( $transaction->customer_id );
+
+		$cart_details = $transaction->cart_details;
+		$this->assertEquals( 1, $cart_details->is_guest_checkout );
+		$this->assertTrue( (bool) get_post_meta( $transaction->ID, '_it-exchange-is-guest-checkout', true ) );
+	}
+
+	public function test_purchase_cart_forbidden_for_wrong_customer() {
+
+		$customer = it_exchange_get_customer( 'guest@example.org' );
+		$cart     = it_exchange_create_cart_and_session( $customer );
+		$cart->add_item( $item = ITE_Cart_Product::create( self::product_factory()->create_and_get() ) );
+
+		$request = \iThemes\Exchange\REST\Request::from_path( "/it_exchange/v1/carts/{$cart->get_id()}/purchase" );
+		$request->set_method( 'POST' );
+		$request->add_header( 'content-type', 'application/json' );
+		$request->set_body( wp_json_encode( array(
+			'id'    => 'offline-payments',
+			'nonce' => wp_create_nonce( 'offline-payments-purchase' ),
+		) ) );
+
+		$scope = new \iThemes\Exchange\REST\Auth\GuestAuthScope( it_exchange_get_customer( 'other.guest@example.org' ) );
+		$this->manager->set_auth_scope( $scope );
+		add_filter( 'it_exchange_get_current_customer', function () use ( $customer ) {
+			return $customer;
+		} );
+
+		$response = $this->server->dispatch( $request );
+		$this->assertErrorResponse( 'it_exchange_rest_cannot_edit', $response, rest_authorization_required_code() );
+	}
+
 	public function test_purchase_with_card() {
 
 		if ( ! $gateway = ITE_Gateways::get( 'test-gateway-live' ) ) {

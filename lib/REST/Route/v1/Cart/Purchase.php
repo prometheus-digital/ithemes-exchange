@@ -81,7 +81,7 @@ class Purchase extends Base implements Getable, Postable, VariableSchema {
 		/** @var \ITE_Cart $cart */
 		$cart = $request->get_route_object( 'cart_id' );
 
-		if ( $feedback = $cart->get_requirements_for_purchase() ) {
+		if ( ( $feedback = $cart->get_requirements_for_purchase() ) && $feedback->has_feedback() ) {
 			$error = new \WP_Error(
 				'it_exchange_rest_purchase_requirements_not_met',
 				__( 'This cart is not yet ready for purchase.', 'it-l10n-ithemes-exchange' ),

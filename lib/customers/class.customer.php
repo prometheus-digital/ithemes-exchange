@@ -511,7 +511,7 @@ class IT_Exchange_Customer implements ITE_Object {
 	/**
 	 * @inheritDoc
 	 */
-	public function get_ID() { return $this->ID; }
+	public function get_ID() { return is_numeric( $this->ID ) ? (int) $this->ID : 0; }
 
 	/**
 	 * @inheritDoc

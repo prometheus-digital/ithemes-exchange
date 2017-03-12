@@ -108,4 +108,15 @@ class ITE_Cart_Feedback {
 	public function clear_notices() {
 		$this->notices = array();
 	}
+
+	/**
+	 * Does this feedback collection have any feedback items.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return bool
+	 */
+	public function has_feedback() {
+		return $this->notices && $this->errors;
+	}
 }

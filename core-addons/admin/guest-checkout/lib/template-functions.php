@@ -11,6 +11,10 @@
 */
 function it_exchange_guest_checkout_add_template_directory( $template_paths, $template_names ) {
 
+    if ( ! it_exchange_can_cart_be_purchased_by_guest() ) {
+        return $template_paths;
+    }
+
 	/**
 	 * Use the template_names array to target a specific template part you want to add
 	 * In this example, we're adding the following template part: super-widget-registration/elements/guest.php
@@ -83,6 +87,11 @@ function it_exchange_guest_checkout_get_heading( $text=false, $class='', $tag='h
  * @return array
 */
 function it_exchange_guest_checkout_modify_guest_checkout_purchase_requirement_form_actions( $actions ) {
+
+    if ( ! it_exchange_can_cart_be_purchased_by_guest() ) {
+        return $actions;
+    }
+
 	// Don't offer guest checkout if we're doing membership
 	if ( function_exists( 'it_exchange_membership_cart_contains_membership_product' ) && it_exchange_membership_cart_contains_membership_product() )
 		return $actions;
@@ -122,6 +131,11 @@ add_filter( 'it_exchange_get_super_widget_guest_checkout_actions_elements', 'it_
  * @return array
 */
 function it_exchange_remove_login_link_from_register_sw_state( $actions ) {
+
+    if ( ! it_exchange_can_cart_be_purchased_by_guest() ) {
+		return $actions;
+	}
+
 	// Don't offer guest checkout if we're doing membership
 	if ( function_exists( 'it_exchange_membership_cart_contains_membership_product' ) && it_exchange_membership_cart_contains_membership_product() )
 		return $actions;
@@ -148,6 +162,11 @@ add_filter( 'it_exchange_get_super_widget_registration_fields_elements', 'it_exc
  * @return array
 */
 function it_exchange_remove_register_link_from_login_sw_state( $actions ) {
+
+    if ( ! it_exchange_can_cart_be_purchased_by_guest() ) {
+		return $actions;
+	}
+
 	// Don't offer guest checkout if we're doing membership
 	if ( function_exists( 'it_exchange_membership_cart_contains_membership_product' ) && it_exchange_membership_cart_contains_membership_product() )
 		return $actions;
@@ -244,6 +263,11 @@ function it_exchange_guest_checkout_get_sw_cancel_link( $options=array() ) {
  * @return array
 */
 function it_exchange_guest_checkout_modify_valid_sw_states( $valid_states ) {
+
+	if ( ! it_exchange_can_cart_be_purchased_by_guest() ) {
+		return $valid_states;
+	}
+
 	// Don't offer guest checkout if we're doing membership
 	if ( function_exists( 'it_exchange_membership_cart_contains_membership_product' ) && it_exchange_membership_cart_contains_membership_product() )
 		return $valid_states;
@@ -262,6 +286,10 @@ add_filter( 'it_exchange_super_widget_valid_states', 'it_exchange_guest_checkout
  * @return string
 */
 function it_exchange_guest_checkout_override_logged_in_checkout_template_part( $template_part ) {
+
+    if ( ! it_exchange_can_cart_be_purchased_by_guest() ) {
+		return $template_part;
+	}
 
 	// Don't offer guest checkout if we're doing membership
 	if ( function_exists( 'it_exchange_membership_cart_contains_membership_product' ) && it_exchange_membership_cart_contains_membership_product() )
@@ -283,6 +311,11 @@ add_filter( 'it_exchange_get_default_content_checkout_mode', 'it_exchange_guest_
  * @return string
 */
 function it_exchange_guest_checkout_override_logged_in_supwer_widget_template_part( $template_part ) {
+
+    if ( ! it_exchange_can_cart_be_purchased_by_guest() ) {
+		return $template_part;
+	}
+
 	$guest_checkout_settings = it_exchange_get_option( 'addon-guest-checkout' );
 	$form = empty( $guest_checkout_settings['default-form'] ) ? $template_part : 'guest-checkout';
 
@@ -303,6 +336,11 @@ add_filter( 'it_exchange_get_default_sw_checkout_mode', 'it_exchange_guest_check
  * @return array
 */
 function it_exchagne_guest_checkout_add_guest_checkout_template_part_to_logged_in_purchase_requirement( $elements ) {
+
+	if ( ! it_exchange_can_cart_be_purchased_by_guest() ) {
+		return $elements;
+	}
+
 	// Don't offer guest checkout if we're doing membership
 	if ( function_exists( 'it_exchange_membership_cart_contains_membership_product' ) && it_exchange_membership_cart_contains_membership_product() )
 		return $elements;
@@ -322,6 +360,10 @@ add_filter( 'it_exchange_get_content-checkout-logged-in-purchase-requirements-no
 */
 function it_exchange_add_guest_checkout_links_to_logged_in_purchase_requirement_on_checkout_page( $links ) {
 
+    if ( ! it_exchange_can_cart_be_purchased_by_guest() ) {
+		return $links;
+	}
+
 	// Don't offer guest checkout if we're doing membership
 	if ( function_exists( 'it_exchange_membership_cart_contains_membership_product' ) && it_exchange_membership_cart_contains_membership_product() )
 		return $links;
@@ -340,6 +382,10 @@ add_filter( 'it_exchange_get_content-checkout-logged-in-purchase-requirements-no
  * @return array
 */
 function it_exchange_guest_checout_maybe_remove_reg_and_login_links_from_checkout_page( $links ) {
+
+    if ( ! it_exchange_can_cart_be_purchased_by_guest() ) {
+		return $links;
+	}
 
 	// Don't offer guest checkout if we're doing membership
 	if ( function_exists( 'it_exchange_membership_cart_contains_membership_product' ) && it_exchange_membership_cart_contains_membership_product() )
@@ -376,6 +422,11 @@ add_filter( 'it_exchange_get_content-checkout-logged-in-purchase-requirements-no
  * @return array
 */
 function it_exchange_add_guest_checkout_link_to_sw_registration_state( $links ) {
+
+    if ( ! it_exchange_can_cart_be_purchased_by_guest() ) {
+		return $links;
+	}
+
 	// Don't offer guest checkout if we're doing membership
 	if ( function_exists( 'it_exchange_membership_cart_contains_membership_product' ) && it_exchange_membership_cart_contains_membership_product() )
 		return $links;
@@ -398,6 +449,10 @@ add_filter( 'it_exchange_get_super_widget_registration_actions_elements', 'it_ex
  * @return array
 */
 function it_exchange_add_guest_checkout_link_to_sw_login_state( $links ) {
+
+	if ( ! it_exchange_can_cart_be_purchased_by_guest() ) {
+		return $links;
+	}
 
 	// Don't offer guest checkout if we're doing membership
 	if ( function_exists( 'it_exchange_membership_cart_contains_membership_product' ) && it_exchange_membership_cart_contains_membership_product() )

@@ -33,7 +33,7 @@ use IronBound\DB\Relations\HasMany;
  * @property string                                    $card_month
  * @property string                                    $card_year
  * @property-read \IT_Exchange_Transaction             $parent
- * @property-read stdClass                             $cart_object // Internal
+ * @property-read stdClass                             $cart_details // Internal
  * @property-read Collection|IT_Exchange_Transaction[] $children
  * @property-read Collection|ITE_Refund[]              $refunds
  */

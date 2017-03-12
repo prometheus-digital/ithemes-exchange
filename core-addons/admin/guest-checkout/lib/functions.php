@@ -7,6 +7,11 @@
  * @return void
 */
 function it_exchange_guest_checkout_bump_session() {
+
+	if ( ! it_exchange_is_guest_checkout_enabled() ) {
+		return;
+	}
+
 	$now            = time();
 	$customer_email = it_exchange_get_cart_data( 'guest-checkout-user' );
 	$customer_email = is_array( $customer_email ) ? reset( $customer_email ) : $customer_email;

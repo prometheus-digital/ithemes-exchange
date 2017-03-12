@@ -893,7 +893,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			return true;
 
 		// Parse options
-		$result        = false;
+		$result = false;
 
 		$defaults      = array(
 			'type'                      => false,
@@ -914,6 +914,7 @@ class IT_Theme_API_Product implements IT_Theme_API {
 			'add-to-cart-edit-quantity' => true,
 			'out-of-stock-text'         => __( 'Product is currently out of stock.', 'it-l10n-ithemes-exchange' ),
 			'not-available-text'        => __( 'Product is currently not available.', 'it-l10n-ithemes-exchange' ),
+            'no-guest-purchase-text'    => __( 'This product cannot be purchased by a guest customer.', 'it-l10n-ithemes-exchange' ),
 			'product-in-stock'          => null,
 		);
 		$options   = ITUtility::merge_defaults( $options, $defaults );
@@ -928,16 +929,22 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		// Do we have multi-item cart add-on enabled?
 		$multi_item_cart = it_exchange_is_multi_item_cart_allowed();
 
-		// Init empty hidden field variables
-		$buy_now_hidden_fields = $add_to_cart_hidden_fields = '';
-
 		$output = '';
 
-		if ( !$product_in_stock )
+		if ( ! $product_in_stock ) {
 			return '<p class="out-of-stock">' . $options['out-of-stock-text'] . '</p>';
+		}
 
-		if ( !$product_is_available )
+		if ( ! $product_is_available ) {
 			return '<p class="not-availabe">' . $options['not-available-text'] . '</p>';
+		}
+
+		$item = ITE_Cart_Product::create( $this->product );
+		$cart = it_exchange_get_current_cart();
+
+		if ( ! it_exchange_can_line_item_be_purchased_by_guest( $item, $cart ) && it_exchange_doing_guest_checkout() ) {
+		    return '<p class="no-guest-purchase">' . $options['no-guest-purchase-text'] . '</p>';
+        }
 
 		$class = $options['class'];
 

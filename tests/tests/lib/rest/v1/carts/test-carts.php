@@ -256,6 +256,24 @@ class Test_IT_Exchange_v1_Carts_Route extends Test_IT_Exchange_REST_Route {
 		$this->assertEquals( 'Edit me', $data['meta']['_editable'] );
 	}
 
+	public function test_get_object_for_guest() {
+
+		$customer = it_exchange_get_customer( 'guest@example.org' );
+		$cart     = it_exchange_create_cart_and_session( $customer );
+
+		$request = \iThemes\Exchange\REST\Request::from_path( "/it_exchange/v1/carts/{$cart->get_id()}" );
+
+		$scope = new \iThemes\Exchange\REST\Auth\GuestAuthScope( $customer );
+		$this->manager->set_auth_scope( $scope );
+
+		$response = $this->server->dispatch( $request );
+		$this->assertEquals( 200, $response->get_status() );
+		$this->assertNotEmpty( $response->get_data() );
+
+		$data = $response->get_data();
+		$this->assertEquals( 'guest@example.org', $data['customer'] );
+	}
+
 	public function test_update_cart_address_from_array() {
 
 		$product  = self::product_factory()->create_and_get( array(

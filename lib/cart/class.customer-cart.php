@@ -236,6 +236,39 @@ class ITE_Cart {
 	public function expires_at() { return $this->get_repository()->expires_at(); }
 
 	/**
+	 * Can this cart be purchased by a guest customer.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return bool
+	 */
+	public function can_be_purchased_by_guest() {
+
+		if ( ! it_exchange_is_guest_checkout_enabled() ) {
+			return false;
+		}
+
+		foreach ( $this->get_items() as $item ) {
+			if ( ! it_exchange_can_line_item_be_purchased_by_guest( $item, $this ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Is this a guest purchase.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return bool
+	 */
+	public function is_guest() {
+		return $this->has_meta( 'guest-email' );
+	}
+
+	/**
 	 * Set the guest customer for this cart.
 	 *
 	 * @since 2.0.0
@@ -404,11 +437,21 @@ class ITE_Cart {
 			$this->get_repository()->save( $item );
 		}
 
+		if ( ! $item ) {
+			return false;
+		}
+
 		if ( $coerce ) {
 			$this->coerce( $item );
 		}
 
 		if ( ! $this->validate() ) {
+			return false;
+		}
+
+		$item = $this->get_item( $item->get_type(), $item->get_id() );
+
+		if ( ! $item ) {
 			return false;
 		}
 
@@ -924,11 +967,16 @@ class ITE_Cart {
 	 *
 	 * @since 2.0.0
 	 *
+	 * @param ITE_Cart_Feedback|null $feedback Optionally, specify feedback other than cart feedback for the validation
+	 *                                         messages to be added to.
+	 *
 	 * @return bool
 	 */
-	public function validate() {
+	public function validate( ITE_Cart_Feedback $feedback = null ) {
 
-		$feedback = $this->feedback;
+		if ( func_num_args() !== 1 ) {
+			$feedback = $this->feedback;
+		}
 
 		foreach ( $this->cart_validators as $cart_validator ) {
 			if ( ! $cart_validator->validate( $this, $feedback ) ) {
@@ -983,17 +1031,6 @@ class ITE_Cart {
 		}
 
 		return $valid;
-	}
-
-	/**
-	 * Is this a guest purchase.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @return bool
-	 */
-	public function is_guest() {
-		return $this->has_meta( 'guest-email' );
 	}
 
 	/**
@@ -1331,12 +1368,13 @@ class ITE_Cart {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @return ITE_Cart_Feedback|null Returns a new cart feedback object if requirements are not met. Otherwise,
-	 *                                returns null.
+	 * @return ITE_Cart_Feedback Returns a new cart feedback object with error messages.
 	 */
 	public function get_requirements_for_purchase() {
 
 		$feedback = new ITE_Cart_Feedback();
+
+		$this->validate( $feedback );
 
 		if ( $this->requires_shipping() ) {
 			$s = $this->get_shipping_address();
@@ -1381,7 +1419,7 @@ class ITE_Cart {
 			}
 		}
 
-		return null;
+		return $feedback;
 	}
 
 	/**
@@ -1729,6 +1767,7 @@ class ITE_Cart {
 	 */
 	private static function validators() {
 		$validators = array(
+			new ITE_Guest_Customer_Purchase_Validator(),
 			new ITE_Multi_Item_Cart_Validator(),
 			new ITE_Multi_Item_Product_Validator(),
 			new ITE_Product_Inventory_Validator(),

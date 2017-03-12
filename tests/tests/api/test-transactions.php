@@ -519,7 +519,10 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 			'address1'   => '123 Main Street',
 		);
 
-		$txn = $this->transaction_factory->create( array( 'shipping_address' => $shipping, 'make_current_cart' => true, ) );
+		$txn = $this->transaction_factory->create( array(
+			'shipping_address'  => $shipping,
+			'make_current_cart' => true,
+		) );
 
 		$saved = it_exchange_get_transaction_shipping_address( $txn );
 
@@ -554,13 +557,13 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 		);
 
 		$t1 = self::transaction_factory()->create_and_get( array(
-			'billing_address'  => $address,
-			'shipping_address' => $address,
+			'billing_address'   => $address,
+			'shipping_address'  => $address,
 			'make_current_cart' => true,
 		) );
 		$t2 = self::transaction_factory()->create_and_get( array(
-			'billing_address'  => $address,
-			'shipping_address' => $address,
+			'billing_address'   => $address,
+			'shipping_address'  => $address,
 			'make_current_cart' => true,
 		) );
 
@@ -1305,6 +1308,29 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 		) );
 
 		$this->assertNotNull( ITE_Session_Model::from_cart_id( $cart_id ) );
+	}
+
+	public function test_guest_purchase() {
+
+		$cart = it_exchange_create_cart_and_session( it_exchange_get_customer( 'guest@example.org' ) );
+		$cart->add_item( ITE_Cart_Product::create( self::product_factory()->create_and_get() ) );
+
+		$txn_id = it_exchange_add_transaction( 'offline-payments', 'TESTID', 'paid', $cart );
+
+		$this->assertNotEmpty( $txn_id );
+
+		$transaction = it_exchange_get_transaction( $txn_id );
+		$this->assertNotNull( $transaction );
+
+		$this->assertTrue( $transaction->is_guest_purchase() );
+		$this->assertInstanceOf( 'IT_Exchange_Guest_Customer', $transaction->get_customer() );
+		$this->assertEquals( 'guest@example.org', $transaction->get_customer()->get_email() );
+		$this->assertEmpty( $transaction->customer_id );
+		$this->assertEquals( 'guest@example.org', $transaction->customer_email );
+
+		$cart_details = $transaction->cart_details;
+		$this->assertEquals( 1, $cart_details->is_guest_checkout );
+		$this->assertTrue( (bool) get_post_meta( $txn_id, '_it-exchange-is-guest-checkout', true ) );
 	}
 
 	public function _map_id( $transaction ) {
