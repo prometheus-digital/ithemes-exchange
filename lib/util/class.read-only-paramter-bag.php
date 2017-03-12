@@ -15,7 +15,7 @@ class ITE_Read_Only_Parameter_Bag implements ITE_Parameter_Bag {
 	private $bag;
 
 	/** @var bool */
-	private $silent = true;
+	private $silent;
 
 	/**
 	 * ITE_Read_Only_Parameter_Bag constructor.
@@ -25,7 +25,7 @@ class ITE_Read_Only_Parameter_Bag implements ITE_Parameter_Bag {
 	 */
 	public function __construct( \ITE_Parameter_Bag $bag, $silent = true ) {
 		$this->bag    = $bag;
-		$this->silent = true;
+		$this->silent = $silent;
 	}
 
 	/**
