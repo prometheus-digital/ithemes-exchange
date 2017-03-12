@@ -107,24 +107,6 @@ class Manager {
 	}
 
 	/**
-	 * Register a route provider.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @param \iThemes\Exchange\REST\Route\v1_Provider $provider
-	 *
-	 * @return $this
-	 */
-	public function register_provider( Route_Provider $provider ) {
-
-		foreach ( $provider->get_routes() as $route ) {
-			$this->register_route( $route );
-		}
-
-		return $this;
-	}
-
-	/**
 	 * Get the first route matching a given class.
 	 *
 	 * @since 2.0.0
