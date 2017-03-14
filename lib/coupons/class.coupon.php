@@ -389,7 +389,8 @@ class IT_Exchange_Coupon implements ITE_Object, ArrayAccess, Countable, Iterator
 	public function get_data_for_transaction_object() {
 		return array(
 			'id'   => $this->get_ID(),
-			'code' => $this->get_code()
+			'code' => $this->get_code(),
+			'type' => $this->get_type(),
 		);
 	}
 

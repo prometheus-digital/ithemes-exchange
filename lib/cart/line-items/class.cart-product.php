@@ -31,7 +31,7 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 	public function __construct( $id, ITE_Parameter_Bag $bag, ITE_Parameter_Bag $frozen ) {
 		parent::__construct( $id, $bag, $frozen );
 		$this->set_id( $id );
-		$this->product = it_exchange_get_product( $this->get_param( 'product_id' ) );
+		$this->product = it_exchange_get_product( $this->get_product_id() );
 
 		if ( $this->has_param( 'itemized_data' ) ) {
 			$this->set_param( 'itemized_data', maybe_unserialize( $this->get_param( 'itemized_data' ) ) );
@@ -295,11 +295,22 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 	}
 
 	/**
-	 * Retrieve the product being purchased.
+	 * Get the product ID for the product being purchased.
 	 *
 	 * @since 2.0.0
 	 *
-	 * @return \IT_Exchange_Product
+	 * @return int
+	 */
+	public function get_product_id() { return $this->get_param( 'product_id' ); }
+
+	/**
+	 * Retrieve the product being purchased.
+	 *
+	 * Null can be returned if the product is deleted after purchase.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return \IT_Exchange_Product|null
 	 */
 	public function get_product() { return $this->product; }
 

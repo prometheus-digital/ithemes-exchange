@@ -422,28 +422,43 @@ class ITE_Line_Item_Transaction_Object_Converter {
 				continue;
 			}
 
-			$coupon = it_exchange_get_coupon( $coupon_data['id'] );
-
-			if ( ! $coupon ) {
-				continue;
-			}
-
-			$item = ITE_Coupon_Line_Item::create( $coupon );
 			$item = new ITE_Coupon_Line_Item(
-				$item->get_id(),
-				new ITE_Array_Parameter_Bag( $item->get_params() ),
+				md5( $coupon_data['code'] ),
+				new ITE_Array_Parameter_Bag( array(
+					'id'   => $coupon_data['id'],
+					'type' => 'cart',
+				) ),
 				new ITE_Array_Parameter_Bag( array(
 					'name'         => __( 'Savings', 'it-l10n-ithemes-exchange' ),
 					'description'  => $coupon_data['code'],
-					'amount'       => $coupons_total,
+					'amount'       => 0,
 					'quantity'     => 1,
-					'total'        => $coupons_total,
+					'total'        => 0,
 					'summary_only' => true,
 				) )
 			);
 
+			$repository->save( $item );
+
 			foreach ( $products as $product ) {
-				$product->add_item( $item );
+				$scoped = new ITE_Coupon_Line_Item(
+					md5( $coupon_data['code'] . '-' . $product->get_id() ),
+					new ITE_Array_Parameter_Bag( array(
+						'id'   => $coupon_data['id'],
+						'type' => 'cart',
+					) ),
+					new ITE_Array_Parameter_Bag( array(
+						'name'         => __( 'Savings', 'it-l10n-ithemes-exchange' ),
+						'description'  => $coupon_data['code'],
+						'amount'       => $coupons_total,
+						'quantity'     => 1,
+						'total'        => $coupons_total,
+						'summary_only' => true,
+					) )
+				);
+				$scoped->set_aggregate( $product );
+
+				$product->add_item( $scoped );
 			}
 		}
 
