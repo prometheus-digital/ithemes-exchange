@@ -86,7 +86,7 @@ add_action( 'it_exchange_register_line_item_types', function ( ITE_Line_Item_Typ
 		'rest_serializer'     => function ( array $data, ITE_Cart_Product $product, array $schema, ITE_Cart $cart ) {
 
 			if ( isset( $schema['properties']['product'] ) ) {
-				$data['product'] = $product->get_product()->ID;
+				$data['product'] = $product->get_product_id();
 			}
 
 			if ( isset( $schema['properties']['shipping_method'] ) && $product->get_product()->has_feature( 'shipping' ) ) {

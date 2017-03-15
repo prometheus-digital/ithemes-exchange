@@ -25,7 +25,7 @@ class ITE_Product_Availability_Validator implements ITE_Line_Item_Validator {
 	 * @inheritDoc
 	 */
 	public function validate( ITE_Line_Item $item, ITE_Cart $cart, ITE_Cart_Feedback $feedback = null ) {
-		return $item instanceof ITE_Cart_Product && it_exchange_is_product_available( $item->get_product()->ID );
+		return $item instanceof ITE_Cart_Product && it_exchange_is_product_available( $item->get_product() );
 	}
 
 	/**

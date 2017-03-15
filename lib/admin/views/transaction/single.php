@@ -158,8 +158,8 @@ $dtf      = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 						</div>
 					<?php endif; ?>
 
-					<?php if ( isset( $download_index[ $product_item->get_param( 'product_id' ) ] ) ) : ?>
-						<?php foreach ( $download_index[ $product_item->get_param( 'product_id' ) ] as $download_id => $hash ) : ?>
+					<?php if ( isset( $download_index[ $product_item->get_product_id() ] ) ) : ?>
+						<?php foreach ( $download_index[ $product_item->get_product_id() ] as $download_id => $hash ) : ?>
 							<?php $download_data = it_exchange_get_download_data_from_hash( $hash[0] ); ?>
 							<div class="product-download product-download-<?php esc_attr_e( $download_id ); ?>">
 								<h4 class="product-download-title">

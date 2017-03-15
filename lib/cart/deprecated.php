@@ -85,7 +85,7 @@ function ite_fire_deprecated_add_cart_product_hook( ITE_Cart_Product $item, ITE_
 	}
 
 	do_action_deprecated( 'it_exchange_add_cart_product', array( $item->bc() ), '2.0.0' );
-	do_action_deprecated( 'it_exchange_product_added_to_cart', array( $item->get_product()->ID ), '2.0.0' );
+	do_action_deprecated( 'it_exchange_product_added_to_cart', array( $item->get_product_id() ), '2.0.0' );
 }
 
 add_action( 'it_exchange_add_product_to_cart', 'ite_fire_deprecated_add_cart_product_hook', 10, 2 );

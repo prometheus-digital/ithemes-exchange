@@ -301,7 +301,7 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 	 *
 	 * @return int
 	 */
-	public function get_product_id() { return $this->get_param( 'product_id' ); }
+	public function get_product_id() { return (int) $this->get_param( 'product_id' ); }
 
 	/**
 	 * Retrieve the product being purchased.
@@ -343,7 +343,7 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 		}
 
 		return $this->get_product()->supports_feature( 'purchase-quantity' ) &&
-		       it_exchange_is_multi_item_product_allowed( $this->get_product()->ID );
+		       it_exchange_is_multi_item_product_allowed( $this->get_product_id() );
 	}
 
 	/**

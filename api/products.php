@@ -277,9 +277,11 @@ function it_exchange_get_the_product_id() {
  *
  * @return boolean
 */
-function it_exchange_is_product_available( $product_id=false ) {
-	if ( ! it_exchange_get_product( $product_id ) )
+function it_exchange_is_product_available( $product_id = false ) {
+
+	if ( ! $p = it_exchange_get_product( $product_id ) ) {
 		return false;
+	}
 
 	$past_start_date = true;
 	$before_end_date = true;
@@ -287,24 +289,21 @@ function it_exchange_is_product_available( $product_id=false ) {
 	$now_end = strtotime( date( 'Y-m-d 23:59:59' ) );
 
 	// Check start time
-	if (
-		it_exchange_product_supports_feature( $product_id, 'availability', array( 'type' => 'start' ) ) &&
-		it_exchange_product_has_feature( $product_id, 'availability', array( 'type' => 'start' ) )
-	) {
-		$start_date = strtotime( it_exchange_get_product_feature( $product_id, 'availability', array( 'type' => 'start' ) ) . ' 00:00:00' );
-		if ( $now_start < $start_date )
-			$past_start_date = false;
+	if ( $p->supports_feature( 'availability', array( 'type' => 'start' ) ) && $p->has_feature( 'availability', array( 'type' => 'start' ) ) ) {
+		$start_date = strtotime( $p->get_feature( 'availability', array( 'type' => 'start' ) ) . ' 00:00:00' );
 
+		if ( $now_start < $start_date ) {
+			$past_start_date = false;
+		}
 	}
 
 	// Check end time
-	if (
-		it_exchange_product_supports_feature( $product_id, 'availability', array( 'type' => 'end' ) ) &&
-		it_exchange_product_has_feature( $product_id, 'availability', array( 'type' => 'end' ) )
-	) {
-		$end_date = strtotime( it_exchange_get_product_feature( $product_id, 'availability', array( 'type' => 'end' ) ) . ' 23:59:59' );
-		if ( $now_end > $end_date )
+	if ( $p->supports_feature( 'availability', array( 'type' => 'end' ) ) && $p->has_feature( 'availability', array( 'type' => 'end' ) ) ) {
+		$end_date = strtotime( $p->get_feature( 'availability', array( 'type' => 'end' ) ) . ' 23:59:59' );
+
+		if ( $now_end > $end_date ) {
 			$before_end_date = false;
+		}
 	}
 
 	return $past_start_date && $before_end_date;
