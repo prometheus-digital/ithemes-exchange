@@ -273,11 +273,11 @@ function it_exchange_get_the_product_id() {
  *
  * @since 0.4.0
  *
- * @param int|bool $product_id Product ID
+ * @param int|IT_Exchange_Product $product_id Product ID
  *
  * @return boolean
 */
-function it_exchange_is_product_available( $product_id = false ) {
+function it_exchange_is_product_available( $product_id = 0 ) {
 
 	if ( ! $p = it_exchange_get_product( $product_id ) ) {
 		return false;

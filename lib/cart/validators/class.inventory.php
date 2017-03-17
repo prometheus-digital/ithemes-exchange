@@ -30,7 +30,7 @@ class ITE_Product_Inventory_Validator implements ITE_Line_Item_Validator {
 	 */
 	public function validate( ITE_Line_Item $item, ITE_Cart $cart, ITE_Cart_Feedback $feedback = null ) {
 
-		$max = it_exchange_get_max_product_quantity_allowed( $item->get_product()->ID, $item->get_id() );
+		$max = it_exchange_get_max_product_quantity_allowed( $item->get_product(), $item->get_id() );
 
 		if ( $max === '' || $item->get_quantity() <= $max ) {
 			return true;
@@ -58,7 +58,7 @@ class ITE_Product_Inventory_Validator implements ITE_Line_Item_Validator {
 			return false;
 		}
 
-		$max = it_exchange_get_max_product_quantity_allowed( $item->get_product()->ID, $item->get_id() );
+		$max = it_exchange_get_max_product_quantity_allowed( $item->get_product(), $item->get_id() );
 
 		$item->set_quantity( $max );
 

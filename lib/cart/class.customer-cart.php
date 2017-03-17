@@ -1091,7 +1091,7 @@ class ITE_Cart {
 
 			if ( $old_method ) {
 				$this->get_items( 'shipping' )->filter( function ( ITE_Shipping_Line_Item $shipping ) use ( $old_method ) {
-					return $shipping->get_method()->slug === $old_method;
+					return $shipping->get_method_slug() === $old_method;
 				} )->delete();
 			}
 
@@ -1117,9 +1117,7 @@ class ITE_Cart {
 			$this->get_repository()->save( $for );
 
 			if ( $this->is_current() ) {
-				it_exchange_update_multiple_shipping_method_for_cart_product(
-					$for->get_id(), $method->slug
-				);
+				it_exchange_update_multiple_shipping_method_for_cart_product( $for->get_id(), $method->slug );
 			}
 
 			return true;

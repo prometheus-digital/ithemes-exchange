@@ -39,7 +39,7 @@ class ITE_Line_Item_Transaction_Object_Converter {
 
 		if ( $shipping_total ) {
 			if ( $cart_object->shipping_method && $cart_object->shipping_method !== 'multiple-methods' ) {
-				$this->shipping_single( $cart_object->shipping_method, $shipping_total, $repository );
+				$this->shipping_single( $cart_object->shipping_method, $shipping_total, $products, $repository );
 			} elseif ( $cart_object->shipping_method === 'multiple-methods' ) {
 				$this->shipping_multi( $cart_object->shipping_method_multi, $shipping_total, $products, $repository );
 			}
@@ -165,7 +165,7 @@ class ITE_Line_Item_Transaction_Object_Converter {
 			foreach ( $data as $tax_type ) {
 				$code = '';
 
-				if ( ! isset( $settings['tax-rates'][$state] ) ) {
+				if ( ! isset( $settings['tax-rates'][ $state ] ) ) {
 					return false;
 				}
 
@@ -470,41 +470,87 @@ class ITE_Line_Item_Transaction_Object_Converter {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param string                                $method
+	 * @param string                                $method_slug
 	 * @param float                                 $total
+	 * @param \ITE_Cart_Product[]                   $products
 	 * @param \ITE_Line_Item_Transaction_Repository $repository
 	 *
 	 * @return \ITE_Shipping_Line_Item|null
 	 */
-	protected function shipping_single( $method, $total, ITE_Line_Item_Transaction_Repository $repository ) {
+	protected function shipping_single( $method_slug, $total, $products, ITE_Line_Item_Transaction_Repository $repository ) {
 
-		$options = it_exchange_get_registered_shipping_method_args( $method );
+		$method  = it_exchange_get_registered_shipping_method( $method_slug );
+		$options = it_exchange_get_registered_shipping_method_args( $method_slug );
 
-		if ( empty( $options['provider'] ) ) {
-			return null;
+		if ( $method ) {
+			$method_label = $method->label;
+		} elseif ( is_int( $method ) ) {
+			$method_label = "Table Rate Shipping #{$method} (deleted)";
+		} else {
+			$method_label = ucwords( str_replace( array( '-', '_' ), ' ', $method ) );
 		}
 
-		$method   = it_exchange_get_registered_shipping_method( $method );
-		$provider = it_exchange_get_registered_shipping_provider( $options['provider'] );
+		$shippable    = array();
+		$per_products = array();
 
-		$item = ITE_Base_Shipping_Line_Item::create( $method, $provider, true );
-		$item = new ITE_Base_Shipping_Line_Item(
-			$item->get_id(),
-			new ITE_Array_Parameter_Bag( $item->get_params() ),
+		foreach ( $products as $product ) {
+			if ( $product->get_product() && $product->get_product()->has_feature( 'shipping' ) ) {
+				$shippable[] = $product;
+			}
+		}
+
+		if ( ! $shippable ) {
+			$shippable = $products;
+		}
+
+		$per_item_cost = $total / count( $shippable );
+
+		foreach ( $shippable as $product ) {
+
+			$per_product = new ITE_Base_Shipping_Line_Item(
+				md5( $method_slug . '-false-' . microtime() ),
+				new ITE_Array_Parameter_Bag( array(
+					'method'    => $method_slug,
+					'provider'  => isset( $options['provider'] ) ? $options['provider'] : '',
+					'cart_wide' => false,
+				) ),
+				new ITE_Array_Parameter_Bag( array(
+					'name'         => $method_label,
+					'description'  => '',
+					'amount'       => $per_item_cost,
+					'quantity'     => 1,
+					'total'        => $per_item_cost,
+					'summary_only' => true
+				) )
+			);
+			$per_product->set_line_item_repository( $repository );
+			$per_product->set_aggregate( $product );
+			$per_products[] = $per_product;
+		}
+
+		$repository->save_many( $per_products );
+
+		$global = new ITE_Base_Shipping_Line_Item(
+			md5( $method_slug . '-true-' . microtime() ),
 			new ITE_Array_Parameter_Bag( array(
-				'name'         => $method->label,
+				'method'    => $method_slug,
+				'provider'  => isset( $options['provider'] ) ? $options['provider'] : '',
+				'cart_wide' => true,
+			) ),
+			new ITE_Array_Parameter_Bag( array(
+				'name'         => $method_label,
 				'description'  => '',
-				'amount'       => $total,
+				'amount'       => 0,
 				'quantity'     => 1,
-				'total'        => $total,
+				'total'        => 0,
 				'summary_only' => true
 			) )
 		);
-		$item->set_line_item_repository( $repository );
+		$global->set_line_item_repository( $repository );
 
-		$repository->save( $item );
+		$repository->save( $global );
 
-		return $item;
+		return $global;
 	}
 
 	/**
@@ -521,63 +567,74 @@ class ITE_Line_Item_Transaction_Object_Converter {
 	 */
 	protected function shipping_multi( $multiple, $total, $products, ITE_Line_Item_Transaction_Repository $repository ) {
 
-		$total /= count( $multiple );
-		$items = array();
+		$per_item_cost = $total / count( $multiple );
+		$per_products  = array();
+		$globals       = array();
 
-		foreach ( $multiple as $cart_product_id => $method ) {
+		foreach ( $multiple as $cart_product_id => $method_slug ) {
 
 			if ( ! isset( $products[ $cart_product_id ] ) ) {
 				continue;
 			}
 
-			$options = it_exchange_get_registered_shipping_method_args( $method );
+			$product = $products[ $cart_product_id ];
 
-			if ( empty( $options['provider'] ) ) {
-				return null;
+			$method  = it_exchange_get_registered_shipping_method( $method_slug );
+			$options = it_exchange_get_registered_shipping_method_args( $method_slug );
+
+			if ( $method ) {
+				$method_label = $method->label;
+			} elseif ( is_int( $method ) ) {
+				$method_label = "Table Rate Shipping #{$method} (deleted)";
+			} else {
+				$method_label = ucwords( str_replace( array( '-', '_' ), ' ', $method ) );
 			}
 
-			$method   = it_exchange_get_registered_shipping_method( $method );
-			$provider = it_exchange_get_registered_shipping_provider( $options['provider'] );
-
-			$item = ITE_Base_Shipping_Line_Item::create( $method, $provider, true );
-			$item = new ITE_Base_Shipping_Line_Item(
-				$item->get_id(),
-				new ITE_Array_Parameter_Bag( $item->get_params() ),
+			$per_product = new ITE_Base_Shipping_Line_Item(
+				md5( $method_slug . '-false-' . microtime() ),
 				new ITE_Array_Parameter_Bag( array(
-					'name'         => $method->label,
+					'method'    => $method_slug,
+					'provider'  => isset( $options['provider'] ) ? $options['provider'] : '',
+					'cart_wide' => false,
+				) ),
+				new ITE_Array_Parameter_Bag( array(
+					'name'         => $method_label,
 					'description'  => '',
-					'amount'       => $total,
+					'amount'       => $per_item_cost,
 					'quantity'     => 1,
-					'total'        => $total,
+					'total'        => $per_item_cost,
 					'summary_only' => true
 				) )
 			);
-			$item->set_line_item_repository( $repository );
+			$per_product->set_line_item_repository( $repository );
+			$per_product->set_aggregate( $product );
+			$per_products[] = $per_product;
 
-			$items[] = $item;
-
-			$item = ITE_Base_Shipping_Line_Item::create( $method, $provider, false );
-			$item = new ITE_Base_Shipping_Line_Item(
-				$item->get_id(),
-				new ITE_Array_Parameter_Bag( $item->get_params() ),
+			$global = new ITE_Base_Shipping_Line_Item(
+				md5( $method_slug . '-true-' . microtime() ),
 				new ITE_Array_Parameter_Bag( array(
-					'name'         => $method->label,
+					'method'    => $method_slug,
+					'provider'  => isset( $options['provider'] ) ? $options['provider'] : '',
+					'cart_wide' => true,
+				) ),
+				new ITE_Array_Parameter_Bag( array(
+					'name'         => $method_label,
 					'description'  => '',
-					'amount'       => 0.00,
+					'amount'       => 0,
 					'quantity'     => 1,
-					'total'        => 0.00,
+					'total'        => 0,
 					'summary_only' => true
 				) )
 			);
-			$item->set_line_item_repository( $repository );
+			$global->set_line_item_repository( $repository );
 
-			$products[ $cart_product_id ]->add_item( $item );
-			$repository->save( $products[ $cart_product_id ] );
+			$globals[] = $global;
 		}
 
-		$repository->save_many( $items );
+		$repository->save_many( $per_products );
+		$repository->save_many( $globals );
 
-		return $items;
+		return $per_products;
 	}
 
 }

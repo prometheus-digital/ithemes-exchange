@@ -297,7 +297,10 @@ class IT_Exchange_API_Cart_Test extends IT_Exchange_UnitTestCase {
 	public function test_add_product_to_shopping_cart_quantity_capped_at_1_when_purchase_quantity_disabled() {
 
 		$product = $this->getMockBuilder( 'IT_Exchange_Product' )->disableOriginalConstructor()->getMock();
-		$product->method( 'supports_feature' )->with( 'purchase-quantity' )->willReturn( false );
+		$product->expects( $this->any() )->method( 'supports_feature' )->will( $this->returnValueMap( array(
+			array( 'availability', array(), false ),
+			array( 'purchase-quantity', array(), false )
+		) ) );
 		$product->ID = 1;
 
 		WP_Mock::wpFunction( 'it_exchange_get_product', array(

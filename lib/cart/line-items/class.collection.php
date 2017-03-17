@@ -462,10 +462,10 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	 *
 	 * @since 2.0.0
 	 *
-	 * @return \ITE_Line_Item
+	 * @return \ITE_Line_Item|null
 	 */
 	public function first() {
-		return reset( $this->items );
+		return reset( $this->items ) ?: null;
 	}
 
 	/**
@@ -473,10 +473,10 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	 *
 	 * @since 2.0.0
 	 *
-	 * @return \ITE_Line_Item
+	 * @return \ITE_Line_Item|null
 	 */
 	public function last() {
-		return end( $this->items );
+		return end( $this->items ) ?: null;
 	}
 
 	/**

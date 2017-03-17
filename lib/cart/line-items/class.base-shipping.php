@@ -105,10 +105,12 @@ class ITE_Base_Shipping_Line_Item extends ITE_Line_Item implements ITE_Shipping_
 			$this->cart = it_exchange_get_current_cart();
 		}
 
-		if ( $this->aggregate instanceof ITE_Cart_Product ) {
+		if ( $this->is_cart_wide() ) {
+			return $this->get_method()->get_additional_cost_for_cart( $this->cart );
+		} elseif ( $this->aggregate instanceof ITE_Cart_Product ) {
 			return $this->get_method()->get_shipping_cost_for_product( $this->aggregate->bc(), $this->cart );
 		} else {
-			return $this->get_method()->get_additional_cost_for_cart( $this->cart );
+			return 0;
 		}
 	}
 
@@ -129,16 +131,22 @@ class ITE_Base_Shipping_Line_Item extends ITE_Line_Item implements ITE_Shipping_
 	/**
 	 * @inheritDoc
 	 */
-	public function get_provider() {
-		return it_exchange_get_registered_shipping_provider( $this->get_param( 'provider' ) );
-	}
+	public function get_provider() { return it_exchange_get_registered_shipping_provider( $this->get_provider_slug() ); }
 
 	/**
 	 * @inheritDoc
 	 */
-	public function get_method() {
-		return it_exchange_get_registered_shipping_method( $this->get_param( 'method' ) );
-	}
+	public function get_provider_slug() { return $this->get_param( 'provider' ); }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_method() { return it_exchange_get_registered_shipping_method( $this->get_method_slug() ); }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_method_slug() { return $this->get_param( 'method' ); }
 
 	/**
 	 * @inheritDoc
