@@ -55,6 +55,73 @@
     "shipping_total": 500,
     "customer_order_notes": ""
   },
+  "singleShippingMethodMultipleProduct": {
+    "cart_id": "1487101618253658a35eb23deee",
+    "customer_id": 1,
+    "total": "21.00",
+    "sub_total": "16.00",
+    "currency": "USD",
+    "description": "Physical Product, My Sample Product",
+    "products": {
+      "8-40cd750bba9870f18aada2478b24840a": {
+        "itemized_data": "a:0:{}",
+        "additional_data": "a:0:{}",
+        "product_id": 8,
+        "product_name": "Physical Product",
+        "product_cart_id": "8-40cd750bba9870f18aada2478b24840a",
+        "count": 1,
+        "itemized_hash": "40cd750bba9870f18aada2478b24840a",
+        "product_base_price": 15,
+        "product_subtotal": 15
+      },
+      "4-40cd750bba9870f18aada2478b24840a": {
+        "itemized_data": "a:0:{}",
+        "additional_data": "a:0:{}",
+        "product_id": 4,
+        "product_name": "My Sample Product",
+        "product_cart_id": "4-40cd750bba9870f18aada2478b24840a",
+        "count": 1,
+        "itemized_hash": "40cd750bba9870f18aada2478b24840a",
+        "product_base_price": 1,
+        "product_subtotal": 1
+      }
+    },
+    "coupons": {},
+    "coupons_total_discount": 0,
+    "customer_ip": "192.168.1.1",
+    "taxes_formated": "$0.00",
+    "taxes_raw": 0,
+    "shipping_address": {
+      "company-name": "",
+      "first-name": "John",
+      "last-name": "Doe",
+      "address1": "123 Main Street",
+      "address2": "",
+      "city": "Edmond",
+      "state": "OK",
+      "zip": "73013",
+      "country": "US",
+      "email": "",
+      "phone": ""
+    },
+    "billing_address": {
+      "company-name": "",
+      "first-name": "John",
+      "last-name": "Doe",
+      "address1": "123 Main Street",
+      "address2": "",
+      "city": "Edmond",
+      "state": "OK",
+      "zip": "73013",
+      "country": "US",
+      "email": "",
+      "phone": ""
+    },
+    "shipping_method": "exchange-flat-rate-shipping",
+    "shipping_method_multi": {},
+    "shipping_total": 500,
+    "customer_order_notes": ""
+  },
   "multipleShippingMethods": {
     "cart_id": "1487101618253658a35eb23deee",
     "customer_id": 1,

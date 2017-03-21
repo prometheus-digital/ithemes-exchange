@@ -503,9 +503,26 @@ class ITE_Line_Item_Transaction_Object_Converter {
 			$shippable = $products;
 		}
 
-		$per_item_cost = $total / count( $shippable );
+		$distributed_over = array();
+
+		if ( $total != 0 ) {
+
+			$distribute_over = array();
+
+			foreach ( $shippable as $product ) {
+				$distribute_over[ $product->get_id() ] = $product->get_total();
+			}
+
+			$distributed_over = it_exchange_proportionally_distribute_cost( $total, $distribute_over );
+		}
 
 		foreach ( $shippable as $product ) {
+
+			if ( $distributed_over ) {
+				$per_item_cost = $distributed_over[ $product->get_id() ] - $product->get_total();
+			} else {
+				$per_item_cost = 0;
+			}
 
 			$per_product = new ITE_Base_Shipping_Line_Item(
 				md5( $method_slug . '-false-' . microtime() ),
@@ -567,9 +584,24 @@ class ITE_Line_Item_Transaction_Object_Converter {
 	 */
 	protected function shipping_multi( $multiple, $total, $products, ITE_Line_Item_Transaction_Repository $repository ) {
 
-		$per_item_cost = $total / count( $multiple );
-		$per_products  = array();
-		$globals       = array();
+		$per_products = array();
+		$globals      = array();
+
+		$distribute_over = array();
+
+		foreach ( $multiple as $cart_product_id => $method_slug ) {
+			if ( ! isset( $products[ $cart_product_id ] ) ) {
+				continue; // Sanity check
+			}
+
+			if ( $method_slug === 'exchange-free-shipping' ) {
+				continue;
+			}
+
+			$distribute_over[ $cart_product_id ] = $products[ $cart_product_id ]->get_total();
+		}
+
+		$distributed_over = it_exchange_proportionally_distribute_cost( $total, $distribute_over );
 
 		foreach ( $multiple as $cart_product_id => $method_slug ) {
 
@@ -588,6 +620,12 @@ class ITE_Line_Item_Transaction_Object_Converter {
 				$method_label = "Table Rate Shipping #{$method} (deleted)";
 			} else {
 				$method_label = ucwords( str_replace( array( '-', '_' ), ' ', $method ) );
+			}
+
+			if ( isset( $distributed_over[ $cart_product_id ] ) ) {
+				$per_item_cost = $distributed_over[ $cart_product_id ] - $product->get_total();
+			} else {
+				$per_item_cost = 0;
 			}
 
 			$per_product = new ITE_Base_Shipping_Line_Item(

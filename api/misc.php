@@ -1,7 +1,8 @@
 <?php
 /**
  * These are hooks that add-ons should use for form actions
- * @since 0.3.7
+ *
+ * @since   0.3.7
  * @package IT_Exchange
  */
 
@@ -32,30 +33,41 @@ function it_exchange_php_date_format_to_jquery_datepicker_format( $date_format )
 	//http://api.jqueryui.com/datepicker/#utility-formatDate
 	$php_format = array(
 		//day
-		'/d/', //Day of the month, 2 digits with leading zeros
-		'/D/', //A textual representation of a day, three letters
-		'/j/', //Day of the month without leading zeros
-		'/l/', //A full textual representation of the day of the week
+		'/d/',
+		//Day of the month, 2 digits with leading zeros
+		'/D/',
+		//A textual representation of a day, three letters
+		'/j/',
+		//Day of the month without leading zeros
+		'/l/',
+		//A full textual representation of the day of the week
 		//'/N/', //ISO-8601 numeric representation of the day of the week (added in PHP 5.1.0)
 		//'/S/', //English ordinal suffix for the day of the month, 2 characters
 		//'/w/', //Numeric representation of the day of the week
-		'/z/', //The day of the year (starting from 0)
+		'/z/',
+		//The day of the year (starting from 0)
 
 		//week
 		//'/W/', //ISO-8601 week number of year, weeks starting on Monday (added in PHP 4.1.0)
 
 		//month
-		'/F/', //A full textual representation of a month, such as January or March
-		'/m/', //Numeric representation of a month, with leading zeros
-		'/M/', //A short textual representation of a month, three letters
-		'/n/', //numeric month no leading zeros
+		'/F/',
+		//A full textual representation of a month, such as January or March
+		'/m/',
+		//Numeric representation of a month, with leading zeros
+		'/M/',
+		//A short textual representation of a month, three letters
+		'/n/',
+		//numeric month no leading zeros
 		//'t/', //Number of days in the given month
 
 		//year
 		//'/L/', //Whether it's a leap year
 		//'/o/', //ISO-8601 year number. This has the same value as Y, except that if the ISO week number (W) belongs to the previous or next year, that year is used instead. (added in PHP 5.1.0)
-		'/Y/', //A full numeric representation of a year, 4 digits
-		'/y/', //A two digit representation of a year
+		'/Y/',
+		//A full numeric representation of a year, 4 digits
+		'/y/',
+		//A two digit representation of a year
 	);
 
 	$datepicker_format = array(
@@ -92,7 +104,7 @@ function it_exchange_php_date_format_to_jquery_datepicker_format( $date_format )
 /**
  * Convert a PHP date format to one usable by Moment.js
  *
- * @link http://stackoverflow.com/a/30192680
+ * @link  http://stackoverflow.com/a/30192680
  *
  * @since 2.0.0
  *
@@ -896,7 +908,7 @@ function it_exchange_convert_country_code( $code ) {
 	}
 
 	if ( isset( $codes[ $code ] ) ) {
-		return $codes[$code];
+		return $codes[ $code ];
 	}
 
 	return false;
@@ -1032,4 +1044,38 @@ function it_exchange_get_upgrade_log_file( $upgrade ) {
 		$upgrade,
 		admin_url( 'admin.php?page=it-exchange-tools' )
 	);
+}
+
+/**
+ * Proportionally distribute a cost amongst multiple items.
+ *
+ * @since 2.0.0
+ *
+ * @param int|float $cost  Cost to distribute. Can be negative.
+ * @param array     $items Array of current item totals.
+ *
+ * @return array An array of items with their new totals. Keys will be maintained.
+ */
+function it_exchange_proportionally_distribute_cost( $cost, array $items ) {
+
+	if ( empty( $items ) || empty( $cost ) ) {
+		return $items;
+	}
+
+	if ( count( $items ) === 1 ) {
+		reset( $items );
+		$k = key( $items );
+		$items[ $k ] += $cost;
+
+		return $items;
+	}
+
+	$sum      = array_sum( $items );
+	$interval = $cost / $sum;
+
+	foreach ( $items as $k => $v ) {
+		$items[$k] += $v * $interval;
+	}
+
+	return $items;
 }
