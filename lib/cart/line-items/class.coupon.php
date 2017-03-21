@@ -325,6 +325,17 @@ class ITE_Coupon_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Lin
 	/**
 	 * @inheritDoc
 	 */
+	public function freeze() {
+		parent::freeze();
+
+		foreach ( $this->get_coupon()->get_data_for_transaction_object() as $k => $v ) {
+			$this->set_param( $k, $v );
+		}
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function get_type( $label = false ) { return $label ? __( 'Coupon', 'it-l10n-ithemes-exchange' ) : 'coupon'; }
 
 	/**

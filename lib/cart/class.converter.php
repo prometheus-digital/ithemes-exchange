@@ -401,64 +401,79 @@ class ITE_Line_Item_Transaction_Object_Converter {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param array[]                               $coupons
-	 * @param float                                 $coupons_total
+	 * @param array[]                               $coupon_types
+	 * @param float                                 $total
 	 * @param \ITE_Cart_Product[]                   $products
 	 * @param \ITE_Line_Item_Transaction_Repository $repository
 	 */
 	protected function coupons(
-		$coupons,
-		$coupons_total,
+		$coupon_types,
+		$total,
 		array $products,
 		ITE_Line_Item_Transaction_Repository $repository
 	) {
 
-		// This is horrifically inaccurate, but no worse than what we had before
-		$coupons_total /= count( $products ) / count( $coupons );
+		$total_coupons = 0;
 
-		foreach ( $coupons as $coupon_data ) {
+		foreach ( $coupon_types as $coupons ) {
+			$total_coupons += count( $coupons );
+		}
 
-			if ( empty( $coupon_data['id'] ) ) {
-				continue;
-			}
+		$distribute_over = array();
 
-			$item = new ITE_Coupon_Line_Item(
-				md5( $coupon_data['code'] ),
-				new ITE_Array_Parameter_Bag( array(
-					'id'   => $coupon_data['id'],
-					'type' => 'cart',
-				) ),
-				new ITE_Array_Parameter_Bag( array(
-					'name'         => __( 'Savings', 'it-l10n-ithemes-exchange' ),
-					'description'  => $coupon_data['code'],
-					'amount'       => 0,
-					'quantity'     => 1,
-					'total'        => 0,
-					'summary_only' => true,
-				) )
-			);
+		foreach ( $products as $product ) {
+			$distribute_over[ $product->get_id() ] = $product->get_total();
+		}
 
-			$repository->save( $item );
+		$distributed_over = it_exchange_proportionally_distribute_cost( $total / $total_coupons, $distribute_over );
 
-			foreach ( $products as $product ) {
-				$scoped = new ITE_Coupon_Line_Item(
-					md5( $coupon_data['code'] . '-' . $product->get_id() ),
-					new ITE_Array_Parameter_Bag( array(
-						'id'   => $coupon_data['id'],
-						'type' => 'cart',
-					) ),
+		foreach ( $coupon_types as $coupon_type => $coupons ) {
+
+			foreach ( $coupons as $coupon_data ) {
+
+				if ( empty( $coupon_data['id'] ) ) {
+					continue;
+				}
+
+				$item = new ITE_Coupon_Line_Item(
+					md5( $coupon_data['code'] ),
+					new ITE_Array_Parameter_Bag( array_merge( array( 'type' => $coupon_type, ), $coupon_data ) ),
 					new ITE_Array_Parameter_Bag( array(
 						'name'         => __( 'Savings', 'it-l10n-ithemes-exchange' ),
 						'description'  => $coupon_data['code'],
-						'amount'       => $coupons_total,
+						'amount'       => 0,
 						'quantity'     => 1,
-						'total'        => $coupons_total,
+						'total'        => 0,
 						'summary_only' => true,
 					) )
 				);
-				$scoped->set_aggregate( $product );
 
-				$product->add_item( $scoped );
+				$item->set_line_item_repository( $repository );
+				$repository->save( $item );
+
+				foreach ( $products as $product ) {
+
+					$per_product_amount = $distributed_over[ $product->get_id() ];
+					$per_product_amount -= $product->get_total();
+					$per_product_amount *= - 1;
+
+					$scoped = new ITE_Coupon_Line_Item(
+						md5( $coupon_data['code'] . '-' . $product->get_id() ),
+						new ITE_Array_Parameter_Bag( array_merge( array( 'type' => $coupon_type, ), $coupon_data ) ),
+						new ITE_Array_Parameter_Bag( array(
+							'name'         => __( 'Savings', 'it-l10n-ithemes-exchange' ),
+							'description'  => $coupon_data['code'],
+							'amount'       => $per_product_amount,
+							'quantity'     => 1,
+							'total'        => $per_product_amount,
+							'summary_only' => true,
+						) )
+					);
+					$scoped->set_aggregate( $product );
+					$scoped->set_line_item_repository( $repository );
+
+					$product->add_item( $scoped );
+				}
 			}
 		}
 

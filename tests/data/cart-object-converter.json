@@ -191,5 +191,58 @@
     },
     "shipping_total": 500,
     "customer_order_notes": ""
+  },
+  "couponSingleProduct": {
+    "cart_id": "144830620408735653661c15535",
+    "total": "23.75",
+    "sub_total": "25.00",
+    "currency": "USD",
+    "description": "My Product",
+    "products": {
+      "8-40cd750bba9870f18aada2478b24840a": {
+        "product_cart_id": "8-40cd750bba9870f18aada2478b24840a",
+        "product_id": 8,
+        "itemized_data": "a:0:{}",
+        "additional_data": "a:0:{}",
+        "itemized_hash": "40cd750bba9870f18aada2478b24840a",
+        "count": 1,
+        "product_base_price": "25.00",
+        "product_subtotal": 25,
+        "product_name": "My Product"
+      }
+    },
+    "coupons": {
+      "cart": {
+        "5OFF": {
+          "id": 89,
+          "title": "5 Off",
+          "code": "5OFF",
+          "amount_number": "5.00",
+          "amount_type": "%",
+          "start_date": "",
+          "end_date": ""
+        }
+      }
+    },
+    "coupons_total_discount": 1.25,
+    "taxes_formated": "$0.00",
+    "taxes_raw": 0,
+    "billing_address": {
+      "first-name": "Timothy",
+      "last-name": "Jacobs",
+      "company-name": "",
+      "address1": "69 Tiemann Place Apt. 64",
+      "address2": "64",
+      "city": "New York",
+      "state": "NY",
+      "zip": "10027",
+      "country": "US",
+      "email": "",
+      "phone": ""
+    },
+    "shipping_address": {},
+    "shipping_method": "",
+    "shipping_method_multi": [],
+    "shipping_total": 0
   }
 }
