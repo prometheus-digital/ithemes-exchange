@@ -612,6 +612,10 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 			$purchase_args['customer_email'] = $customer->get_email();
 		}
 
+		if ( $cart ) {
+			$purchase_args['currency'] = $cart->get_currency_code();
+		}
+
 		$transaction = IT_Exchange_Transaction::create( $purchase_args );
 
 		$repo = new ITE_Line_Item_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction );
@@ -806,6 +810,10 @@ function it_exchange_add_child_transaction( $method, $method_id, $status = 'pend
 			$purchase_args['card_redacted'] = $card->get_redacted_number();
 			$purchase_args['card_month']    = $card->get_expiration_month();
 			$purchase_args['card_year']     = $card->get_expiration_year();
+		}
+
+		if ( $cart ) {
+			$purchase_args['currency'] = $cart->get_currency_code();
 		}
 
 		$transaction = IT_Exchange_Transaction::create( $purchase_args );

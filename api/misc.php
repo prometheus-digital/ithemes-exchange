@@ -1079,3 +1079,17 @@ function it_exchange_proportionally_distribute_cost( $cost, array $items ) {
 
 	return $items;
 }
+
+/**
+ * Get the default currency for the store.
+ *
+ * @since 2.0.0
+ *
+ * @return string
+ */
+function it_exchange_get_default_currency() {
+
+	$settings = it_exchange_get_option( 'settings_general' );
+
+	 return $settings['default-currency'];
+}

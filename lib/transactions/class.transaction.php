@@ -36,6 +36,7 @@ use IronBound\DB\Relations\HasMany;
  * @property-read stdClass                             $cart_details // Internal
  * @property-read Collection|IT_Exchange_Transaction[] $children
  * @property-read Collection|ITE_Refund[]              $refunds
+ * @property string                                    $currency
  */
 class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_Prorate_Credit_Provider {
 
@@ -253,7 +254,8 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 			'order_date'     => $post->post_date_gmt,
 			'cleared'        => false,
 			'billing'        => $billing,
-			'shipping'       => $shipping
+			'shipping'       => $shipping,
+			'currency'       => $cart_details->currency,
 		);
 
 		if ( $p = get_post_meta( $post_id, '_it_exchange_parent_tx_id', true ) ) {
@@ -823,10 +825,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	 * @return string
 	 */
 	public function get_currency() {
-		$settings         = it_exchange_get_option( 'settings_general' );
-		$default_currency = $settings['default-currency'];
-
-		$currency = empty( $this->cart_details->currency ) ? $default_currency : $this->cart_details->currency;
+		$currency = $this->currency ?: it_exchange_get_default_currency();
 
 		return apply_filters( 'it_exchange_get_transaction_currency', $currency, $this );
 	}
@@ -1224,6 +1223,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 
 	/**
 	 * @inheritdoc
+	 *
 	 * @param ITE_Prorate_Forever_Credit_Request $request
 	 */
 	public static function handle_prorate_credit_request( ITE_Prorate_Credit_Request $request, ITE_Daily_Price_Calculator $calculator ) {
@@ -1236,7 +1236,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 		$for         = $request->get_product_providing_credit();
 
 		$product_id   = $for->ID;
-		$cart_product = $transaction->get_items( 'product')->filter( function( ITE_Cart_Product $product ) use ( $product_id ) {
+		$cart_product = $transaction->get_items( 'product' )->filter( function ( ITE_Cart_Product $product ) use ( $product_id ) {
 			return $product->get_product() && $product->get_product()->ID == $product_id;
 		} )->first();
 
