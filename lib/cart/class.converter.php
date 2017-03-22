@@ -427,6 +427,8 @@ class ITE_Line_Item_Transaction_Object_Converter {
 
 		$distributed_over = it_exchange_proportionally_distribute_cost( $total / $total_coupons, $distribute_over );
 
+		$per_products = array();
+
 		foreach ( $coupon_types as $coupon_type => $coupons ) {
 
 			foreach ( $coupons as $coupon_data ) {
@@ -474,11 +476,13 @@ class ITE_Line_Item_Transaction_Object_Converter {
 					$scoped->set_line_item_repository( $repository );
 
 					$product->add_item( $scoped );
+
+					$per_products[] = $scoped;
 				}
 			}
 		}
 
-		$repository->save_many( $products );
+		$repository->save_many( $per_products );
 	}
 
 	/**

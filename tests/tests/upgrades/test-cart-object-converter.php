@@ -206,4 +206,64 @@ class Test_IT_Exchange_Upgrades_Cart_Object_Converter extends IT_Exchange_UnitTe
 		$this->assertTrue( $item->has_param( 'end_date' ) );
 		$this->assertEquals( -1.25, $item->get_total() );
 	}
+
+	public function test_coupon_multiple_products() {
+
+		$post        = self::factory()->post->create( array( 'post_type' => 'it_exchange_tran' ) );
+		$cart_object = self::$cartObjects['couponMultipleProducts'];
+		$transaction = $this->getMockBuilder( 'IT_Exchange_Transaction' )->setMethods( array( 'get_ID' ) )->getMock();
+		$transaction->expects( $this->any() )->method( 'get_ID' )->willReturn( $post );
+
+		self::$converter->convert( $cart_object, $transaction );
+
+		$repo  = new ITE_Line_Item_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction );
+		$items = $repo->all();
+
+		$this->assertCount( 2, $items->with_only( 'product' ), 'Product count correct' );
+		
+		/** @var ITE_Cart_Product $p1 */
+		$p1 = $items->get( 'product', '8-40cd750bba9870f18aada2478b24840a' );
+		$this->assertNotNull( $p1 );
+
+		/** @var ITE_Cart_Product $p2 */
+		$p2 = $items->get( 'product', '4-40cd750bba9870f18aada2478b24840a' );
+		$this->assertNotNull( $p2 );
+
+		$this->assertCount( 1, $items->with_only( 'coupon' ), 'Global coupon item added' );
+		$this->assertCount( 1, $p1->get_line_items()->with_only( 'coupon' ), 'Product coupon item added.' );
+		$this->assertCount( 1, $p2->get_line_items()->with_only( 'coupon' ), 'Product coupon item added.' );
+
+		/** @var ITE_Coupon_Line_Item $global */
+		$global = $items->with_only( 'coupon' )->first();
+
+		/** @var ITE_Coupon_Line_Item $c1 */
+		$c1 = $p1->get_line_items()->with_only( 'coupon' )->first();
+		
+		/** @var ITE_Coupon_Line_Item $c2 */
+		$c2 = $p2->get_line_items()->with_only( 'coupon' )->first();
+
+		$this->assertEquals( 'Savings', $global->get_name() );
+		$this->assertEquals( '10OFF', $global->get_description() );
+		$this->assertEquals( '10OFF', $global->get_param( 'code' ) );
+		$this->assertEquals( '%', $global->get_param( 'amount_type' ) );
+		$this->assertTrue( $global->has_param( 'start_date' ) );
+		$this->assertTrue( $global->has_param( 'end_date' ) );
+		$this->assertEquals( 0, $global->get_total() );
+
+		$this->assertEquals( 'Savings', $c1->get_name() );
+		$this->assertEquals( '10OFF', $c1->get_description() );
+		$this->assertEquals( '10OFF', $c1->get_param( 'code' ) );
+		$this->assertEquals( '%', $c1->get_param( 'amount_type' ) );
+		$this->assertTrue( $c1->has_param( 'start_date' ) );
+		$this->assertTrue( $c1->has_param( 'end_date' ) );
+		$this->assertEquals( -3.0, $c1->get_total(), '', .1 );
+
+		$this->assertEquals( 'Savings', $c2->get_name() );
+		$this->assertEquals( '10OFF', $c2->get_description() );
+		$this->assertEquals( '10OFF', $c2->get_param( 'code' ) );
+		$this->assertEquals( '%', $c2->get_param( 'amount_type' ) );
+		$this->assertTrue( $c2->has_param( 'start_date' ) );
+		$this->assertTrue( $c2->has_param( 'end_date' ) );
+		$this->assertEquals( -2.0, $c2->get_total(), '', .1 );
+	}
 }
