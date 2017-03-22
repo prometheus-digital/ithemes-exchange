@@ -9,7 +9,8 @@
 /**
  * Class ITE_Base_Shipping_Line_Item
  */
-class ITE_Base_Shipping_Line_Item extends ITE_Line_Item implements ITE_Shipping_Line_Item, ITE_Taxable_Line_Item, ITE_Line_Item_Repository_Aware, ITE_Cart_Aware {
+class ITE_Base_Shipping_Line_Item extends ITE_Line_Item implements
+	ITE_Shipping_Line_Item, ITE_Taxable_Line_Item, ITE_Line_Item_Repository_Aware, ITE_Cart_Aware, ITE_Scopable_Line_Item {
 
 	/** @var ITE_Aggregate_Line_Item */
 	private $aggregate;
@@ -22,6 +23,9 @@ class ITE_Base_Shipping_Line_Item extends ITE_Line_Item implements ITE_Shipping_
 
 	/** @var ITE_Cart */
 	private $cart;
+
+	/** @var ITE_Base_Shipping_Line_Item */
+	private $scoped_from;
 
 	/**
 	 * Create a new base shipping line item.
@@ -72,6 +76,36 @@ class ITE_Base_Shipping_Line_Item extends ITE_Line_Item implements ITE_Shipping_
 			$this->bag,
 			$include_frozen ? $this->frozen : new ITE_Array_Parameter_Bag()
 		);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function is_scoped() { return (bool) $this->scoped_from; }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function scoped_from() {
+		if ( $this->is_scoped() ) {
+			return $this->scoped_from;
+		}
+
+		throw new UnexpectedValueException( 'Shipping item is not scoped.' );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function set_scoped_from( ITE_Scopable_Line_Item $scoped_from ) {
+		$this->scoped_from = $scoped_from;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function shared_params_in_scope() {
+		return array( 'method', 'provider' );
 	}
 
 	/**

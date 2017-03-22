@@ -536,37 +536,6 @@ class ITE_Line_Item_Transaction_Object_Converter {
 			$distributed_over = it_exchange_proportionally_distribute_cost( $total, $distribute_over );
 		}
 
-		foreach ( $shippable as $product ) {
-
-			if ( $distributed_over ) {
-				$per_item_cost = $distributed_over[ $product->get_id() ] - $product->get_total();
-			} else {
-				$per_item_cost = 0;
-			}
-
-			$per_product = new ITE_Base_Shipping_Line_Item(
-				md5( $method_slug . '-false-' . microtime() ),
-				new ITE_Array_Parameter_Bag( array(
-					'method'    => $method_slug,
-					'provider'  => isset( $options['provider'] ) ? $options['provider'] : '',
-					'cart_wide' => false,
-				) ),
-				new ITE_Array_Parameter_Bag( array(
-					'name'         => $method_label,
-					'description'  => '',
-					'amount'       => $per_item_cost,
-					'quantity'     => 1,
-					'total'        => $per_item_cost,
-					'summary_only' => true
-				) )
-			);
-			$per_product->set_line_item_repository( $repository );
-			$per_product->set_aggregate( $product );
-			$per_products[] = $per_product;
-		}
-
-		$repository->save_many( $per_products );
-
 		$global = new ITE_Base_Shipping_Line_Item(
 			md5( $method_slug . '-true-' . microtime() ),
 			new ITE_Array_Parameter_Bag( array(
@@ -585,6 +554,33 @@ class ITE_Line_Item_Transaction_Object_Converter {
 		);
 		$global->set_line_item_repository( $repository );
 
+		foreach ( $shippable as $product ) {
+
+			if ( $distributed_over ) {
+				$per_item_cost = $distributed_over[ $product->get_id() ] - $product->get_total();
+			} else {
+				$per_item_cost = 0;
+			}
+
+			$per_product = new ITE_Base_Shipping_Line_Item(
+				md5( $method_slug . '-false-' . microtime() ),
+				new ITE_Array_Parameter_Bag( array(	'cart_wide' => false, ) ),
+				new ITE_Array_Parameter_Bag( array(
+					'name'         => $method_label,
+					'description'  => '',
+					'amount'       => $per_item_cost,
+					'quantity'     => 1,
+					'total'        => $per_item_cost,
+					'summary_only' => true
+				) )
+			);
+			$per_product->set_line_item_repository( $repository );
+			$per_product->set_aggregate( $product );
+			$per_product->set_scoped_from( $global );
+			$per_products[] = $per_product;
+		}
+
+		$repository->save_many( $per_products );
 		$repository->save( $global );
 
 		return $global;
@@ -648,26 +644,6 @@ class ITE_Line_Item_Transaction_Object_Converter {
 				$per_item_cost = 0;
 			}
 
-			$per_product = new ITE_Base_Shipping_Line_Item(
-				md5( $method_slug . '-false-' . microtime() ),
-				new ITE_Array_Parameter_Bag( array(
-					'method'    => $method_slug,
-					'provider'  => isset( $options['provider'] ) ? $options['provider'] : '',
-					'cart_wide' => false,
-				) ),
-				new ITE_Array_Parameter_Bag( array(
-					'name'         => $method_label,
-					'description'  => '',
-					'amount'       => $per_item_cost,
-					'quantity'     => 1,
-					'total'        => $per_item_cost,
-					'summary_only' => true
-				) )
-			);
-			$per_product->set_line_item_repository( $repository );
-			$per_product->set_aggregate( $product );
-			$per_products[] = $per_product;
-
 			$global = new ITE_Base_Shipping_Line_Item(
 				md5( $method_slug . '-true-' . microtime() ),
 				new ITE_Array_Parameter_Bag( array(
@@ -687,10 +663,27 @@ class ITE_Line_Item_Transaction_Object_Converter {
 			$global->set_line_item_repository( $repository );
 
 			$globals[] = $global;
+
+			$per_product = new ITE_Base_Shipping_Line_Item(
+				md5( $method_slug . '-false-' . microtime() ),
+				new ITE_Array_Parameter_Bag( array( 'cart_wide' => false, ) ),
+				new ITE_Array_Parameter_Bag( array(
+					'name'         => $method_label,
+					'description'  => '',
+					'amount'       => $per_item_cost,
+					'quantity'     => 1,
+					'total'        => $per_item_cost,
+					'summary_only' => true
+				) )
+			);
+			$per_product->set_line_item_repository( $repository );
+			$per_product->set_aggregate( $product );
+			$per_product->set_scoped_from( $global );
+			$per_products[] = $per_product;
 		}
 
-		$repository->save_many( $per_products );
 		$repository->save_many( $globals );
+		$repository->save_many( $per_products );
 
 		return $per_products;
 	}

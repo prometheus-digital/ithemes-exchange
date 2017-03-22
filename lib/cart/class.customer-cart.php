@@ -1112,8 +1112,12 @@ class ITE_Cart {
 				return false;
 			}
 
-			$for->add_item( ITE_Base_Shipping_Line_Item::create( $method, $provider ) );
-			$this->add_item( ITE_Base_Shipping_Line_Item::create( $method, $provider, true ) );
+			$global = ITE_Base_Shipping_Line_Item::create( $method, $provider, true );
+			$item = ITE_Base_Shipping_Line_Item::create( $method, $provider );
+			$item->set_scoped_from( $global );
+
+			$for->add_item( $item );
+			$this->add_item( $global );
 			$this->get_repository()->save( $for );
 
 			if ( $this->is_current() ) {
@@ -1151,15 +1155,17 @@ class ITE_Cart {
 			return false;
 		}
 
+		$this->add_item( $global = ITE_Base_Shipping_Line_Item::create( $method, $provider, true ) );
+
 		/** @var ITE_Cart_Product $item */
 		foreach ( $this->get_items( 'product' ) as $item ) {
 			if ( $item->get_product()->has_feature( 'shipping' ) ) {
-				$item->add_item( ITE_Base_Shipping_Line_Item::create( $method, $provider ) );
+				$per_item =  ITE_Base_Shipping_Line_Item::create( $method, $provider );
+				$per_item->set_scoped_from( $global );
+				$item->add_item( $per_item );
 				$this->get_repository()->save( $item );
 			}
 		}
-
-		$this->add_item( ITE_Base_Shipping_Line_Item::create( $method, $provider, true ) );
 
 		return true;
 	}
