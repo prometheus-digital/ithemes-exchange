@@ -39,6 +39,7 @@ require_once dirname( __FILE__ ) . '/line-items/interface.taxable.php';
 require_once dirname( __FILE__ ) . '/line-items/interface.shipping.php';
 require_once dirname( __FILE__ ) . '/line-items/interface.discountable.php';
 require_once dirname( __FILE__ ) . '/line-items/interface.quantity-modifiable.php';
+require_once dirname( __FILE__ ) . '/line-items/interface.scopable.php';
 
 require_once dirname( __FILE__ ) . '/line-items/class.cart-product.php';
 require_once dirname( __FILE__ ) . '/line-items/class.simple-tax.php';

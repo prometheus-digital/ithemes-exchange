@@ -470,6 +470,11 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 			}
 		}
 
+		if ( $item instanceof ITE_Scopable_Line_Item && $item->is_scoped() ) {
+			$this->save( $item->scoped_from() );
+			$additional['_scoped_from'] = $item->scoped_from()->get_id();
+		}
+
 		$data = $item instanceof ITE_Cart_Product ? $item->bc() : array(
 			'_params' => $item->get_params(),
 		);
@@ -500,7 +505,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 
 		$class = $data['_class'];
 		$_data = $data;
-		unset( $data['_class'], $data['_parent'], $data['_aggregate'] );
+		unset( $data['_class'], $data['_parent'], $data['_aggregate'], $data['_scoped_from'] );
 
 		if ( ! class_exists( $class ) ) {
 			return null;
@@ -585,6 +590,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 	protected final function set_additional_properties( ITE_Line_Item $item, array $data, ITE_Aggregate_Line_Item $aggregate = null ) {
 		$this->set_repository( $item );
 		$this->set_aggregate( $item, $data, $aggregate );
+		$this->set_scoped_from( $item, $data );
 		$this->set_aggregatables( $item, $data );
 	}
 
@@ -607,6 +613,24 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 
 			if ( $aggregate instanceof ITE_Aggregate_Line_Item ) {
 				$item->set_aggregate( $aggregate );
+			}
+		}
+	}
+
+	/**
+	 * Set the scoped from line item for this item.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param ITE_Line_Item $item
+	 * @param array         $data
+	 */
+	protected final function set_scoped_from( ITE_Line_Item $item, array $data ) {
+		if ( $item instanceof ITE_Scopable_Line_Item && ! empty( $data['_scoped_from'] ) ) {
+			$scoped_from = $this->get( $item->get_type(), $data['_scoped_from'] );
+
+			if ( $scoped_from instanceof ITE_Scopable_Line_Item ) {
+				$item->set_scoped_from( $scoped_from );
 			}
 		}
 	}

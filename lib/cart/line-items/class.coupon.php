@@ -9,9 +9,10 @@
 /**
  * Class ITE_Coupon_Line_Item
  */
-class ITE_Coupon_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Line_Item, ITE_Line_Item_Repository_Aware, ITE_Cart_Aware {
+class ITE_Coupon_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Scopable_Line_Item,
+	ITE_Taxable_Line_Item, ITE_Line_Item_Repository_Aware, ITE_Cart_Aware {
 
-	/** @var IT_Exchange_Coupon */
+	/** @var IT_Exchange_Coupon|null|false */
 	private $coupon;
 
 	/** @var ITE_Aggregate_Line_Item|ITE_Cart_Product */
@@ -26,17 +27,8 @@ class ITE_Coupon_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Lin
 	/** @var ITE_Cart */
 	private $cart;
 
-	/**
-	 * ITE_Coupon_Line_Item constructor.
-	 *
-	 * @param string             $id
-	 * @param \ITE_Parameter_Bag $bag
-	 * @param \ITE_Parameter_Bag $frozen
-	 */
-	public function __construct( $id, ITE_Parameter_Bag $bag, ITE_Parameter_Bag $frozen ) {
-		parent::__construct( $id, $bag, $frozen );
-		$this->coupon = it_exchange_get_coupon( $this->get_param( 'id' ), $this->get_param( 'type' ) );
-	}
+	/** @var ITE_Coupon_Line_Item|null */
+	private $scoped_from;
 
 	/**
 	 * Create a coupon line item.
@@ -108,7 +100,47 @@ class ITE_Coupon_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Lin
 			$coupon->set_cart( $this->cart );
 		}
 
+		$coupon->set_scoped_from( $this );
+
 		return $coupon;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function is_scoped() { return (bool) $this->scoped_from; }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function scoped_from() {
+		if ( $this->is_scoped() ) {
+			return $this->scoped_from;
+		}
+
+		throw new UnexpectedValueException( 'Non scoped line item.' );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function set_scoped_from( ITE_Scopable_Line_Item $scoped_from ) {
+		$this->scoped_from = $scoped_from;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function shared_params_in_scope() {
+
+		// 'type' is a shared param, so to avoid recursion, grab shared params from scoped.
+		if ( $this->is_scoped() ) {
+			return $this->scoped_from()->shared_params_in_scope();
+		}
+
+		$coupon_class = it_exchange_get_coupon_type_class( $this->get_param( 'type' ) );
+
+		return $coupon_class::supported_data_for_transaction_object();
 	}
 
 	/**
@@ -364,7 +396,14 @@ class ITE_Coupon_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Lin
 	 *
 	 * @return \IT_Exchange_Coupon
 	 */
-	public function get_coupon() { return $this->coupon; }
+	public function get_coupon() {
+
+		if ( $this->coupon === null ) {
+			$this->coupon = it_exchange_get_coupon( $this->get_param( 'id' ), $this->get_param( 'type' ) );
+		}
+
+		return $this->coupon ?: null;
+	}
 
 	/**
 	 * @inheritdoc

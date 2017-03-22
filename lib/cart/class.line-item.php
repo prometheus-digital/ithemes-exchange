@@ -121,6 +121,7 @@ abstract class ITE_Line_Item implements ITE_Parameter_Bag {
 			$total = $this->get_amount() * $this->get_quantity();
 		}
 
+		// This is crap, but kind of unavoidable without using traits which are PHP 5.4
 		if ( $this instanceof ITE_Aggregate_Line_Item ) {
 			foreach ( $this->get_line_items()->non_summary_only() as $item ) {
 				$total += $item->get_total();
@@ -185,25 +186,65 @@ abstract class ITE_Line_Item implements ITE_Parameter_Bag {
 	/**
 	 * @inheritDoc
 	 */
-	public function get_params() { return $this->bag->get_params(); }
+	public function get_params() {
+		$params = $this->bag->get_params();
+
+		// Again, we shouldn't be doing it this way, but we don't have traits and this makes client code easier.
+		if ( $this instanceof ITE_Scopable_Line_Item && $this->is_scoped() ) {
+			$scoped_params = $this->scoped_from()->get_params();
+			$shared        = $this->shared_params_in_scope();
+
+			$params = array_merge( $params, array_intersect_key( $scoped_params, array_flip( $shared ) ) );
+		}
+
+		return $params;
+	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function has_param( $param ) { return $this->bag->has_param( $param ); }
+	public function has_param( $param ) {
+
+		if ( $this instanceof ITE_Scopable_Line_Item && $this->is_scoped() && in_array( $param, $this->shared_params_in_scope() ) ) {
+			return $this->scoped_from()->has_param( $param );
+		}
+
+		return $this->bag->has_param( $param );
+	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function get_param( $param ) { return $this->bag->get_param( $param ); }
+	public function get_param( $param ) {
+
+		if ( $this instanceof ITE_Scopable_Line_Item && $this->is_scoped() && in_array( $param, $this->shared_params_in_scope() ) ) {
+			return $this->scoped_from()->get_param( $param );
+		}
+
+		return $this->bag->get_param( $param );
+	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function set_param( $param, $value ) { return $this->bag->set_param( $param, $value ); }
+	public function set_param( $param, $value ) {
+
+		if ( $this instanceof ITE_Scopable_Line_Item && $this->is_scoped() && in_array( $param, $this->shared_params_in_scope() ) ) {
+			return $this->scoped_from()->set_param( $param, $value );
+		}
+
+		return $this->bag->set_param( $param, $value );
+	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function remove_param( $param ) { return $this->bag->remove_param( $param ); }
+	public function remove_param( $param ) {
+
+		if ( $this instanceof ITE_Scopable_Line_Item && $this->is_scoped() && in_array( $param, $this->shared_params_in_scope() ) ) {
+			return $this->scoped_from()->remove_param( $param );
+		}
+
+		return $this->bag->remove_param( $param );
+	}
 }

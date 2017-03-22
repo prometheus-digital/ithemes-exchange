@@ -101,7 +101,7 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 	 * @since 2.0.0
 	 *
 	 * @param \ITE_Line_Item $item
-	 * @param bool           $save_parent
+	 * @param bool           $save_parents
 	 * @param array          $search        Instead of querying the database for models, pass an array of models keyed
 	 *                                      by their ID, keyed by the type instead. Ex. [ 'product' => [ id => model,
 	 *                                      id => model ], 'tax' => [ id => model ] ]
@@ -111,9 +111,19 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 	 * @throws \IronBound\DB\Exception
 	 * @throws \UnexpectedValueException
 	 */
-	public function save( ITE_Line_Item $item, $save_parent = true, array $search = array() ) {
+	public function save( ITE_Line_Item $item, $save_parents = true, array $search = array() ) {
 
-		if ( $save_parent && ( $item instanceof ITE_Aggregatable_Line_Item && $item->get_aggregate() ) ) {
+		if ( $save_parents ) {
+			if ( $item instanceof ITE_Aggregatable_Line_Item && $item->get_aggregate() ) {
+				$this->save( $item->get_aggregate(), false, $search );
+			}
+
+			if ( $item instanceof ITE_Scopable_Line_Item && $item->is_scoped() ) {
+				$this->save( $item->scoped_from(), false, $search );
+			}
+		}
+
+		if ( $save_parents && ( $item instanceof ITE_Aggregatable_Line_Item && $item->get_aggregate() ) ) {
 			$this->save( $item->get_aggregate(), false, $search );
 		}
 
@@ -140,9 +150,7 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 			}
 		}
 
-		foreach ( $item->get_params() as $param => $value ) {
-			$model->update_meta( $param, $value );
-		}
+		$this->persist_params( $model, $item );
 
 		if ( $item instanceof ITE_Aggregate_Line_Item ) {
 			$this->save_many( $item->get_line_items()->to_array(), false, $search );
@@ -160,11 +168,13 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 	 *
 	 * @param ITE_Line_Item $item
 	 * @param bool          $include_static_data
-	 * @param bool|array    $search_for_parent
+	 * @param bool|array    $model_search        Whether to search for related models that need to be persisted. If
+	 *                                           true, will query the database for the model. If false, will not query.
+	 *                                           If an array, will look for a model that is keyed by type and then ID.
 	 *
 	 * @return array
 	 */
-	protected function build_attributes_for_item( ITE_Line_Item $item, $include_static_data = false, $search_for_parent = true ) {
+	protected function build_attributes_for_item( ITE_Line_Item $item, $include_static_data = false, $model_search = true ) {
 		$attributes = array(
 			'name'         => $item->get_name(),
 			'description'  => $item->get_description(),
@@ -179,21 +189,42 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 			return $attributes;
 		}
 
-		if ( $search_for_parent !== false && $item instanceof ITE_Aggregatable_Line_Item && $item->get_aggregate() ) {
+		if ( $model_search !== false ) {
 
-			$parent = null;
+			if ( $item instanceof ITE_Aggregatable_Line_Item && $item->get_aggregate() ) {
 
-			/** @var ITE_Line_Item|ITE_Aggregate_Line_Item $aggregate */
-			$aggregate = $item->get_aggregate();
+				$parent = null;
 
-			if ( is_array( $search_for_parent ) && isset( $search_for_parent[ $aggregate->get_type() ][ $aggregate->get_id() ] ) ) {
-				$parent = $search_for_parent[ $aggregate->get_type() ][ $aggregate->get_id() ];
-			} else {
-				$parent = $this->find_model_for_item( $aggregate );
+				/** @var ITE_Line_Item|ITE_Aggregate_Line_Item $aggregate */
+				$aggregate = $item->get_aggregate();
+
+				if ( is_array( $model_search ) && isset( $model_search[ $aggregate->get_type() ][ $aggregate->get_id() ] ) ) {
+					$parent = $model_search[ $aggregate->get_type() ][ $aggregate->get_id() ];
+				} else {
+					$parent = $this->find_model_for_item( $aggregate );
+				}
+
+				if ( $parent ) {
+					$attributes['_parent'] = $parent->get_pk();
+				}
 			}
 
-			if ( $parent ) {
-				$attributes['_parent'] = $parent->get_pk();
+			if ( $item instanceof ITE_Scopable_Line_Item && $item->is_scoped() ) {
+
+				/** @var ITE_Line_Item|ITE_Scopable_Line_Item $scoped_from */
+				$scoped_from = $item->scoped_from();
+
+				$scoped_from_model = null;
+
+				if ( is_array( $model_search ) && isset( $model_search[ $scoped_from->get_type() ][ $scoped_from->get_id() ] ) ) {
+					$scoped_from_model = $model_search[ $scoped_from->get_type() ][ $scoped_from->get_id() ];
+				} else {
+					$scoped_from_model = $this->find_model_for_item( $scoped_from );
+				}
+
+				if ( $scoped_from_model ) {
+					$attributes['_scoped_from'] = $scoped_from_model->get_pk();
+				}
 			}
 		}
 
@@ -211,17 +242,17 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 	 * @since 2.0.0
 	 *
 	 * @param ITE_Line_Item[] $items
-	 * @param bool            $save_parents
+	 * @param bool            $save_parentss
 	 * @param array           $search Instead of querying the database for models, pass an array of models keyed by
 	 *                                their ID, keyed by the type instead. Ex. [ 'product' => [ id => model, id =>
 	 *                                model ], 'tax' => [ id => model ] ]
 	 *
 	 * @return bool
 	 */
-	public function save_many( array $items, $save_parents = true, array $search = array() ) {
+	public function save_many( array $items, $save_parentss = true, array $search = array() ) {
 
 		if ( count( $items ) === 1 ) {
-			return $this->save( reset( $items ), $save_parents, $search );
+			return $this->save( reset( $items ), $save_parentss, $search );
 		}
 
 		$map = array();
@@ -279,7 +310,7 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 		}
 
 		foreach ( $items as $item ) {
-			$this->save( $item, $save_parents, $models );
+			$this->save( $item, $save_parentss, $models );
 		}
 
 		return true;
@@ -377,14 +408,44 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 				/** @var ITE_Transaction_Line_Item_Model $model */
 				$model = $done[ $item->get_type() ][ $item->get_id() ];
 
-				foreach ( $item->get_params() as $key => $value ) {
-					$model->add_meta( $key, $value );
-				}
+				$this->persist_params( $model, $item, true );
 			} else {
 				$this->save( $item );
 			}
 		}
 
+	}
+
+	/**
+	 * Persist meta to a model.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param ITE_Transaction_Line_Item_Model $model
+	 * @param ITE_Line_Item                   $item
+	 * @param bool                            $add
+	 */
+	protected function persist_params( ITE_Transaction_Line_Item_Model $model, ITE_Line_Item $item, $add = false ) {
+
+		$meta      = $item->get_params();
+		$blacklist = array();
+
+		if ( $item instanceof ITE_Scopable_Line_Item && $item->is_scoped() ) {
+			$blacklist = array_flip( $item->shared_params_in_scope() );
+		}
+
+		foreach ( $meta as $key => $value ) {
+
+			if ( isset( $blacklist[ $key ] ) ) {
+				continue;
+			}
+
+			if ( $add ) {
+				$model->add_meta( $key, $value );
+			} else {
+				$model->update_meta( $key, $value );
+			}
+		}
 	}
 
 	/**
@@ -531,6 +592,7 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 	) {
 		$this->set_repository( $item );
 		$this->set_aggregate( $item, $model, $aggregate );
+		$this->set_scoped_from( $item, $model );
 		$this->set_aggregatables( $item, $model );
 	}
 
@@ -556,6 +618,25 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 
 			if ( $aggregate instanceof ITE_Aggregate_Line_Item ) {
 				$item->set_aggregate( $aggregate );
+			}
+		}
+	}
+
+	/**
+	 * Set the scoped from item for a line item.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param \ITE_Line_Item                   $item
+	 * @param \ITE_Transaction_Line_Item_Model $model
+	 */
+	protected final function set_scoped_from( ITE_Line_Item $item, ITE_Transaction_Line_Item_Model $model ) {
+
+		if ( $item instanceof ITE_Scopable_Line_Item && $model->_scoped_from ) {
+			$scoped_from = $this->model_to_item( $model->_scoped_from );
+
+			if ( $scoped_from instanceof ITE_Scopable_Line_Item ) {
+				$item->set_scoped_from( $scoped_from );
 			}
 		}
 	}

@@ -435,7 +435,7 @@ class ITE_Line_Item_Transaction_Object_Converter {
 					continue;
 				}
 
-				$item = new ITE_Coupon_Line_Item(
+				$global = new ITE_Coupon_Line_Item(
 					md5( $coupon_data['code'] ),
 					new ITE_Array_Parameter_Bag( array_merge( array( 'type' => $coupon_type, ), $coupon_data ) ),
 					new ITE_Array_Parameter_Bag( array(
@@ -448,8 +448,8 @@ class ITE_Line_Item_Transaction_Object_Converter {
 					) )
 				);
 
-				$item->set_line_item_repository( $repository );
-				$repository->save( $item );
+				$global->set_line_item_repository( $repository );
+				$repository->save( $global );
 
 				foreach ( $products as $product ) {
 
@@ -459,7 +459,7 @@ class ITE_Line_Item_Transaction_Object_Converter {
 
 					$scoped = new ITE_Coupon_Line_Item(
 						md5( $coupon_data['code'] . '-' . $product->get_id() ),
-						new ITE_Array_Parameter_Bag( array_merge( array( 'type' => $coupon_type, ), $coupon_data ) ),
+						new ITE_Array_Parameter_Bag(),
 						new ITE_Array_Parameter_Bag( array(
 							'name'         => __( 'Savings', 'it-l10n-ithemes-exchange' ),
 							'description'  => $coupon_data['code'],
@@ -469,6 +469,7 @@ class ITE_Line_Item_Transaction_Object_Converter {
 							'summary_only' => true,
 						) )
 					);
+					$scoped->set_scoped_from( $global );
 					$scoped->set_aggregate( $product );
 					$scoped->set_line_item_repository( $repository );
 

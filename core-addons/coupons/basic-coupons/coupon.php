@@ -195,6 +195,18 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 	}
 
 	/**
+	 * @inheritDoc
+	 */
+	public static function supported_data_for_transaction_object() {
+		return array_merge( parent::supported_data_for_transaction_object(), array(
+			'amount_number',
+			'amount_type',
+			'start_date',
+			'end_date'
+		) );
+	}
+
+	/**
 	 * Validate the coupon.
 	 *
 	 * @since 1.35
@@ -308,8 +320,7 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 
 		try {
 			return new DateTime( $start );
-		}
-		catch ( Exception $e ) {
+		} catch ( Exception $e ) {
 			return null;
 		}
 	}
@@ -347,8 +358,7 @@ class IT_Exchange_Cart_Coupon extends IT_Exchange_Coupon {
 
 		try {
 			return new DateTime( $end );
-		}
-		catch ( Exception $e ) {
+		} catch ( Exception $e ) {
 			return null;
 		}
 	}

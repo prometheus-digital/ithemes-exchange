@@ -614,6 +614,8 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 
 		if ( $cart ) {
 			$purchase_args['currency'] = $cart->get_currency_code();
+		} elseif ( ! empty( $cart_object->currency ) ) {
+			$purchase_args['currency'] = $cart_object->currency;
 		}
 
 		$transaction = IT_Exchange_Transaction::create( $purchase_args );
@@ -814,6 +816,8 @@ function it_exchange_add_child_transaction( $method, $method_id, $status = 'pend
 
 		if ( $cart ) {
 			$purchase_args['currency'] = $cart->get_currency_code();
+		} elseif ( ! empty( $txn_object->currency ) ) {
+			$purchase_args['currency'] = $txn_object->currency;
 		}
 
 		$transaction = IT_Exchange_Transaction::create( $purchase_args );

@@ -9,21 +9,22 @@
 /**
  * Class ITE_Transaction_Line_Item_Model
  *
- * @property int         $pk
- * @property string      $id
- * @property-read string $type
- * @property string      $name
- * @property string      $description
- * @property int         $object_id
- * @property float       $amount
- * @property int         $quantity
- * @property float       $total
- * @property bool        $summary_only
- * @property int         $transaction
- * @property \DateTime   $created_at
- * @property \DateTime   $updated_at
- * @property string      $_class
- * @property int         $_parent
+ * @property int                             $pk
+ * @property string                          $id
+ * @property-read string                     $type
+ * @property string                          $name
+ * @property string                          $description
+ * @property int                             $object_id
+ * @property float                           $amount
+ * @property int                             $quantity
+ * @property float                           $total
+ * @property bool                            $summary_only
+ * @property int                             $transaction
+ * @property \DateTime                       $created_at
+ * @property \DateTime                       $updated_at
+ * @property string                          $_class
+ * @property int                             $_parent
+ * @property ITE_Transaction_Line_Item_Model $_scoped_from
  */
 class ITE_Transaction_Line_Item_Model extends \IronBound\DB\Extensions\Meta\ModelWithMeta {
 
@@ -75,6 +76,10 @@ class ITE_Transaction_Line_Item_Model extends \IronBound\DB\Extensions\Meta\Mode
 				wp_cache_delete( $model->get_pk(), ITE_Transaction_Line_Item_Model::CHILDREN_KEY );
 			}
 		} );
+	}
+
+	public function __scoped_from_relation() {
+		return new \IronBound\DB\Relations\HasParent( '_scoped_from', $this );
 	}
 
 	/**

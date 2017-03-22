@@ -57,6 +57,7 @@ class ITE_Transaction_Line_Item_Table extends BaseTable implements TimestampedTa
 			'updated_at'   => new DateTime( 'updated_at' ),
 			'_class'       => new StringBased( 'VARCHAR', '_class', array(), array( 255 ) ),
 			'_parent'      => new IntegerBased( 'BIGINT', '_parent', array(), array( 20 ) ),
+			'_scoped_from' => new IntegerBased( 'BIGINT', '_scoped_from', array(), array( 20 ) ),
 		);
 
 		return $this->columns;
@@ -82,6 +83,7 @@ class ITE_Transaction_Line_Item_Table extends BaseTable implements TimestampedTa
 			'updated_at'   => '',
 			'_class'       => '',
 			'_parent'      => 0,
+			'_scoped_from' => 0,
 		);
 	}
 
@@ -90,7 +92,7 @@ class ITE_Transaction_Line_Item_Table extends BaseTable implements TimestampedTa
 	 */
 	protected function get_keys() {
 
-		$keys = parent::get_keys();
+		$keys   = parent::get_keys();
 		$keys[] = 'KEY transaction__type__id (transaction,type,id)';
 
 		return $keys;

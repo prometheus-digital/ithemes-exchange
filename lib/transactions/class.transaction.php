@@ -10,6 +10,7 @@ use IronBound\DB\Model;
 use IronBound\DB\Relations\HasForeign;
 use IronBound\DB\Relations\HasForeignPost;
 use IronBound\DB\Relations\HasMany;
+use IronBound\DB\Relations\HasParent;
 
 /**
  * Merges a WP Post with iThemes Exchange Transaction data
@@ -1189,7 +1190,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	}
 
 	protected function _parent_relation() {
-		return new HasForeign( 'parent', $this, get_class() );
+		return new HasParent( 'parent', $this );
 	}
 
 	protected function _children_relation() {

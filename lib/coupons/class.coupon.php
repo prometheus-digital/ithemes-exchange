@@ -395,6 +395,17 @@ class IT_Exchange_Coupon implements ITE_Object, ArrayAccess, Countable, Iterator
 	}
 
 	/**
+	 * Get a list of all the keys that can be provided by ::get_data_for_transaction_object().
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return string[]
+	 */
+	public static function supported_data_for_transaction_object() {
+		return array( 'id', 'code', 'type' );
+	}
+
+	/**
 	 * Get the Coupon ID.
 	 *
 	 * @since 1.33
