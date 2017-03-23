@@ -116,8 +116,8 @@ $dtf      = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 
 		$items = $txn->get_items()->non_summary_only();
 
-		if ( ! $items->count() && $txn->has_parent() ) {
-			$items = $txn->get_parent()->get_items();
+		if ( ! $items->count() && $txn->parent ) {
+			$items = $txn->parent->get_items()->non_summary_only();
 		}
 
 		$product_items = $items->with_only( 'product' );
