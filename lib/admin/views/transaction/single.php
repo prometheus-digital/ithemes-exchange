@@ -114,14 +114,14 @@ $dtf      = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 		</div>
 		<?php
 
-		$items = $txn->get_items();
+		$items = $txn->get_items()->non_summary_only();
 
 		if ( ! $items->count() && $txn->has_parent() ) {
 			$items = $txn->get_parent()->get_items();
 		}
 
 		$product_items = $items->with_only( 'product' );
-		$other_items   = $items->without( 'product', 'shipping' );
+		$other_items   = $items->without( 'product' );
 
 		$download_index = it_exchange_get_transaction_download_hash_index( $txn );
 		?>
