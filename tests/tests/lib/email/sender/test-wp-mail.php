@@ -41,7 +41,7 @@ class Test_IT_Exchange_Lib_Email_Sender_WP_Mail extends IT_Exchange_UnitTestCase
 		$bcc->method( 'get_email' )->willReturn( 'bcc@example.org' );
 		$bcc->method( 'get_full_name' )->willReturn( 'Some Girl' );
 
-		$sendable = $this->getMock( 'IT_Exchange_Sendable' );
+		$sendable = $this->getMockBuilder( 'IT_Exchange_Sendable' )->getMock();
 		$sendable->method( 'get_subject' )->willReturn( 'Subject' );
 		$sendable->method( 'get_body' )->willReturn( 'Body' );
 		$sendable->method( 'get_recipient' )->willReturn( $recipient );

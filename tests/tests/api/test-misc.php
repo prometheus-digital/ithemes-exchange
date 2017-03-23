@@ -544,7 +544,7 @@ class IT_Exchange_API_Misc_Test extends IT_Exchange_UnitTestCase {
 	 */
 	public function test_send_email_original_recipient_object_kept() {
 
-		$recipient = $this->getMock( 'IT_Exchange_Email_Recipient' );
+		$recipient = $this->getMockBuilder( 'IT_Exchange_Email_Recipient' )->getMock();
 
 		$sender = $this->getMockBuilder( 'IT_Exchange_Email_Sender' )->setMethods( array( 'send', 'bulk_send' ) )->getMock();
 		$sender->expects( $this->once() )->method( 'send' )->with( $this->callback( function ( $sendable ) use ( $recipient ) {

@@ -203,7 +203,9 @@ class IT_Exchange_Sale_Schedule extends IT_Exchange_Product_Feature_Abstract {
 		$start = get_post_meta( $product_id, '_it_exchange_sale_schedule_start', true );
 		$end   = get_post_meta( $product_id, '_it_exchange_sale_schedule_end', true );
 
-		$raw_meta = ITUtility::merge_defaults( get_post_meta( $product_id, '_it_exchange_sale_schedule', true ), array(
+		$config = get_post_meta( $product_id, '_it_exchange_sale_schedule', true ) ?: array();
+
+		$raw_meta = ITUtility::merge_defaults( $config , array(
 			'enable_start' => false,
 			'enable_end'   => false,
 			'start'        => '',

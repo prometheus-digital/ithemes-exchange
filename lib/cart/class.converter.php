@@ -682,8 +682,8 @@ class ITE_Line_Item_Transaction_Object_Converter {
 			$per_products[] = $per_product;
 		}
 
-		$repository->save_many( $globals );
 		$repository->save_many( $per_products );
+		$repository->save_many( $globals );
 
 		return $per_products;
 	}

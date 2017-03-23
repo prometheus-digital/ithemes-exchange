@@ -18,7 +18,7 @@
         "asika/autolink": "dev-master",
         "ironbound/db": "^2.0.0",
         "ironbound/wpevents": "^1.0",
-        "justinrainbow/json-schema": "^5.0",
+        "justinrainbow/json-schema": "5.1",
         "firebase/php-jwt": "^4.0"
     },
     "repositories": [

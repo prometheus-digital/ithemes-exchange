@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "bf684219a2378852cd1561a7edff433c",
+    "content-hash": "0c41a515ce000d41b91f179524a6936d",
     "packages": [
         {
             "name": "asika/autolink",
@@ -504,7 +504,7 @@
                 "GPL-2.0+"
             ],
             "description": "A mocking library to take the pain out of unit testing for WordPress",
-            "time": "2017-02-24T16:42:08+00:00"
+            "time": "2017-02-24 16:42:08"
         },
         {
             "name": "antecedent/patchwork",

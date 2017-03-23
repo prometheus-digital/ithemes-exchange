@@ -26,7 +26,7 @@ class Test_IT_Exchange_Email_Postmark_Sender extends IT_Exchange_UnitTestCase {
 			return $args['message'];
 		} );
 
-		$http = $this->getMock( 'WP_Http' );
+		$http = $this->getMockBuilder( 'WP_Http' )->getMock();
 		$http->method( 'post' )->with( IT_Exchange_Email_Postmark_Sender::URL . 'email', array(
 			'reject_unsafe_urls' => true,
 			'headers'            => array(
@@ -35,12 +35,12 @@ class Test_IT_Exchange_Email_Postmark_Sender extends IT_Exchange_UnitTestCase {
 				'X-Postmark-Server-Token' => 'token'
 			),
 			'body'               => wp_json_encode( array(
-				'From'     => 'exchange@example.org',
-				'To'       => 'to@example.org',
-				'Subject'  => 'Subject',
-				'HtmlBody' => 'Body',
-				'Cc'       => 'cc@example.org',
-				'Bcc'      => 'bcc@example.org',
+				'From'       => 'exchange@example.org',
+				'To'         => 'to@example.org',
+				'Subject'    => 'Subject',
+				'HtmlBody'   => 'Body',
+				'Cc'         => 'cc@example.org',
+				'Bcc'        => 'bcc@example.org',
 				'TrackOpens' => true
 			) )
 		) );
@@ -63,7 +63,7 @@ class Test_IT_Exchange_Email_Postmark_Sender extends IT_Exchange_UnitTestCase {
 		$sendable->method( 'get_template' )->willReturn( $template );
 		$sendable->method( 'get_context' )->willReturn( array() );
 
-		$handler = $this->getMock( 'IT_Exchange_Email_Middleware_Handler' );
+		$handler = $this->getMockBuilder( 'IT_Exchange_Email_Middleware_Handler' )->getMock();
 		$handler->expects( $this->once() )->method( 'handle' )->with( $this->callback( function ( $mutable ) use ( $sendable ) {
 
 			if ( ! $mutable instanceof IT_Exchange_Sendable_Mutable_Wrapper ) {
@@ -78,5 +78,5 @@ class Test_IT_Exchange_Email_Postmark_Sender extends IT_Exchange_UnitTestCase {
 		) );
 		$sender->send( $sendable );
 	}
-	
+
 }

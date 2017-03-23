@@ -15,7 +15,7 @@ class Test_IT_Exchange_Email_Middleware_Handler extends IT_Exchange_UnitTestCase
 
 		$sendable = $this->getMockBuilder( 'IT_Exchange_Sendable_Mutable_Wrapper' )->disableOriginalConstructor()->getMock();
 
-		$middleware = $this->getMock( 'IT_Exchange_Email_Middleware', array( 'handle' ) );
+		$middleware = $this->getMockBuilder( 'IT_Exchange_Email_Middleware' )->setMethods( array( 'handle' ) )->getMock();
 		$middleware->expects( $this->once() )->method( 'handle' )->with( $sendable )->willReturn( true );
 
 		$handler = new IT_Exchange_Email_Middleware_Handler();
@@ -38,10 +38,10 @@ class Test_IT_Exchange_Email_Middleware_Handler extends IT_Exchange_UnitTestCase
 
 		$sendable = $this->getMockBuilder( 'IT_Exchange_Sendable_Mutable_Wrapper' )->disableOriginalConstructor()->getMock();
 
-		$m1 = $this->getMock( 'IT_Exchange_Email_Middleware', array( 'handle' ) );
+		$m1 = $this->getMockBuilder( 'IT_Exchange_Email_Middleware' )->setMethods( array( 'handle' ) )->getMock();
 		$m1->expects( $this->once() )->method( 'handle' )->with( $sendable )->willReturn( false );
 
-		$m2 = $this->getMock( 'IT_Exchange_Email_Middleware', array( 'handle' ) );
+		$m2 = $this->getMockBuilder( 'IT_Exchange_Email_Middleware' )->setMethods( array( 'handle' ) )->getMock();
 		$m2->expects( $this->never() )->method( 'handle' );
 
 		$handler = new IT_Exchange_Email_Middleware_Handler();
@@ -65,13 +65,13 @@ class Test_IT_Exchange_Email_Middleware_Handler extends IT_Exchange_UnitTestCase
 
 		$sendable = $this->getMockBuilder( 'IT_Exchange_Sendable_Mutable_Wrapper' )->disableOriginalConstructor()->getMock();
 
-		$m1 = $this->getMock( 'IT_Exchange_Email_Middleware', array( 'handle' ) );
+		$m1 = $this->getMockBuilder( 'IT_Exchange_Email_Middleware' )->setMethods( array( 'handle' ) )->getMock();
 		$m1->expects( $this->once() )->method( 'handle' )->with( $sendable )->willReturn( true );
 
-		$m2 = $this->getMock( 'IT_Exchange_Email_Middleware', array( 'handle' ) );
+		$m2 = $this->getMockBuilder( 'IT_Exchange_Email_Middleware' )->setMethods( array( 'handle' ) )->getMock();
 		$m2->expects( $this->once() )->method( 'handle' )->willReturn( false );
 
-		$m3 = $this->getMock( 'IT_Exchange_Email_Middleware', array( 'handle' ) );
+		$m3 = $this->getMockBuilder( 'IT_Exchange_Email_Middleware' )->setMethods( array( 'handle' ) )->getMock();
 		$m3->expects( $this->never() )->method( 'handle' );
 
 		$handler = new IT_Exchange_Email_Middleware_Handler();
@@ -96,10 +96,10 @@ class Test_IT_Exchange_Email_Middleware_Handler extends IT_Exchange_UnitTestCase
 
 		$sendable = $this->getMockBuilder( 'IT_Exchange_Sendable_Mutable_Wrapper' )->disableOriginalConstructor()->getMock();
 
-		$m1 = $this->getMock( 'IT_Exchange_Email_Middleware', array( 'handle' ) );
+		$m1 = $this->getMockBuilder( 'IT_Exchange_Email_Middleware' )->setMethods( array( 'handle' ) )->getMock();
 		$m1->expects( $this->once() )->method( 'handle' )->with( $sendable )->willReturn( false );
 
-		$m2 = $this->getMock( 'IT_Exchange_Email_Middleware', array( 'handle' ) );
+		$m2 = $this->getMockBuilder( 'IT_Exchange_Email_Middleware' )->setMethods( array( 'handle' ) )->getMock();
 		$m2->expects( $this->never() )->method( 'handle' );
 
 		$handler = new IT_Exchange_Email_Middleware_Handler();
@@ -124,7 +124,8 @@ class Test_IT_Exchange_Email_Middleware_Handler extends IT_Exchange_UnitTestCase
 		$recipient = $this->getMockForAbstractClass( 'IT_Exchange_Email_Recipient' );
 		$sendable  = new IT_Exchange_Sendable_Mutable_Wrapper( new IT_Exchange_Simple_Email( '', '', $recipient ) );
 
-		$m1 = $this->getMock( 'IT_Exchange_Email_Middleware', array( 'handle' ), array(), 'IT_Exchange_Email_MiddlewareM1' );
+		$m1 = $this->getMockBuilder( 'IT_Exchange_Email_Middleware' )->setMethods( array( 'handle' ) )
+		           ->setMockClassName( 'IT_Exchange_Email_MiddlewareM1' )->getMock();
 		$m1->expects( $this->once() )->method( 'handle' )->with( $this->callback( function ( $sendable ) {
 			return true;
 		} ) )->willReturnCallback( function ( IT_Exchange_Sendable_Mutable_Wrapper $sendable ) {
@@ -134,7 +135,8 @@ class Test_IT_Exchange_Email_Middleware_Handler extends IT_Exchange_UnitTestCase
 			return true;
 		} );
 
-		$m2 = $this->getMock( 'IT_Exchange_Email_Middleware', array( 'handle' ), array(), 'IT_Exchange_Email_MiddlewareM2' );
+		$m2 = $this->getMockBuilder( 'IT_Exchange_Email_Middleware' )->setMethods( array( 'handle' ) )
+		           ->setMockClassName( 'IT_Exchange_Email_MiddlewareM2' )->getMock();
 		$m2->expects( $this->once() )->method( 'handle' )->with( $this->callback(
 			function ( IT_Exchange_Sendable_Mutable_Wrapper $sendable ) {
 				return strpos( $sendable->get_subject(), 'm1' ) === 0;
@@ -145,7 +147,8 @@ class Test_IT_Exchange_Email_Middleware_Handler extends IT_Exchange_UnitTestCase
 			return true;
 		} );
 
-		$m3 = $this->getMock( 'IT_Exchange_Email_Middleware', array( 'handle' ), array(), 'IT_Exchange_Email_MiddlewareM3' );
+		$m3 = $this->getMockBuilder( 'IT_Exchange_Email_Middleware' )->setMethods( array( 'handle' ) )
+		           ->setMockClassName( 'IT_Exchange_Email_MiddlewareM3' )->getMock();
 		$m3->expects( $this->once() )->method( 'handle' )->with( $this->callback(
 			function ( IT_Exchange_Sendable_Mutable_Wrapper $sendable ) {
 				return strpos( $sendable->get_subject(), 'm1m2' ) === 0;
@@ -156,7 +159,8 @@ class Test_IT_Exchange_Email_Middleware_Handler extends IT_Exchange_UnitTestCase
 			return true;
 		} );
 
-		$m4 = $this->getMock( 'IT_Exchange_Email_Middleware', array( 'handle' ), array(), 'IT_Exchange_Email_MiddlewareM4' );
+		$m4 = $this->getMockBuilder( 'IT_Exchange_Email_Middleware' )->setMethods( array( 'handle' ) )
+		           ->setMockClassName( 'IT_Exchange_Email_MiddlewareM4' )->getMock();
 		$m4->expects( $this->once() )->method( 'handle' )->with( $this->callback(
 			function ( IT_Exchange_Sendable_Mutable_Wrapper $sendable ) {
 				return strpos( $sendable->get_subject(), 'm1m2m3' ) === 0;
@@ -167,7 +171,8 @@ class Test_IT_Exchange_Email_Middleware_Handler extends IT_Exchange_UnitTestCase
 			return true;
 		} );
 
-		$m5 = $this->getMock( 'IT_Exchange_Email_Middleware', array( 'handle' ), array(), 'IT_Exchange_Email_MiddlewareM5' );
+		$m5 = $this->getMockBuilder( 'IT_Exchange_Email_Middleware' )->setMethods( array( 'handle' ) )
+		           ->setMockClassName( 'IT_Exchange_Email_MiddlewareM5' )->getMock();
 		$m5->expects( $this->once() )->method( 'handle' )->with( $this->callback(
 			function ( IT_Exchange_Sendable_Mutable_Wrapper $sendable ) {
 				return strpos( $sendable->get_subject(), 'm1m2m3m4' ) === 0;
@@ -178,7 +183,8 @@ class Test_IT_Exchange_Email_Middleware_Handler extends IT_Exchange_UnitTestCase
 			return true;
 		} );
 
-		$m6 = $this->getMock( 'IT_Exchange_Email_Middleware', array( 'handle' ), array(), 'IT_Exchange_Email_MiddlewareM6' );
+		$m6 = $this->getMockBuilder( 'IT_Exchange_Email_Middleware' )->setMethods( array( 'handle' ) )
+		           ->setMockClassName( 'IT_Exchange_Email_MiddlewareM6' )->getMock();
 		$m6->expects( $this->once() )->method( 'handle' )->with( $this->callback(
 			function ( IT_Exchange_Sendable_Mutable_Wrapper $sendable ) {
 				return strpos( $sendable->get_subject(), 'm1m2m3m4m5' ) === 0;
@@ -205,10 +211,10 @@ class Test_IT_Exchange_Email_Middleware_Handler extends IT_Exchange_UnitTestCase
 
 		$sendable = $this->getMockBuilder( 'IT_Exchange_Sendable_Mutable_Wrapper' )->disableOriginalConstructor()->getMock();
 
-		$m1 = $this->getMock( 'IT_Exchange_Email_Middleware', array( 'handle' ) );
+		$m1 = $this->getMockBuilder( 'IT_Exchange_Email_Middleware' )->setMethods( array( 'handle' ) )->getMock();
 		$m1->expects( $this->exactly( 2 ) )->method( 'handle' )->with( $sendable )->willReturn( true );
 
-		$m2 = $this->getMock( 'IT_Exchange_Email_Middleware', array( 'handle' ) );
+		$m2 = $this->getMockBuilder( 'IT_Exchange_Email_Middleware' )->setMethods( array( 'handle' ) )->getMock();
 		$m2->expects( $this->once() )->method( 'handle' )->with( $sendable )->willReturn( true );
 
 		$handler = new IT_Exchange_Email_Middleware_Handler();

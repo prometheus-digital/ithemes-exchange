@@ -105,7 +105,7 @@ class Base extends \IT_Exchange_Product_Feature_Abstract {
 			'terms' => ''
 		);
 
-		$values   = get_post_meta( $product_id, '_it_exchange_itetos_product_terms', true );
+		$values   = get_post_meta( $product_id, '_it_exchange_itetos_product_terms', true ) ?: array();
 		$raw_meta = \ITUtility::merge_defaults( $values, $defaults );
 
 		if ( ! isset( $options['field'] ) ) { // if we aren't looking for a particular field

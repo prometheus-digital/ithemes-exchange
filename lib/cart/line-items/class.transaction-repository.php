@@ -119,12 +119,8 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 			}
 
 			if ( $item instanceof ITE_Scopable_Line_Item && $item->is_scoped() ) {
-				$this->save( $item->scoped_from(), false, $search );
+				$this->save( $item->scoped_from(), $save_parents, $search );
 			}
-		}
-
-		if ( $save_parents && ( $item instanceof ITE_Aggregatable_Line_Item && $item->get_aggregate() ) ) {
-			$this->save( $item->get_aggregate(), false, $search );
 		}
 
 		$old = $this->get( $item->get_type(), $item->get_id() );
@@ -242,17 +238,17 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 	 * @since 2.0.0
 	 *
 	 * @param ITE_Line_Item[] $items
-	 * @param bool            $save_parentss
+	 * @param bool            $save_parents
 	 * @param array           $search Instead of querying the database for models, pass an array of models keyed by
 	 *                                their ID, keyed by the type instead. Ex. [ 'product' => [ id => model, id =>
 	 *                                model ], 'tax' => [ id => model ] ]
 	 *
 	 * @return bool
 	 */
-	public function save_many( array $items, $save_parentss = true, array $search = array() ) {
+	public function save_many( array $items, $save_parents = true, array $search = array() ) {
 
 		if ( count( $items ) === 1 ) {
-			return $this->save( reset( $items ), $save_parentss, $search );
+			return $this->save( reset( $items ), $save_parents, $search );
 		}
 
 		$map = array();
@@ -281,27 +277,11 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 			$can_create_many = true;
 
 			foreach ( $items as $item ) {
-				if ( ! $item instanceof ITE_Aggregatable_Line_Item ) {
-					continue;
+
+				if ( ! $this->can_item_be_created_in_batch( $item, $models ) ) {
+					$can_create_many = false;
+					break;
 				}
-
-				if ( ! $item->get_aggregate() ) {
-					continue;
-				}
-
-				/** @var ITE_Line_Item $aggregate */
-				$aggregate = $item->get_aggregate();
-
-				if ( isset( $map[ $aggregate->get_type() ] ) ) {
-					continue;
-				}
-
-				if ( isset( $map[ $aggregate->get_type() ][ $aggregate->get_id() ] ) ) {
-					continue;
-				}
-
-				$can_create_many = false;
-				break;
 			}
 
 			if ( $can_create_many ) {
@@ -310,7 +290,36 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 		}
 
 		foreach ( $items as $item ) {
-			$this->save( $item, $save_parentss, $models );
+			$this->save( $item, $save_parents, $models );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Can this line item be created in a fatch request.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param ITE_Line_Item $item
+	 * @param array         $models
+	 *
+	 * @return bool
+	 */
+	protected function can_item_be_created_in_batch( ITE_Line_Item $item, array $models ) {
+
+		if ( $item instanceof ITE_Aggregatable_Line_Item && $a = $item->get_aggregate() ) {
+			if ( ! isset( $models[ $a->get_type() ][ $a->get_id() ] ) ) {
+				return false;
+			}
+		}
+
+		if ( $item instanceof ITE_Scopable_Line_Item && $item->is_scoped() ) {
+			$s = $item->scoped_from();
+
+			if ( ! isset( $models[ $s->get_type() ][ $s->get_id() ] ) ) {
+				return false;
+			}
 		}
 
 		return true;
@@ -476,7 +485,7 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 		$query->add_nested_where( function ( \IronBound\DB\Query\FluentQuery $query ) use ( $items ) {
 			foreach ( $items as $type => $ids ) {
 				$query->or_where( 'type', '=', $type, function ( \IronBound\DB\Query\FluentQuery $query ) use ( $ids ) {
-					$query->and_where( 'pk', '=', $ids );
+					$query->and_where( 'id', '=', $ids );
 				} );
 			}
 		} );

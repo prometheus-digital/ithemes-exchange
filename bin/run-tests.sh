@@ -1,9 +1,6 @@
 #!/bin/sh
 
-#dir=$(pwd)
-dir="/app/wordpress-develop/tests/phpunit/"
-
-export WP_TESTS_DIR="$1"
+export WP_DEVELOP_DIR="$1"
 
 shift
 
