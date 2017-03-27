@@ -10,6 +10,8 @@ do_action( 'it_exchange_before_payment_details', $post );
 $settings = it_exchange_get_option( 'settings_general' );
 $currency = it_exchange_get_currency_symbol( $txn->get_currency() );
 $dtf      = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
+
+$items = $txn->get_items();
 ?>
 	<div class="postbox" id="it-exchange-transaction-details">
 	<div class="inside">
@@ -114,14 +116,14 @@ $dtf      = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 		</div>
 		<?php
 
-		$items = $txn->get_items()->non_summary_only();
+		$non_summary = $items->non_summary_only();
 
-		if ( ! $items->count() && $txn->parent ) {
-			$items = $txn->parent->get_items()->non_summary_only();
+		if ( ! $non_summary->count() && $txn->has_parent() ) {
+			$non_summary = $txn->get_parent()->get_items()->non_summary_only();
 		}
 
-		$product_items = $items->with_only( 'product' );
-		$other_items   = $items->without( 'product' );
+		$product_items = $non_summary->with_only( 'product' );
+		$other_items   = $non_summary->without( 'product' );
 
 		$download_index = it_exchange_get_transaction_download_hash_index( $txn );
 		?>
@@ -281,7 +283,9 @@ $dtf      = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 			</div>
 		</div>
 
-		<?php if ( $coupons = it_exchange_get_transaction_coupons( $post ) ) : ?>
+        <?php $coupons = $items->with_only( 'coupon' ); ?>
+
+		<?php if ( $coupons->count() ) : ?>
 			<div class="transaction-costs-coupons right">
 				<div class="transaction-costs-coupon-total-label left"><?php _e( 'Total Discount', 'it-l10n-ithemes-exchange' ); ?></div>
 				<div class="transaction-costs-coupon-total-amount">
@@ -291,12 +295,10 @@ $dtf      = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 				</div>
 			</div>
 			<label><strong><?php _e( 'Coupons', 'it-l10n-ithemes-exchange' ); ?></strong></label>
-			<?php foreach ( $coupons as $type => $coupon ) : ?>
-				<?php foreach ( $coupon as $data ) : ?>
-					<div class="transaction-cost-coupon">
-						<span class="code"><?php echo $data['code'] ?></span>
-					</div>
-				<?php endforeach; ?>
+			<?php foreach ( $coupons as $coupon ) : /** @var ITE_Coupon_Line_Item $coupon */?>
+                <div class="transaction-cost-coupon">
+                    <span class="code"><?php echo $coupon->get_description(); ?></span>
+                </div>
 			<?php endforeach; ?>
 		<?php endif; ?>
 
@@ -320,7 +322,7 @@ $dtf      = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
 							/* translators: $1$s refund amount %2$s refund date. */
 								__( '%1$s on %2$s', 'it-l10n-ithemes-exchange' ),
 								it_exchange_format_price( $refund->amount ),
-								get_date_from_gmt( $refund->created_at->format( DateTime::ISO8601 ), $dtf )
+								get_date_from_gmt( $refund->created_at->format( DateTime::ATOM ), $dtf )
 							) ); ?>
 						</span>
 					</div>
