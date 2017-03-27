@@ -76,6 +76,10 @@ class IT_Exchange_API_Customers_Test extends IT_Exchange_UnitTestCase {
 			'type'  => 'simple-product-type',
 			'title' => 'My Product 4'
 		) );
+		$p5 = it_exchange_add_product( array(
+			'type'  => 'simple-product-type',
+			'title' => 'My Product 5'
+		) );
 
 		$cart = $this->cart();
 		$cart->add_item( ITE_Cart_Product::create( it_exchange_get_product( $p1 ) ) );
@@ -87,6 +91,11 @@ class IT_Exchange_API_Customers_Test extends IT_Exchange_UnitTestCase {
 		$cart->add_item( ITE_Cart_Product::create( it_exchange_get_product( $p3 ) ) );
 
 		$t2 = it_exchange_add_transaction( 'test-method', 'test-method-id-2', 'pending', $cart );
+
+		$cart = $this->cart( self::factory()->user->create() );
+		$cart->add_item( ITE_Cart_Product::create( it_exchange_get_product( $p4 ) ) );
+
+		$t3 = it_exchange_add_transaction( 'test-method', 'test-method-id-2', 'pending', $cart );
 
 		$products = it_exchange_get_customer_products( 1 );
 		$this->assertEquals( 3, count( $products ) );
