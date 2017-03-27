@@ -228,14 +228,14 @@
     "taxes_formated": "$0.00",
     "taxes_raw": 0,
     "billing_address": {
-      "first-name": "Timothy",
-      "last-name": "Jacobs",
       "company-name": "",
-      "address1": "69 Tiemann Place Apt. 64",
-      "address2": "64",
-      "city": "New York",
-      "state": "NY",
-      "zip": "10027",
+      "first-name": "John",
+      "last-name": "Doe",
+      "address1": "123 Main Street",
+      "address2": "",
+      "city": "Edmond",
+      "state": "OK",
+      "zip": "73013",
       "country": "US",
       "email": "",
       "phone": ""
@@ -292,14 +292,85 @@
     "taxes_formated": "$0.00",
     "taxes_raw": 0,
     "billing_address": {
-      "first-name": "Timothy",
-      "last-name": "Jacobs",
       "company-name": "",
-      "address1": "69 Tiemann Place Apt. 64",
-      "address2": "64",
-      "city": "New York",
-      "state": "NY",
-      "zip": "10027",
+      "first-name": "John",
+      "last-name": "Doe",
+      "address1": "123 Main Street",
+      "address2": "",
+      "city": "Edmond",
+      "state": "OK",
+      "zip": "73013",
+      "country": "US",
+      "email": "",
+      "phone": ""
+    },
+    "shipping_address": {},
+    "shipping_method": "",
+    "shipping_method_multi": [],
+    "shipping_total": 0
+  },
+  "multipleCouponsMultipleProducts": {
+    "cart_id": "144830620408735653661c15535",
+    "total": "45.00",
+    "sub_total": "50.00",
+    "currency": "USD",
+    "description": "My First Product, My Second Product",
+    "products": {
+      "8-40cd750bba9870f18aada2478b24840a": {
+        "product_cart_id": "8-40cd750bba9870f18aada2478b24840a",
+        "product_id": 8,
+        "itemized_data": "a:0:{}",
+        "additional_data": "a:0:{}",
+        "itemized_hash": "40cd750bba9870f18aada2478b24840a",
+        "count": 1,
+        "product_base_price": "30.00",
+        "product_subtotal": 30,
+        "product_name": "My First Product"
+      },
+      "4-40cd750bba9870f18aada2478b24840a": {
+        "product_cart_id": "4-40cd750bba9870f18aada2478b24840a",
+        "product_id": 4,
+        "itemized_data": "a:0:{}",
+        "additional_data": "a:0:{}",
+        "itemized_hash": "40cd750bba9870f18aada2478b24840a",
+        "count": 1,
+        "product_base_price": "20.00",
+        "product_subtotal": 20,
+        "product_name": "My Second Product"
+      }
+    },
+    "coupons": {
+      "cart": {
+        "10OFF": {
+          "id": 50,
+          "title": "10 Off",
+          "code": "10OFF",
+          "amount_number": "10.00",
+          "amount_type": "%",
+          "start_date": "",
+          "end_date": ""
+        }
+      },
+      "custom": {
+        "CUSTOM_CODE": {
+          "id": 55,
+          "code": "CUSTOM_CODE",
+          "customProp": "value"
+        }
+      }
+    },
+    "coupons_total_discount": 5.00,
+    "taxes_formated": "$0.00",
+    "taxes_raw": 0,
+    "billing_address": {
+      "company-name": "",
+      "first-name": "John",
+      "last-name": "Doe",
+      "address1": "123 Main Street",
+      "address2": "",
+      "city": "Edmond",
+      "state": "OK",
+      "zip": "73013",
       "country": "US",
       "email": "",
       "phone": ""

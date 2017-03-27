@@ -459,6 +459,8 @@ class ITE_Line_Item_Transaction_Object_Converter {
 					$per_product_amount -= $product->get_total();
 					$per_product_amount *= - 1;
 
+					$props = array_merge( array( 'type' => $coupon_type ), $coupon_data );
+
 					$scoped = new ITE_Coupon_Line_Item(
 						md5( $coupon_data['code'] . '-' . $product->get_id() ),
 						new ITE_Array_Parameter_Bag(),
@@ -474,6 +476,10 @@ class ITE_Line_Item_Transaction_Object_Converter {
 					$scoped->set_scoped_from( $global );
 					$scoped->set_aggregate( $product );
 					$scoped->set_line_item_repository( $repository );
+
+					foreach ( $props as $k => $v ) {
+						$scoped->set_param( $k, $v );
+					}
 
 					$product->add_item( $scoped );
 
