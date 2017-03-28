@@ -259,16 +259,16 @@
         },
         {
             "name": "ironbound/db",
-            "version": "v2.0.1",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iron-bound-designs/IronBound-DB.git",
-                "reference": "072780179e61632fc964e22c1f7de16bc03ffe62"
+                "reference": "a39a04a1bca28a715f10e08592afef5afb6054c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iron-bound-designs/IronBound-DB/zipball/072780179e61632fc964e22c1f7de16bc03ffe62",
-                "reference": "072780179e61632fc964e22c1f7de16bc03ffe62",
+                "url": "https://api.github.com/repos/iron-bound-designs/IronBound-DB/zipball/a39a04a1bca28a715f10e08592afef5afb6054c5",
+                "reference": "a39a04a1bca28a715f10e08592afef5afb6054c5",
                 "shasum": ""
             },
             "require": {
@@ -305,7 +305,7 @@
                 }
             ],
             "description": "Provides models and custom query objects for custom database tables in WordPress.",
-            "time": "2017-02-15T16:17:25+00:00"
+            "time": "2017-03-28T19:57:28+00:00"
         },
         {
             "name": "ironbound/wpevents",

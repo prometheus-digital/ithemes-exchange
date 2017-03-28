@@ -69,7 +69,10 @@ class Address extends Base implements Getable, Putable, Deletable, RouteObjectEx
 		$current = \ITE_Saved_Address::get( $address_id );
 		$address = \ITE_Saved_Address::get( $address_id );
 
-		$address->fill( $request->get_json_params() );
+		// This should actually be protected by the schema, but just in case
+		$address->with_guarded( 'customer', 'type', function( \ITE_Saved_Address $address ) use ( $request ) {
+			$address->fill( $request->get_json_params() );
+		} );
 
 		$type = $current->get_type();
 
