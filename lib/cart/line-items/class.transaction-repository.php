@@ -418,6 +418,8 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 				$model = $done[ $item->get_type() ][ $item->get_id() ];
 
 				$this->persist_params( $model, $item, true );
+
+				$this->events->on_save( $item, null, $this );
 			} else {
 				$this->save( $item );
 			}
