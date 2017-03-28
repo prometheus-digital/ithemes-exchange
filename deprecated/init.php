@@ -154,7 +154,7 @@ class IT_Exchange {
 	}
 
 	function remove_dev_dirs() {
-		$plugins_dir = dirname( $this->_plugin_path, 2 );
+		$plugins_dir = dirname( dirname( $this->_plugin_path ) );
 
 		$dirs = array(
 			$this->_plugin_path . '/vendor/phpunit',
