@@ -231,6 +231,13 @@ class ITE_Coupon_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Lin
 	/**
 	 * @inheritDoc
 	 */
+	public function _set_line_items( array $items ) {
+		$this->aggregatables = $items;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function is_tax_exempt( ITE_Tax_Provider $for ) {
 		return $this->get_aggregate() ? $this->get_aggregate()->is_tax_exempt( $for ) : false;
 	}

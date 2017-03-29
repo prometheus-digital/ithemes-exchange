@@ -305,6 +305,13 @@ class ITE_Base_Shipping_Line_Item extends ITE_Line_Item implements
 	/**
 	 * @inheritDoc
 	 */
+	public function _set_line_items( array $items ) {
+		$this->aggregatables = $items;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function set_line_item_repository( ITE_Line_Item_Repository $repository ) {
 		$this->repository = $repository;
 	}

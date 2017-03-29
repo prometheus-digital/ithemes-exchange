@@ -527,15 +527,13 @@ class ITE_Cart {
 	 */
 	public function get_item( $type, $id ) {
 
-		$items = $this->get_items( $type );
+		$item = $this->get_repository()->get( $type, $id );
 
-		foreach ( $items as $item ) {
-			if ( $item->get_id() === $id ) {
-				return $item;
-			}
+		if ( $item instanceof ITE_Cart_Aware ) {
+			$item->set_cart( $this );
 		}
 
-		return null;
+		return $item;
 	}
 
 	/**

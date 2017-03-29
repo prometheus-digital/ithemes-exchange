@@ -152,6 +152,13 @@ class ITE_Fee_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Line_I
 	/**
 	 * @inheritDoc
 	 */
+	public function _set_line_items( array $items ) {
+		$this->aggregatables = $items;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function get_name() {
 		return $this->get_param( 'name' );
 	}

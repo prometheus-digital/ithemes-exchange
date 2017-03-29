@@ -646,6 +646,9 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 	protected final function set_aggregatables( ITE_Line_Item $item, array $data ) {
 
 		if ( $item instanceof ITE_Aggregate_Line_Item && ! empty( $data['_aggregate'] ) ) {
+
+			$aggregatables = array();
+
 			foreach ( $data['_aggregate'] as $aggregatable_data ) {
 
 				$all_of_type = $this->session->get_session_data( self::normalize_type( $aggregatable_data['type'] ) );
@@ -660,9 +663,13 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 					$aggregatable = $this->construct_item( $id, $all_of_type[ $id ], $item );
 
 					if ( $aggregatable instanceof ITE_Aggregatable_Line_Item ) {
-						$item->add_item( $aggregatable );
+						$aggregatables[] = $aggregatable;
 					}
 				}
+			}
+
+			if ( $aggregatables ) {
+				$item->_set_line_items( $aggregatables );
 			}
 		}
 	}

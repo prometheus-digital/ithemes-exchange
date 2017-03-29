@@ -26,6 +26,7 @@ function it_exchange_get_country_states( $options=array() ) {
 		'CA' => 'it_exchange_get_country_states_for_ca',
 		'DE' => 'it_exchange_get_country_states_for_de',
 		'ES' => 'it_exchange_get_country_states_for_es',
+		'EU' => 'it_exchange_get_country_states_for_eu', // This is kind of cheating, but good enough for our purposes.
 		'MX' => 'it_exchange_get_country_states_for_mx',
 		'FR' => 'it_exchange_get_country_states_for_fr',
 		'NL' => 'it_exchange_get_country_states_for_nl',
@@ -297,6 +298,51 @@ function it_exchange_get_country_states_for_es( $options=array() ) {
 
 	$states = apply_filters( 'it_exchange_get_country_states_for_es', $states, $options );
 	return $states;
+}
+
+/**
+ * Get country states for the European Union.
+ *
+ * @since 2.0.0
+ *
+ * @param array $options
+ *
+ * @return array
+ */
+function it_exchange_get_country_states_for_eu( $options = array() ) {
+
+	$states = array(
+		'AT' => __( 'Austria', 'it-l10n-ithemes-exchange' ),
+		'BE' => __( 'Belgium', 'it-l10n-ithemes-exchange' ),
+		'BG' => __( 'Bulgaria', 'it-l10n-ithemes-exchange' ),
+		'HR' => __( 'Croatia', 'it-l10n-ithemes-exchange' ),
+		'CY' => __( 'Cyprus', 'it-l10n-ithemes-exchange' ),
+		'CZ' => __( 'Czech Republic', 'it-l10n-ithemes-exchange' ),
+		'DK' => __( 'Denmark', 'it-l10n-ithemes-exchange' ),
+		'EE' => __( 'Estonia', 'it-l10n-ithemes-exchange' ),
+		'FI' => __( 'Finland', 'it-l10n-ithemes-exchange' ),
+		'FR' => __( 'France', 'it-l10n-ithemes-exchange' ),
+		'DE' => __( 'Germany', 'it-l10n-ithemes-exchange' ),
+		'EL' => __( 'Greece', 'it-l10n-ithemes-exchange' ),
+		'HU' => __( 'Hungary', 'it-l10n-ithemes-exchange' ),
+		'IE' => __( 'Ireland', 'it-l10n-ithemes-exchange' ),
+		'IT' => __( 'Italy', 'it-l10n-ithemes-exchange' ),
+		'LV' => __( 'Latvia', 'it-l10n-ithemes-exchange' ),
+		'LT' => __( 'Lithuania', 'it-l10n-ithemes-exchange' ),
+		'LU' => __( 'Luxembourg', 'it-l10n-ithemes-exchange' ),
+		'MT' => __( 'Malta', 'it-l10n-ithemes-exchange' ),
+		'NL' => __( 'Netherlands', 'it-l10n-ithemes-exchange' ),
+		'PL' => __( 'Poland', 'it-l10n-ithemes-exchange' ),
+		'PT' => __( 'Portugal', 'it-l10n-ithemes-exchange' ),
+		'RO' => __( 'Romania', 'it-l10n-ithemes-exchange' ),
+		'SK' => __( 'Slovakia', 'it-l10n-ithemes-exchange' ),
+		'SI' => __( 'Slovenia', 'it-l10n-ithemes-exchange' ),
+		'ES' => __( 'Spain', 'it-l10n-ithemes-exchange' ),
+		'SE' => __( 'Sweden', 'it-l10n-ithemes-exchange' ),
+		'GB' => __( 'United Kingdom', 'it-l10n-ithemes-exchange' ),
+	);
+
+	return apply_filters( 'it_exchange_get_country_states_for_eu', $states, $options );
 }
 
 /**

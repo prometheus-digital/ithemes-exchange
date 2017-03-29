@@ -485,6 +485,13 @@ class ITE_Cart_Product extends ITE_Line_Item implements ITE_Taxable_Line_Item, I
 	/**
 	 * @inheritDoc
 	 */
+	public function _set_line_items( array $items ) {
+		$this->aggregatables = $items;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function get_id() {
 		return $this->has_param( 'product_cart_id' ) ? $this->get_param( 'product_cart_id' ) : '';
 	}

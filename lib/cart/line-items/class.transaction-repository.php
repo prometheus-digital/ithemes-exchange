@@ -668,13 +668,19 @@ class ITE_Line_Item_Transaction_Repository extends ITE_Line_Item_Repository {
 
 		$children = $model->get_children();
 
+		$aggregatables = array();
+
 		foreach ( $children as $child ) {
 			$aggregatable = $this->model_to_item( $child, $item );
 
 			// sanity check
 			if ( $aggregatable instanceof ITE_Aggregatable_Line_Item ) {
-				$item->add_item( $aggregatable );
+				$aggregatables[] = $aggregatable;
 			}
+		}
+
+		if ( $aggregatables ) {
+			$item->_set_line_items( $aggregatables );
 		}
 	}
 
