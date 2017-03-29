@@ -66,9 +66,13 @@ class Addresses extends Base implements Getable, Postable {
 		if ( $address ) {
 			$response = new \WP_REST_Response( null, \WP_Http::SEE_OTHER );
 		} else {
-			$address = \ITE_Saved_Address::create( $data );
+			$address = new \ITE_Saved_Address();
+			$address->with_guarded('type', function( \ITE_Saved_Address $address ) use ( $data ) {
+				$address->fill( $data );
+			} );
+			$saved = $address->save();
 
-			if ( ! $address ) {
+			if ( ! $saved || ! $address->exists() ) {
 				return new \WP_Error(
 					'it_exchange_rest_unable_to_create',
 					__( 'Unable to create address.', 'it-l10n-ithemes-exchange' ),
