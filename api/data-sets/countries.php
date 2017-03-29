@@ -87,7 +87,6 @@ function it_exchange_get_countries( $options=array() ) {
 		'ER' => __( 'Eritrea', 'it-l10n-ithemes-exchange' ),
 		'ES' => __( 'Spain', 'it-l10n-ithemes-exchange' ),
 		'ET' => __( 'Ethiopia', 'it-l10n-ithemes-exchange' ),
-		'EU' => __( 'Europe', 'it-l10n-ithemes-exchange' ),
 		'FI' => __( 'Finland', 'it-l10n-ithemes-exchange' ),
 		'FJ' => __( 'Fiji', 'it-l10n-ithemes-exchange' ),
 		'FK' => __( 'Falkland Islands (Malvinas)', 'it-l10n-ithemes-exchange' ),
