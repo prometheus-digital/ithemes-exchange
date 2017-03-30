@@ -1316,3 +1316,5 @@
 	Fix: Variable name for superwidget error output
 1.36.2 - Chris Jean
 	Security Fix: Automatically detect and remove development directory that could exist in the exchange-addon-membership plugin.
+1.36.3 - Timothy Jacobs
+	Tweak: Account for plugins or themes flushing rewrite rules in a non-admin context.
