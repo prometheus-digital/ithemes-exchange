@@ -42,8 +42,9 @@ class IT_Exchange_Pages {
 	function __construct() {
 		add_action( 'init', array( $this, 'set_slugs_and_names' ) );
 		add_action( 'init', array( $this, 'set_pretty_permalinks_boolean' ) );
+		add_filter( 'rewrite_rules_array', array( $this, 'register_rewrite_rules' ) );
+
 		if ( is_admin() ) {
-			add_filter( 'rewrite_rules_array', array( $this, 'register_rewrite_rules' ) );
 			add_action( 'save_post', array( $this, 'flush_rewrites_when_wp_confirmation_page_is_updated' ) );
 		} else {
 			add_action( 'template_redirect', array( $this, 'set_environment' ), 1 );
