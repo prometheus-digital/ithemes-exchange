@@ -411,13 +411,13 @@ class ITE_Cart {
 	 * @param \ITE_Line_Item $item
 	 * @param bool           $coerce
 	 *
-	 * @return bool True if item successfully added. Errors encountered during adding an item will be added to
-	 *              the cart feedback and false returned from this method.
+	 * @return ITE_Line_Item|null Updated item if added. Null if failed. Errors encountered during adding an item will
+	 *                            be added to the cart feedback.
 	 *
 	 * @throws \ITE_Line_Item_Coercion_Failed_Exception
 	 * @throws \ITE_Cart_Coercion_Failed_Exception
 	 */
-	public function add_item( ITE_Line_Item &$item, $coerce = true ) {
+	public function add_item( ITE_Line_Item $item, $coerce = true ) {
 
 		if ( $item instanceof ITE_Line_Item_Repository_Aware ) {
 			$item->set_line_item_repository( $this->get_repository() );
@@ -438,7 +438,7 @@ class ITE_Cart {
 		}
 
 		if ( ! $item ) {
-			return false;
+			return null;
 		}
 
 		if ( $coerce ) {
@@ -446,13 +446,13 @@ class ITE_Cart {
 		}
 
 		if ( ! $this->validate() ) {
-			return false;
+			return null;
 		}
 
-		$item =& $this->get_item( $item->get_type(), $item->get_id() );
+		$item = $this->get_item( $item->get_type(), $item->get_id() );
 
 		if ( ! $item ) {
-			return false;
+			return null;
 		}
 
 		if ( ! $add_new ) {
@@ -469,7 +469,7 @@ class ITE_Cart {
 		 */
 		do_action( 'it_exchange_add_line_item_to_cart', $item, $this );
 
-		$item =& $this->get_item( $item->get_type(), $item->get_id() );
+		$item = $this->get_item( $item->get_type(), $item->get_id() );
 
 		/**
 		 * Fires when a line item is added to the cart.
@@ -483,7 +483,7 @@ class ITE_Cart {
 		 */
 		do_action( "it_exchange_add_{$item->get_type()}_to_cart", $item, $this );
 
-		return true;
+		return $item;
 	}
 
 	/**
@@ -1110,12 +1110,12 @@ class ITE_Cart {
 				return false;
 			}
 
-			$global = ITE_Base_Shipping_Line_Item::create( $method, $provider, true );
+			$global = $this->add_item( ITE_Base_Shipping_Line_Item::create( $method, $provider, true ) );
+
 			$item = ITE_Base_Shipping_Line_Item::create( $method, $provider );
 			$item->set_scoped_from( $global );
 
 			$for->add_item( $item );
-			$this->add_item( $global );
 			$this->get_repository()->save( $for );
 
 			if ( $this->is_current() ) {
@@ -1153,13 +1153,12 @@ class ITE_Cart {
 			return false;
 		}
 
-		$global = ITE_Base_Shipping_Line_Item::create( $method, $provider, true );
-		$this->add_item( $global );
+		$global = $this->add_item( ITE_Base_Shipping_Line_Item::create( $method, $provider, true ) );
 
 		/** @var ITE_Cart_Product $item */
 		foreach ( $this->get_items( 'product' ) as $item ) {
 			if ( $item->get_product()->has_feature( 'shipping' ) ) {
-				$per_item =  ITE_Base_Shipping_Line_Item::create( $method, $provider );
+				$per_item = ITE_Base_Shipping_Line_Item::create( $method, $provider );
 				$per_item->set_scoped_from( $global );
 				$item->add_item( $per_item );
 				$this->get_repository()->save( $item );
