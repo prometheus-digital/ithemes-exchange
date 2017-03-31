@@ -27,9 +27,20 @@ abstract class ITE_Tax_Provider {
 	 *
 	 * @param \IT_Exchange_Product $product
 	 *
-	 * @return float
+	 * @return string|int
 	 */
-	public abstract function get_tax_code_for_product( IT_Exchange_Product $product );
+	public function get_tax_code_for_product( IT_Exchange_Product $product ) { return ''; }
+
+	/**
+	 * Get the tax code for an item.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param ITE_Line_Item $item
+	 *
+	 * @return string|int
+	 */
+	public function get_tax_code_for_item( ITE_Line_Item $item ) { return ''; }
 
 	/**
 	 * Check if a product is tax exempt.

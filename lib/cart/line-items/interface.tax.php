@@ -43,4 +43,13 @@ interface ITE_Tax_Line_Item extends ITE_Aggregatable_Line_Item {
 	 * @return self A new instance of this class.
 	 */
 	public function create_scoped_for_taxable( ITE_Taxable_Line_Item $item );
+
+	/**
+	 * Get the tax provider.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return ITE_Tax_Provider
+	 */
+	public function get_provider();
 }

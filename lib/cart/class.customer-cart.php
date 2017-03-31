@@ -417,7 +417,7 @@ class ITE_Cart {
 	 * @throws \ITE_Line_Item_Coercion_Failed_Exception
 	 * @throws \ITE_Cart_Coercion_Failed_Exception
 	 */
-	public function add_item( ITE_Line_Item $item, $coerce = true ) {
+	public function add_item( ITE_Line_Item &$item, $coerce = true ) {
 
 		if ( $item instanceof ITE_Line_Item_Repository_Aware ) {
 			$item->set_line_item_repository( $this->get_repository() );
@@ -449,7 +449,7 @@ class ITE_Cart {
 			return false;
 		}
 
-		$item = $this->get_item( $item->get_type(), $item->get_id() );
+		$item =& $this->get_item( $item->get_type(), $item->get_id() );
 
 		if ( ! $item ) {
 			return false;
@@ -469,7 +469,7 @@ class ITE_Cart {
 		 */
 		do_action( 'it_exchange_add_line_item_to_cart', $item, $this );
 
-		$item = $this->get_item( $item->get_type(), $item->get_id() );
+		$item =& $this->get_item( $item->get_type(), $item->get_id() );
 
 		/**
 		 * Fires when a line item is added to the cart.
@@ -1153,7 +1153,8 @@ class ITE_Cart {
 			return false;
 		}
 
-		$this->add_item( $global = ITE_Base_Shipping_Line_Item::create( $method, $provider, true ) );
+		$global = ITE_Base_Shipping_Line_Item::create( $method, $provider, true );
+		$this->add_item( $global );
 
 		/** @var ITE_Cart_Product $item */
 		foreach ( $this->get_items( 'product' ) as $item ) {

@@ -200,7 +200,14 @@ class ITE_Base_Shipping_Line_Item extends ITE_Line_Item implements
 	 * @inheritDoc
 	 */
 	public function get_tax_code( ITE_Tax_Provider $for ) {
-		return $this->get_aggregate() ? $this->get_aggregate()->get_tax_code( $for ) : '';
+
+		$aggregate = $this->get_aggregate();
+
+		if ( $aggregate instanceof ITE_Taxable_Line_Item ) {
+			return $aggregate->get_tax_code( $for );
+		}
+
+		return $for->get_tax_code_for_item( $this );
 	}
 
 	/**
