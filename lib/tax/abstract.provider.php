@@ -80,4 +80,13 @@ abstract class ITE_Tax_Provider {
 	 * @return \ITE_Zone
 	 */
 	public function is_restricted_to_location() { return null; }
+
+	/**
+	 * Should the tax code for an item be inherited from its aggregate if one exists.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return bool
+	 */
+	public function inherit_tax_code_from_aggregate() { return true; }
 }

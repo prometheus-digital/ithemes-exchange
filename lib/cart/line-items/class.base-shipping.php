@@ -201,13 +201,18 @@ class ITE_Base_Shipping_Line_Item extends ITE_Line_Item implements
 	 */
 	public function get_tax_code( ITE_Tax_Provider $for ) {
 
-		$aggregate = $this->get_aggregate();
+		$code = '';
 
-		if ( $aggregate instanceof ITE_Taxable_Line_Item ) {
-			return $aggregate->get_tax_code( $for );
+		if ( $for->inherit_tax_code_from_aggregate() ) {
+
+			$aggregate = $this->get_aggregate();
+
+			if ( $aggregate instanceof ITE_Taxable_Line_Item ) {
+				$code = $aggregate->get_tax_code( $for );
+			}
 		}
 
-		return $for->get_tax_code_for_item( $this );
+		return $code ?: $for->get_tax_code_for_item( $this );
 	}
 
 	/**
