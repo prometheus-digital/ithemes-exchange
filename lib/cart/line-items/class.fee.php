@@ -215,12 +215,23 @@ class ITE_Fee_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Line_I
 	 */
 	public function get_tax_code( ITE_Tax_Provider $for ) {
 
-		if ( $this->aggregate instanceof ITE_Taxable_Line_Item ) {
-			return $this->aggregate->get_tax_code( $for );
+		$code = '';
+
+		if ( $for->inherit_tax_code_from_aggregate() ) {
+
+			$aggregate = $this->get_aggregate();
+
+			if ( $aggregate instanceof ITE_Taxable_Line_Item ) {
+				$code = $aggregate->get_tax_code( $for );
+			}
+		}
+
+		if ( $code ) {
+			return $code;
 		} elseif ( $this->has_param( 'tax_code' ) ) {
 			return $this->get_param( 'tax_code' );
 		} else {
-			return '';
+			return $for->get_tax_code_for_item( $this );
 		}
 	}
 
