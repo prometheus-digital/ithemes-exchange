@@ -15,6 +15,7 @@
  */
 function it_exchange_create_unique_hash() {
 	$hash = str_replace( '.', '', microtime( true ) . uniqid() ); //Remove the period from microtime, cause it's ugly
+
 	return apply_filters( 'it_exchange_generate_unique_hash', $hash );
 }
 
@@ -1051,12 +1052,14 @@ function it_exchange_get_upgrade_log_file( $upgrade ) {
  *
  * @since 2.0.0
  *
- * @param int|float $cost  Cost to distribute. Can be negative.
- * @param array     $items Array of current item totals.
+ * @param int|float                $cost  Cost to distribute. Can be negative.
+ * @param float[]|array[]|object[] $items Array of current item totals.
+ * @param string                   $field Instead of being an array of totals, $items is an array of arrays or objects
+ *                                        where the $field is the field containing the total.
  *
  * @return array An array of items with their new totals. Keys will be maintained.
  */
-function it_exchange_proportionally_distribute_cost( $cost, array $items ) {
+function it_exchange_proportionally_distribute_cost( $cost, array $items, $field = '' ) {
 
 	if ( empty( $items ) || empty( $cost ) ) {
 		return $items;
@@ -1065,7 +1068,14 @@ function it_exchange_proportionally_distribute_cost( $cost, array $items ) {
 	if ( count( $items ) === 1 ) {
 		reset( $items );
 		$k = key( $items );
-		$items[ $k ] += $cost;
+
+		if ( $field && is_array( $items[ $k ] ) ) {
+			$items[ $k ][ $field ] += $cost;
+		} elseif ( $field && is_object( $items[ $k ] ) ) {
+			$items[ $k ]->$field += $cost;
+		} else {
+			$items[ $k ] += $cost;
+		}
 
 		return $items;
 	}
@@ -1074,7 +1084,13 @@ function it_exchange_proportionally_distribute_cost( $cost, array $items ) {
 	$interval = $cost / $sum;
 
 	foreach ( $items as $k => $v ) {
-		$items[$k] += $v * $interval;
+		if ( $field && is_array( $v ) ) {
+			$items[ $k ][ $field ] += $v[ $field ] * $interval;
+		} elseif ( $field && is_object( $v ) ) {
+			$items[ $k ]->$field += $v->$field * $interval;
+		} else {
+			$items[ $k ] += $v * $interval;
+		}
 	}
 
 	return $items;
@@ -1091,5 +1107,5 @@ function it_exchange_get_default_currency() {
 
 	$settings = it_exchange_get_option( 'settings_general' );
 
-	 return $settings['default-currency'];
+	return $settings['default-currency'];
 }
