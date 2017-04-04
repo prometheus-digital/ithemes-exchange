@@ -581,4 +581,13 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	public function count() {
 		return count( $this->items );
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function __clone() {
+		foreach ( $this->items as $i => $item ) {
+			$this->items[ $i ] = clone $item;
+		}
+	}
 }
