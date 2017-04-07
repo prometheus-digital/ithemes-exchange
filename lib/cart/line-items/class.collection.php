@@ -517,6 +517,33 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	}
 
 	/**
+	 * Return a new collection that contains all of the items in this collection that are not in the passed collection.
+	 *
+	 * This matches against item type and id instead of looking for identical (===) objects.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param ITE_Line_Item_Collection $collection
+	 *
+	 * @return ITE_Line_Item_Collection
+	 */
+	public function diff( ITE_Line_Item_Collection $collection ) {
+
+		$items = $this->items;
+
+		foreach ( $collection as $check_for_item ) {
+
+			foreach ( $items as $i => $item ) {
+				if ( $item->get_type() === $check_for_item->get_type() && $item->get_id() === $check_for_item->get_id() ) {
+					unset( $items[ $i ] );
+				}
+			}
+		}
+
+		return new ITE_Line_Item_Collection( $items, $this->repository );
+	}
+
+	/**
 	 * Merge a collection with this one.
 	 *
 	 * @since 2.0.0
