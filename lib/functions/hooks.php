@@ -1401,6 +1401,9 @@ function it_exchange_add_on_before_disable_payment_gateways( $add_on ) {
 
 add_action( 'it_exchange_add_on_before_disable', 'it_exchange_add_on_before_disable_payment_gateways' );
 
+// Commit session changes at the end of the request.
+add_action( 'shutdown', 'it_exchange_commit_session' );
+
 /**
  * Setup schedule for delete transient transactions (moved away from WP transient API)
  *

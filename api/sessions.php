@@ -122,3 +122,17 @@ function it_exchange_get_session_id( $id_only = false ) {
 
 	return empty( $parts[0] ) ? false : $parts[0];
 }
+
+/**
+ * Commit session changes to storage.
+ *
+ * @since 2.0.0
+ */
+function it_exchange_commit_session() {
+
+	$session = it_exchange_get_session();
+
+	if ( $session instanceof ITE_Committable_Session ) {
+		$session->commit();
+	}
+}

@@ -11,22 +11,34 @@
  * ## License: GPLv2 or later License URI: http://www.gnu.org/licenses/gpl-2.0.html
  * #############################################
  *
- * @since 0.3.3
+ * @since   0.3.3
  * @package IT_Exchange
-*/
+ */
 
 /**
  * The IT_Exchange_Session class holds cart and purchasing details
  *
  * @since 0.3.3
-*/
-class IT_Exchange_Session implements IT_Exchange_SessionInterface, ITE_Expiring_Session {
+ */
+class IT_Exchange_Session implements IT_Exchange_SessionInterface, ITE_Expiring_Session, ITE_Committable_Session {
 
 	/**
 	 * @var IT_Exchange_DB_Sessions
 	 * @since 0.4.0
-	*/
+	 */
 	private $_session;
+
+	/**
+	 * Keep track of whether the session committed changes by itself or the user did manually.
+	 *
+	 * Used for issuing doing it wrong notices.
+	 *
+	 * @var bool
+	 */
+	private $user_committed_changes = null;
+
+	/** @var array */
+	private $keys_changed = array();
 
 	/**
 	 * Constructor.
@@ -45,11 +57,11 @@ class IT_Exchange_Session implements IT_Exchange_SessionInterface, ITE_Expiring_
 
 		// Only include the functionality if it's not pre-defined.
 		if ( ! class_exists( 'IT_Exchange_DB_Sessions' ) ) {
-			require_once( dirname( __FILE__ ) .  '/db_session_manager/class-db-session.php' );
+			require_once( dirname( __FILE__ ) . '/db_session_manager/class-db-session.php' );
 			require_once( dirname( __FILE__ ) . '/db_session_manager/db-session.php' );
 		}
 
-		add_action( 'init', array( $this, 'init' ), -1 );
+		add_action( 'init', array( $this, 'init' ), - 1 );
 
 		// Reset the session when the user loggs out
 		add_action( 'wp_logout', array( $this, 'reset_session_and_cache_cart_on_logout' ) );
@@ -73,7 +85,7 @@ class IT_Exchange_Session implements IT_Exchange_SessionInterface, ITE_Expiring_
 	 * @since 0.4.0
 	 *
 	 * @return IT_Exchange_DB_Sessions
-	*/
+	 */
 	public function init() {
 		$this->_session = IT_Exchange_DB_Sessions::get_instance();
 
@@ -90,18 +102,19 @@ class IT_Exchange_Session implements IT_Exchange_SessionInterface, ITE_Expiring_
 	 * @param string|bool $key Specify the data to retrieve, if false all data will be retrieved.
 	 *
 	 * @return mixed. serialized string
-	*/
+	 */
 	public function get_session_data( $key = false ) {
 		if ( $key ) {
 			$key = sanitize_key( $key );
 
-			if ( $key && !empty( $this->_session[$key] ) ) {
-				$data = $this->_session[$key];
+			if ( $key && ! empty( $this->_session[ $key ] ) ) {
+				$data = $this->_session[ $key ];
 				if ( is_array( $data ) ) {
 					$data = array_map( 'maybe_unserialize', $data );
 				} else {
 					$data = maybe_unserialize( $data );
 				}
+
 				return $data;
 			}
 		} else {
@@ -109,10 +122,12 @@ class IT_Exchange_Session implements IT_Exchange_SessionInterface, ITE_Expiring_
 				$session_data = json_decode( $json, true );
 				if ( ! empty( $session_data ) ) {
 					$session_data = array_map( 'maybe_unserialize', $session_data );
+
 					return $session_data;
 				}
 			}
 		}
+
 		return array();
 	}
 
@@ -121,21 +136,24 @@ class IT_Exchange_Session implements IT_Exchange_SessionInterface, ITE_Expiring_
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param string $key key for the data
+	 * @param string $key  key for the data
 	 * @param mixed  $data data to be stored. will be serialized if not already
 	 *
 	 * @return void
-	*/
+	 */
 	public function add_session_data( $key, $data ) {
 		$key = sanitize_key( $key );
 
-		if ( ! empty( $this->_session[$key] ) ) {
-			$current_data = maybe_unserialize( $this->_session[$key] );
-			$this->_session[$key] = maybe_serialize( array_merge( $current_data, (array)$data ) );
-		} else if ( !empty( $data ) ) {
-			$this->_session[$key] = maybe_serialize( (array)$data );
+		if ( ! empty( $this->_session[ $key ] ) ) {
+			$current_data           = maybe_unserialize( $this->_session[ $key ] );
+			$this->_session[ $key ] = maybe_serialize( array_merge( $current_data, (array) $data ) );
+		} else if ( ! empty( $data ) ) {
+			$this->_session[ $key ] = maybe_serialize( (array) $data );
 		}
 		it_exchange_db_session_commit();
+
+		$this->user_committed_changes = false;
+		isset( $this->keys_changed[ $key ] ) ? $this->keys_changed[ $key ] ++ : $this->keys_changed[ $key ] = 1;
 	}
 
 	/**
@@ -143,15 +161,18 @@ class IT_Exchange_Session implements IT_Exchange_SessionInterface, ITE_Expiring_
 	 *
 	 * @since 0.4.0
 	 *
-	 * @param string $key key for the data
+	 * @param string $key  key for the data
 	 * @param mixed  $data data to be stored. will be serialized if not already
 	 *
 	 * @return void
-	*/
+	 */
 	public function update_session_data( $key, $data ) {
-		$key = sanitize_key( $key );
-		$this->_session[$key] = maybe_serialize( (array)$data );
+		$key                    = sanitize_key( $key );
+		$this->_session[ $key ] = maybe_serialize( (array) $data );
 		it_exchange_db_session_commit();
+
+		$this->user_committed_changes = false;
+		isset( $this->keys_changed[ $key ] ) ? $this->keys_changed[ $key ] ++ : $this->keys_changed[ $key ] = 1;
 	}
 
 	/**
@@ -162,21 +183,24 @@ class IT_Exchange_Session implements IT_Exchange_SessionInterface, ITE_Expiring_
 	 * @param string|bool $key Specify the key to clear, or clear all data if false.
 	 *
 	 * @return void
-	*/
+	 */
 	public function clear_session_data( $key = false ) {
-		if ( !empty( $key ) ) {
+		if ( ! empty( $key ) ) {
 			$key = sanitize_key( $key );
 
-			if ( isset( $this->_session[$key] ) ) {
-				unset( $this->_session[$key] );
+			if ( isset( $this->_session[ $key ] ) ) {
+				unset( $this->_session[ $key ] );
 				it_exchange_db_session_commit();
 			}
 		} else {
-			foreach( $this->_session as $key => $value ) {
-				unset( $this->_session[$key] );
+			foreach ( $this->_session as $key => $value ) {
+				unset( $this->_session[ $key ] );
 			}
 			it_exchange_db_session_commit();
 		}
+
+		$this->user_committed_changes = false;
+		isset( $this->keys_changed[ $key ] ) ? $this->keys_changed[ $key ] ++ : $this->keys_changed[ $key ] = 1;
 	}
 
 	/**
@@ -185,7 +209,7 @@ class IT_Exchange_Session implements IT_Exchange_SessionInterface, ITE_Expiring_
 	 * @since 0.4.0
 	 *
 	 * @param bool $hard If true, old delete sessions as well.
-	*/
+	 */
 	public function clear_session( $hard = false ) {
 		it_exchange_db_session_regenerate_id( $hard );
 		it_exchange_db_session_commit();
@@ -203,7 +227,7 @@ class IT_Exchange_Session implements IT_Exchange_SessionInterface, ITE_Expiring_
 	 * @since 1.9.0
 	 *
 	 * @return void
-	*/
+	 */
 	public function reset_session_and_cache_cart_on_logout() {
 
 		if ( 'wp_logout' === current_filter() ) {
@@ -215,6 +239,37 @@ class IT_Exchange_Session implements IT_Exchange_SessionInterface, ITE_Expiring_
 
 			do_action( 'it_exchange_db_session_reset_on_logout' );
 			it_exchange_cache_customer_cart();
+		}
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function commit() {
+		it_exchange_db_session_commit();
+		$this->user_committed_changes = true;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function __destruct() {
+
+		if ( $this->user_committed_changes === false ) {
+
+			$keys = '';
+			foreach ( $this->keys_changed as $key => $times ) {
+				$keys .= "{$key}:{$times}, ";
+			}
+
+			_doing_it_wrong(
+				'it_exchange_(add|update|clear)_session_data',
+				sprintf(
+					__( '%s not called before page end for keys: %s', 'it-l10n-ithemes-exchange' ),
+					'it_exchange_commit_session()', $keys
+				),
+				'2.0.0'
+			);
 		}
 	}
 

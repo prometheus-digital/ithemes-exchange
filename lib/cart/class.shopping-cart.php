@@ -22,8 +22,6 @@ class IT_Exchange_Shopping_Cart {
 		add_action( 'template_redirect', array( $this, 'convert_feedback_to_notices' ) );
 		add_action( 'it_exchange_update_cart', array( $this, 'convert_feedback_to_notices' ), 100 );
 		add_action( 'it_exchange_add_transaction_success', array( $this, 'clear_cart_meta_session_on_transaction' ), 10, 2 );
-
-		// Filters to sync cart across devices
 		add_action( 'wp_login', array( $this, 'merge_session' ), 10, 2 );
 
 		ITE_Session_Model::updated( array( $this, 'fire_deprecated_cache_cart' ) );

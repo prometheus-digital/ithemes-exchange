@@ -8,6 +8,7 @@
 
 require_once dirname( __FILE__ ) . '/interface.php';
 require_once dirname( __FILE__ ) . '/interface.expiring.php';
+require_once dirname( __FILE__ ) . '/interface.committable.php';
 require_once dirname( __FILE__ ) . '/class.session.php';
 require_once dirname( __FILE__ ) . '/class.in-memory.php';
 require_once dirname( __FILE__ ) . '/db_session_manager/class.table.php';

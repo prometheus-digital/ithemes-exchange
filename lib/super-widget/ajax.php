@@ -96,6 +96,8 @@ class IT_Exchange_Super_Widget_Ajax {
 
 		$this->cart->get_feedback()->clear();
 
+		it_exchange_commit_session();
+
 		if ( $this->get_state ) {
 		    $this->state = $this->get_state;
 		    $success     = $this->do_action( 'get-state' );
