@@ -17,23 +17,23 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	private $items = array();
 
 	/**
-	 * @var ITE_Line_Item_Repository
+	 * @var ITE_Cart_Repository
 	 */
 	private $repository;
 
 	/**
 	 * ITE_Line_Item_Collection constructor.
 	 *
-	 * @param \ITE_Line_Item[]          $items
-	 * @param \ITE_Line_Item_Repository $repository
+	 * @param \ITE_Line_Item[]     $items
+	 * @param \ITE_Cart_Repository $repository
 	 */
-	public function __construct( array $items, \ITE_Line_Item_Repository $repository ) {
+	public function __construct( array $items, \ITE_Cart_Repository $repository ) {
 		$this->items      = $items;
 		$this->repository = $repository;
 
 		foreach ( $this->items as $item ) {
-			if ( $item instanceof ITE_Line_Item_Repository_Aware ) {
-				$item->set_line_item_repository( $repository );
+			if ( $item instanceof ITE_Cart_Repository_Aware ) {
+				$item->set_cart_repository( $repository );
 			}
 		}
 	}
@@ -418,7 +418,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 	 * @since 2.0.0
 	 */
 	public function save() {
-		$this->repository->save_many( $this->items );
+		$this->repository->save_many_items( $this->items );
 	}
 
 	/**
@@ -433,7 +433,7 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 				$item->get_aggregate()->remove_item( $item->get_type(), $item->get_id() );
 			}
 
-			$this->repository->delete( $item );
+			$this->repository->delete_item( $item );
 		}
 	}
 
@@ -514,6 +514,21 @@ class ITE_Line_Item_Collection implements Countable, ArrayAccess, IteratorAggreg
 		}
 
 		return null;
+	}
+
+	/**
+	 * Replace a line item in the collection.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param ITE_Line_Item $item
+	 */
+	public function replace( ITE_Line_Item $item ) {
+		foreach ( $this->items as $i => $replace ) {
+			if ( $item->get_type() === $replace->get_type() && $item->get_id() === $replace->get_id() ) {
+				$this->items[ $i ] = $item;
+			}
+		}
 	}
 
 	/**

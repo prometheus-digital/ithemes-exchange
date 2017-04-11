@@ -24,7 +24,7 @@ class ITE_Array_Parameter_Bag implements ITE_Parameter_Bag {
 	public function __construct( array $params = array() ) {
 		$this->params = $params;
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
@@ -68,5 +68,24 @@ class ITE_Array_Parameter_Bag implements ITE_Parameter_Bag {
 		unset( $this->params[ $param ] );
 
 		return true;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function __debugInfo() {
+		return $this->get_params();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function __clone() {
+
+		foreach ( $this->params as $key => $param ) {
+			if ( is_object( $param ) ) {
+				$this->params[ $key ] = clone $param;
+			}
+		}
 	}
 }

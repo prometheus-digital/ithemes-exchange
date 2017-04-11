@@ -7,9 +7,9 @@
  */
 
 /**
- * Class ITE_Line_Item_Cached_Session_Repository
+ * Class ITE_Cart_Cached_Session_Repository
  */
-class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repository {
+class ITE_Cart_Cached_Session_Repository extends ITE_Cart_Session_Repository {
 
 	/** @var  IT_Exchange_Customer */
 	protected $customer;
@@ -84,7 +84,7 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 	 *
 	 * @param string $cart_id
 	 *
-	 * @return \ITE_Line_Item_Cached_Session_Repository
+	 * @return \ITE_Cart_Cached_Session_Repository
 	 *
 	 * @throws \InvalidArgumentException
 	 */
@@ -103,7 +103,7 @@ class ITE_Line_Item_Cached_Session_Repository extends ITE_Line_Item_Session_Repo
 	 * @param \ITE_Session_Model    $session
 	 * @param \IT_Exchange_Customer $customer
 	 *
-	 * @return \ITE_Line_Item_Cached_Session_Repository
+	 * @return \ITE_Cart_Cached_Session_Repository
 	 *
 	 * @throws \InvalidArgumentException
 	 */

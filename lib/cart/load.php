@@ -22,16 +22,16 @@ require_once dirname( __FILE__ ) . '/interface.cart-aware.php';
 require_once dirname( __FILE__ ) . '/class.line-item-type.php';
 require_once dirname( __FILE__ ) . '/class.line-item-types.php';
 
-require_once dirname( __FILE__ ) . '/line-items/class.repository-events.php';
-require_once dirname( __FILE__ ) . '/line-items/abstract.repository.php';
-require_once dirname( __FILE__ ) . '/line-items/class.session-repository.php';
-require_once dirname( __FILE__ ) . '/line-items/class.cached-session-repository.php';
-require_once dirname( __FILE__ ) . '/line-items/class.transaction-repository.php';
+require_once dirname( __FILE__ ) . '/repository/class.events.php';
+require_once dirname( __FILE__ ) . '/repository/abstract.repository.php';
+require_once dirname( __FILE__ ) . '/repository/class.session.php';
+require_once dirname( __FILE__ ) . '/repository/class.cached-session.php';
+require_once dirname( __FILE__ ) . '/repository/class.transaction.php';
+
+require_once dirname( __FILE__ ) . '/repository/transaction/class.model.php';
+require_once dirname( __FILE__ ) . '/repository/transaction/class.table.php';
+
 require_once dirname( __FILE__ ) . '/line-items/interface.repository-aware.php';
-
-require_once dirname( __FILE__ ) . '/line-items/transaction/class.model.php';
-require_once dirname( __FILE__ ) . '/line-items/transaction/class.table.php';
-
 require_once dirname( __FILE__ ) . '/line-items/interface.aggregatable.php';
 require_once dirname( __FILE__ ) . '/line-items/interface.aggregate.php';
 require_once dirname( __FILE__ ) . '/line-items/interface.tax.php';

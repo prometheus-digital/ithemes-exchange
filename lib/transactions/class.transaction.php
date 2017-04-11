@@ -292,7 +292,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	 * @return \ITE_Line_Item_Collection|\ITE_Line_Item[]
 	 */
 	public function get_items( $type = '', $flatten = false ) {
-		$repository = new ITE_Line_Item_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $this );
+		$repository = new ITE_Cart_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $this );
 
 		if ( $flatten ) {
 			$items = $this->get_items()->flatten();
@@ -300,7 +300,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 			return $type ? $items->with_only( $type ) : $items;
 		}
 
-		return $repository->all( $type );
+		return $repository->all_items( $type );
 	}
 
 	/**
@@ -314,9 +314,9 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	 * @return \ITE_Line_Item|null
 	 */
 	public function get_item( $type, $id ) {
-		$repository = new ITE_Line_Item_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $this );
+		$repository = new ITE_Cart_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $this );
 
-		return $repository->get( $type, $id );
+		return $repository->get_item( $type, $id );
 	}
 
 	/**
@@ -1125,7 +1125,7 @@ class IT_Exchange_Transaction extends Model implements ITE_Object, ITE_Contract_
 	 * @return \ITE_Cart
 	 */
 	public function cart() {
-		$repo = new ITE_Line_Item_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $this );
+		$repo = new ITE_Cart_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $this );
 
 		return new ITE_Cart( $repo, $this->cart_id, $this->get_customer() );
 	}

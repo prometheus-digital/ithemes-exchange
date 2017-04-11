@@ -9,15 +9,15 @@
 /**
  * Class ITE_Fee_Line_Item
  */
-class ITE_Fee_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Line_Item, ITE_Line_Item_Repository_Aware, ITE_Requires_Optionally_Supported_Features {
+class ITE_Fee_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Line_Item, ITE_Taxable_Line_Item, ITE_Requires_Optionally_Supported_Features {
 
 	/** @var ITE_Aggregate_Line_Item */
 	private $aggregate;
 
-	/** @var  ITE_Aggregatable_Line_Item[] */
-	private $aggregatables = array();
+	/** @var ITE_Line_Item_Collection|ITE_Aggregatable_Line_Item[] */
+	private $aggregatables;
 
-	/** @var ITE_Line_Item_Repository */
+	/** @var ITE_Cart_Repository */
 	private $repository;
 
 	/**
@@ -106,7 +106,13 @@ class ITE_Fee_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Line_I
 			) );
 		}
 
-		return new ITE_Line_Item_Collection( $this->aggregatables, $this->repository );
+		if ( $this->aggregatables ) {
+			return $this->aggregatables;
+		}
+
+		$items = $this->repository->get_item_aggregatables( $this );
+
+		return $this->aggregatables = new ITE_Line_Item_Collection( $items, $this->repository );
 	}
 
 	/**
@@ -116,7 +122,7 @@ class ITE_Fee_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Line_I
 
 		$item->set_aggregate( $this );
 
-		$this->aggregatables[] = $item;
+		$this->get_line_items()->add( $item );
 
 		if ( $item instanceof ITE_Taxable_Line_Item ) {
 			foreach ( $this->get_taxes() as $tax ) {
@@ -133,27 +139,7 @@ class ITE_Fee_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Line_I
 	 * @inheritDoc
 	 */
 	public function remove_item( $type, $id ) {
-		$found = false;
-
-		foreach ( $this->aggregatables as $i => $item ) {
-			if ( $item->get_type() === $type && $item->get_id() === $id ) {
-				unset( $this->aggregatables[ $i ] );
-				$found = true;
-
-				break;
-			}
-		}
-
-		reset( $this->aggregatables );
-
-		return $found;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function _set_line_items( array $items ) {
-		$this->aggregatables = $items;
+		return (bool) $this->get_line_items()->remove( $type, $id );
 	}
 
 	/**
@@ -289,7 +275,7 @@ class ITE_Fee_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Line_I
 	/**
 	 * @inheritDoc
 	 */
-	public function set_line_item_repository( ITE_Line_Item_Repository $repository ) {
+	public function set_cart_repository( ITE_Cart_Repository $repository ) {
 		$this->repository = $repository;
 	}
 
@@ -325,5 +311,14 @@ class ITE_Fee_Line_Item extends ITE_Line_Item implements ITE_Aggregatable_Line_I
 	 */
 	public function __destruct() {
 		unset( $this->aggregate, $this->aggregatables, $this->repository );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function __clone() {
+		parent::__clone();
+
+		$this->aggregatables = null;
 	}
 }

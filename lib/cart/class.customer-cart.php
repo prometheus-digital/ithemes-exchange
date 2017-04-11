@@ -11,8 +11,11 @@
  */
 class ITE_Cart {
 
-	/** @var \ITE_Line_Item_Repository */
+	/** @var \ITE_Cart_Repository */
 	private $repository;
+
+	/** @var ITE_Line_Item_Collection */
+	private $items;
 
 	/** @var ITE_Cart_Validator[] */
 	private $cart_validators = array();
@@ -38,11 +41,11 @@ class ITE_Cart {
 	/**
 	 * ITE_Cart constructor.
 	 *
-	 * @param ITE_Line_Item_Repository  $repository
+	 * @param ITE_Cart_Repository       $repository
 	 * @param string                    $cart_id
 	 * @param IT_Exchange_Customer|null $customer
 	 */
-	public function __construct( ITE_Line_Item_Repository $repository, $cart_id, IT_Exchange_Customer $customer = null ) {
+	public function __construct( ITE_Cart_Repository $repository, $cart_id, IT_Exchange_Customer $customer = null ) {
 		$this->repository = $repository;
 		$this->cart_id    = $cart_id;
 
@@ -78,16 +81,16 @@ class ITE_Cart {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param \ITE_Line_Item_Repository|null $repository Specify the repository to used. If null, the session
+	 * @param \ITE_Cart_Repository|null  $repository     Specify the repository to used. If null, the session
 	 *                                                   repository will be used.
-	 * @param \IT_Exchange_Customer|null     $customer   Specify the customer to use. If null, and this is the active
+	 * @param \IT_Exchange_Customer|null $customer       Specify the customer to use. If null, and this is the active
 	 *                                                   cart, the current customer will be used.
 	 *
 	 * @return \ITE_Cart
 	 */
-	public static function create( ITE_Line_Item_Repository $repository = null, IT_Exchange_Customer $customer = null ) {
+	public static function create( ITE_Cart_Repository $repository = null, IT_Exchange_Customer $customer = null ) {
 
-		$repository = $repository ?: new ITE_Line_Item_Session_Repository(
+		$repository = $repository ?: new ITE_Cart_Session_Repository(
 			it_exchange_get_session(), new ITE_Line_Item_Repository_Events()
 		);
 
@@ -95,7 +98,7 @@ class ITE_Cart {
 			$customer = $c;
 		}
 
-		$is_current = $repository instanceof ITE_Line_Item_Session_Repository && $repository->backed_by_active_session();
+		$is_current = $repository instanceof ITE_Cart_Session_Repository && $repository->backed_by_active_session();
 		$cart_id    = it_exchange_create_cart_id();
 
 		if ( $is_current ) {
@@ -202,11 +205,11 @@ class ITE_Cart {
 
 		$repo = $this->get_repository();
 
-		if ( $repo instanceof ITE_Line_Item_Cached_Session_Repository ) {
+		if ( $repo instanceof ITE_Cart_Cached_Session_Repository ) {
 			return (bool) $repo->get_model()->is_main;
 		}
 
-		if ( $repo instanceof ITE_Line_Item_Session_Repository ) {
+		if ( $repo instanceof ITE_Cart_Session_Repository ) {
 			$model = ITE_Session_Model::from_cart_id( $this->get_id() );
 
 			return $model && $model->is_main;
@@ -419,8 +422,8 @@ class ITE_Cart {
 	 */
 	public function add_item( ITE_Line_Item $item, $coerce = true ) {
 
-		if ( $item instanceof ITE_Line_Item_Repository_Aware ) {
-			$item->set_line_item_repository( $this->get_repository() );
+		if ( $item instanceof ITE_Cart_Repository_Aware ) {
+			$item->set_cart_repository( $this->get_repository() );
 		}
 
 		if ( $item instanceof ITE_Cart_Aware ) {
@@ -432,14 +435,16 @@ class ITE_Cart {
 
 		if ( ! method_exists( $this, $method ) ) {
 			$add_new = true;
-			$success = $this->get_repository()->save( $item );
+			$success = $this->get_repository()->save_item( $item );
 		} elseif ( ( $success = $this->{$method}( $item, $add_new ) ) && $add_new ) {
-			$this->get_repository()->save( $item );
+			$this->get_repository()->save_item( $item );
 		}
 
-		if ( ! $item ) {
+		if ( ! $success ) {
 			return null;
 		}
+
+		$this->_clear_item_cache();
 
 		if ( $coerce ) {
 			$this->coerce( $item );
@@ -456,7 +461,7 @@ class ITE_Cart {
 		}
 
 		if ( ! $add_new ) {
-			return $success;
+			return $item;
 		}
 
 		/**
@@ -504,13 +509,31 @@ class ITE_Cart {
 			self::assert_type( $type );
 		}
 
-		if ( $flatten ) {
-			$items = $this->get_items()->flatten();
-
-			return $type ? $items->with_only( $type ) : $items;
+		if ( $this->items ) {
+			$items = clone $this->items;
+		} else {
+			$items       = $this->get_repository()->all_items();
+			$this->items = clone $items;
 		}
 
-		return $this->get_repository()->all( $type )->set_cart( $this );
+		if ( $flatten ) {
+			$items = $items->flatten();
+
+			// Avoid double flattening.
+			foreach ( $items as $item ) {
+				if ( $item instanceof ITE_Cart_Aware ) {
+					$item->set_cart( $this );
+				}
+			}
+		} else {
+			$items = $items->set_cart( $this );
+		}
+
+		if ( $type ) {
+			$items = $items->with_only( $type );
+		}
+
+		return $items;
 	}
 
 	/**
@@ -527,11 +550,14 @@ class ITE_Cart {
 	 */
 	public function get_item( $type, $id ) {
 
-		$item = $this->get_repository()->get( $type, $id );
+		$items = $this->get_items( $type );
+		$item  = $items->get( $type, $id );
 
-		if ( $item instanceof ITE_Cart_Aware ) {
-			$item->set_cart( $this );
+		if ( $item ) {
+			return $item;
 		}
+
+		$item = $items->flatten()->get( $type, $id );
 
 		return $item;
 	}
@@ -568,17 +594,13 @@ class ITE_Cart {
 			}
 		}
 
-		/*if ( $this->get_items()->flatten()->count() === 1 ) {
-			$this->empty_cart();
-
-			return $this->get_items()->count() === 0;
-		}*/
-
 		if ( $remove_item ) {
-			$deleted = $this->get_repository()->delete( $item );
+			$deleted = $this->get_repository()->delete_item( $item );
 		}
 
 		if ( $deleted ) {
+			$this->_clear_item_cache();
+
 			/**
 			 * Fires when a line item is removed from the cart.
 			 *
@@ -619,11 +641,32 @@ class ITE_Cart {
 	 */
 	public function remove_all( $type = '', $flatten = false ) {
 
-		foreach ( $this->get_items( $type, $flatten ) as $item ) {
+		$items = $this->get_items( $type, $flatten );
+
+		foreach ( $items as $item ) {
 			$this->remove_item( $item );
 		}
 
 		return true;
+	}
+
+	/**
+	 * Save a line item.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param ITE_Line_Item $item
+	 *
+	 * @return bool
+	 */
+	public function save_item( ITE_Line_Item $item ) {
+		$r = $this->get_repository()->save_item( $item );
+
+		if ( $r ) {
+			$this->_clear_item_cache();
+		}
+
+		return $r;
 	}
 
 	/**
@@ -636,7 +679,25 @@ class ITE_Cart {
 	 * @return ITE_Line_Item|null
 	 */
 	public function refresh_item( ITE_Line_Item $item ) {
-		return $this->get_item( $item->get_type(), $item->get_id() );
+		$item = $this->get_repository()->get_item( $item->get_type(), $item->get_id() );
+
+		if ( $item ) {
+
+			$this->items->replace( $item );
+
+			return $item;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Clear the internal line item cache.
+	 *
+	 * This is automatically cleared when removing or adding items.
+	 */
+	public function _clear_item_cache() {
+		$this->items = null;
 	}
 
 	/**
@@ -773,7 +834,7 @@ class ITE_Cart {
 			}
 
 			$dupe->set_quantity( $product->get_quantity() + $dupe->get_quantity() );
-			$this->get_repository()->save( $dupe );
+			$this->save_item( $dupe );
 
 			$add_item = false;
 		}
@@ -795,7 +856,7 @@ class ITE_Cart {
 		foreach ( $this->get_items() as $item ) {
 			if ( $item instanceof ITE_Taxable_Line_Item && $tax->applies_to( $item ) ) {
 				$item->add_tax( $tax->create_scoped_for_taxable( $item ) );
-				$this->get_repository()->save( $item );
+				$this->save_item( $item );
 			}
 		}
 
@@ -834,7 +895,7 @@ class ITE_Cart {
 		foreach ( $products as $product ) {
 			if ( $coupon->get_coupon()->valid_for_product( $product ) ) {
 				$product->add_item( $coupon->create_scoped_for_product( $product ) );
-				$this->get_repository()->save( $product );
+				$this->save_item( $product );
 			}
 		}
 
@@ -1114,9 +1175,10 @@ class ITE_Cart {
 
 			$item = ITE_Base_Shipping_Line_Item::create( $method, $provider );
 			$item->set_scoped_from( $global );
+			$item->set_cart_repository( $this->get_repository() );
 
 			$for->add_item( $item );
-			$this->get_repository()->save( $for );
+			$this->save_item( $for );
 
 			if ( $this->is_current() ) {
 				it_exchange_update_multiple_shipping_method_for_cart_product( $for->get_id(), $method->slug );
@@ -1159,9 +1221,10 @@ class ITE_Cart {
 		foreach ( $this->get_items( 'product' ) as $item ) {
 			if ( $item->get_product()->has_feature( 'shipping' ) ) {
 				$per_item = ITE_Base_Shipping_Line_Item::create( $method, $provider );
+				$per_item->set_cart_repository( $this->get_repository() );
 				$per_item->set_scoped_from( $global );
 				$item->add_item( $per_item );
-				$this->get_repository()->save( $item );
+				$this->save_item( $item );
 			}
 		}
 
@@ -1538,11 +1601,11 @@ class ITE_Cart {
 		$repo = $this->get_repository();
 		$this->set_meta( 'frozen_total', $this->get_total() );
 
-		if ( $repo instanceof ITE_Line_Item_Cached_Session_Repository ) {
+		if ( $repo instanceof ITE_Cart_Cached_Session_Repository ) {
 			return $repo->get_model()->mark_purchased( $purchased );
 		}
 
-		if ( $repo instanceof ITE_Line_Item_Session_Repository ) {
+		if ( $repo instanceof ITE_Cart_Session_Repository ) {
 			$model = ITE_Session_Model::from_cart_id( $this->get_id() );
 
 			return $model && $model->mark_purchased( $purchased );
@@ -1556,19 +1619,19 @@ class ITE_Cart {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param \ITE_Line_Item_Repository $repository
-	 * @param bool                      $new_ids
+	 * @param \ITE_Cart_Repository $repository
+	 * @param bool                 $new_ids
 	 *
 	 * @return \ITE_Cart
 	 */
-	public function with_new_repository( ITE_Line_Item_Repository $repository, $new_ids = false ) {
+	public function with_new_repository( ITE_Cart_Repository $repository, $new_ids = false ) {
 
 		if ( $new_ids ) {
 			foreach ( $this->get_items() as $item ) {
-				$repository->save( $item->clone_with_new_id() );
+				$repository->save_item( $item->clone_with_new_id() );
 			}
 		} else {
-			$repository->save_many( $this->get_items()->flatten()->to_array() );
+			$repository->save_many_items( $this->get_items()->flatten()->to_array() );
 		}
 
 		$repository->set_billing_address( $this->get_billing_address() );
@@ -1739,7 +1802,7 @@ class ITE_Cart {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @return \ITE_Line_Item_Repository
+	 * @return \ITE_Cart_Repository
 	 */
 	public function get_repository() {
 		return $this->repository;

@@ -65,7 +65,7 @@ class IT_Exchange_Test_Factory_For_Transactions extends WP_UnitTest_Factory_For_
 
 			if ( empty( $args['make_current_cart'] ) ) {
 				$cart_object = ITE_Cart::create(
-					new ITE_Line_Item_Session_Repository( new IT_Exchange_In_Memory_Session( null ), new ITE_Line_Item_Repository_Events() ),
+					new ITE_Cart_Session_Repository( new IT_Exchange_In_Memory_Session( null ), new ITE_Line_Item_Repository_Events() ),
 					it_exchange_get_customer( $args['customer'] )
 				);
 			} else {

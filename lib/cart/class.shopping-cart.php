@@ -366,7 +366,7 @@ class IT_Exchange_Shopping_Cart {
 
 					if ( $max !== '' && (int) $quantity <= $max ) {
 						$item->set_quantity( (int) $quantity );
-						$current_cart->get_repository()->save( $item );
+						$current_cart->save_item( $item );
 					}
 				}
 			}
@@ -803,7 +803,7 @@ class IT_Exchange_Shopping_Cart {
 			}
 
 			try {
-				$repository = ITE_Line_Item_Cached_Session_Repository::from_customer( $customer );
+				$repository = ITE_Cart_Cached_Session_Repository::from_customer( $customer );
 				IT_Exchange_DB_Sessions::get_instance()->transfer_session( $repository->get_model(), true );
 			}
 			catch ( InvalidArgumentException $e ) {

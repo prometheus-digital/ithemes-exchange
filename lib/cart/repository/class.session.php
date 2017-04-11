@@ -7,9 +7,9 @@
  */
 
 /**
- * Class ITE_Line_Item_Session_Repository
+ * Class ITE_Cart_Session_Repository
  */
-class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
+class ITE_Cart_Session_Repository extends ITE_Cart_Repository {
 
 	/** @var IT_Exchange_SessionInterface */
 	protected $session;
@@ -31,7 +31,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function get( $type, $id ) {
+	public function get_item( $type, $id ) {
 		$data = $this->session->get_session_data( self::normalize_type( $type ) );
 
 		if ( ! isset( $data[ $id ] ) ) {
@@ -44,7 +44,43 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function all( $type = '' ) {
+	public function get_item_aggregatables( ITE_Line_Item $item ) {
+
+		$data = $this->session->get_session_data( self::normalize_type( $item->get_type() ) );
+
+		if ( ! isset( $data[ $item->get_id() ] ) ) {
+			return array();
+		}
+
+		if ( empty( $data[ $item->get_id() ]['_aggregate'] ) ) {
+			return array();
+		}
+
+		$aggregatables = array();
+
+		foreach ( $data[ $item->get_id() ]['_aggregate'] as $aggregatable_data ) {
+			$aggregatable_type_data = $this->session->get_session_data( self::normalize_type( $aggregatable_data['type'] ) );
+
+			$id = $aggregatable_data['id'];
+
+			if ( empty( $aggregatable_type_data[ $id ] ) ) {
+				continue;
+			}
+
+			$aggregatable = $this->construct_item( $id, $aggregatable_type_data[ $id ], $item );
+
+			if ( $aggregatable instanceof ITE_Aggregatable_Line_Item ) {
+				$aggregatables[] = $aggregatable;
+			}
+		}
+
+		return $aggregatables;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function all_items( $type = '' ) {
 
 		if ( $type ) {
 			$type = self::normalize_type( $type );
@@ -103,9 +139,9 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function save( ITE_Line_Item $item ) {
+	public function save_item( ITE_Line_Item $item ) {
 
-		$old = $this->get( $item->get_type(), $item->get_id() );
+		$old = $this->get_item( $item->get_type(), $item->get_id() );
 
 		$type = self::normalize_type( $item->get_type() );
 		$this->session->add_session_data( $type, array( $item->get_id() => $this->get_data( $item ) ) );
@@ -118,14 +154,14 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function save_many( array $items ) {
+	public function save_many_items( array $items ) {
 
 		$data = array();
 		$olds = array();
 
 		foreach ( $items as $item ) {
 			$data[ $item->get_type() ][ $item->get_id() ] = $this->get_data( $item );
-			$olds[ $item->get_type() ][ $item->get_id() ] = $this->get( $item->get_type(), $item->get_id() );
+			$olds[ $item->get_type() ][ $item->get_id() ] = $this->get_item( $item->get_type(), $item->get_id() );
 		}
 
 		foreach ( $data as $type => $item_data ) {
@@ -143,16 +179,37 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function delete( ITE_Line_Item $item ) {
+	public function delete_item( ITE_Line_Item $item ) {
 
-		if ( $item instanceof ITE_Aggregatable_Line_Item && $item->get_aggregate() ) {
+		$this->do_delete_item( $item );
+
+		return true;
+	}
+
+	/**
+	 * Delete an item from the repository.
+	 *
+	 * Responsibilities:
+	 *
+	 * - Delete self
+	 * - Delete any child items
+	 * - remove self from parent item
+	 *
+	 * @param ITE_Line_Item $item
+	 * @param bool          $remove_from_parent Whether to remove this item from the parent's aggregatables list.
+	 *
+	 * @return bool
+	 */
+	protected function do_delete_item( ITE_Line_Item $item, $remove_from_parent = true ) {
+
+		if ( $remove_from_parent && $item instanceof ITE_Aggregatable_Line_Item && $item->get_aggregate() ) {
 			$item->get_aggregate()->remove_item( $item->get_type(), $item->get_id() );
-			$this->save( $item->get_aggregate() );
+			$this->save_item( $item->get_aggregate() );
 		}
 
 		if ( $item instanceof ITE_Aggregate_Line_Item ) {
 			foreach ( $item->get_line_items() as $aggregatable ) {
-				$this->delete( $aggregatable );
+				$this->do_delete_item( $aggregatable, false );
 			}
 		}
 
@@ -462,7 +519,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 
 		if ( $item instanceof ITE_Aggregate_Line_Item ) {
 			foreach ( $item->get_line_items() as $aggregatable ) {
-				$this->save( $aggregatable );
+				$this->save_item( $aggregatable );
 				$additional['_aggregate'][] = array(
 					'type' => $aggregatable->get_type(),
 					'id'   => $aggregatable->get_id(),
@@ -471,7 +528,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 		}
 
 		if ( $item instanceof ITE_Scopable_Line_Item && $item->is_scoped() ) {
-			$this->save( $item->scoped_from() );
+			$this->save_item( $item->scoped_from() );
 			$additional['_scoped_from'] = $item->scoped_from()->get_id();
 		}
 
@@ -591,7 +648,6 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 		$this->set_repository( $item );
 		$this->set_aggregate( $item, $data, $aggregate );
 		$this->set_scoped_from( $item, $data );
-		$this->set_aggregatables( $item, $data );
 	}
 
 	/**
@@ -608,7 +664,7 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 		if ( $item instanceof ITE_Aggregatable_Line_Item && ! empty( $data['_parent'] ) ) {
 
 			if ( ! $aggregate && ! empty( $data['_parent']['type'] ) && ! empty( $data['_parent']['id'] ) ) {
-				$aggregate = $this->get( $data['_parent']['type'], $data['_parent']['type'] );
+				$aggregate = $this->get_item( $data['_parent']['type'], $data['_parent']['type'] );
 			}
 
 			if ( $aggregate instanceof ITE_Aggregate_Line_Item ) {
@@ -627,49 +683,10 @@ class ITE_Line_Item_Session_Repository extends ITE_Line_Item_Repository {
 	 */
 	protected final function set_scoped_from( ITE_Line_Item $item, array $data ) {
 		if ( $item instanceof ITE_Scopable_Line_Item && ! empty( $data['_scoped_from'] ) ) {
-			$scoped_from = $this->get( $item->get_type(), $data['_scoped_from'] );
+			$scoped_from = $this->get_item( $item->get_type(), $data['_scoped_from'] );
 
 			if ( $scoped_from instanceof ITE_Scopable_Line_Item ) {
 				$item->set_scoped_from( $scoped_from );
-			}
-		}
-	}
-
-	/**
-	 * Set the aggregatable line items on the given line item if necessary.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @param \ITE_Line_Item $item
-	 * @param array          $data
-	 */
-	protected final function set_aggregatables( ITE_Line_Item $item, array $data ) {
-
-		if ( $item instanceof ITE_Aggregate_Line_Item && ! empty( $data['_aggregate'] ) ) {
-
-			$aggregatables = array();
-
-			foreach ( $data['_aggregate'] as $aggregatable_data ) {
-
-				$all_of_type = $this->session->get_session_data( self::normalize_type( $aggregatable_data['type'] ) );
-
-				if ( ! $all_of_type || empty( $aggregatable_data['id'] ) ) {
-					continue;
-				}
-
-				$id = $aggregatable_data['id'];
-
-				if ( isset( $all_of_type[ $id ] ) ) {
-					$aggregatable = $this->construct_item( $id, $all_of_type[ $id ], $item );
-
-					if ( $aggregatable instanceof ITE_Aggregatable_Line_Item ) {
-						$aggregatables[] = $aggregatable;
-					}
-				}
-			}
-
-			if ( $aggregatables ) {
-				$item->_set_line_items( $aggregatables );
 			}
 		}
 	}

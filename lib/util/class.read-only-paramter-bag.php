@@ -66,4 +66,18 @@ class ITE_Read_Only_Parameter_Bag implements ITE_Parameter_Bag {
 			throw new BadMethodCallException( 'Read Only Paramter Bag does not allow removing parameters.' );
 		}
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function __debugInfo() {
+		return $this->get_params();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function __clone() {
+		$this->bag = clone $this->bag;
+	}
 }

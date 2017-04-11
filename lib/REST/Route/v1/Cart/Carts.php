@@ -57,14 +57,14 @@ class Carts extends Base implements Postable {
 				'expires_at' => $expires_at,
 			) );
 
-			$repo = \ITE_Line_Item_Cached_Session_Repository::from_session_id( $user, $session->ID );
+			$repo = \ITE_Cart_Cached_Session_Repository::from_session_id( $user, $session->ID );
 
 			$cart    = \ITE_Cart::create( $repo, $user );
 			$session = \ITE_Session_Model::get( $session->ID );
 		} elseif ( $request['is_main'] === true ) {
 			try {
 				// Guard against multiple carts per customer.
-				$repo    = \ITE_Line_Item_Cached_Session_Repository::from_customer( $user );
+				$repo    = \ITE_Cart_Cached_Session_Repository::from_customer( $user );
 				$cart_id = $repo->get_cart_id();
 				$save    = false;
 
@@ -101,7 +101,7 @@ class Carts extends Base implements Postable {
 				'expires_at' => $expires_at,
 			) );
 
-			$repo = \ITE_Line_Item_Cached_Session_Repository::from_session_id( $user, $session->ID );
+			$repo = \ITE_Cart_Cached_Session_Repository::from_session_id( $user, $session->ID );
 			$cart = \ITE_Cart::create( $repo, $user );
 		} else {
 			$session = \ITE_Session_Model::create( array(
@@ -111,7 +111,7 @@ class Carts extends Base implements Postable {
 				'expires_at' => $expires_at,
 			) );
 
-			$repo = \ITE_Line_Item_Cached_Session_Repository::from_session_id( $user, $session->ID );
+			$repo = \ITE_Cart_Cached_Session_Repository::from_session_id( $user, $session->ID );
 			$cart = \ITE_Cart::create( $repo, $user );
 		}
 

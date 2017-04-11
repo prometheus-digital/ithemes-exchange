@@ -86,7 +86,7 @@ class Item extends Base implements Getable, Putable, Deletable {
 
 			if ( (int) $quantity !== (int) $item->get_quantity() ) {
 				$item->set_quantity( $quantity );
-				$cart->get_repository()->save( $item );
+				$cart->save_item( $item );
 			}
 		}
 

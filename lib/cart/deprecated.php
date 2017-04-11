@@ -49,13 +49,13 @@ add_action( 'it_exchange_set_cart_shipping_address', 'ite_save_main_shipping_add
  *
  * @since 2.0.0
  *
- * @param \ITE_Line_Item            $item
- * @param \ITE_Line_Item|null       $old
- * @param \ITE_Line_Item_Repository $repo
+ * @param \ITE_Line_Item       $item
+ * @param \ITE_Line_Item|null  $old
+ * @param \ITE_Cart_Repository $repo
  */
-function ite_fire_deprecated_quantity_hook( ITE_Line_Item $item, ITE_Line_Item $old = null, ITE_Line_Item_Repository $repo ) {
+function ite_fire_deprecated_quantity_hook( ITE_Line_Item $item, ITE_Line_Item $old = null, ITE_Cart_Repository $repo ) {
 
-	if ( ! $repo instanceof ITE_Line_Item_Session_Repository || $repo instanceof ITE_Line_Item_Cached_Session_Repository ) {
+	if ( ! $repo instanceof ITE_Cart_Session_Repository || $repo instanceof ITE_Cart_Cached_Session_Repository ) {
 		return;
 	}
 
@@ -95,17 +95,17 @@ add_action( 'it_exchange_add_product_to_cart', 'ite_fire_deprecated_add_cart_pro
  *
  * @since 2.0.0
  *
- * @param \ITE_Cart_Product         $item
- * @param \ITE_Line_Item            $old
- * @param \ITE_Line_Item_Repository $repo
+ * @param \ITE_Cart_Product    $item
+ * @param \ITE_Line_Item       $old
+ * @param \ITE_Cart_Repository $repo
  */
-function ite_fire_deprecated_update_cart_product_hook( ITE_Cart_Product $item, ITE_Line_Item $old = null, ITE_Line_Item_Repository $repo ) {
+function ite_fire_deprecated_update_cart_product_hook( ITE_Cart_Product $item, ITE_Line_Item $old = null, ITE_Cart_Repository $repo ) {
 
 	if ( ! $old ) {
 		return;
 	}
 
-	if ( ! $repo instanceof ITE_Line_Item_Session_Repository ) {
+	if ( ! $repo instanceof ITE_Cart_Session_Repository ) {
 		return;
 	}
 
@@ -318,7 +318,7 @@ function it_exchange_update_cart_product( $cart_product_id, $product ) {
 
 	if ( $cart_product->get_quantity() != $product['count'] ) {
 		$cart_product->set_quantity( $product['count'] );
-		it_exchange_get_current_cart()->get_repository()->save( $cart_product );
+		it_exchange_get_current_cart()->save_item( $cart_product );
 	}
 
 	$bc = $cart_product->bc();

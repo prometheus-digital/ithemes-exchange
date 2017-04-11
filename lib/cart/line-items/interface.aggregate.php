@@ -9,7 +9,7 @@
 /**
  * Interface ITE_Aggregate_Line_Item
  */
-interface ITE_Aggregate_Line_Item {
+interface ITE_Aggregate_Line_Item extends ITE_Cart_Repository_Aware {
 
 	/**
 	 * Get all of the line items being represented.
@@ -42,13 +42,4 @@ interface ITE_Aggregate_Line_Item {
 	 * @return bool
 	 */
 	public function remove_item( $type, $id );
-
-	/**
-	 * Set the aggregatables for this item.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @param \ITE_Aggregatable_Line_Item[] $items
-	 */
-	public function _set_line_items( array $items );
 }

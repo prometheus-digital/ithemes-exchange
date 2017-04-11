@@ -62,7 +62,7 @@ class ITE_Product_Inventory_Validator implements ITE_Line_Item_Validator {
 
 		$item->set_quantity( $max );
 
-		if ( ! $cart->get_repository()->save( $item ) ) {
+		if ( ! $cart->save_item( $item ) ) {
 			throw new ITE_Line_Item_Coercion_Failed_Exception(
 				__( 'Failed to set the product quantity to the max allowed.', 'it-l10n-ithemes-exchange' ),
 				$item, $this

@@ -142,7 +142,7 @@ class ITE_Transaction_Meta_Sync {
 			$transaction->set_attribute( 'subtotal', $new->sub_total );
 		}
 
-		$repo = new ITE_Line_Item_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction );
+		$repo = new ITE_Cart_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction );
 
 		if ( count( $new->products ) === count( $old->products ) ) {
 			foreach ( $new->products as $product_cart_id => $cart_product ) {
@@ -162,20 +162,20 @@ class ITE_Transaction_Meta_Sync {
 					_doing_it_wrong(
 						'it_exchange_update_transaction_cart_object', "Don't modify cart products via cart object.", '2.0.0'
 					);
-					$repo->save( $item );
+					$repo->save_item( $item );
 				}
 			}
 		} elseif ( count( $new->products ) < count( $old->products ) ) {
 			foreach ( $old->products as $product_cart_id => $cart_product ) {
 				if ( ! isset( $new->products[ $product_cart_id ] ) ) {
 
-					$item = $repo->get( 'product', $product_cart_id );
+					$item = $repo->get_item( 'product', $product_cart_id );
 
 					if ( $item ) {
 						_doing_it_wrong(
 							'it_exchange_update_transaction_cart_object', "Don't delete cart products via cart object.", '2.0.0'
 						);
-						$repo->delete( $item );
+						$repo->delete_item( $item );
 					}
 				}
 			}
@@ -205,7 +205,7 @@ class ITE_Transaction_Meta_Sync {
 					'it_exchange_update_transaction_cart_object', "Don't add cart products via cart object.", '2.0.0'
 				);
 
-				$repo->save( $item );
+				$repo->save_item( $item );
 			}
 		}
 

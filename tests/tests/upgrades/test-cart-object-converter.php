@@ -42,8 +42,8 @@ class Test_IT_Exchange_Upgrades_Cart_Object_Converter extends IT_Exchange_UnitTe
 
 		self::$converter->convert( $cart_object, $transaction );
 
-		$repo  = new ITE_Line_Item_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction );
-		$items = $repo->all();
+		$repo  = new ITE_Cart_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction );
+		$items = $repo->all_items();
 
 		$this->assertCount( 1, $items->with_only( 'product' ) );
 
@@ -77,8 +77,8 @@ class Test_IT_Exchange_Upgrades_Cart_Object_Converter extends IT_Exchange_UnitTe
 
 		self::$converter->convert( $cart_object, $transaction );
 
-		$repo  = new ITE_Line_Item_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction );
-		$items = $repo->all();
+		$repo  = new ITE_Cart_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction );
+		$items = $repo->all_items();
 
 		$this->assertCount( 2, $items->with_only( 'product' ) );
 
@@ -125,8 +125,8 @@ class Test_IT_Exchange_Upgrades_Cart_Object_Converter extends IT_Exchange_UnitTe
 
 		self::$converter->convert( $cart_object, $transaction );
 
-		$repo  = new ITE_Line_Item_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction );
-		$items = $repo->all();
+		$repo  = new ITE_Cart_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction );
+		$items = $repo->all_items();
 
 		$this->assertCount( 2, $items->with_only( 'product' ) );
 
@@ -173,8 +173,8 @@ class Test_IT_Exchange_Upgrades_Cart_Object_Converter extends IT_Exchange_UnitTe
 
 		self::$converter->convert( $cart_object, $transaction );
 
-		$repo  = new ITE_Line_Item_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction );
-		$items = $repo->all();
+		$repo  = new ITE_Cart_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction );
+		$items = $repo->all_items();
 
 		$this->assertCount( 1, $items->with_only( 'product' ) );
 		/** @var ITE_Cart_Product $product */
@@ -216,8 +216,8 @@ class Test_IT_Exchange_Upgrades_Cart_Object_Converter extends IT_Exchange_UnitTe
 
 		self::$converter->convert( $cart_object, $transaction );
 
-		$repo  = new ITE_Line_Item_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction );
-		$items = $repo->all();
+		$repo  = new ITE_Cart_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction );
+		$items = $repo->all_items();
 
 		$this->assertCount( 2, $items->with_only( 'product' ), 'Product count correct' );
 
@@ -230,8 +230,8 @@ class Test_IT_Exchange_Upgrades_Cart_Object_Converter extends IT_Exchange_UnitTe
 		$this->assertNotNull( $p2 );
 
 		$this->assertCount( 1, $items->with_only( 'coupon' ), 'Global coupon item added' );
-		$this->assertCount( 1, $p1->get_line_items()->with_only( 'coupon' ), 'Product coupon item added.' );
-		$this->assertCount( 1, $p2->get_line_items()->with_only( 'coupon' ), 'Product coupon item added.' );
+		$this->assertCount( 1, $p1->get_line_items()->with_only( 'coupon' ), 'Product 1 coupon item added.' );
+		$this->assertCount( 1, $p2->get_line_items()->with_only( 'coupon' ), 'Product 2 coupon item added.' );
 
 		/** @var ITE_Coupon_Line_Item $global */
 		$global = $items->with_only( 'coupon' )->first();
@@ -276,8 +276,8 @@ class Test_IT_Exchange_Upgrades_Cart_Object_Converter extends IT_Exchange_UnitTe
 
 		self::$converter->convert( $cart_object, $transaction );
 
-		$repo  = new ITE_Line_Item_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction );
-		$items = $repo->all();
+		$repo  = new ITE_Cart_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction );
+		$items = $repo->all_items();
 
 		$this->assertCount( 2, $items->with_only( 'product' ), 'Product count correct' );
 

@@ -37,7 +37,7 @@ class ITE_Simple_Taxes_Provider extends ITE_Tax_Provider {
 
 		if ( $tax->applies_to( $item ) ) {
 			$item->add_tax( $tax );
-			$cart->get_repository()->save( $item );
+			$cart->save_item( $item );
 		}
 	}
 }

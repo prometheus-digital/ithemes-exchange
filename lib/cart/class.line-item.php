@@ -247,4 +247,21 @@ abstract class ITE_Line_Item implements ITE_Parameter_Bag {
 
 		return $this->bag->remove_param( $param );
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function __clone() {
+
+		if ( $this instanceof ITE_Scopable_Line_Item && $this->is_scoped() ) {
+			$this->set_scoped_from( clone $this->scoped_from() );
+		}
+
+		if ( $this instanceof ITE_Aggregatable_Line_Item && $this->get_aggregate() ) {
+			$this->set_aggregate( clone $this->get_aggregate() );
+		}
+
+		$this->bag    = clone $this->bag;
+		$this->frozen = clone $this->frozen;
+	}
 }

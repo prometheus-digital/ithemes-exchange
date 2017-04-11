@@ -23,7 +23,7 @@ class ITE_Line_Item_Transaction_Object_Converter {
 	 */
 	public function convert( stdClass $cart_object, IT_Exchange_Transaction $transaction ) {
 
-		$repository = new ITE_Line_Item_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction );
+		$repository = new ITE_Cart_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction );
 
 		if ( empty( $cart_object->products ) ) {
 			return;
@@ -63,12 +63,12 @@ class ITE_Line_Item_Transaction_Object_Converter {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param array                                 $products
-	 * @param \ITE_Line_Item_Transaction_Repository $repository
+	 * @param array                            $products
+	 * @param \ITE_Cart_Transaction_Repository $repository
 	 *
 	 * @return \ITE_Cart_Product[]
 	 */
-	protected function products( array $products, ITE_Line_Item_Transaction_Repository $repository ) {
+	protected function products( array $products, ITE_Cart_Transaction_Repository $repository ) {
 
 		$items = array();
 
@@ -104,10 +104,10 @@ class ITE_Line_Item_Transaction_Object_Converter {
 					'summary_only' => false,
 				) ) );
 			$items[ $item->get_id() ] = $item;
-			$item->set_line_item_repository( $repository );
+			$item->set_cart_repository( $repository );
 		}
 
-		$repository->save_many( $items );
+		$repository->save_many_items( $items );
 
 		return $items;
 	}
@@ -117,14 +117,14 @@ class ITE_Line_Item_Transaction_Object_Converter {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param float                                 $taxes
-	 * @param float                                 $sub_total
-	 * @param \ITE_Cart_Product[]                   $products
-	 * @param \ITE_Line_Item_Transaction_Repository $repository
+	 * @param float                            $taxes
+	 * @param float                            $sub_total
+	 * @param \ITE_Cart_Product[]              $products
+	 * @param \ITE_Cart_Transaction_Repository $repository
 	 *
 	 * @return bool
 	 */
-	protected function taxes( $taxes, $sub_total, array $products, ITE_Line_Item_Transaction_Repository $repository ) {
+	protected function taxes( $taxes, $sub_total, array $products, ITE_Cart_Transaction_Repository $repository ) {
 
 		$tid = $repository->get_transaction()->ID;
 
@@ -204,10 +204,10 @@ class ITE_Line_Item_Transaction_Object_Converter {
 					$total_tax_amount += $tax_amount;
 				}
 
-				$repository->save_many( $products );
+				$repository->save_many_items( $products );
 
 				if ( $total_tax_amount < $tax_type['total'] ) {
-					$repository->save( new ITE_Canadian_Tax_Item(
+					$repository->save_item( new ITE_Canadian_Tax_Item(
 						md5( uniqid( 'CANADIAN', true ) . $tax_type['type'] ),
 						new ITE_Array_Parameter_Bag( array(
 							'code'                => $code,
@@ -284,10 +284,10 @@ class ITE_Line_Item_Transaction_Object_Converter {
 						$total_tax_amount += $tax_amount;
 					}
 
-					$repository->save_many( $products );
+					$repository->save_many_items( $products );
 
 					if ( $total_tax_amount < $regular_tax['total'] ) {
-						$repository->save( new ITE_EU_VAT_Line_Item(
+						$repository->save_item( new ITE_EU_VAT_Line_Item(
 							md5( uniqid( 'VAT', true ) . $rate ),
 							new ITE_Array_Parameter_Bag( array(
 								'code'                => $code,
@@ -361,10 +361,10 @@ class ITE_Line_Item_Transaction_Object_Converter {
 						$total_tax_amount += $tax_amount;
 					}
 
-					$repository->save_many( $products );
+					$repository->save_many_items( $products );
 
 					if ( $total_tax_amount < $moss_tax['total'] ) {
-						$repository->save( new ITE_EU_VAT_Line_Item(
+						$repository->save_item( new ITE_EU_VAT_Line_Item(
 							md5( uniqid( 'VAT', true ) . $rate ),
 							new ITE_Array_Parameter_Bag( array(
 								'code'                => $code,
@@ -391,7 +391,7 @@ class ITE_Line_Item_Transaction_Object_Converter {
 			$product->add_tax( $tax );
 		}
 
-		$repository->save_many( $products );
+		$repository->save_many_items( $products );
 
 		return true;
 	}
@@ -401,16 +401,16 @@ class ITE_Line_Item_Transaction_Object_Converter {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param array[]                               $coupon_types
-	 * @param float                                 $total
-	 * @param \ITE_Cart_Product[]                   $products
-	 * @param \ITE_Line_Item_Transaction_Repository $repository
+	 * @param array[]                          $coupon_types
+	 * @param float                            $total
+	 * @param \ITE_Cart_Product[]              $products
+	 * @param \ITE_Cart_Transaction_Repository $repository
 	 */
 	protected function coupons(
 		$coupon_types,
 		$total,
 		array $products,
-		ITE_Line_Item_Transaction_Repository $repository
+		ITE_Cart_Transaction_Repository $repository
 	) {
 
 		$total_coupons = 0;
@@ -450,8 +450,8 @@ class ITE_Line_Item_Transaction_Object_Converter {
 					) )
 				);
 
-				$global->set_line_item_repository( $repository );
-				$repository->save( $global );
+				$global->set_cart_repository( $repository );
+				$repository->save_item( $global );
 
 				foreach ( $products as $product ) {
 
@@ -475,7 +475,7 @@ class ITE_Line_Item_Transaction_Object_Converter {
 					);
 					$scoped->set_scoped_from( $global );
 					$scoped->set_aggregate( $product );
-					$scoped->set_line_item_repository( $repository );
+					$scoped->set_cart_repository( $repository );
 
 					foreach ( $props as $k => $v ) {
 						$scoped->set_param( $k, $v );
@@ -488,7 +488,7 @@ class ITE_Line_Item_Transaction_Object_Converter {
 			}
 		}
 
-		$repository->save_many( $per_products );
+		$repository->save_many_items( $per_products );
 	}
 
 	/**
@@ -496,14 +496,14 @@ class ITE_Line_Item_Transaction_Object_Converter {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param string                                $method_slug
-	 * @param float                                 $total
-	 * @param \ITE_Cart_Product[]                   $products
-	 * @param \ITE_Line_Item_Transaction_Repository $repository
+	 * @param string                           $method_slug
+	 * @param float                            $total
+	 * @param \ITE_Cart_Product[]              $products
+	 * @param \ITE_Cart_Transaction_Repository $repository
 	 *
 	 * @return \ITE_Shipping_Line_Item|null
 	 */
-	protected function shipping_single( $method_slug, $total, $products, ITE_Line_Item_Transaction_Repository $repository ) {
+	protected function shipping_single( $method_slug, $total, $products, ITE_Cart_Transaction_Repository $repository ) {
 
 		$method  = it_exchange_get_registered_shipping_method( $method_slug );
 		$options = it_exchange_get_registered_shipping_method_args( $method_slug );
@@ -558,7 +558,7 @@ class ITE_Line_Item_Transaction_Object_Converter {
 				'summary_only' => true
 			) )
 		);
-		$global->set_line_item_repository( $repository );
+		$global->set_cart_repository( $repository );
 
 		foreach ( $shippable as $product ) {
 
@@ -580,14 +580,14 @@ class ITE_Line_Item_Transaction_Object_Converter {
 					'summary_only' => true
 				) )
 			);
-			$per_product->set_line_item_repository( $repository );
+			$per_product->set_cart_repository( $repository );
 			$per_product->set_aggregate( $product );
 			$per_product->set_scoped_from( $global );
 			$per_products[] = $per_product;
 		}
 
-		$repository->save_many( $per_products );
-		$repository->save( $global );
+		$repository->save_many_items( $per_products );
+		$repository->save_item( $global );
 
 		return $global;
 	}
@@ -597,14 +597,14 @@ class ITE_Line_Item_Transaction_Object_Converter {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param array                                 $multiple
-	 * @param float                                 $total
-	 * @param \ITE_Cart_Product[]                   $products
-	 * @param \ITE_Line_Item_Transaction_Repository $repository
+	 * @param array                            $multiple
+	 * @param float                            $total
+	 * @param \ITE_Cart_Product[]              $products
+	 * @param \ITE_Cart_Transaction_Repository $repository
 	 *
 	 * @return \ITE_Shipping_Line_Item[]
 	 */
-	protected function shipping_multi( $multiple, $total, $products, ITE_Line_Item_Transaction_Repository $repository ) {
+	protected function shipping_multi( $multiple, $total, $products, ITE_Cart_Transaction_Repository $repository ) {
 
 		$per_products = array();
 		$globals      = array();
@@ -666,7 +666,7 @@ class ITE_Line_Item_Transaction_Object_Converter {
 					'summary_only' => true
 				) )
 			);
-			$global->set_line_item_repository( $repository );
+			$global->set_cart_repository( $repository );
 
 			$globals[] = $global;
 
@@ -682,14 +682,14 @@ class ITE_Line_Item_Transaction_Object_Converter {
 					'summary_only' => true
 				) )
 			);
-			$per_product->set_line_item_repository( $repository );
+			$per_product->set_cart_repository( $repository );
 			$per_product->set_aggregate( $product );
 			$per_product->set_scoped_from( $global );
 			$per_products[] = $per_product;
 		}
 
-		$repository->save_many( $per_products );
-		$repository->save_many( $globals );
+		$repository->save_many_items( $per_products );
+		$repository->save_many_items( $globals );
 
 		return $per_products;
 	}

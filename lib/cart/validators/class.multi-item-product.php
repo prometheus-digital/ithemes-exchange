@@ -59,7 +59,7 @@ class ITE_Multi_Item_Product_Validator implements ITE_Line_Item_Validator {
 
 		$item->set_quantity( 1 );
 
-		if ( ! $cart->get_repository()->save( $item ) ) {
+		if ( ! $cart->save_item( $item ) ) {
 			throw new ITE_Line_Item_Coercion_Failed_Exception(
 				__( 'Failed to set quantity to 1.', 'it-l10n-ithemes-exchange' ), $item, $this
 			);

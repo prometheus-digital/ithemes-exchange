@@ -620,7 +620,7 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 
 		$transaction = IT_Exchange_Transaction::create( $purchase_args );
 
-		$repo = new ITE_Line_Item_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction );
+		$repo = new ITE_Cart_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction );
 
 		if ( $cart ) {
 			$cart->get_items()->flatten()->freeze();
@@ -654,7 +654,7 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 
 		if ( $cart ) {
 			if ( $gateway && ! $gateway->requires_cart_after_purchase() ) {
-				if ( $cart->get_repository() instanceof ITE_Line_Item_Session_Repository ) {
+				if ( $cart->get_repository() instanceof ITE_Cart_Session_Repository ) {
 					$model = ITE_Session_Model::from_cart_id( $cart->get_id() );
 
 					if ( $model ) {
@@ -662,7 +662,7 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 					}
 				}
 			} elseif ( $gateway && $gateway->requires_cart_after_purchase() ) {
-				if ( $cart->get_repository() instanceof ITE_Line_Item_Session_Repository ) {
+				if ( $cart->get_repository() instanceof ITE_Cart_Session_Repository ) {
 					$model = ITE_Session_Model::from_cart_id( $cart->get_id() );
 
 					if ( $model && ! $model->purchased_at ) {
@@ -824,7 +824,7 @@ function it_exchange_add_child_transaction( $method, $method_id, $status = 'pend
 
 		if ( $cart ) {
 			$cart->get_items()->flatten()->freeze();
-			$cart->with_new_repository( new ITE_Line_Item_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction ) );
+			$cart->with_new_repository( new ITE_Cart_Transaction_Repository( new ITE_Line_Item_Repository_Events(), $transaction ) );
 		}
 
 		do_action( 'it_exchange_add_child_transaction_success', $transaction_id, $cart );
@@ -835,7 +835,7 @@ function it_exchange_add_child_transaction( $method, $method_id, $status = 'pend
 
 		if ( $cart ) {
 			if ( $gateway && ! $gateway->requires_cart_after_purchase() ) {
-				if ( $cart->get_repository() instanceof ITE_Line_Item_Session_Repository ) {
+				if ( $cart->get_repository() instanceof ITE_Cart_Session_Repository ) {
 					$model = ITE_Session_Model::from_cart_id( $cart->get_id() );
 
 					if ( $model ) {
@@ -843,7 +843,7 @@ function it_exchange_add_child_transaction( $method, $method_id, $status = 'pend
 					}
 				}
 			} elseif ( $gateway && $gateway->requires_cart_after_purchase() ) {
-				if ( $cart->get_repository() instanceof ITE_Line_Item_Session_Repository ) {
+				if ( $cart->get_repository() instanceof ITE_Cart_Session_Repository ) {
 					$model = ITE_Session_Model::from_cart_id( $cart->get_id() );
 
 					if ( $model && ! $model->purchased_at ) {

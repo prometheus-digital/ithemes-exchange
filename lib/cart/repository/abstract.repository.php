@@ -7,9 +7,9 @@
  */
 
 /**
- * Class ITE_Line_Item_Repository
+ * Class ITE_Cart_Repository
  */
-abstract class ITE_Line_Item_Repository {
+abstract class ITE_Cart_Repository {
 
 	/**
 	 * Get an item from the repository.
@@ -21,7 +21,18 @@ abstract class ITE_Line_Item_Repository {
 	 *
 	 * @return ITE_Line_Item|null
 	 */
-	abstract public function get( $type, $id );
+	abstract public function get_item( $type, $id );
+
+	/**
+	 * Get an item's aggregatables.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param ITE_Line_Item $item
+	 *
+	 * @return ITE_Aggregatable_Line_Item[]
+	 */
+	abstract public function get_item_aggregatables( ITE_Line_Item $item );
 
 	/**
 	 * Get all line items.
@@ -32,7 +43,7 @@ abstract class ITE_Line_Item_Repository {
 	 *
 	 * @return ITE_Line_Item_Collection|ITE_Line_Item[]
 	 */
-	abstract public function all( $type = '' );
+	abstract public function all_items( $type = '' );
 
 	/**
 	 * Save an item.
@@ -43,7 +54,7 @@ abstract class ITE_Line_Item_Repository {
 	 *
 	 * @return bool
 	 */
-	abstract public function save( ITE_Line_Item $item );
+	abstract public function save_item( ITE_Line_Item $item );
 
 	/**
 	 * Save multiple items.
@@ -54,7 +65,7 @@ abstract class ITE_Line_Item_Repository {
 	 *
 	 * @return bool
 	 */
-	abstract public function save_many( array $items );
+	abstract public function save_many_items( array $items );
 
 	/**
 	 * Delete a line item.
@@ -68,7 +79,7 @@ abstract class ITE_Line_Item_Repository {
 	 *
 	 * @return bool
 	 */
-	abstract public function delete( ITE_Line_Item $item );
+	abstract public function delete_item( ITE_Line_Item $item );
 
 	/**
 	 * Get all meta stored on the cart.
@@ -172,8 +183,8 @@ abstract class ITE_Line_Item_Repository {
 	 * @param \ITE_Line_Item $item
 	 */
 	protected final function set_repository( ITE_Line_Item $item ) {
-		if ( $item instanceof ITE_Line_Item_Repository_Aware ) {
-			$item->set_line_item_repository( $this );
+		if ( $item instanceof ITE_Cart_Repository_Aware ) {
+			$item->set_cart_repository( $this );
 		}
 	}
 

@@ -748,7 +748,7 @@ class IT_Exchange_API_Cart_Test extends IT_Exchange_UnitTestCase {
 	public function test_get_cart_description() {
 
 		$cart = ITE_Cart::create(
-			new ITE_Line_Item_Session_Repository( new IT_Exchange_In_Memory_Session( null ), new ITE_Line_Item_Repository_Events() ),
+			new ITE_Cart_Session_Repository( new IT_Exchange_In_Memory_Session( null ), new ITE_Line_Item_Repository_Events() ),
 			it_exchange_get_customer( 1 )
 		);
 

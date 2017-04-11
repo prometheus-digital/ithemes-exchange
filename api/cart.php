@@ -30,7 +30,7 @@ function it_exchange_get_current_cart( $create_if_not_started = true ) {
 
 		if ( $cart_id ) {
 			$cart = new ITE_Cart(
-				new ITE_Line_Item_Session_Repository( it_exchange_get_session(), new ITE_Line_Item_Repository_Events() ),
+				new ITE_Cart_Session_Repository( it_exchange_get_session(), new ITE_Line_Item_Repository_Events() ),
 				$cart_id,
 				it_exchange_get_current_customer() ?: null
 			);
@@ -75,7 +75,7 @@ function it_exchange_get_cart( $cart_id ) {
 	}
 
 	try {
-		$repo = ITE_Line_Item_Cached_Session_Repository::from_cart_id( $cart_id );
+		$repo = ITE_Cart_Cached_Session_Repository::from_cart_id( $cart_id );
 	} catch ( InvalidArgumentException $e ) {
 		return null;
 	}
@@ -113,7 +113,7 @@ function it_exchange_create_cart_and_session( IT_Exchange_Customer $user, $is_ma
 
 	$session = \ITE_Session_Model::create( $data );
 
-	$repo = \ITE_Line_Item_Cached_Session_Repository::from_session_id( $user, $session->ID );
+	$repo = \ITE_Cart_Cached_Session_Repository::from_session_id( $user, $session->ID );
 	$cart = \ITE_Cart::create( $repo, $user );
 
 	if ( ! $cart ) {
@@ -311,7 +311,7 @@ function it_exchange_update_cart_product_quantity( $cart_product_id, $quantity, 
 		$item->set_quantity( $quantity );
 	}
 
-	return it_exchange_get_current_cart()->get_repository()->save( $item );
+	return it_exchange_get_current_cart()->save_item( $item );
 }
 
 /**
@@ -402,7 +402,7 @@ function it_exchange_get_cached_customer_cart( $customer_id = false, $session_on
 	}
 
 	try {
-		$repository = ITE_Line_Item_Cached_Session_Repository::from_customer( $customer );
+		$repository = ITE_Cart_Cached_Session_Repository::from_customer( $customer );
 	} catch ( InvalidArgumentException $e ) {
 		return false;
 	}
@@ -474,7 +474,7 @@ function it_exchange_merge_cached_customer_cart_into_current_session( $user_logi
 	}
 
 	try {
-		$repository = ITE_Line_Item_Cached_Session_Repository::from_customer( $customer );
+		$repository = ITE_Cart_Cached_Session_Repository::from_customer( $customer );
 		it_exchange_get_current_cart()->merge( new \ITE_Cart(
 			$repository, $repository->get_cart_id(), $customer
 		) );

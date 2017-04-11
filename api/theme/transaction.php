@@ -810,7 +810,7 @@ class IT_Theme_API_Transaction implements IT_Theme_API {
 				'description' => '',
 				'amount'      => 85.00
 			) ) ),
-		), new ITE_Line_Item_Cached_Session_Repository(
+		), new ITE_Cart_Cached_Session_Repository(
 			new IT_Exchange_In_Memory_Session( null ), it_exchange_get_current_customer(),
 			new ITE_Line_Item_Repository_Events()
 		) );

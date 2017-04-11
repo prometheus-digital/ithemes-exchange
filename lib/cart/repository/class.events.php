@@ -16,19 +16,19 @@ class ITE_Line_Item_Repository_Events {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param \ITE_Line_Item            $item
-	 * @param \ITE_Line_Item|null       $old
-	 * @param \ITE_Line_Item_Repository $repository
+	 * @param \ITE_Line_Item       $item
+	 * @param \ITE_Line_Item|null  $old
+	 * @param \ITE_Cart_Repository $repository
 	 */
-	public function on_save( ITE_Line_Item $item, ITE_Line_Item $old = null, ITE_Line_Item_Repository $repository ) {
+	public function on_save( ITE_Line_Item $item, ITE_Line_Item $old = null, ITE_Cart_Repository $repository ) {
 		/**
 		 * Fires when a line item is saved.
 		 *
 		 * @since 2.0.0
 		 *
-		 * @param \ITE_Line_Item            $item
-		 * @param \ITE_Line_Item|null       $old
-		 * @param \ITE_Line_Item_Repository $repository
+		 * @param \ITE_Line_Item       $item
+		 * @param \ITE_Line_Item|null  $old
+		 * @param \ITE_Cart_Repository $repository
 		 */
 		do_action( 'it_exchange_save_line_item', $item, $old, $this );
 
@@ -40,9 +40,9 @@ class ITE_Line_Item_Repository_Events {
 		 *
 		 * @since 2.0.0
 		 *
-		 * @param \ITE_Line_Item            $item
-		 * @param \ITE_Line_Item|null       $old
-		 * @param \ITE_Line_Item_Repository $repository
+		 * @param \ITE_Line_Item       $item
+		 * @param \ITE_Line_Item|null  $old
+		 * @param \ITE_Cart_Repository $repository
 		 */
 		do_action( "it_exchange_save_{$item->get_type()}_item", $item, $old, $repository );
 	}
@@ -52,18 +52,18 @@ class ITE_Line_Item_Repository_Events {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param \ITE_Line_Item            $item
-	 * @param \ITE_Line_Item_Repository $repository
+	 * @param \ITE_Line_Item       $item
+	 * @param \ITE_Cart_Repository $repository
 	 */
-	public function on_delete( ITE_Line_Item $item, ITE_Line_Item_Repository $repository ) {
+	public function on_delete( ITE_Line_Item $item, ITE_Cart_Repository $repository ) {
 
 		/**
 		 * Fires when a line item is deleted.
 		 *
 		 * @since 2.0.0
 		 *
-		 * @param \ITE_Line_Item            $item
-		 * @param \ITE_Line_Item_Repository $repository
+		 * @param \ITE_Line_Item       $item
+		 * @param \ITE_Cart_Repository $repository
 		 */
 		do_action( 'it_exchange_delete_line_item', $item, $repository );
 
@@ -75,8 +75,8 @@ class ITE_Line_Item_Repository_Events {
 		 *
 		 * @since 2.0.0
 		 *
-		 * @param \ITE_Line_Item            $item
-		 * @param \ITE_Line_Item_Repository $repository
+		 * @param \ITE_Line_Item       $item
+		 * @param \ITE_Cart_Repository $repository
 		 */
 		do_action( "it_exchange_delete_{$item->get_type()}_item", $item, $repository );
 	}
@@ -86,12 +86,12 @@ class ITE_Line_Item_Repository_Events {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param \ITE_Line_Item            $item
-	 * @param \ITE_Line_Item_Repository $repository
+	 * @param \ITE_Line_Item       $item
+	 * @param \ITE_Cart_Repository $repository
 	 *
 	 * @return \ITE_Line_Item
 	 */
-	public function on_get( ITE_Line_Item $item, ITE_Line_Item_Repository $repository ) {
+	public function on_get( ITE_Line_Item $item, ITE_Cart_Repository $repository ) {
 
 		$class = get_class( $item );
 
@@ -100,8 +100,8 @@ class ITE_Line_Item_Repository_Events {
 		 *
 		 * @since 2.0.0
 		 *
-		 * @param \ITE_Line_Item            $item
-		 * @param \ITE_Line_Item_Repository $repository
+		 * @param \ITE_Line_Item       $item
+		 * @param \ITE_Cart_Repository $repository
 		 */
 		$_item = apply_filters( 'it_exchange_get_line_item', $item, $repository );
 
@@ -121,8 +121,8 @@ class ITE_Line_Item_Repository_Events {
 		 *
 		 * @since 2.0.0
 		 *
-		 * @param \ITE_Line_Item            $item
-		 * @param \ITE_Line_Item_Repository $repository
+		 * @param \ITE_Line_Item       $item
+		 * @param \ITE_Cart_Repository $repository
 		 */
 		$_item = apply_filters( "it_exchange_get_{$item->get_type()}_item", $item, $repository );
 

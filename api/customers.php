@@ -219,7 +219,7 @@ function it_exchange_get_customer_products( $customer_id ) {
 		->order_by( 'created_at', 'DESC' )
 		->results()->toArray();
 
-	$items_by_txn = ITE_Line_Item_Transaction_Repository::convert_to_items_segmented( $models );
+	$items_by_txn = ITE_Cart_Transaction_Repository::convert_to_items_segmented( $models );
 
 	$products = array();
 

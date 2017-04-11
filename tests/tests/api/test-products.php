@@ -186,7 +186,7 @@ class IT_Exchange_API_Products_Test extends IT_Exchange_UnitTestCase {
 		) );
 
 		$cart = ITE_Cart::create(
-			new ITE_Line_Item_Session_Repository(
+			new ITE_Cart_Session_Repository(
 				new IT_Exchange_In_Memory_Session( null ), new ITE_Line_Item_Repository_Events()
 			), it_exchange_get_customer( 1 ) );
 
@@ -206,7 +206,7 @@ class IT_Exchange_API_Products_Test extends IT_Exchange_UnitTestCase {
 		$t1 = it_exchange_add_transaction( 'test-method', 'test-method-id-1', 'pending', $cart );
 
 		$cart = ITE_Cart::create(
-			new ITE_Line_Item_Session_Repository(
+			new ITE_Cart_Session_Repository(
 				new IT_Exchange_In_Memory_Session( null ), new ITE_Line_Item_Repository_Events()
 			), it_exchange_get_customer( 1 ) );
 
