@@ -155,21 +155,43 @@ add_action( 'shutdown', 'it_exchange_db_session_write_close' );
 function it_exchange_db_session_cleanup() {
 	global $wpdb;
 	
-	if ( defined( 'WP_SETUP_CONFIG' ) ) {
+	if ( defined( 'WP_SETUP_CONFIG' ) || defined( 'WP_INSTALLING' ) ) {
 		return;
 	}
-	
-	if ( ! defined( 'WP_INSTALLING' ) ) {
 
-		$wpdb->query( $wpdb->prepare(
-			"DELETE FROM {$wpdb->prefix}ite_sessions WHERE expires_at < %s AND purchased_at IS NULL", current_time( 'mysql', true )
+	$week_ago = time() - ( DAY_IN_SECONDS * 7 );
+	$week_ago = gmdate( 'Y-m-d H:i:s', $week_ago );
+
+	$cache_group = ITE_Session_Model::get_cache_group();
+
+	if ( ! function_exists( 'wp_cache_delete_group' ) ) {
+		$eids = $wpdb->get_results( $wpdb->prepare(
+			"SELECT ID FROM {$wpdb->prefix}ite_sessions WHERE expires_at < %s AND purchased_at IS NULL",
+			current_time( 'mysql', true )
+		) );
+		$pids = $wpdb->get_results( $wpdb->prepare(
+			"SELECT ID FROM {$wpdb->prefix}ite_sessions WHERE purchased_at < %s OR expires_at < %s", $week_ago, $week_ago
 		) );
 
-		$week_ago = time() - ( DAY_IN_SECONDS * 7 );
-		$week_ago = gmdate( 'Y-m-d H:i:s', $week_ago );
-		$wpdb->query( $wpdb->prepare(
-			"DELETE FROM {$wpdb->prefix}ite_sessions WHERE purchased_at < %s OR expires_at < %s", $week_ago, $week_ago
-		) );
+		foreach ( $eids as $id ) {
+			wp_cache_delete( $id->ID, $cache_group );
+		}
+
+		foreach ( $pids as $id ) {
+			wp_cache_delete( $id->ID, $cache_group );
+		}
+	}
+
+	$wpdb->query( $wpdb->prepare(
+		"DELETE FROM {$wpdb->prefix}ite_sessions WHERE expires_at < %s AND purchased_at IS NULL",
+		current_time( 'mysql', true )
+	) );
+	$wpdb->query( $wpdb->prepare(
+		"DELETE FROM {$wpdb->prefix}ite_sessions WHERE purchased_at < %s OR expires_at < %s", $week_ago, $week_ago
+	) );
+
+	if ( function_exists( 'wp_cache_delete_group' ) ) {
+		wp_cache_delete_group( $cache_group );
 	}
 
 	// Allow other plugins to hook in to the garbage collection process.
@@ -184,16 +206,28 @@ add_action( 'it_exchange_db_session_garbage_collection', 'it_exchange_db_session
  * This method probably shouldn't be called in a production environment
  *
  * @internal
+ *
+ * @since 2.0.0 Introduce $include_legacy parameter.
+ *
+ * @param bool $include_legacy
  */
-function it_exchange_db_delete_all_sessions() {
+function it_exchange_db_delete_all_sessions( $include_legacy = false ) {
 	global $wpdb;
 
-	if ( defined( 'WP_SETUP_CONFIG' ) ) {
+	if ( defined( 'WP_SETUP_CONFIG' ) || defined( 'WP_INSTALLING' ) ) {
 		return;
 	}
 
-	if ( ! defined( 'WP_INSTALLING' ) ) {
-		$wpdb->query( "TRUNCATE TABLE {$wpdb->prefix}ite_sessions" );
+	$wpdb->query( "TRUNCATE TABLE {$wpdb->prefix}ite_sessions" );
+
+	if ( $include_legacy ) {
+		$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE '_it_exchange_db_session_%'" );
+	}
+
+	if ( function_exists( 'wp_cache_delete_group' ) ) {
+		wp_cache_delete_group( ITE_Session_Model::get_cache_group() );
+	} else {
+		wp_cache_flush();
 	}
 
 	// Allow other plugins to hook in to the garbage collection process.
