@@ -56,7 +56,7 @@ class IT_Exchange_Upgrade_Routine_Txn_Table implements IT_Exchange_UpgradeInterf
 			__( 'Move transactions to their own database table for increased performance and reporting.', 'it-l10n-ithemes-exchange' )
 			. ' <b>' .
 			__( 'Ensure all tax and shipping add-ons ever used have been activated before proceeding.', 'it-l10n-ithemes-exchange' )
-			 . '</b>';
+			. '</b>';
 	}
 
 	/**
@@ -257,6 +257,16 @@ class IT_Exchange_Upgrade_Routine_Txn_Table implements IT_Exchange_UpgradeInterf
 	public function upgrade( IT_Exchange_Upgrade_Config $config, IT_Exchange_Upgrade_SkinInterface $skin ) {
 
 		$transactions = $this->get_transactions( $config->get_number() );
+
+		if ( ! $transactions ) {
+			it_exchange_db_delete_all_sessions( true );
+			$skin->debug( 'Cleared All Sessions' );
+
+			if ( function_exists( 'wp_cache_delete_group' ) ) {
+				wp_cache_flush();
+				$skin->debug( 'Cleared Object Cache' );
+			}
+		}
 
 		foreach ( $transactions as $transaction ) {
 			$this->upgrade_transaction( $transaction, $skin, $config->is_verbose() );
