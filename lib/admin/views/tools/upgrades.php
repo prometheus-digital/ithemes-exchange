@@ -4,15 +4,16 @@
  *
  * @since   2.0.0
  * @license GPLv2
+ * @var IT_Exchange_Admin $this
  */
 
 $upgrader = it_exchange_make_upgrader();
 ?>
 <div class="wrap tools-wrap tools-upgrade-wrap">
 	<?php ITUtility::screen_icon( 'it-exchange' ); ?>
-	<h1><?php _e( 'Upgrades', 'it-l10n-ithemes-exchange' ); ?></h1>
+	<h1><?php _e( 'Tools', 'it-l10n-ithemes-exchange' ); ?></h1>
 
-	<?php $this->print_tools_tab(); ?>
+	<?php $this->print_tools_page_tabs(); ?>
 
 	<div class="upgrades-container">
 

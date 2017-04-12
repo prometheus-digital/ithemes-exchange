@@ -114,7 +114,8 @@ class IT_Exchange_Admin {
 
 		// Page Settings Defaults
 		add_filter( 'it_storage_get_defaults_exchange_settings_pages', array( $this, 'set_pages_settings_defaults' ) );
-		
+
+		add_action( 'it_exchange_print_tools_tab_links', array( $this, 'tools_tab' ) );
 		add_action( 'it_exchange_print_tools_tab_links', array( $this, 'sysinfo_tab' ) );
 		add_action( 'it_exchange_print_tools_tab_links', array( $this, 'upgrades_tab' ) );
 		add_action( 'admin_init', array( $this, 'upgrades_tab_permissions_check' ) );
@@ -682,7 +683,7 @@ class IT_Exchange_Admin {
 	 */
 	function print_tools_page() {
 		
-		$tab = empty( $_GET['tab'] ) ? 'sysinfo' : $_GET['tab'];
+		$tab = empty( $_GET['tab'] ) ? 'tools' : $_GET['tab'];
 		
 		$tab = str_replace( '.', '', $tab );
 		
@@ -698,10 +699,10 @@ class IT_Exchange_Admin {
 	 * 
 	 * @since 2.0.0
 	 */
-	public function print_tools_tab() {
+	public function print_tools_page_tabs() {
 
 		if ( empty( $_GET['tab'] ) ) {
-			$tab = 'sysinfo';
+			$tab = 'tools';
 		} else {
 			$tab = $_GET['tab'];
 		}
@@ -711,6 +712,23 @@ class IT_Exchange_Admin {
 			<?php do_action( 'it_exchange_print_tools_tab_links', $tab ); ?>
 		</h2>
 
+		<?php
+	}
+
+	/**
+	 * Print the system info tab.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $current_tab
+	 */
+	public function tools_tab( $current_tab ) {
+
+		$active = 'tools' == $current_tab ? 'nav-tab-active' : '';
+		?>
+        <a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-tools' ); ?>">
+			<?php _e( 'Tools', 'it-l10n-ithemes-exchange' ); ?>
+        </a>
 		<?php
 	}
 

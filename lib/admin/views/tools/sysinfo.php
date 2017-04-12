@@ -4,15 +4,16 @@
  *
  * @since   2.0.0
  * @license GPLv2
+ * @var IT_Exchange_Admin $this
  */
 
 $sysinfo = it_exchange_get_system_info();
 ?>
 <div class="wrap tools-wrap">
 	<?php ITUtility::screen_icon( 'it-exchange' ); ?>
-	<h1><?php _e( 'System Info', 'it-l10n-ithemes-exchange' ); ?></h1>
+	<h1><?php _e( 'Tools', 'it-l10n-ithemes-exchange' ); ?></h1>
 
-	<?php $this->print_tools_tab(); ?>
+	<?php $this->print_tools_page_tabs(); ?>
 
 	<label for="system-info" class="screen-reader-text">
 		<?php _e( 'System Info', 'it-l10n-ithemes-exchange' ); ?>

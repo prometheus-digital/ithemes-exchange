@@ -128,6 +128,9 @@ add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 
 	$product = new Route\v1\Product\Product( $serializer );
 	$manager->register_route( $product->set_parent( $products ) );
+
+	// --- Tools --- //
+	$manager->register_route( new Route\v1\Tools\ClearSessions() );
 } );
 
 /**

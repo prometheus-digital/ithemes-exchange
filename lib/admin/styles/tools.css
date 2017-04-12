@@ -6,6 +6,20 @@
 	border-bottom: 1px solid #CCC;
 }
 
+.tool {
+    padding: 10px 0 0 0;
+}
+
+.tool label {
+	font-weight: bold;
+	display: block;
+	padding-bottom: 5px;
+}
+
+#all-sessions-warning {
+    color: #a00;
+}
+
 .upgrades-container {
 	background: #FFF;
 	border: 1px solid #CCC;

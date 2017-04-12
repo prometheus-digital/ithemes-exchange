@@ -235,6 +235,44 @@ function it_exchange_db_delete_all_sessions( $include_legacy = false ) {
 }
 
 /**
+ * Delete all active sessions.
+ *
+ * @since 2.0.0
+ *
+ * @internal
+ */
+function it_exchange_db_delete_active_sessions() {
+
+	global $wpdb;
+
+	if ( defined( 'WP_SETUP_CONFIG' ) || defined( 'WP_INSTALLING' ) ) {
+		return;
+	}
+
+	$cache_group = ITE_Session_Model::get_cache_group();
+
+	if ( ! function_exists( 'wp_cache_delete_group' ) ) {
+		$ids = $wpdb->get_results( $wpdb->prepare(
+			"SELECT ID FROM {$wpdb->prefix}ite_sessions WHERE expires_at > %s AND purchased_at IS NULL",
+			current_time( 'mysql', true )
+		) );
+
+		foreach ( $ids as $id ) {
+			wp_cache_delete( $id->ID, $cache_group );
+		}
+	}
+
+	$wpdb->query( $wpdb->prepare(
+		"DELETE FROM {$wpdb->prefix}ite_sessions WHERE expires_at > %s AND purchased_at IS NULL",
+		current_time( 'mysql', true )
+	) );
+
+	if ( function_exists( 'wp_cache_delete_group' ) ) {
+		wp_cache_delete_group( $cache_group );
+	}
+}
+
+/**
  * Register the garbage collector as a twice daily event.
  *
  * @internal

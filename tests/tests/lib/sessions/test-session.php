@@ -25,7 +25,6 @@ class Test_IT_Exchange_Session extends IT_Exchange_UnitTestCase {
 		$this->assertNotNull( ITE_Session_Model::get( $session->get_pk() ) );
 	}
 
-
 	public function test_cleanup_does_not_delete_purchased_sessions() {
 
 		$session = ITE_Session_Model::create( array(
@@ -64,4 +63,40 @@ class Test_IT_Exchange_Session extends IT_Exchange_UnitTestCase {
 		$this->assertNull( ITE_Session_Model::get( $session->get_pk() ) );
 	}
 
+	public function test_delete_active_session_deletes_unexpired_sessions() {
+
+		$session = ITE_Session_Model::create( array(
+			'expires_at' => time() + DAY_IN_SECONDS,
+			'ID'         => it_exchange_create_unique_hash(),
+		) );
+
+		it_exchange_db_delete_active_sessions();
+
+		$this->assertNull( ITE_Session_Model::get( $session->get_pk() ) );
+	}
+
+	public function test_delete_active_session_does_not_delete_purchased() {
+
+		$session = ITE_Session_Model::create( array(
+			'expires_at'   => time() + DAY_IN_SECONDS,
+			'ID'           => it_exchange_create_unique_hash(),
+			'purchased_at' => time() - DAY_IN_SECONDS
+		) );
+
+		it_exchange_db_delete_active_sessions();
+
+		$this->assertNotNull( ITE_Session_Model::get( $session->get_pk() ) );
+	}
+
+	public function test_delete_active_session_does_not_delete_expired() {
+
+		$session = ITE_Session_Model::create( array(
+			'expires_at' => time() - DAY_IN_SECONDS,
+			'ID'         => it_exchange_create_unique_hash(),
+		) );
+
+		it_exchange_db_delete_active_sessions();
+
+		$this->assertNotNull( ITE_Session_Model::get( $session->get_pk() ) );
+	}
 }
