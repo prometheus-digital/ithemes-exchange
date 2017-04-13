@@ -892,9 +892,6 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		if ( $options['has'] )
 			return true;
 
-		// Parse options
-		$result = false;
-
 		$defaults      = array(
 			'type'                      => false,
 			'class'                     => false,
@@ -920,11 +917,26 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		$options   = ITUtility::merge_defaults( $options, $defaults );
 
 		// If we are tracking inventory, lets make sure we have some available
-		$product_in_stock = it_exchange_product_supports_feature( $this->product->ID, 'inventory' ) ? it_exchange_product_has_feature( $this->product->ID, 'inventory' ) : true;
-		$product_in_stock = is_null( $options['product-in-stock'] ) ? $product_in_stock : $options['product-in-stock'];
+        if ( $options['product-in-stock'] !== null ) {
+            $product_in_stock = (bool) $options['product-in-stock'];
+        } elseif ( it_exchange_product_supports_feature( $this->product->ID, 'inventory' ) ) {
+			$product_in_stock = it_exchange_product_has_feature( $this->product->ID, 'inventory' );
+		} else {
+			$product_in_stock = true;
+		}
+
+		/**
+		 * Filter whether the product purchase options should display as in stock.
+         *
+         * @since 2.0.0
+         *
+         * @param bool                 $product_in_stock
+         * @param \IT_Exchange_Product $product
+		 */
+		$product_in_stock = apply_filters( 'it_exchange_purchase_options_product_in_stock', $product_in_stock, $this->product );
 
 		// If we're supporting availability dates, check that
-		$product_is_available = it_exchange( 'product', 'is-available' );
+		$product_is_available = it_exchange( 'product', 'get-is-available' );
 
 		// Do we have multi-item cart add-on enabled?
 		$multi_item_cart = it_exchange_is_multi_item_cart_allowed();
@@ -1054,11 +1066,19 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		$options = apply_filters( 'it_exchange_product_theme_api_buy_now_options', $options, $this->product->ID );
 
 		// If we are tracking inventory, lets make sure we have some available
-		$product_in_stock = it_exchange_product_supports_feature( $this->product->ID, 'inventory' ) ? it_exchange_product_has_feature( $this->product->ID, 'inventory' ) : true;
-		$product_in_stock = is_null( $options['product-in-stock'] ) ? $product_in_stock : $options['product-in-stock'];
+		if ( $options['product-in-stock'] !== null ) {
+			$product_in_stock = (bool) $options['product-in-stock'];
+		} elseif ( it_exchange_product_supports_feature( $this->product->ID, 'inventory' ) ) {
+			$product_in_stock = it_exchange_product_has_feature( $this->product->ID, 'inventory' );
+		} else {
+			$product_in_stock = true;
+		}
+
+		// This filter is documented in api/theme/product.php
+		$product_in_stock = apply_filters( 'it_exchange_purchase_options_product_in_stock', $product_in_stock, $this->product );
 
 		// If we're supporting availability dates, check that
-		$product_is_available = it_exchange( 'product', 'is-available' );
+		$product_is_available = it_exchange( 'product', 'get-is-available' );
 
 		$output = '';
 
@@ -1122,11 +1142,19 @@ class IT_Theme_API_Product implements IT_Theme_API {
 		$options   = ITUtility::merge_defaults( $options, $defaults );
 
 		// If we are tracking inventory, lets make sure we have some available
-		$product_in_stock = it_exchange_product_supports_feature( $this->product->ID, 'inventory' ) ? it_exchange_product_has_feature( $this->product->ID, 'inventory' ) : true;
-		$product_in_stock = is_null( $options['product-in-stock'] ) ? $product_in_stock : $options['product-in-stock'];
+		if ( $options['product-in-stock'] !== null ) {
+			$product_in_stock = (bool) $options['product-in-stock'];
+		} elseif ( it_exchange_product_supports_feature( $this->product->ID, 'inventory' ) ) {
+			$product_in_stock = it_exchange_product_has_feature( $this->product->ID, 'inventory' );
+		} else {
+			$product_in_stock = true;
+		}
+
+		// This filter is documented in api/theme/product.php
+		$product_in_stock = apply_filters( 'it_exchange_purchase_options_product_in_stock', $product_in_stock, $this->product );
 
 		// If we're supporting availability dates, check that
-		$product_is_available = it_exchange( 'product', 'is-available' );
+		$product_is_available = it_exchange( 'product', 'get-is-available' );
 
 		// Do we have multi-item cart add-on enabled?
 		$multi_item_cart = it_exchange_is_multi_item_cart_allowed();
