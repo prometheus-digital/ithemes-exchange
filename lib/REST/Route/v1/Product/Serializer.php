@@ -21,10 +21,11 @@ class Serializer {
 	 * @since 2.0.0
 	 *
 	 * @param \IT_Exchange_Product $product
+	 * @param string               $context
 	 *
 	 * @return array
 	 */
-	public function serialize( \IT_Exchange_Product $product ) {
+	public function serialize( \IT_Exchange_Product $product, $context = 'view' ) {
 
 		$p       = $product;
 		$on_sale = it_exchange_is_product_sale_active( $p );
@@ -77,6 +78,10 @@ class Serializer {
 			foreach ( $images as $image ) {
 				$data['attachments'][] = $image;
 			}
+		}
+
+		if ( $context === 'stats' ) {
+			$data['stats']['sales'] = it_exchange_get_transactions_for_product( $product, 'count' );
 		}
 
 		return $data;
@@ -304,6 +309,18 @@ class Serializer {
 					'items'       => array(
 						'type'    => 'integer',
 						'minimum' => 0,
+					)
+				),
+				'stats'          => array(
+					'description' => __( 'Stats about this product.', 'it-l10n-ithemes-exchange' ),
+					'type'        => 'object',
+					'context'     => array( 'stats' ),
+					'readonly'    => true,
+					'properties'  => array(
+						'sales' => array(
+							'type'        => 'integer',
+							'description' => __( 'The total number of times this product has been sold and cleared.', 'it-l10n-ithemes-exchange' )
+						)
 					)
 				)
 			)

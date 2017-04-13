@@ -39,7 +39,7 @@ class Product extends Base implements Getable {
 
 		$product = it_exchange_get_product( $request->get_param( 'product_id', 'URL' ) );
 
-		$data = $this->serializer->serialize( $product );
+		$data = $this->serializer->serialize( $product, $request['context'] );
 
 		$response = new \WP_REST_Response( $data );
 
@@ -67,8 +67,8 @@ class Product extends Base implements Getable {
 			return Errors::cannot_view();
 		}
 
-		if ( $request['context'] === 'edit' && ! $scope->can( 'edit_it_product', $product_id ) ) {
-			return Errors::forbidden_context( 'edit' );
+		if ( in_array( $request['context'], array( 'edit', 'stats' ), true ) && ! $scope->can( 'edit_it_product', $product_id ) ) {
+			return Errors::forbidden_context( $request['context'] );
 		}
 
 		return true;

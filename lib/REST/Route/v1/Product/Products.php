@@ -55,7 +55,7 @@ class Products extends Base implements Getable {
 		$data     = array();
 
 		foreach ( $products as $product ) {
-			$serialized = $this->serializer->serialize( $product );
+			$serialized = $this->serializer->serialize( $product, $request['context'] );
 			$links      = $this->serializer->generate_links( $product );
 
 			foreach ( $links as $rel => $rel_links ) {
@@ -110,6 +110,10 @@ class Products extends Base implements Getable {
 
 		if ( $request['visible_only'] !== true && ! $scope->can( 'edit_it_products' ) ) {
 			return Errors::cannot_use_query_var( 'visible_only' );
+		}
+
+		if ( $request['context'] === 'stats' && ! $scope->can( 'edit_it_products'  ) ) {
+			return Errors::forbidden_context( 'stats' );
 		}
 
 		return true;
