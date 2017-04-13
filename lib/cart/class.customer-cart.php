@@ -670,6 +670,27 @@ class ITE_Cart {
 	}
 
 	/**
+	 * Save multiple line items at once.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param ITE_Line_Item[]|ITE_Line_Item_Collection $items
+	 *
+	 * @return bool
+	 */
+	public function save_many_items( $items ) {
+
+		$items = $items instanceof ITE_Line_Item_Collection ? $items->to_array() : $items;
+		$r     = $this->get_repository()->save_many_items( $items );
+
+		if ( $r ) {
+			$this->_clear_item_cache();
+		}
+
+		return $r;
+	}
+
+	/**
 	 * Fetch a new instance of a line item object.
 	 *
 	 * @since 2.0.0

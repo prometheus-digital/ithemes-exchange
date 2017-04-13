@@ -93,9 +93,6 @@ foreach( $transactions as $transaction ) {
 					<div class="item-column block-column block-column-<?php echo $column; ?>">
 						<?php foreach ( $detail as $action => $label ) : ?>
 							<a class="button" href="<?php echo $action; ?>"><?php esc_attr_e( $label ); ?></a>
-							<!--
-							<input type="button" class="button" name="it_exchange_<?php echo $action; ?>" value="<?php echo $label; ?>" />
-							-->
 						<?php endforeach; ?>
 					</div>
 				<?php else : ?>
@@ -106,13 +103,6 @@ foreach( $transactions as $transaction ) {
 			<?php endforeach; ?>
 		</div>
 	<?php endforeach; ?>
-
-<?php if ( 'transactions' === $tab && false ) : ?>
-	<div class="add-manual-transaction">
-		<input type="button" class="button button-large" name="add_it_exchange_transaction" value="<?php _e( 'Add Manual Transaction', 'it-l10n-ithemes-exchange' ) ?>" />
-	</div>
-<?php endif; ?>
-
 </div>
 
 <?php echo paginate_links( array(
