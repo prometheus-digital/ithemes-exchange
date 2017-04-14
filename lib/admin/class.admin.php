@@ -1898,6 +1898,7 @@ class IT_Exchange_Admin {
 		wp_register_script( 'it-exchange-dialog', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/tips.js', array( 'jquery-ui-dialog', 'jquery' ) );
 		wp_register_script( 'ithemes-chartjs', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/Chart.min.js', array( 'jquery' ), '0.2', true );
 		wp_register_script( 'it-exchange-select2', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/select2.min.js', array( 'jquery' ), '4.0.1', true );
+		wp_register_style( 'it-exchange-select2', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/select2.min.css', array(), '4.0.1' );
 		wp_register_script( 'ithemes-momentjs', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/moment.min.js', array(), '2.11.0', true );
 		wp_register_script( 'it-exchange-if-visible', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/ifvisible.min.js', array(), '1.0.6', true );
 

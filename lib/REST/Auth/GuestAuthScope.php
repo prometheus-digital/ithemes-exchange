@@ -33,6 +33,8 @@ class GuestAuthScope implements AuthScope {
 		$args = array_slice( func_get_args(), 1 );
 
 		switch ( $capability ) {
+			case 'it_create_others_carts':
+				return false;
 			case 'it_create_carts':
 				return true;
 			case 'it_read_cart':

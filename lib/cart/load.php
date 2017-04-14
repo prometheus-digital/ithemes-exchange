@@ -139,10 +139,18 @@ add_action( 'it_exchange_register_line_item_types', function ( ITE_Line_Item_Typ
 			),
 			'image'           => array(
 				'description' => __( 'A thumbnail of the product and variation.', 'it-l10n-ithemes-exchange' ),
-				'type'        => 'string',
-				'format'      => 'uri',
 				'context'     => array( 'view', 'edit' ),
 				'readonly'    => true,
+				'oneOf'       => array(
+					array(
+						'type'   => 'string',
+						'format' => 'uri',
+					),
+					array(
+						'type' => 'string',
+						'enum' => array( '' )
+					)
+				)
 			),
 		),
 		'create_from_request' => function ( \iThemes\Exchange\REST\Request $request ) {

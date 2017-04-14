@@ -159,6 +159,7 @@ function it_exchange_register_scripts() {
 		'decimalsSep'  => $settings['currency-decimals-separator'],
 		'restNonce'    => wp_create_nonce( 'wp_rest' ),
 		'restUrl'      => rest_url( 'it_exchange/v1/' ),
+		'wpRestUrl'    => rest_url( 'wp/v2' ),
 		'currentUser'  => (int) get_current_user_id(),
 		'baseCountry'  => $settings['company-base-country'],
 		'i18n'         => array(
@@ -1144,11 +1145,11 @@ add_action( 'it_exchange_version_updated', 'it_exchange_clean_duplicate_user_pos
  */
 function it_exchange_delete_cached_cart_user_meta_on_upgrade( $versions ) {
 
-    if ( version_compare( '2.0.0', $versions['previous'], '>=' ) ) {
-        return;
-    }
+	if ( version_compare( '2.0.0', $versions['previous'], '>=' ) ) {
+		return;
+	}
 
-    delete_metadata( 'user', 0, '_it_exchange_active_user_carts', '', true );
+	delete_metadata( 'user', 0, '_it_exchange_active_user_carts', '', true );
 	delete_metadata( 'user', 0, '_it_exchange_cached_cart', '', true );
 }
 
@@ -1182,27 +1183,27 @@ add_action( 'template_redirect', 'it_exchange_set_content_width_on_product_pages
  */
 function it_exchange_process_compatibility_mode_login() {
 
-    if ( ! apply_filters( 'it_exchange_login_page_use_compatibility_mode', true ) ) {
-        return;
-    }
+	if ( ! apply_filters( 'it_exchange_login_page_use_compatibility_mode', true ) ) {
+		return;
+	}
 
-    if ( isset( $_POST['pwd'], $_POST['log'] ) ) {
-        $errors = wp_signon();
+	if ( isset( $_POST['pwd'], $_POST['log'] ) ) {
+		$errors = wp_signon();
 
-        if ( is_wp_error( $errors ) ) {
-            foreach ( $errors->get_error_messages() as $message ) {
-                it_exchange_add_message( 'error', $message );
-            }
-        } else {
-            if ( isset( $_REQUEST['redirect_to'] ) ) {
-                wp_safe_redirect( $_REQUEST['redirect_to'] );
-            } else {
-                wp_redirect( it_exchange_get_page_url( 'account' ) );
-            }
+		if ( is_wp_error( $errors ) ) {
+			foreach ( $errors->get_error_messages() as $message ) {
+				it_exchange_add_message( 'error', $message );
+			}
+		} else {
+			if ( isset( $_REQUEST['redirect_to'] ) ) {
+				wp_safe_redirect( $_REQUEST['redirect_to'] );
+			} else {
+				wp_redirect( it_exchange_get_page_url( 'account' ) );
+			}
 
-            die();
-        }
-    }
+			die();
+		}
+	}
 
 }
 
@@ -1372,31 +1373,31 @@ add_action( 'admin_notices', 'it_exchange_show_ithemes_sync_integration_nag' );
 function it_exchange_add_on_before_disable_payment_gateways( $add_on ) {
 
 	if ( empty( $_GET['page'] ) || 'it-exchange-setup' === $_GET['page'] ) {
-	    return;
-    }
+		return;
+	}
 
 	if ( ! empty( $_GET['remove-gateway'] ) && 'yes' === $_GET['remove-gateway'] ) {
-	    return;
-    }
+		return;
+	}
 
 	$message = __( 'Deactivating a payment gateway can cause customers to lose access to any membership products they have purchased using this payment gateway.', 'LION' );
 	$message .= ' ' . __( 'Are you sure you want to proceed? %s | %s', 'LION' );
 
-    switch ( $add_on ) {
-        case 'offline-payments':
-        case 'paypal-standard':
-        case 'paypal-standard-secure':
-        case 'zero-sum-checkout':
-            $title   = __( 'Payment Gateway Warning', 'LION' );
-            $yes     = '<a href="' . esc_url( add_query_arg( 'remove-gateway', 'yes' ) ) . '">' . __( 'Yes', 'LION' ) . '</a>';
-            $no      = '<a href="javascript:history.back()">' . __( 'No', 'LION' ) . '</a>';
-            $message = '<p>' . sprintf( $message, $yes, $no ) . '</p>';
-            $args    = array(
-                'response'  => 200,
-                'back_link' => false,
-            );
-            wp_die( $message, $title, $args );
-    }
+	switch ( $add_on ) {
+		case 'offline-payments':
+		case 'paypal-standard':
+		case 'paypal-standard-secure':
+		case 'zero-sum-checkout':
+			$title   = __( 'Payment Gateway Warning', 'LION' );
+			$yes     = '<a href="' . esc_url( add_query_arg( 'remove-gateway', 'yes' ) ) . '">' . __( 'Yes', 'LION' ) . '</a>';
+			$no      = '<a href="javascript:history.back()">' . __( 'No', 'LION' ) . '</a>';
+			$message = '<p>' . sprintf( $message, $yes, $no ) . '</p>';
+			$args    = array(
+				'response'  => 200,
+				'back_link' => false,
+			);
+			wp_die( $message, $title, $args );
+	}
 }
 
 add_action( 'it_exchange_add_on_before_disable', 'it_exchange_add_on_before_disable_payment_gateways' );

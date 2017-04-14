@@ -39,7 +39,12 @@ class Carts extends Base implements Postable {
 	 */
 	public function handle_post( Request $request ) {
 
-		$user       = it_exchange_get_current_customer();
+		if ( $request['customer'] ) {
+			$user = it_exchange_get_customer( $request['customer'] );
+		} else {
+			$user = it_exchange_get_current_customer();
+		}
+
 		$expires_at = null;
 
 		if ( $request['expires_at'] ) {
@@ -136,6 +141,10 @@ class Carts extends Base implements Postable {
 	 */
 	public function user_can_post( Request $request, AuthScope $scope ) {
 		if ( ! $scope->can( 'it_create_carts' ) ) {
+			return Errors::cannot_create();
+		}
+
+		if ( $request['customer'] && ! $scope->can( 'it_create_others_carts' ) ) {
 			return Errors::cannot_create();
 		}
 

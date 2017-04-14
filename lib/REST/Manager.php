@@ -553,7 +553,7 @@ class Manager {
 		$factory = new Factory(
 			$this->schema_storage,
 			$this->uri_retreiver,
-			Constraint::CHECK_MODE_COERCE_TYPES | Constraint::CHECK_MODE_APPLY_DEFAULTS
+			Constraint::CHECK_MODE_COERCE_TYPES | Constraint::CHECK_MODE_APPLY_DEFAULTS | Constraint::CHECK_MODE_TYPE_CAST
 		);
 
 		return new Validator( $factory );

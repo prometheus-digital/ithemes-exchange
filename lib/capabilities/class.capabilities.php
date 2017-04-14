@@ -206,7 +206,7 @@ class IT_Exchange_Capabilities {
 					return array();
 				}
 
-				return array( 'do_not_allow' );
+				return array( 'it_edit_others_carts' );
 		}
 
 		return $caps;

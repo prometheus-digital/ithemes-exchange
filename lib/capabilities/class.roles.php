@@ -74,6 +74,9 @@ class IT_Exchange_Roles {
 		$administrator->add_cap( 'it_list_refunds' );
 		$administrator->add_cap( 'it_list_transaction_refunds' );
 
+		$administrator->add_cap( 'it_edit_others_carts' );
+		$administrator->add_cap( 'it_create_others_carts' );
+
 		/**
 		 * Fires when custom capabilities should be added to roles.
 		 *

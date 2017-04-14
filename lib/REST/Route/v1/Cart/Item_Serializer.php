@@ -101,7 +101,12 @@ class Item_Serializer {
 			$data['children'] = array();
 
 			foreach ( $item->get_line_items() as $child ) {
-				$data['children'][] = \ITE_Line_Item_Types::get( $child->get_type() )->get_rest_serializer()->serialize( $child, $cart );
+
+				$type = \ITE_Line_Item_Types::get( $child->get_type() );
+
+				if ( $type && $type->is_show_in_rest() ) {
+					$data['children'][] = $type->get_rest_serializer()->serialize( $child, $cart );
+				}
 			}
 		}
 
@@ -177,9 +182,16 @@ class Item_Serializer {
 								),
 								'max'      => array(
 									'description' => __( 'Maximum purchase quantity for the line item.', 'it-l10n-ithemes-exchange' ),
-									'type'        => 'integer',
-									'context'     => array( 'view', 'edit' ),
 									'readonly'    => true,
+									'context'     => array( 'view', 'edit' ),
+									'oneOf'       => array(
+										array( 'type' => 'integer' ),
+										array(
+											'type'        => 'string',
+											'enum'        => array( '' ),
+											'description' => __( 'Unlimited quantity.', 'it-l10n-ithemes-exchange' )
+										)
+									)
 								),
 								'editable' => array(
 									'description' => __( 'Whether the item quantity can be edited.', 'it-l10n-ithemes-exchange' ),
@@ -219,9 +231,12 @@ class Item_Serializer {
 			);
 
 			foreach ( \ITE_Line_Item_Types::aggregatables() as $aggregatable ) {
-				$schema['properties']['children']['items']['oneOf'][] = array(
-					'$ref' => \iThemes\Exchange\REST\url_for_schema( "cart-item{$aggregatable->get_type()}" )
-				);
+
+				if ( $aggregatable->is_show_in_rest() ) {
+					$schema['properties']['children']['items']['oneOf'][] = array(
+						'$ref' => \iThemes\Exchange\REST\url_for_schema( "cart-item-{$aggregatable->get_type()}" )
+					);
+				}
 			}
 		}
 
