@@ -100,7 +100,7 @@ class IT_Exchange_Transaction_Post_Type {
 				'post-formats',
 			),
 			'capabilities'         => array(
-				'create_posts' => apply_filters( 'it_exchange_tran_create_posts_capabilities', 'do_not_allow' ),
+				'create_posts' => '',
 				'delete_posts' => 'delete_others_it_transactions',
 				'edit_post'    => 'edit_it_transaction',
 				'read_post'    => 'read_it_transaction',
@@ -169,6 +169,7 @@ class IT_Exchange_Transaction_Post_Type {
 	 * @return void
 	 */
 	public function register_the_post_type() {
+	    $this->options['capabilities']['create_posts'] = apply_filters( 'it_exchange_tran_create_posts_capabilities', 'do_not_allow' );
 		register_post_type( $this->post_type, $this->options );
 	}
 
