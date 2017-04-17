@@ -10,6 +10,7 @@ namespace iThemes\Exchange\REST;
 
 use iThemes\Exchange\REST\Middleware\Autolinker;
 use iThemes\Exchange\REST\Middleware\Cart_Feedback;
+use iThemes\Exchange\REST\Middleware\Empty_Attribute_Caster;
 use iThemes\Exchange\REST\Middleware\Error_Handler;
 use iThemes\Exchange\REST\Middleware\Filter_By_Context;
 use iThemes\Exchange\REST\Middleware\Stack;
@@ -203,6 +204,7 @@ function get_rest_manager() {
 		$stack->push( new Autolinker(), 'autolinker' );
 		$stack->push( new Filter_By_Context( new ContextFilterer() ), 'filter-by-context' );
 		$stack->push( new Cart_Feedback(), 'cart-feedback' );
+		$stack->before( new Empty_Attribute_Caster(), 'filter-by-context', 'empty-attribute-caster' );
 
 		$manager = new Manager( 'it_exchange', $stack, array(
 			'card' => array(

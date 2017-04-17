@@ -423,16 +423,14 @@ class ITE_Cart_Transaction_Repository extends ITE_Cart_Repository {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param ITE_Line_Item[] $items
+	 * @param ITE_Line_Item[]                   $items
+	 * @param ITE_Transaction_Line_Item_Model[] $done
 	 */
-	protected function create_many( array $items ) {
+	protected function create_many( array $items, array $done = array() ) {
 
 		// Goal is to minimize writes. So we create records from the most parent down
 
 		$all = $items;
-
-		/** @var ITE_Transaction_Line_Item_Model[] $done */
-		$done = array();
 
 		while ( count( $items ) ) {
 
@@ -487,6 +485,10 @@ class ITE_Cart_Transaction_Repository extends ITE_Cart_Repository {
 				$this->persist_params( $model, $item, true );
 
 				$this->events->on_save( $item, null, $this );
+
+				if ( $item instanceof ITE_Aggregate_Line_Item ) {
+					$this->create_many( $item->get_line_items()->to_array(), $done );
+				}
 			} else {
 				$this->save_item( $item );
 			}
@@ -735,7 +737,7 @@ class ITE_Cart_Transaction_Repository extends ITE_Cart_Repository {
 	/**
 	 * @inheritDoc
 	 */
-	public function get_meta( $ley ) {
+	public function get_meta( $key ) {
 		return $this->bag->get_param( $key );
 	}
 
@@ -836,12 +838,12 @@ class ITE_Cart_Transaction_Repository extends ITE_Cart_Repository {
 
 		$items = array();
 
-		foreach ( $by_transaction as $transaction_id => $models ) {
+		foreach ( $by_transaction as $transaction_id => $txn_models ) {
 			$transaction = it_exchange_get_transaction( $transaction_id );
 			$repo        = new self( new ITE_Line_Item_Repository_Events(), $transaction );
 
-			foreach ( $models as $model ) {
-				$items[] = $repo->model_to_item( $model );
+			foreach ( $txn_models as $txn_model ) {
+				$items[] = $repo->model_to_item( $txn_model );
 			}
 		}
 
@@ -867,12 +869,12 @@ class ITE_Cart_Transaction_Repository extends ITE_Cart_Repository {
 
 		$items = array();
 
-		foreach ( $by_transaction as $transaction_id => $models ) {
+		foreach ( $by_transaction as $transaction_id => $txn_models ) {
 			$transaction = it_exchange_get_transaction( $transaction_id );
 			$repo        = new self( new ITE_Line_Item_Repository_Events(), $transaction );
 
-			foreach ( $models as $model ) {
-				$items[ $transaction_id ][] = $repo->model_to_item( $model );
+			foreach ( $txn_models as $txn_model ) {
+				$items[ $transaction_id ][] = $repo->model_to_item( $txn_model );
 			}
 		}
 

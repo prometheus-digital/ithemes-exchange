@@ -89,4 +89,22 @@ class ITE_Cart_Meta {
 	public function get_schema() {
 		return $this->args['schema'];
 	}
+
+	/**
+	 * Can the current rest scope edit this meta.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param \iThemes\Exchange\REST\Auth\AuthScope $scope
+	 *
+	 * @return bool
+	 */
+	public function has_rest_edit_permission( \iThemes\Exchange\REST\Auth\AuthScope $scope ) {
+
+		if ( is_callable( $this->args['editable_in_rest'] ) ) {
+			return call_user_func( $this->args['editable_in_rest'], $scope );
+		}
+
+		return true;
+	}
 }

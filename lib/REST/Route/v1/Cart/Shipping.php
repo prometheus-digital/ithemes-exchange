@@ -51,7 +51,37 @@ class Shipping extends Base implements Getable, Putable {
 		$is_eligible          = it_exchange_cart_is_eligible_for_multiple_shipping_methods( $cart );
 		$switched_to_multiple = false;
 
-		if ( $is_eligible && is_array( $request['per_item'] ) ) {
+		if ( is_array( $request['cart_wide'] ) ) {
+
+			$available = it_exchange_get_available_shipping_methods_for_cart( true, $cart );
+
+			foreach ( $request['cart_wide'] as $method ) {
+				if ( $method['selected'] && $method['id'] !== $cart_method ) {
+					if ( ( $method['id'] === 'multiple-methods' && $is_eligible ) || isset( $available[ $method['id'] ] ) ) {
+						$cart->set_shipping_method( $method['id'] );
+
+						$switched_to_multiple = $method['id'] === 'multiple-methods';
+
+						break;
+					}
+
+					return new \WP_Error(
+						'it_exchange_rest_invalid_shipping_method',
+						sprintf(
+							__( "The '%s' shipping method is not available for this cart.", 'it-l10n-ithemes-exchange' ),
+							$method['id']
+						),
+						array( 'status' => 400 )
+					);
+				}
+			}
+		}
+
+		if ( ! $switched_to_multiple ) {
+			return new \WP_REST_Response( $this->prepare_cart_for_response( $cart ) );
+		}
+
+		if ( is_array( $request['per_item'] ) ) {
 			foreach ( $request['per_item'] as $item ) {
 
 				$line_item = $cart->get_item( $item['item']['type'], $item['item']['id'] );
@@ -64,51 +94,28 @@ class Shipping extends Base implements Getable, Putable {
 				$current   = $cart->get_shipping_method( $line_item );
 				$current   = $current ? $current->slug : '';
 
+				if ( count( $available ) === 1 ) {
+					$cart->set_shipping_method( reset( $available ), $line_item );
+					continue;
+				}
+
 				foreach ( $item['methods'] as $method ) {
 					if ( $method['selected'] && $method['id'] !== $current ) {
 
-						if ( ! isset( $available[ $method['id'] ] ) ) {
-							return new \WP_Error(
-								'it_exchange_rest_invalid_shipping_method',
-								sprintf(
-									__( "The '%s' shipping method is not available for the '%s' product.", 'it-l10n-ithemes-exchange' ),
-									$method['id'], $line_item->get_name()
-								),
-								array( 'status' => 400 )
-							);
+						if ( isset( $available[ $method['id'] ] ) ) {
+							$cart->set_shipping_method( $method['id'], $line_item );
+							break;
 						}
 
-						if ( ! $switched_to_multiple ) {
-							$cart->set_shipping_method( 'multiple-methods' );
-							$switched_to_multiple = true;
-						}
-
-						$cart->set_shipping_method( $method['id'], $line_item );
-						break;
-					}
-				}
-			}
-		}
-
-		if ( ! $switched_to_multiple && is_array( $request['cart_wide'] ) ) {
-
-			$available = it_exchange_get_available_shipping_methods_for_cart( true, $cart );
-
-			foreach ( $request['cart_wide'] as $method ) {
-				if ( $method['selected'] && $method['id'] !== $cart_method ) {
-
-					if ( ( ! $is_eligible && $method['id'] === 'multiple-methods' ) || ! isset( $available[ $method['id'] ] ) ) {
 						return new \WP_Error(
 							'it_exchange_rest_invalid_shipping_method',
 							sprintf(
-								__( "The '%s' shipping method is not available for this cart.", 'it-l10n-ithemes-exchange' ),
-								$method['id']
+								__( "The '%s' shipping method is not available for the '%s' product.", 'it-l10n-ithemes-exchange' ),
+								$method['id'], $line_item->get_name()
 							),
 							array( 'status' => 400 )
 						);
 					}
-
-					$cart->set_shipping_method( $method['id'] );
 				}
 			}
 		}
@@ -247,7 +254,7 @@ class Shipping extends Base implements Getable, Putable {
 							),
 						),
 						'selected' => array(
-							'description' => __( 'Whether this is the selected shipping method..', 'it-l10n-ithemes-exchange' ),
+							'description' => __( 'Whether this is the selected shipping method.', 'it-l10n-ithemes-exchange' ),
 							'type'        => 'boolean',
 							'context'     => array( 'view', 'edit' ),
 							'default'     => false,
@@ -255,7 +262,7 @@ class Shipping extends Base implements Getable, Putable {
 					)
 				)
 			),
-			'title'       => 'cart_shipping_methods',
+			'title'       => 'cart-shipping-methods',
 			'type'        => 'object',
 			'properties'  => array(
 				'cart_wide' => array(

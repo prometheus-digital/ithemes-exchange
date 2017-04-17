@@ -1652,7 +1652,7 @@ class ITE_Cart {
 				$repository->save_item( $item->clone_with_new_id() );
 			}
 		} else {
-			$repository->save_many_items( $this->get_items()->flatten()->to_array() );
+			$repository->save_many_items( $this->get_items()->to_array() );
 		}
 
 		$repository->set_billing_address( $this->get_billing_address() );

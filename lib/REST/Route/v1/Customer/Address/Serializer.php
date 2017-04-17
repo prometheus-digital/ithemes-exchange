@@ -25,10 +25,14 @@ class Serializer {
 	 * @return array
 	 */
 	public function serialize( \ITE_Saved_Address $address ) {
+
+		$used = $address->get_last_used_date();
+
 		return array_merge( array(
-			'id'    => $address->get_pk(),
-			'label' => $address->label,
-			'type'  => $address->get_type(),
+			'id'        => $address->get_pk(),
+			'label'     => $address->label,
+			'type'      => $address->get_type(),
+			'last_used' => $used ? \iThemes\Exchange\REST\format_rfc339( $used ) : '',
 		), $address->to_array() );
 	}
 
@@ -126,6 +130,20 @@ class Serializer {
 					'type'        => 'string',
 					'context'     => array( 'edit' ),
 					'enum'        => array( '', 'both', 'billing', 'shipping' ),
+				),
+				'last_used'    => array(
+					'description' => __( 'The date the address was last used.', 'it-l10n-ithemes-exchange' ),
+					'context'     => array( 'edit' ),
+					'oneOf'       => array(
+						array(
+							'type'   => 'string',
+							'format' => 'date-time',
+						),
+						array(
+							'type' => 'string',
+							'enum' => array( '' )
+						)
+					)
 				)
 			)
 		);

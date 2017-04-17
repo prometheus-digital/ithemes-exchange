@@ -45,15 +45,15 @@ class Carts extends Base implements Postable {
 			$user = it_exchange_get_current_customer();
 		}
 
-		$expires_at = null;
+		$expires_at         = null;
+		$default_expiration = time() + (int) apply_filters( 'it_exchange_db_session_expiration', 2 * DAY_IN_SECONDS );
 
 		if ( $request['expires_at'] ) {
-			$expires_at         = new \DateTime( $request['expires_at'], new \DateTimeZone( 'UTC' ) );
-			$default_expiration = time() + (int) apply_filters( 'it_exchange_db_session_expiration', 2 * DAY_IN_SECONDS );
+			$expires_at = new \DateTime( $request['expires_at'], new \DateTimeZone( 'UTC' ) );
+		}
 
-			if ( $expires_at->getTimestamp() > $default_expiration ) {
-				$expires_at = new \DateTime( "@$default_expiration", new \DateTimeZone( 'UTC' ) );
-			}
+		if ( ! $expires_at || $expires_at->getTimestamp() > $default_expiration ) {
+			$expires_at = new \DateTime( "@$default_expiration", new \DateTimeZone( 'UTC' ) );
 		}
 
 		if ( $user instanceof \IT_Exchange_Guest_Customer ) {

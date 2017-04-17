@@ -75,7 +75,7 @@ class Request extends \WP_REST_Request {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @return \iThemes\Exchange\REST\Route\v1|null
+	 * @return \iThemes\Exchange\REST\Route|null
 	 */
 	public function get_matched_route_controller() {
 		return $this->matched_route_controller;
@@ -86,7 +86,7 @@ class Request extends \WP_REST_Request {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param \iThemes\Exchange\REST\Route\v1 $matched_route_controller
+	 * @param \iThemes\Exchange\REST\Route $matched_route_controller
 	 *
 	 * @return $this
 	 */

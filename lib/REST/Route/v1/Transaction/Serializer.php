@@ -105,6 +105,12 @@ class Serializer {
 			'embeddable' => true,
 		);
 
+		$links['edit'][] = array(
+			'href'       => get_edit_post_link( $transaction->get_ID(), 'raw' ),
+			'mediaType'  => 'text/html',
+			'embeddable' => false,
+		);
+
 		$links['activity'][] = array(
 			'href'       => r\get_rest_url(
 				$manager->get_first_route( 'iThemes\Exchange\REST\Route\v1\Transaction\Activity\Activity' ),

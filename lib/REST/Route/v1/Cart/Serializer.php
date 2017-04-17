@@ -30,15 +30,16 @@ class Serializer {
 	public function serialize( \ITE_Cart $cart ) {
 
 		$data = array(
-			'id'               => $cart->get_id(),
-			'customer'         => 0,
-			'is_main'          => $cart->is_main(),
-			'shipping_address' => null,
-			'billing_address'  => null,
-			'subtotal'         => $cart->get_subtotal(),
-			'total'            => $cart->get_total(),
-			'expires_at'       => $cart->expires_at() ? \iThemes\Exchange\REST\format_rfc339( $cart->expires_at() ) : '',
-			'meta'             => array(),
+			'id'                => $cart->get_id(),
+			'customer'          => 0,
+			'is_main'           => $cart->is_main(),
+			'shipping_address'  => null,
+			'billing_address'   => null,
+			'requires_shipping' => false,
+			'subtotal'          => $cart->get_subtotal(),
+			'total'             => $cart->get_total(),
+			'expires_at'        => $cart->expires_at() ? \iThemes\Exchange\REST\format_rfc339( $cart->expires_at() ) : '',
+			'meta'              => array(),
 		);
 
 		if ( $cart->get_customer() instanceof \IT_Exchange_Guest_Customer ) {
@@ -53,6 +54,10 @@ class Serializer {
 
 		if ( $cart->get_shipping_address() ) {
 			$data['shipping_address'] = $cart->get_shipping_address()->to_array();
+		}
+
+		if ( $cart->requires_shipping() ) {
+			$data['requires_shipping'] = true;
 		}
 
 		$items = array();
@@ -86,7 +91,8 @@ class Serializer {
 					} )->first();
 
 					$totals_info[] = array(
-						'slug'        => $type,
+						'id'          => $segment->first()->get_id(),
+						'type'        => $type,
 						'label'       => $name,
 						'total'       => $total,
 						'description' => $description ? $description->get_description() : ''

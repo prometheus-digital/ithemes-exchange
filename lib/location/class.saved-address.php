@@ -147,6 +147,29 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 	}
 
 	/**
+	 * Get the date th
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return DateTime|null
+	 */
+	public function get_last_used_date() {
+		// SELECT `order_date` FROM wp_ite_transactions WHERE billing = 392 OR shipping = 392  ORDER BY `order_date` DESC LIMIT 1
+
+		$r = IT_Exchange_Transaction::query_with_no_global_scopes()
+		                            ->or_where( 'billing', '=', $this->get_pk() )
+		                            ->or_where( 'shipping', '=', $this->get_pk() )
+		                            ->order_by( 'order_date', 'DESC' )
+		                            ->take( 1 )
+		                            ->select_single( 'order_date' )
+		                            ->results();
+
+		$date = $r->first();
+
+		return $date ? new DateTime( $date, new DateTimeZone( 'UTC' ) ) : null;
+	}
+
+	/**
 	 * @inheritDoc
 	 */
 	public function get_pk() {

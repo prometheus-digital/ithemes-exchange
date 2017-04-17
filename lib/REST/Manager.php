@@ -473,7 +473,7 @@ class Manager {
 		$properties     = $request->get_method() === 'GET' ? $query_args : $schema['properties'];
 
 		foreach ( $properties as $property => $_ ) {
-			if ( $request->has_param( $property, $types_to_check ) ) {
+			if ( ! empty( $_['readonly'] ) && $request->has_param( $property, $types_to_check ) ) {
 				$to_validate[ $property ] = $request[ $property ];
 			}
 		}
@@ -701,7 +701,7 @@ class Manager {
 	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Route $route
-	 * @param array                           $args
+	 * @param array                        $args
 	 *
 	 * @return array
 	 */

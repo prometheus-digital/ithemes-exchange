@@ -1728,7 +1728,7 @@ button.it-exchange-customer-addresses-address-action--primary:hover {
 /** -----------------------------------------------------:[ Payment Tokens ]:---------- */
 
 .it-exchange-payment-tokens-selector--list {
-    margin: 2em 0;
+    margin: 2em 0 !important;
     padding: 0;
 }
 
@@ -1754,6 +1754,7 @@ button.it-exchange-customer-addresses-address-action--primary:hover {
     display: inline-block;
     margin: 0 0 0 .5em;
     vertical-align: middle;
+    width: 100%;
 }
 
 .it-exchange-payment-tokens-selector--payment-token label img {

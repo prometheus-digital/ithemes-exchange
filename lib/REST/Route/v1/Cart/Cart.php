@@ -63,7 +63,7 @@ class Cart extends r\Route\Base implements Getable, Putable, Deletable, r\RouteO
 			return $e;
 		}
 
-		if ( ! empty( $request['meta'] ) ) {
+		if ( is_array( $request['meta'] ) ) {
 			foreach ( $request['meta'] as $key => $value ) {
 				if ( ( $config = \ITE_Cart_Meta_Registry::get( $key ) ) && $config->editable_in_rest() ) {
 					$value === null ? $cart->remove_meta( $key ) : $cart->set_meta( $key, $value );
@@ -72,6 +72,34 @@ class Cart extends r\Route\Base implements Getable, Putable, Deletable, r\RouteO
 		}
 
 		return $this->prepare_item_for_response( $cart );
+	}
+
+	/**
+	 * Handle a meta update.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param \ITE_Cart $cart
+	 * @param array     $meta
+	 */
+	protected function handle_meta( \ITE_Cart $cart, array $meta ) {
+		foreach ( $meta as $key => $value ) {
+			$config = \ITE_Cart_Meta_Registry::get( $key );
+
+			if ( ! $config || ! $config->editable_in_rest() ) {
+				continue;
+			}
+
+			if ( ! $config->has_rest_edit_permission( $this->get_manager()->get_auth_scope() ) ) {
+				continue; // Throw permission error
+			}
+
+			if ( $value !== null ) {
+				$cart->set_meta( $key, $value );
+			} else {
+				$cart->remove_meta( $key );
+			}
+		}
 	}
 
 	/**
@@ -87,42 +115,65 @@ class Cart extends r\Route\Base implements Getable, Putable, Deletable, r\RouteO
 	 */
 	protected function handle_address_update( \ITE_Cart $cart, $input, $type ) {
 
+		/** @var \ITE_Location $current */
 		$current = call_user_func( array( $cart, "get_{$type}_address" ) );
+		$address = null;
 
 		if ( is_int( $input ) ) {
-
-			if ( $current instanceof \ITE_Saved_Address && $current->get_pk() == $input ) {
-				return null;
-			}
-
-			$address = \ITE_Saved_Address::get( $input );
-
-			if ( ! $address || $address->is_trashed() || ! $address->customer || $address->customer->get_ID() != $cart->get_customer()->get_ID() ) {
-				return new \WP_Error(
-					'it_exchange_rest_invalid_address',
-					__( 'Invalid address ID.', 'it-l10n-ithemes-exchange' ),
-					array( 'status' => \WP_Http::BAD_REQUEST )
-				);
-			}
+			$address = $this->update_address_by_id( $cart, $input, $current );
+		} elseif ( is_array( $input ) && isset( $input['id'] ) ) {
+			$address = $this->update_address_by_id( $cart, (int) $input['id'], $current );
 		} elseif ( is_array( $input ) ) {
 			$address = new \ITE_In_Memory_Address( $input );
 
 			if ( $address->equals( $current ) ) {
-				return null;
+				$address = null;
 			}
-		} else {
-			return null;
+		}
+
+		if ( ! $address instanceof \ITE_Location ) {
+			return $address;
 		}
 
 		if ( call_user_func( array( $cart, "set_{$type}_address" ), $address ) ) {
 			return null;
-		} else {
+		}
+
+		return new \WP_Error(
+			'it_exchange_rest_address_failed_validation',
+			__( 'Address failed to verification.', 'it-l10n-ithemes-exchange' ),
+			array( 'status' => \WP_Http::BAD_REQUEST )
+		);
+	}
+
+	/**
+	 * Update an address by id.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param \ITE_Cart $cart
+	 * @param int       $id
+	 * @param           $current
+	 *
+	 * @return \ITE_Saved_Address|\WP_Error|null
+	 */
+	protected function update_address_by_id( \ITE_Cart $cart, $id, $current ) {
+
+		if ( $current instanceof \ITE_Saved_Address && $current->get_pk() === $id ) {
+			return null;
+		}
+
+		$address = \ITE_Saved_Address::get( $id );
+
+		if ( ! $address || $address->is_trashed() || ! $address->customer || $address->customer->get_ID() != $cart->get_customer()->get_ID() ) {
 			return new \WP_Error(
-				'it_exchange_rest_address_failed_validation',
-				__( 'Address failed to verification.', 'it-l10n-ithemes-exchange' ),
+				'it_exchange_rest_invalid_address',
+				__( 'Invalid address ID.', 'it-l10n-ithemes-exchange' ),
 				array( 'status' => \WP_Http::BAD_REQUEST )
 			);
 		}
+
+		return $address;
 	}
 
 	/**
@@ -222,7 +273,13 @@ class Cart extends r\Route\Base implements Getable, Putable, Deletable, r\RouteO
 
 		$shipping_methods = new Shipping();
 		$shipping_methods->set_parent( $this );
-		$response->add_link( 'shipping_methods', r\get_rest_url( $shipping_methods, array( 'cart_id' => $cart->get_id() ) ) );
+
+		if ( $cart->requires_shipping() ) {
+			$response->add_link(
+				'shipping_methods',
+				r\get_rest_url( $shipping_methods, array( 'cart_id' => $cart->get_id() ) )
+			);
+		}
 
 		if ( $cart->get_customer() && ! $cart->get_customer() instanceof \IT_Exchange_Guest_Customer ) {
 			$response->add_link(
