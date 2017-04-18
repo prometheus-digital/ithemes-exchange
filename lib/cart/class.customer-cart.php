@@ -1010,7 +1010,7 @@ class ITE_Cart {
 		}
 
 		$total = $this->get_subtotal();
-		$total += $this->get_items( '', true )->without( 'product' )->summary_only()->total();
+		$total += $this->get_items( '', true )->summary_only()->total();
 
 		/**
 		 * Filter the cart total.
@@ -1383,6 +1383,10 @@ class ITE_Cart {
 	public function set_meta( $key, $value ) {
 
 		$previous = $this->has_meta( $key ) ? $this->get_meta( $key ) : null;
+
+		if ( $previous === $value ) {
+			return true;
+		}
 
 		if ( $this->get_repository()->set_meta( $key, $value ) ) {
 
