@@ -186,6 +186,12 @@ abstract class ITE_Cart_Repository {
 		if ( $item instanceof ITE_Cart_Repository_Aware ) {
 			$item->set_cart_repository( $this );
 		}
+
+		if ( $item instanceof ITE_Aggregate_Line_Item ) {
+			foreach ( $item->get_line_items() as $child ) {
+				$this->set_repository( $child );
+			}
+		}
 	}
 
 	/**

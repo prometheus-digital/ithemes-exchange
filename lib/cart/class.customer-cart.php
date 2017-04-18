@@ -422,13 +422,7 @@ class ITE_Cart {
 	 */
 	public function add_item( ITE_Line_Item $item, $coerce = true ) {
 
-		if ( $item instanceof ITE_Cart_Repository_Aware ) {
-			$item->set_cart_repository( $this->get_repository() );
-		}
-
-		if ( $item instanceof ITE_Cart_Aware ) {
-			$item->set_cart( $this );
-		}
+		$this->set_services_for_item( $item );
 
 		$method  = "add_{$item->get_type()}_item";
 		$add_new = true;
@@ -710,6 +704,30 @@ class ITE_Cart {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Set any services on the item.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param ITE_Line_Item $item
+	 */
+	protected function set_services_for_item( ITE_Line_Item $item ) {
+
+		if ( $item instanceof ITE_Cart_Repository_Aware ) {
+			$item->set_cart_repository( $this->get_repository() );
+		}
+
+		if ( $item instanceof ITE_Cart_Aware ) {
+			$item->set_cart( $this );
+		}
+
+		if ( $item instanceof ITE_Aggregate_Line_Item ) {
+			foreach ( $item->get_line_items() as $child ) {
+				$this->set_services_for_item( $child );
+			}
+		}
 	}
 
 	/**

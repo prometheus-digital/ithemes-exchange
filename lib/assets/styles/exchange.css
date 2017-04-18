@@ -1819,6 +1819,19 @@ button.it-exchange-customer-addresses-address-action--primary:hover {
     margin-bottom: 0;
 }
 
+.it-exchange-checkout-line-items > li.it-exchange-view > ul {
+    list-style-type: square;
+    margin: 5px 0 0 20px;
+}
+
+.it-exchange-checkout-line-items > li > ul > li {
+    list-style-type: square;
+}
+
+.it-exchange-checkout-line-items ul:empty {
+    display: none;
+}
+
 .it-exchange-checkout-line-item-totals-container {
     max-width: 400px;
 }
