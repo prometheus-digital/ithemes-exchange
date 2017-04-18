@@ -143,6 +143,10 @@ function it_exchange_addons_requiring_v2() {
 			'name'   => 'Table Rate Shipping',
 		),
 		array(
+			'plugin' => 'exchange-addon-manual-purchases/exchange-addon-manual-purchases.php',
+			'name'   => 'Manual Purchases',
+		),
+		array(
 			'plugin' => 'exchange-addon-classes/exchange-addon-classes.php',
 			'name'   => 'Classes',
 		),
