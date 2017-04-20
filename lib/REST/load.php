@@ -130,6 +130,15 @@ add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 	$product = new Route\v1\Product\Product( $serializer );
 	$manager->register_route( $product->set_parent( $products ) );
 
+	// --- Coupons --- //
+	foreach ( \ITE_Coupon_Types::in_rest() as $type ) {
+		$coupons = new Route\v1\Coupons\Coupons( $type );
+		$manager->register_route( $coupons );
+
+		$coupon = new Route\v1\Coupons\Coupon( $type );
+		$manager->register_route( $coupon->set_parent( $coupons ) );
+	}
+
 	// --- Tools --- //
 	$manager->register_route( new Route\v1\Tools\ClearSessions() );
 } );
@@ -292,6 +301,10 @@ function url_for_schema( $title ) {
  * @return string
  */
 function format_rfc339( $date ) {
+
+	if ( ! $date ) {
+		return '';
+	}
 
 	if ( is_string( $date ) ) {
 		$datetime = new \DateTime( $date, new \DateTimeZone( 'UTC' ) );

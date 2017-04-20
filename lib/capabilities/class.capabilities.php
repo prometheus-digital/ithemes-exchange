@@ -38,6 +38,7 @@ class IT_Exchange_Capabilities {
 
 		switch ( $cap ) {
 			case 'create_it_coupons':
+			case 'list_it_coupons':
 				return array( 'edit_it_coupons' );
 			case 'create_it_products':
 				return array( 'edit_it_products' );

@@ -287,11 +287,11 @@ function it_exchange_basic_coupons_permissions_check() {
 	if ( empty( $_GET['page'] ) || $_GET['page'] != 'it-exchange-edit-basic-coupon' ) {
 		return;
 	}
-	
+
 	if ( empty( $_GET['post'] ) && ! current_user_can( 'create_it_coupons' ) ) {
 		wp_die( __( "You don't have permission to create coupons.", 'it-l10n-ithemes-exchange' ) );
 	}
-	
+
 	if ( ! empty( $_GET['post'] ) && ! current_user_can( 'edit_it_coupon', $_GET['post'] ) ) {
 		wp_die( __( "You don't have permission to edit this coupon.", 'it-l10n-ithemes-exchange' ) );
 	}
@@ -910,8 +910,8 @@ function it_exchange_basic_coupons_add_availability_filter( $post_type ) {
 		return;
 	}
 
-	$s = isset( $_GET['start_date'] ) ? $_GET['start_date'] : '';
-	$e = isset( $_GET['end_date'] ) ? $_GET['end_date'] : '';
+	$s = isset( $_GET['start_date'] ) ? esc_attr( $_GET['start_date'] ) : '';
+	$e = isset( $_GET['end_date'] ) ? esc_attr( $_GET['end_date'] ) : '';
 
 	$start = "<input type=\"text\" class=\"datepicker\" name=\"start_date\" id=\"start-date\" value=\"{$s}\">";
 	$end = "<input type=\"text\" class=\"datepicker\" name=\"end_date\" id=\"end-date\" value=\"{$e}\">";
