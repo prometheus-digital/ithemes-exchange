@@ -211,7 +211,15 @@ function it_exchange_add_coupon( $args = array(), $deprecated = false ) {
 		return false;
 	}
 
+	$type = isset( $args['type'] ) ? $args['type'] : '';
+	unset( $args['type'] );
+
 	if ( $coupon_id = wp_insert_post( $args ) ) {
+
+		if ( $type ) {
+			update_post_meta( $coupon_id, '_it_exchange_coupon_type', $type );
+		}
+
 		foreach ( (array) $post_meta as $key => $value ) {
 			update_post_meta( $coupon_id, $key, $value );
 		}

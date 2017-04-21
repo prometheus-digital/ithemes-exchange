@@ -43,7 +43,7 @@ class ITE_Coupon_Types {
 
 		$slug = $type->get_type();
 
-		if ( ! in_array( $type, $GLOBALS['it_exchange']['coupon_types'] ) ) {
+		if ( ! in_array( $slug, $GLOBALS['it_exchange']['coupon_types'], true ) ) {
 			$GLOBALS['it_exchange']['coupon_types'][]             = $slug;
 			$GLOBALS['it_exchange']['coupon_types_meta'][ $slug ] = array(
 				'class' => $type->get_class()
@@ -60,7 +60,7 @@ class ITE_Coupon_Types {
 		 * @param string          $class
 		 * @param ITE_Coupon_Type $type
 		 */
-		do_action( 'it_exchange_register_coupon_type', $slug, $class, $type );
+		do_action( 'it_exchange_register_coupon_type', $slug, $type->get_class(), $type );
 
 		return true;
 	}
