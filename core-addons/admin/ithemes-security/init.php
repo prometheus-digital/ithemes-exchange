@@ -126,6 +126,12 @@ function it_exchange_security_validate_recaptcha_registration( $errors ) {
 		$success = $recaptcha->validate_captcha();
 	}
 
+	if ( is_wp_error( $success ) ) {
+		return $success;
+	} elseif ( $success === true ) {
+		return $errors;
+	}
+
 	switch ( $success ) {
 
 		case - 1:
@@ -174,6 +180,12 @@ function it_exchange_security_validate_sw_recaptcha_login( $errors ) {
 		$recaptcha = new ITSEC_Recaptcha();
 		$recaptcha->setup();
 		$success = $recaptcha->validate_captcha();
+	}
+
+	if ( is_wp_error( $success ) ) {
+		return $success;
+	} elseif ( $success === true ) {
+		return $errors;
 	}
 
 	switch ( $success ) {
