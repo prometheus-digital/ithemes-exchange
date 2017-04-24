@@ -150,6 +150,10 @@ function it_exchange_addons_requiring_v2() {
 			'plugin' => 'exchange-addon-classes/exchange-addon-classes.php',
 			'name'   => 'Classes',
 		),
+		array(
+			'plugin' => 'exchange-addon-licensing/exchange-addon-licensing.php',
+			'name'   => 'Licensing',
+		),
 	);
 }
 
