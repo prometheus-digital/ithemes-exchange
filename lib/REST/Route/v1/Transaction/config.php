@@ -231,7 +231,6 @@ return array(
 		new CallableQueryArg( 'customer', array(
 			'description' => __( 'The customer whose transactions should be retrieved.', 'it-l10n-ithemes-exchange' ),
 			'type'        => 'integer',
-			'default'     => 0,
 		),
 			function ( $scope, $id ) { return $id ? $scope->can( 'edit_user', $id ) : $scope->can( 'list_it_transactions' ); },
 			'customer_id',
@@ -262,6 +261,20 @@ return array(
 			'type'        => 'integer',
 		), function ( AuthScope $scope, $id ) { return $scope->can( 'edit_it_transaction', $id ); },
 			null, function ( $value ) { return (bool) it_exchange_get_transaction( $value ); } ),
+		new CallableQueryArg( 'orderby', array(
+			'description' => __( 'Order the transactions by a given field.', 'it-l10n-ithemes-exchange' ),
+			'type'        => 'string',
+			'enum'        => array( 'ID', 'order_date', 'status', 'customer_id' ),
+			'default'     => 'ID',
+		), null, function ( Criteria $criteria, $order_by, $all_args ) {
+			$criteria->orderBy( array( $order_by => isset( $all_args['order'] ) ? $all_args['order'] : Criteria::DESC ) );
+		} ),
+		new CallableQueryArg( 'order', array(
+			'description' => __( 'Alter the order in which results are returned.', 'it-l10n-ithemes-exchange' ),
+			'type'        => 'string',
+			'enum'        => array( Criteria::ASC, Criteria::DESC ),
+			'default'     => Criteria::DESC,
+		), null, '__return_true' ),
 		new CallableQueryArg( 'search', array(
 			'description' => __( 'Limit results to those matching a string.', 'it-l10n-ithemes-exchange' ),
 			'type'        => 'string',
@@ -294,6 +307,6 @@ return array(
 
 				$query->and_where( $where );
 			}, 10, 2 );
-		} )
+		} ),
 	),
 );

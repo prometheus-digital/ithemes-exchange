@@ -52,9 +52,9 @@ class PageQueryArg implements QueryArg {
 	/**
 	 * @inheritDoc
 	 */
-	public function add_criteria( Criteria $criteria, $value, array $all_query_args ) {
+	public function add_criteria( Criteria $criteria, $page, array $all_query_args ) {
 		$per_page = isset( $all_query_args['per_page'] ) ? $all_query_args['per_page'] : get_option( 'posts_per_page' );
 
-		$criteria->setFirstResult( $value * $per_page );
+		$criteria->setFirstResult( $per_page * ( $page - 1 ) );
 	}
 }

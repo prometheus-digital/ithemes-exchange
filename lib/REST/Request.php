@@ -202,12 +202,12 @@ class Request extends \WP_REST_Request {
 
 		$order = $this->get_parameter_order();
 
-		if ( $param_types_to_check ) {
-			$order = array_intersect( $order, $param_types_to_check );
+		if ( ! in_array( 'defaults', $param_types_to_check, true ) && ( $i = array_search( 'defaults', $order, true ) ) !== false ) {
+			unset( $order[ $i ] );
 		}
 
-		if ( ( $i = array_search( 'defaults', $order, true ) ) !== false ) {
-			unset( $order[ $i ] );
+		if ( $param_types_to_check ) {
+			$order = array_intersect( $order, $param_types_to_check );
 		}
 
 		foreach ( $order as $type ) {

@@ -116,11 +116,11 @@ class RouteHelper {
 		}
 
 		foreach ( $this->get_query_args() as $key => $query_arg ) {
-			if ( ! $request->has_param( $key, array( 'GET' ) ) ) {
+			if ( ! $request->has_param( $key, array( 'GET', 'defaults' ) ) ) {
 				continue;
 			}
 
-			$value = $request->get_param( $key, 'GET' );
+			$value = $request->get_param( $key );
 
 			if ( ! $query_arg->scope_can_use( $scope, $value ) ) {
 				return Errors::cannot_use_query_var( $key );
@@ -149,11 +149,11 @@ class RouteHelper {
 		$params   = array();
 
 		foreach ( $this->get_query_args() as $key => $query_arg ) {
-			if ( ! $request->has_param( $key, array( 'GET' ) ) ) {
+			if ( ! $request->has_param( $key, array( 'GET', 'defaults' ) ) ) {
 				continue;
 			}
 
-			$params[ $key ] = $request->get_param( $key, 'GET' );
+			$params[ $key ] = $request->get_param( $key );
 		}
 
 		$query_args = $this->get_query_args();
@@ -194,11 +194,11 @@ class RouteHelper {
 		}
 
 		foreach ( $this->get_query_args() as $key => $query_arg ) {
-			if ( ! $request->has_param( $key, array( 'GET' ) ) ) {
+			if ( ! $request->has_param( $key, array( 'GET', 'defaults' ) ) ) {
 				continue;
 			}
 
-			$value = $request->get_param( $key, 'GET' );
+			$value = $request->get_param( $key );
 
 			if ( ! $query_arg->scope_can_use( $scope, $value ) ) {
 				return Errors::cannot_use_query_var( $key );
