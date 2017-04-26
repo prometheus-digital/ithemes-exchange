@@ -27,7 +27,7 @@ abstract class ITE_User_Object_Type implements ITE_Object_Type, ITE_Object_Type_
 	/**
 	 * @inheritDoc
 	 */
-	public function get_objects( \Doctrine\Common\Collections\Criteria $criteria = null ) {
+	public function get_objects( \Doctrine\Common\Collections\Criteria $criteria = null, &$total = null ) {
 
 		$args = array();
 
@@ -52,7 +52,9 @@ abstract class ITE_User_Object_Type implements ITE_Object_Type, ITE_Object_Type_
 			}
 		}
 
-		$args['count_total'] = false;
+		if ( func_num_args() === 1 ) {
+			$args['count_total'] = false;
+		}
 
 		$query   = new WP_User_Query( $args );
 		$users   = $query->get_results();
@@ -60,6 +62,10 @@ abstract class ITE_User_Object_Type implements ITE_Object_Type, ITE_Object_Type_
 
 		foreach ( $users as $user ) {
 			$objects[] = $this->convert_user( $user );
+		}
+
+		if ( func_num_args() === 2 ) {
+			$total = $query->get_total();
 		}
 
 		return $objects;
@@ -81,6 +87,11 @@ abstract class ITE_User_Object_Type implements ITE_Object_Type, ITE_Object_Type_
 	 * @inheritDoc
 	 */
 	public function is_restful() { return $this instanceof ITE_RESTful_Object_Type; }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function has_capabilities() { return $this instanceof ITE_Object_Type_With_Capabilities; }
 
 	/**
 	 * @inheritDoc

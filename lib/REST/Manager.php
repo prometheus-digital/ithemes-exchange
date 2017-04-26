@@ -86,12 +86,13 @@ class Manager {
 	 * @since 2.0.0
 	 *
 	 * @param \iThemes\Exchange\REST\Route $route
+	 * @param string                       $id
 	 *
 	 * @return $this
 	 *
 	 * @throws \UnexpectedValueException
 	 */
-	public function register_route( Route $route ) {
+	public function register_route( Route $route, $id = '' ) {
 
 		if ( $this->initialized ) {
 			throw new \UnexpectedValueException( 'Route Manager has already been initialized.' );
@@ -101,9 +102,26 @@ class Manager {
 			$route->set_manager( $this );
 		}
 
-		$this->routes[] = $route;
+		if ( $id ) {
+			$this->routes[ $id ] = $route;
+		} else {
+			$this->routes[] = $route;
+		}
 
 		return $this;
+	}
+
+	/**
+	 * Retrieve a route by ID.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $id
+	 *
+	 * @return Route|null
+	 */
+	public function get_route_by_id( $id ) {
+		return isset( $this->routes[ $id ] ) ? $this->routes[ $id ] : null;
 	}
 
 	/**

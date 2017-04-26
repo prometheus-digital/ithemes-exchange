@@ -5,6 +5,8 @@
  * @since   2.0.0
  * @license GPLv2
  */
+use Doctrine\Common\Collections\Criteria;
+use IronBound\DB\Query\FluentQuery;
 
 /**
  * Class ITE_Table_Object_Type
@@ -30,7 +32,7 @@ abstract class ITE_Table_Object_Type implements ITE_Object_Type {
 	/**
 	 * @inheritDoc
 	 */
-	public function get_objects( \Doctrine\Common\Collections\Criteria $criteria = null ) {
+	public function get_objects( Criteria $criteria = null, &$total = null ) {
 
 		$query = $this->get_model()->query();
 
@@ -55,7 +57,27 @@ abstract class ITE_Table_Object_Type implements ITE_Object_Type {
 			$query->offset( $criteria->getFirstResult() );
 		}
 
-		return $query->results()->toArray();
+		if ( func_num_args() === 2 ) {
+			$query->calc_found_rows();
+		}
+
+		/**
+		 * Fires when the query is about to be executed.
+		 *
+		 * @since 2.0.0
+		 *
+		 * @param FluentQuery $query
+		 * @param Criteria    $criteria
+		 */
+		do_action( "it_exchange_get_{$this->get_slug()}_objects", $query, $criteria );
+
+		$results = $query->results();
+
+		if ( func_num_args() === 2 ) {
+			$total = $query->total();
+		}
+
+		return $results->toArray();
 	}
 
 	/**
@@ -94,6 +116,11 @@ abstract class ITE_Table_Object_Type implements ITE_Object_Type {
 	 * @inheritDoc
 	 */
 	public function is_restful() { return $this instanceof ITE_RESTful_Object_Type; }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function has_capabilities() { return $this instanceof ITE_Object_Type_With_Capabilities; }
 
 	/**
 	 * Get the model.

@@ -47,10 +47,6 @@ class Transactions extends Base implements Getable {
 			'orderby'        => 'ID',
 		);
 
-		if ( $request['order_number'] ) {
-			$args['ID'] = (int) preg_replace( '/\D/', '', $request['order_number'] );
-		}
-
 		if ( $request['cleared_for_delivery'] !== null ) {
 			$args['cleared'] = $request['cleared_for_delivery'];
 		}
@@ -76,7 +72,6 @@ class Transactions extends Base implements Getable {
 
 			$data[] = $serialized;
 		}
-
 
 		$total_pages         = $total ? ceil( $total / $per_page ) : 0;
 		$base_pagination_url = add_query_arg(
@@ -189,10 +184,6 @@ class Transactions extends Base implements Getable {
 				'description' => __( 'Retrieve child transactions of a given parent.', 'it-l10n-ithemes-exchange' ),
 				'type'        => 'integer',
 				'default'     => null,
-			),
-			'order_number'         => array(
-				'description' => __( 'Filter transactions by order number.', 'it-l10n-ithemes-exchange' ),
-				'type'        => 'string',
 			),
 			'cleared_for_delivery' => array(
 				'description' => __( 'Only return transactions that have been cleared for delivery.', 'it-l10n-ithemes-exchange' ),
