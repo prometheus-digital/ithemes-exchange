@@ -256,9 +256,9 @@ class RouteHelper {
 		$changed       = $this->get_changed_fields( $request, $object );
 		$no_permission = array();
 
-		foreach ( $changed as $key ) {
-			if ( ! $fields[ $key ]->scope_can_set( $scope, $request->get_param( $key ) ) ) {
-				$no_permission[ $key ] = $this->get_fields()[ $key ];
+		foreach ( $changed as $key => $value ) {
+			if ( ! $fields[ $key ]->scope_can_set( $scope, $value ) ) {
+				$no_permission[ $key ] = $fields[ $key ];
 			}
 		}
 
