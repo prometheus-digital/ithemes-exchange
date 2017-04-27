@@ -1234,8 +1234,17 @@ class ITE_Cart {
 
 		if ( $method === 'multiple-methods' ) {
 
+			$this->set_meta( '_multiple-shipping-methods', true );
+
 			if ( $this->is_current() ) {
 				it_exchange_remove_cart_data( 'multiple-shipping-methods' );
+			}
+
+			/** @var ITE_Cart_Product $product */
+			foreach ( $this->get_items( 'product' ) as $product ) {
+				if ( $product->get_product()->has_feature( 'shipping' ) ) {
+					$this->get_shipping_method( $product ); // Set defaults
+				}
 			}
 
 			return true;
@@ -1253,6 +1262,8 @@ class ITE_Cart {
 		if ( ! $method ) {
 			return false;
 		}
+
+		$this->remove_meta( '_multiple-shipping-methods' );
 
 		$global = $this->add_item( ITE_Base_Shipping_Line_Item::create( $method, $provider, true ) );
 
@@ -1297,14 +1308,14 @@ class ITE_Cart {
 				return $item->get_method()->slug;
 			} );
 
-			if ( $uniqued->count() === 0 ) {
-				$method = null;
-			} elseif ( $uniqued->count() === 1 ) {
-				$method = $uniqued->first()->get_method();
-			} else {
+			if ( $uniqued->count() > 1 || $this->has_meta( '_multiple-shipping-methods' ) ) {
 				$method        = new stdClass();
 				$method->slug  = 'multiple-methods';
 				$method->label = __( 'Multiple Shipping Methods', 'it-l10n-ithemes-exchange' );
+			} elseif ( $uniqued->count() === 1 ) {
+				$method = $uniqued->first()->get_method();
+			} else {
+				$method = null;
 			}
 		}
 
@@ -1315,6 +1326,35 @@ class ITE_Cart {
 		if ( ! $this->requires_shipping() ) {
 			return null;
 		}
+
+		return $this->find_and_set_forced_shipping_method( $for );
+	}
+
+	/**
+	 * Set the forced shipping method for either the whole cart or a given item.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param ITE_Line_Item|null $for
+	 *
+	 * @return |IT_Exchange_Shipping_Method|null
+	 */
+	protected function find_and_set_forced_shipping_method( ITE_Line_Item $for = null ) {
+
+		if ( $for instanceof ITE_Cart_Product ) {
+			$enabled = it_exchange_get_enabled_shipping_methods_for_product( $for->get_product(), 'slug', $this );
+
+			if ( is_array( $enabled ) && count( $enabled ) === 1 ) {
+				$slug = reset( $enabled );
+				$this->set_shipping_method( $slug, $for );
+
+				return it_exchange_get_registered_shipping_method( $slug );
+			}
+
+			return null;
+		}
+
+		$method = null;
 
 		// If there is only one possible shipping method for the cart, set it and return it.
 		$cart_methods    = it_exchange_get_available_shipping_methods_for_cart( true, $this );
@@ -1332,13 +1372,7 @@ class ITE_Cart {
 
 			/** @var ITE_Cart_Product $product */
 			foreach ( $this->get_items( 'product' ) as $product ) {
-				$enabled_methods = it_exchange_get_enabled_shipping_methods_for_product(
-					$product->get_product(), 'slug', $this
-				);
-
-				if ( is_array( $enabled_methods ) && count( $enabled_methods ) === 1 ) {
-					$this->set_shipping_method( reset( $enabled_methods ), $product );
-				}
+				$this->find_and_set_forced_shipping_method( $product );
 			}
 
 			$method        = new stdClass();
@@ -1681,7 +1715,9 @@ class ITE_Cart {
 		$repository->set_shipping_address( $this->get_shipping_address() );
 
 		foreach ( $this->get_all_meta() as $key => $value ) {
-			$repository->set_meta( $key, $value );
+			if ( $key[0] !== '_' ) {
+				$repository->set_meta( $key, $value );
+			}
 		}
 
 		$clone             = clone $this;

@@ -38,7 +38,7 @@ class Empty_Attribute_Caster implements Middleware {
 
 		if ( \ITUtility::is_associative_array( $data ) ) {
 			$data = $this->cast( $data, $schema );
-		} else {
+		} elseif ( is_array( $data ) ) {
 			foreach ( $data as $i => $datum ) {
 				$data[ $i ] = $this->cast( $datum, $schema );
 			}

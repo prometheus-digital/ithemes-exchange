@@ -136,7 +136,7 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 			?>
 			<div class="it-exchange-itemized-checkout-methods it-exchange-clearfix">
 				<?php
-				foreach ( it_exchange_get_current_cart()->get_items( 'product' ) as $product ) {
+				foreach ( $cart->get_items( 'product' ) as $product ) {
 
 					if ( ! $product->get_product()->has_feature( 'shipping' ) ) {
 						continue;
@@ -145,7 +145,8 @@ class IT_Theme_API_Shipping_Method implements IT_Theme_API {
 					echo '<div class="it-exchange-itemized-checkout-method">';
 
 						echo '<span class="it-exchange-shipping-product-title">' . it_exchange_get_cart_product_title( $product->bc() ) . '</span>';
-						$selected_multiple_method = it_exchange_get_multiple_shipping_method_for_cart_product( $product->get_id() );
+						$selected_multiple_method = $cart->get_shipping_method( $product );
+						$selected_multiple_method = $selected_multiple_method ? $selected_multiple_method->slug : '';
 						$enabled_shipping_methods = (array) it_exchange_get_enabled_shipping_methods_for_product( $product->get_product() );
 
 						if ( count( $enabled_shipping_methods ) > 1 ) {

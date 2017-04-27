@@ -855,20 +855,8 @@ class IT_Exchange_Shipping {
 			$cart_product_id = empty( $_POST['cart-product-id'] ) ? '' : $_POST['cart-product-id'];
 			$shipping_method = empty( $_POST['shipping-method'] ) ? '0' : $_POST['shipping-method'];
 
-			$item = $cart->get_item( 'product', $cart_product_id );
+			$item = $cart_product_id ? $cart->get_item( 'product', $cart_product_id ) : null;
 			$cart->set_shipping_method( $shipping_method, $item );
-
-			if ( $shipping_method === 'multiple-methods' ) {
-				/** @var ITE_Cart_Product $product */
-				foreach ( $cart->get_items( 'product' ) as $product ) {
-					$enabled_methods = it_exchange_get_enabled_shipping_methods_for_product( $product->get_product(), 'slug' );
-
-					if ( is_array( $enabled_methods ) && count( $enabled_methods ) === 1 ) {
-						$cart->set_shipping_method( reset( $enabled_methods ), $product );
-					}
-				}
-			}
-
 			it_exchange_get_template_part( 'content-checkout' );
 			die();
 		}
