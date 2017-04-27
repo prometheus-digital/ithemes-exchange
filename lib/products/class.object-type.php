@@ -30,7 +30,7 @@ class ITE_Product_Object_Type extends ITE_CPT_Object_Type {
 	 * @inheritDoc
 	 */
 	protected function convert_post( WP_Post $post ) {
-		return it_exchange_get_product( $post ) ?: null;
+		return it_exchange_get_product( $post );
 	}
 
 	/**

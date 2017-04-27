@@ -349,7 +349,7 @@ class Serializer {
 					'readonly'    => true,
 					'properties'  => array(
 						'label' => array(
-							'description' => __( 'Human readable label of the payment method used.', 'it-l10n-ithemes-exchange' ),
+							'description' => __( 'Human readable label of the payment method used.' ),
 							'type'        => 'string',
 							'context'     => array( 'view', 'edit', 'embed' ),
 						),

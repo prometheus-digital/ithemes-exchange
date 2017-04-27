@@ -5,7 +5,6 @@
  * @since   2.0.0
  * @license GPLv2
  */
-use Doctrine\Common\Collections\Criteria;
 
 /**
  * Class ITE_CPT_Object_Type
@@ -42,7 +41,7 @@ abstract class ITE_CPT_Object_Type implements ITE_Object_Type, ITE_Object_Type_W
 	/**
 	 * @inheritDoc
 	 */
-	public function get_objects( Criteria $criteria = null, &$total = null ) {
+	public function get_objects( \Doctrine\Common\Collections\Criteria $criteria = null ) {
 
 		$args = array();
 
@@ -69,10 +68,7 @@ abstract class ITE_CPT_Object_Type implements ITE_Object_Type, ITE_Object_Type_W
 
 		$args['post_type']        = $this->get_post_type();
 		$args['suppress_filters'] = true;
-
-		if ( func_num_args() === 1 ) {
-			$args['no_found_rows'] = true;
-		}
+		$args['no_found_rows']    = true;
 
 		$query   = new WP_Query( $args );
 		$posts   = $query->get_posts();
@@ -80,10 +76,6 @@ abstract class ITE_CPT_Object_Type implements ITE_Object_Type, ITE_Object_Type_W
 
 		foreach ( $posts as $post ) {
 			$objects[] = $this->convert_post( $post );
-		}
-
-		if ( func_num_args() === 2 ) {
-			$total = $query->found_posts;
 		}
 
 		return $objects;
@@ -111,11 +103,6 @@ abstract class ITE_CPT_Object_Type implements ITE_Object_Type, ITE_Object_Type_W
 	 * @inheritDoc
 	 */
 	public function is_restful() { return $this instanceof ITE_RESTful_Object_Type; }
-
-	/**
-	 * @inheritDoc
-	 */
-	public function has_capabilities() { return $this instanceof ITE_Object_Type_With_Capabilities; }
 
 	/**
 	 * @inheritDoc

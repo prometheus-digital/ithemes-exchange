@@ -10,7 +10,6 @@ require_once dirname( __FILE__ ) . '/interface.object.php';
 require_once dirname( __FILE__ ) . '/interface.type.php';
 require_once dirname( __FILE__ ) . '/interface.restful.php';
 require_once dirname( __FILE__ ) . '/interface.with-meta.php';
-require_once dirname( __FILE__ ) . '/interface.with-capabilities.php';
 
 require_once dirname( __FILE__ ) . '/types/class.table.php';
 require_once dirname( __FILE__ ) . '/types/class.table-with-meta.php';

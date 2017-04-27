@@ -5,7 +5,6 @@
  * @since   2.0.0
  * @license GPLv2
  */
-use Doctrine\Common\Collections\Criteria;
 
 /**
  * Interface ITE_Object_Type
@@ -63,14 +62,13 @@ interface ITE_Object_Type {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param array|Criteria $criteria
-	 * @param int            $total If passed, will be set to the total results ignoring pagination.
+	 * @param array|\Doctrine\Common\Collections\Criteria $criteria
 	 *
 	 * @return ITE_Object[]
 	 *
 	 * @throws BadMethodCallException If this method is not supported by the object type.
 	 */
-	public function get_objects( Criteria $criteria = null, &$total = null );
+	public function get_objects( \Doctrine\Common\Collections\Criteria $criteria = null );
 
 	/**
 	 * Delete an object by its ID.
@@ -102,13 +100,4 @@ interface ITE_Object_Type {
 	 * @return bool
 	 */
 	public function is_restful();
-
-	/**
-	 * Does this object type have capability protection.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @return bool
-	 */
-	public function has_capabilities();
 }

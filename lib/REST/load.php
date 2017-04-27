@@ -8,8 +8,6 @@
 
 namespace iThemes\Exchange\REST;
 
-use iThemes\Exchange\REST\Fields\Serializer;
-use iThemes\Exchange\REST\Helpers\RouteHelper;
 use iThemes\Exchange\REST\Middleware\Autolinker;
 use iThemes\Exchange\REST\Middleware\Cart_Feedback;
 use iThemes\Exchange\REST\Middleware\Empty_Attribute_Caster;
@@ -17,8 +15,6 @@ use iThemes\Exchange\REST\Middleware\Error_Handler;
 use iThemes\Exchange\REST\Middleware\Filter_By_Context;
 use iThemes\Exchange\REST\Middleware\Stack;
 use iThemes\Exchange\REST\Helpers\ContextFilterer;
-use iThemes\Exchange\REST\Route\CollectionRoute;
-use iThemes\Exchange\REST\Route\ItemRoute;
 use iThemes\Exchange\REST\Route\v1\Cart\Carts;
 use iThemes\Exchange\REST\Route\v1\Cart\TypeSerializer;
 use iThemes\Exchange\REST\Route\v1\Customer\Address\Address;
@@ -103,15 +99,10 @@ add_action( 'it_exchange_register_rest_routes', function ( Manager $manager ) {
 	$manager->register_route( $token->set_parent( $tokens ) );
 
 	// --- Transactions --- //
-	//$transactions = new Route\v1\Transaction\Transactions( new TransactionSerializer() );
-	$object_types = it_exchange_object_type_registry();
-	$txn_type     = $object_types->get( 'transaction' );
-	$txn_helper   = RouteHelper::from_file( $txn_type, new Serializer(), __DIR__ . '/Route/v1/Transaction/config.php' );
-	$transactions = new CollectionRoute( $txn_helper, 'transactions/' );
+	$transactions = new Route\v1\Transaction\Transactions( new TransactionSerializer() );
 	$manager->register_route( $transactions );
 
-	//$transaction = new Route\v1\Transaction\Transaction( new TransactionSerializer() );
-	$transaction = new ItemRoute( $txn_helper, $txn_type, 'transaction_id', '(?P<transaction_id>\d+)/' );
+	$transaction = new Route\v1\Transaction\Transaction( new TransactionSerializer() );
 	$manager->register_route( $transaction->set_parent( $transactions ) );
 
 	$send_receipt = new Route\v1\Transaction\Send_Receipt( it_exchange_email_notifications() );
@@ -225,7 +216,7 @@ function get_rest_manager() {
 		$stack->before( new Empty_Attribute_Caster(), 'filter-by-context', 'empty-attribute-caster' );
 
 		$manager = new Manager( 'it_exchange', $stack, array(
-			'card'    => array(
+			'card' => array(
 				'title'                => 'card',
 				'type'                 => 'object',
 				'additionalProperties' => false,
@@ -259,77 +250,6 @@ function get_rest_manager() {
 						'description' => __( 'Card holder name.', 'it-l10n-ithemes-exchange' ),
 					),
 				),
-			),
-			'address' => array(
-				'description' => __( 'An address.', 'it-l10n-ithemes-exchange' ),
-				'type'        => 'object',
-				'context'     => array( 'view', 'edit' ),
-				'properties'  => array(
-					'first-name'   => array(
-						'description' => __( 'The first name of the address.', 'it-l10n-ithemes-exchange' ),
-						'type'        => 'string',
-						'context'     => array( 'view', 'edit' ),
-					),
-					'last-name'    => array(
-						'description' => __( 'The last name of the address.', 'it-l10n-ithemes-exchange' ),
-						'type'        => 'string',
-						'context'     => array( 'view', 'edit' ),
-					),
-					'company-name' => array(
-						'description' => __( 'The company name of the address.', 'it-l10n-ithemes-exchange' ),
-						'type'        => 'string',
-						'context'     => array( 'view', 'edit' ),
-					),
-					'address1'     => array(
-						'description' => __( 'The address line 1 of the address.', 'it-l10n-ithemes-exchange' ),
-						'type'        => 'string',
-						'context'     => array( 'view', 'edit' ),
-					),
-					'address2'     => array(
-						'description' => __( 'The address line 2 of the address.', 'it-l10n-ithemes-exchange' ),
-						'type'        => 'string',
-						'context'     => array( 'view', 'edit' ),
-					),
-					'city'         => array(
-						'description' => __( 'The city of the address.', 'it-l10n-ithemes-exchange' ),
-						'type'        => 'string',
-						'context'     => array( 'view', 'edit' ),
-					),
-					'state'        => array(
-						'description' => __( 'The state two-letter abbreviation of the address.', 'it-l10n-ithemes-exchange' ),
-						'type'        => 'string',
-						'context'     => array( 'view', 'edit' ),
-					),
-					'country'      => array(
-						'description' => __( 'The country two-letter abbreviation of the address.', 'it-l10n-ithemes-exchange' ),
-						'type'        => 'string',
-						'context'     => array( 'view', 'edit' ),
-					),
-					'zip'          => array(
-						'description' => __( 'The zip code of the address.', 'it-l10n-ithemes-exchange' ),
-						'type'        => 'string',
-						'context'     => array( 'view', 'edit' ),
-					),
-					'email'        => array(
-						'description' => __( 'The email address of the address.', 'it-l10n-ithemes-exchange' ),
-						'context'     => array( 'view', 'edit' ),
-						'oneOf'       => array(
-							array(
-								'type'   => 'string',
-								'format' => 'email',
-							),
-							array(
-								'type' => 'string',
-								'enum' => array( '' ),
-							),
-						)
-					),
-					'phone'        => array(
-						'description' => __( 'The phone number of the address.', 'it-l10n-ithemes-exchange' ),
-						'type'        => 'string',
-						'context'     => array( 'view', 'edit' ),
-					),
-				)
 			)
 		) );
 	}

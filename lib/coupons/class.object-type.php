@@ -35,6 +35,6 @@ class ITE_Coupon_Object_Type extends ITE_CPT_Object_Type {
 	 * @inheritDoc
 	 */
 	protected function convert_post( WP_Post $post ) {
-		return it_exchange_get_coupon( $post ) ?: null;
+		return it_exchange_get_coupon( $post );
 	}
 }
