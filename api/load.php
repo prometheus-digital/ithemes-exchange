@@ -6,59 +6,60 @@
  * @since   0.2.0
  */
 
-include( $this->_plugin_path . 'api/theme.php' );
+require_once __DIR__ . '/theme.php' ;
 
 // Contains functions for registering / retreiving Add-ons, Add-on categories, and Add-on sets
-include( $this->_plugin_path . 'api/addons.php' );
+require_once __DIR__ . '/addons.php' ;
 
 // Product Features
-include( $this->_plugin_path . 'api/product-features.php' );
+require_once __DIR__ . '/product-features.php' ;
 
 // Register and retreive form actions
-include( $this->_plugin_path . 'api/misc.php' );
+require_once __DIR__ . '/misc.php' ;
 
 // Product Type Add-ons
-include( $this->_plugin_path . 'api/products.php' );
+require_once __DIR__ . '/products.php' ;
 
 // Transaction Add-ons
-include( $this->_plugin_path . 'api/transactions.php' );
+require_once __DIR__ . '/transactions.php' ;
 
 // Sessions
-include( $this->_plugin_path . 'api/sessions.php' );
+require_once __DIR__ . '/sessions.php' ;
 
 // Storage
-include( $this->_plugin_path . 'api/storage.php' );
+require_once __DIR__ . '/storage.php' ;
 
 // Shopping Cart API
-include( $this->_plugin_path . 'api/cart.php' );
+require_once __DIR__ . '/cart.php' ;
 
 // Customers
-include( $this->_plugin_path . 'api/customers.php' );
+require_once __DIR__ . '/customers.php' ;
 
 // Messages
-include( $this->_plugin_path . 'api/messages.php' );
+require_once __DIR__ . '/messages.php' ;
 
 // Coupons
-include( $this->_plugin_path . 'api/coupons.php' );
+require_once __DIR__ . '/coupons.php' ;
 
 // Downloads
-include( $this->_plugin_path . 'api/downloads.php' );
+require_once __DIR__ . '/downloads.php' ;
 
 // Pages
-include( $this->_plugin_path . 'api/pages.php' );
+require_once __DIR__ . '/pages.php' ;
 
 // Template Parts
-include( $this->_plugin_path . 'api/template-parts.php' );
+require_once __DIR__ . '/template-parts.php' ;
 
 // Data Sets
-include( $this->_plugin_path . 'api/data-sets.php' );
+require_once __DIR__ . '/data-sets.php' ;
 
 // Purchase Dialogs
-include( $this->_plugin_path . 'api/purchase-dialogs.php' );
+require_once __DIR__ . '/purchase-dialogs.php' ;
 
 // Shipping API
-include( $this->_plugin_path . 'api/shipping.php' );
-include( $this->_plugin_path . 'api/shipping-features.php' );
+require_once __DIR__ . '/shipping.php' ;
+require_once __DIR__ . '/shipping-features.php' ;
 
-include( $this->_plugin_path . 'api/sales.php' );
-include( $this->_plugin_path . 'api/gateways.php' );
+require_once __DIR__ . '/sales.php' ;
+require_once __DIR__ . '/gateways.php' ;
+require_once __DIR__ . '/logging.php' ;

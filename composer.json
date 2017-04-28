@@ -19,7 +19,8 @@
         "ironbound/db": "^2.0.0",
         "ironbound/wpevents": "^1.0",
         "justinrainbow/json-schema": "5.1",
-        "firebase/php-jwt": "^4.0"
+        "firebase/php-jwt": "^4.0",
+        "ironbound/db-logger": "^2.0"
     },
     "repositories": [
         {
