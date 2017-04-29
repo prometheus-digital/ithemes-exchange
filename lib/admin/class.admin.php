@@ -39,6 +39,9 @@ class IT_Exchange_Admin {
 	*/
 	var $error_message;
 
+	/** @var ITE_Log_List_Table */
+	private $log_table;
+
 	/**
 	 * Class constructor
 	 *
@@ -97,7 +100,7 @@ class IT_Exchange_Admin {
 		// Email settings callback
 		add_filter( 'it_exchange_general_settings_tab_callback_email', array( $this, 'register_email_settings_tab_callback' ) );
 		add_action( 'it_exchange_print_general_settings_tab_links', array( $this, 'print_email_settings_tab_link' ) );
-		
+
 		// Page settings callback
 		add_filter( 'it_exchange_general_settings_tab_callback_pages', array( $this, 'register_pages_settings_tab_callback' ) );
 		add_action( 'it_exchange_print_general_settings_tab_links', array( $this, 'print_pages_settings_tab_link' ) );
@@ -116,8 +119,12 @@ class IT_Exchange_Admin {
 		add_filter( 'it_storage_get_defaults_exchange_settings_pages', array( $this, 'set_pages_settings_defaults' ) );
 
 		add_action( 'it_exchange_print_tools_tab_links', array( $this, 'tools_tab' ) );
+		add_action( 'it_exchange_print_tools_tab_links', array( $this, 'logs_tab' ) );
 		add_action( 'it_exchange_print_tools_tab_links', array( $this, 'sysinfo_tab' ) );
 		add_action( 'it_exchange_print_tools_tab_links', array( $this, 'upgrades_tab' ) );
+		add_action( 'current_screen', array( $this, 'setup_log_view' ) );
+		add_filter( 'set-screen-option', array( $this, 'save_screen_options' ), 10, 3 );
+		add_action( 'admin_init', array( $this, 'handle_delete_logs' ) );
 		add_action( 'admin_init', array( $this, 'upgrades_tab_permissions_check' ) );
 		add_action( 'admin_init', array( $this, 'serve_upgrade_file' ) );
 
@@ -682,11 +689,15 @@ class IT_Exchange_Admin {
 	 * Print the tools page.
 	 */
 	function print_tools_page() {
-		
+
 		$tab = empty( $_GET['tab'] ) ? 'tools' : $_GET['tab'];
-		
 		$tab = str_replace( '.', '', $tab );
-		
+
+		if ( $tab === 'logs' ) {
+		    $table = $this->log_table;
+		    $table->prepare_items();
+        }
+
 		if ( file_exists( dirname(__FILE__) . "/views/tools/$tab.php" ) ) {
 			include dirname( __FILE__ ) . "/views/tools/$tab.php";
 		} else {
@@ -696,7 +707,7 @@ class IT_Exchange_Admin {
 
 	/**
 	 * Print the tools tabs.
-	 * 
+	 *
 	 * @since 2.0.0
 	 */
 	public function print_tools_page_tabs() {
@@ -734,9 +745,9 @@ class IT_Exchange_Admin {
 
 	/**
 	 * Print the system info tab.
-	 * 
+	 *
 	 * @since 2.0.0
-	 * 
+	 *
 	 * @param string $current_tab
 	 */
 	public function sysinfo_tab( $current_tab ) {
@@ -750,6 +761,29 @@ class IT_Exchange_Admin {
 	}
 
 	/**
+	 * Print the system info tab.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $current_tab
+	 */
+	public function logs_tab( $current_tab ) {
+
+	    $logger = it_exchange_logger();
+
+	    if ( ! $logger instanceof ITE_Queryable_Logger && ! $logger instanceof ITE_Retrievable_Logger ) {
+	        return;
+        }
+
+		$active = 'logs' === $current_tab ? 'nav-tab-active' : '';
+		?>
+        <a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-tools&tab=logs' ); ?>">
+			<?php _e( 'Logs', 'it-l10n-ithemes-exchange' ); ?>
+        </a>
+		<?php
+	}
+
+	/**
 	 * Print the upgrades tab.
 	 *
 	 * @since 2.0.0
@@ -757,7 +791,7 @@ class IT_Exchange_Admin {
 	 * @param string $current_tab
 	 */
 	public function upgrades_tab( $current_tab ) {
-		
+
 		if ( ! current_user_can( 'it_perform_upgrades' ) ) {
 			return;
 		}
@@ -780,20 +814,114 @@ class IT_Exchange_Admin {
 	}
 
 	/**
+	 * Set up the log table.
+     *
+     * @since 2.0.0
+	 */
+	public function setup_log_view() {
+
+	    if ( ! isset( $_GET['page'] ) || $_GET['page'] !== 'it-exchange-tools' ) {
+            return;
+        }
+
+        if ( ! isset( $_GET['tab'] ) || $_GET['tab'] !== 'logs' ) {
+	        return;
+        }
+
+        $logger = it_exchange_logger();
+
+		if ( ! $logger instanceof ITE_Queryable_Logger && ! $logger instanceof ITE_Retrievable_Logger ) {
+			return;
+		}
+
+		$table = new ITE_Log_List_Table( $logger );
+
+		$this->log_table = $table;
+
+		add_screen_option( 'per_page', array(
+			'label'   => __( 'Log Items', 'it-l10n-ithemes-exchange' ),
+			'default' => 20,
+			'option'  => 'exchange_page_it_exchange_tools_logs_per_page'
+		) );
+    }
+
+	/**
+     * Save the per page option for the logs table.
+     *
+     * @since 2.0.0
+     *
+	 * @param string $status
+	 * @param string $option
+	 * @param string $value
+	 *
+	 * @return string|boolean
+	 */
+    public function save_screen_options( $status, $option, $value ) {
+
+	    if ( $option === 'exchange_page_it_exchange_tools_logs_per_page' ) {
+	        return $value;
+        }
+
+	    return $status;
+    }
+
+	/**
+	 * Handle a delete log request.
+     *
+     * @since 2.0.0
+	 */
+    public function handle_delete_logs() {
+
+        if ( ! isset( $_REQUEST['it_exchange_delete_old_logs'] ) && ! isset( $_REQUEST['it_exchange_delete_logs'] ) ) {
+            return;
+        }
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            return;
+        }
+
+        check_admin_referer('it_exchange_delete_logs', 'it_exchange_delete_logs_nonce' );
+
+        $logger = it_exchange_logger();
+
+        if ( ! $logger instanceof ITE_Purgeable_Logger ) {
+            return;
+        }
+
+        $r = false;
+
+        if ( ! empty( $_REQUEST['it_exchange_delete_logs'] ) ) {
+            $r =$logger->purge();
+        } elseif ( ! empty( $_REQUEST['logs_older_than'] ) && $logger instanceof ITE_Date_Purgeable_Logger ) {
+            $r = $logger->purge_older_than( absint( $_REQUEST['logs_older_than'] ) );
+        }
+
+        if ( $r ) {
+            add_action( 'admin_notices', function() {
+                echo '<div class="notice notice-success"><p>' . __( 'Logs successfully deleted.', 'it-l10n-ithemes-exchange' ) . '</p></div>';
+            } );
+        } else {
+	        add_action( 'admin_notices', function() {
+		        echo '<div class="notice notice-error"><p>' . __( 'Unable to delete logs.', 'it-l10n-ithemes-exchange' ) . '</p></div>';
+	        } );
+        }
+    }
+
+	/**
 	 * Check if the user has permission to perform upgrades if on the upgrades tab.
-	 * 
+	 *
 	 * @since 2.0.0
 	 */
 	public function upgrades_tab_permissions_check() {
-		
+
 		if ( empty( $_GET['page'] ) || $_GET['page'] !== 'it-exchange-tools' ) {
 			return;
 		}
-		
+
 		if ( empty( $_GET['tab'] ) || $_GET['tab'] !== 'upgrades' ) {
 			return;
 		}
-		
+
 		if ( ! current_user_can( 'it_perform_upgrades' ) ) {
 			wp_die( __( "You don't have permission to perform upgrades.", 'it-l10n-ithemes-exchange' ) );
 		}
@@ -1934,8 +2062,8 @@ class IT_Exchange_Admin {
 			}
 
 			$dtf = $df . ' ' . $tf;
-			
-			
+
+
 			wp_enqueue_script( 'it-exchange-jquery-toastr', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/js/toastr.js' );
 			it_exchange_preload_schemas( 'transaction' );
 
@@ -1950,7 +2078,7 @@ class IT_Exchange_Admin {
 				'failed' => _x( 'Failed!', 'Notice when an email receipt has failed to be sent.', 'it-l10n-ithemes-exchange' ),
 				'format' => it_exchange_convert_php_to_moment( $dtf ),
 				'receiptSuccess' => __( 'Receipt Sent!', 'it-l10n-ithemes-exchange' ),
-				'receiptFailed' => __( 'Resending receipt failed', 'it-l10n-ithemes-exchange' ), 
+				'receiptFailed' => __( 'Resending receipt failed', 'it-l10n-ithemes-exchange' ),
 				'statusChangeSuccess' => __( 'Status changed from %1$s to %2$s.', 'it-l10n-ithemes-exchange' ),
 				'statusChangeError' => __( 'Status change failed', 'it-l10n-ithemes-exchange' ),
 				'transaction' => $serializer->serialize( $transaction ),

@@ -19,8 +19,7 @@ class ITE_DB_Logger extends \IronBound\DBLogger\Logger implements ITE_Date_Purge
 	/**
 	 * @var \IronBound\DBLogger\AbstractTable
 	 */
-	private $table;
-
+	protected $table;
 
 	/**
 	 * @inheritDoc
@@ -43,7 +42,7 @@ class ITE_DB_Logger extends \IronBound\DBLogger\Logger implements ITE_Date_Purge
 	/**
 	 * @inheritDoc
 	 */
-	public function purge() {
+	public function purge( $_days = null, wpdb $wpdb = null ) {
 		return \IronBound\DB\Manager::maybe_empty_table( $this->table, $this->wpdb );
 	}
 
@@ -64,7 +63,10 @@ class ITE_DB_Logger extends \IronBound\DBLogger\Logger implements ITE_Date_Purge
 		$query = new \IronBound\DB\Query\FluentQuery( $this->table, $this->wpdb );
 
 		$visitor = new ITE_DB_Visitor( $query );
-		$visitor->dispatch( $criteria->getWhereExpression() );
+
+		if ( $criteria->getWhereExpression() ) {
+			$visitor->dispatch( $criteria->getWhereExpression() );
+		}
 
 		foreach ( $criteria->getOrderings() as $column => $direction ) {
 			$query->order_by( $this->order_by_map( $column ), $direction );

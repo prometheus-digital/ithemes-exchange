@@ -90,4 +90,24 @@ class ITE_Log_Levels extends \Psr\Log\LogLevel {
 			return false;
 		}
 	}
+
+	/**
+	 * Get a list of the possible log levels with translations.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_levels() {
+		return array(
+			self::EMERGENCY => __( 'Emergency', 'it-l10n-ithemes-exchange' ),
+			self::ALERT     => __( 'Alert', 'it-l10n-ithemes-exchange' ),
+			self::CRITICAL  => __( 'Critical', 'it-l10n-ithemes-exchange' ),
+			self::ERROR     => __( 'Error', 'it-l10n-ithemes-exchange' ),
+			self::WARNING   => __( 'Warning', 'it-l10n-ithemes-exchange' ),
+			self::NOTICE    => __( 'Notice', 'it-l10n-ithemes-exchange' ),
+			self::INFO      => __( 'Info', 'it-l10n-ithemes-exchange' ),
+			self::DEBUG     => __( 'Debug', 'it-l10n-ithemes-exchange' ),
+		);
+	}
 }

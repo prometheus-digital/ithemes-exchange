@@ -16,6 +16,46 @@
 	padding-bottom: 5px;
 }
 
+.logs-wrap form {
+	padding: 20px 0 0 0;
+}
+
+.logs-wrap .displaying-num {
+	display: none;
+}
+
+.logs-wrap .tablenav .tablenav-pages .last-page {
+	display: none;
+}
+
+.logs-wrap .total-pages {
+	display: none;
+}
+
+.logs-wrap .tablenav-paging-text::after {
+	content: '∞';
+	display: inline;
+}
+
+.logs-wrap .bulkactions {
+	display: none;
+}
+
+.logs-wrap input[name="logs_older_than"] {
+	width: 120px;
+}
+
+.logs-wrap .button-delete {
+
+}
+
+.logs-wrap .button-delete:hover {
+	color: #fff;
+	background-color: #d54e21;
+	border-color: #d54e21;
+	box-shadow: 0 1px 0 #943617;
+}
+
 #all-sessions-warning {
     color: #a00;
 }

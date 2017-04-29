@@ -566,7 +566,7 @@ function it_exchange_get_tables() {
 		\IronBound\DB\Manager::get( 'ite-payment-tokens' ),
 		\IronBound\DB\Manager::get( 'ite-payment-tokens-meta' ),
 		\IronBound\DB\Manager::get( 'ite-sessions' ),
-		//\IronBound\DB\Manager::get( 'ite-logs' ),
+		\IronBound\DB\Manager::get( 'ite-logs' ),
 	);
 }
 
