@@ -1109,3 +1109,18 @@ function it_exchange_get_default_currency() {
 
 	return $settings['default-currency'];
 }
+
+/**
+ * Check if a function is disabled.
+ *
+ * @since 2.0.0
+ *
+ * @param string $function
+ *
+ * @return bool
+ */
+function it_exchange_function_is_disabled( $function ) {
+	$disabled = explode( ',',  ini_get( 'disable_functions' ) );
+
+	return in_array( $function, $disabled, true );
+}

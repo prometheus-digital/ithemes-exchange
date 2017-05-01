@@ -42,6 +42,13 @@ class ITE_DB_Logger extends \IronBound\DBLogger\Logger implements ITE_Date_Purge
 	/**
 	 * @inheritDoc
 	 */
+	protected function get_ip() {
+		return it_exchange_get_ip();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function purge( $_days = null, wpdb $wpdb = null ) {
 		return \IronBound\DB\Manager::maybe_empty_table( $this->table, $this->wpdb );
 	}
@@ -58,7 +65,7 @@ class ITE_DB_Logger extends \IronBound\DBLogger\Logger implements ITE_Date_Purge
 	/**
 	 * @inheritDoc
 	 */
-	public function query( \Doctrine\Common\Collections\Criteria $criteria ) {
+	public function query( \Doctrine\Common\Collections\Criteria $criteria, &$has_more ) {
 
 		$query = new \IronBound\DB\Query\FluentQuery( $this->table, $this->wpdb );
 
@@ -73,11 +80,20 @@ class ITE_DB_Logger extends \IronBound\DBLogger\Logger implements ITE_Date_Purge
 		}
 
 		if ( $criteria->getMaxResults() ) {
-			$query->take( $criteria->getMaxResults() );
+			$query->take( $criteria->getMaxResults() + 1 );
 		}
 
 		if ( $criteria->getFirstResult() ) {
 			$query->offset( $criteria->getFirstResult() );
+		}
+
+		$results  = $query->results();
+		$has_more = $results->count() === $criteria->getMaxResults() + 1;
+
+		$rows = $results->toArray();
+
+		if ( $has_more ) {
+			array_pop( $rows );
 		}
 
 		return array_map( function ( $row ) {
@@ -90,7 +106,7 @@ class ITE_DB_Logger extends \IronBound\DBLogger\Logger implements ITE_Date_Purge
 				'ip'      => $row['ip'],
 
 			) );
-		}, $query->results()->toArray() );
+		}, $rows );
 	}
 
 	/**

@@ -840,7 +840,7 @@ class IT_Exchange_Admin {
 
 		add_screen_option( 'per_page', array(
 			'label'   => __( 'Log Items', 'it-l10n-ithemes-exchange' ),
-			'default' => 20,
+			'default' => 100,
 			'option'  => 'exchange_page_it_exchange_tools_logs_per_page'
 		) );
     }

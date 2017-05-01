@@ -21,10 +21,26 @@ function it_exchange_logger() {
 		return $logger;
 	}
 
+	$log_type = 'file';
+
 	if ( defined( 'IT_EXCHANGE_DISABLE_LOGS' ) && IT_EXCHANGE_DISABLE_LOGS ) {
-		$logger = new  \Psr\Log\NullLogger();
-	} else {
-		$logger = new ITE_DB_Logger( \IronBound\DB\Manager::get( 'ite-logs' ), $GLOBALS['wpdb']	);
+		$log_type = 'null';
+	}
+
+	if ( $log_type === 'file' ) {
+		it_classes_load( 'it-file-utility.php' );
+		$directory = ITFileUtility::get_writable_directory( 'it-exchange-logs' );
+
+		if ( is_string( $directory ) ) {
+			$logger = new ITE_File_Logger( $directory );
+		}
+
+	} elseif ( $log_type === 'db' ) {
+		$logger = new ITE_DB_Logger( \IronBound\DB\Manager::get( 'ite-logs' ), $GLOBALS['wpdb'] );
+	}
+
+	if ( ! $logger ) {
+		$logger = new \Psr\Log\NullLogger();
 	}
 
 	/**

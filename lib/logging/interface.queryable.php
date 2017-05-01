@@ -2,7 +2,7 @@
 /**
  * Queryable Logger.
  *
- * @since 2.0.0
+ * @since   2.0.0
  * @license GPLv2
  */
 
@@ -21,10 +21,11 @@ interface ITE_Queryable_Logger extends \Psr\Log\LoggerInterface {
 	 * @since 2.0.0
 	 *
 	 * @param \Doctrine\Common\Collections\Criteria $criteria
+	 * @param bool                                  $has_more Set to whether there are more records available.
 	 *
 	 * @return ITE_Log_Item[]
 	 */
-	public function query( \Doctrine\Common\Collections\Criteria $criteria );
+	public function query( \Doctrine\Common\Collections\Criteria $criteria, &$has_more );
 
 	/**
 	 * Get the filters that are supported by this log source.

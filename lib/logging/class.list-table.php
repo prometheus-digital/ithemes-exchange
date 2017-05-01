@@ -129,7 +129,7 @@ class ITE_Log_List_Table extends WP_List_Table {
 	/**
 	 * Render the user column.
 	 *
-	 * @since 1.0
+	 * @since 2.0
 	 *
 	 * @param ITE_Log_Item $item
 	 */
@@ -138,7 +138,7 @@ class ITE_Log_List_Table extends WP_List_Table {
 		$user = $item->get_user();
 
 		if ( $user ) {
-			echo $user->user_email;
+			echo $user->user_login;
 		} elseif ( $item->get_user_id() ) {
 			echo "#{$item->get_user_id()}";
 		} else {
@@ -149,7 +149,7 @@ class ITE_Log_List_Table extends WP_List_Table {
 	/**
 	 * Render the time column.
 	 *
-	 * @since 1.0
+	 * @since 2.0
 	 *
 	 * @param ITE_Log_Item $item
 	 */
@@ -162,6 +162,17 @@ class ITE_Log_List_Table extends WP_List_Table {
 		} else {
 			echo '-';
 		}
+	}
+
+	/**
+	 * Render the IP address column.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param ITE_Log_Item $item
+	 */
+	public function column_ip( ITE_Log_Item $item ) {
+		echo esc_html( $item->get_ip() );
 	}
 
 	/**
@@ -255,7 +266,7 @@ class ITE_Log_List_Table extends WP_List_Table {
 
 		<?php
 
-        wp_nonce_field( 'it_exchange_delete_logs', 'it_exchange_delete_logs_nonce' );
+		wp_nonce_field( 'it_exchange_delete_logs', 'it_exchange_delete_logs_nonce' );
 	}
 
 	/**
@@ -263,10 +274,10 @@ class ITE_Log_List_Table extends WP_List_Table {
 	 */
 	public function prepare_items() {
 		$page     = $this->get_pagenum();
-		$per_page = $this->get_items_per_page( 'exchange_page_it_exchange_tools_logs_per_page' );
+		$per_page = $this->get_items_per_page( 'exchange_page_it_exchange_tools_logs_per_page' ) ?: 100;
 
 		if ( $this->logger instanceof ITE_Retrievable_Logger ) {
-			$this->items = $this->logger->get_log_items( $page, $per_page );
+			$this->items = $this->logger->get_log_items( $page, $per_page, $has_more );
 		} elseif ( $this->logger instanceof ITE_Queryable_Logger ) {
 			$order_by = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'time';
 			$order    = isset( $_GET['order'] ) ? strtoupper( $_GET['order'] ) : 'DESC';
@@ -293,19 +304,26 @@ class ITE_Log_List_Table extends WP_List_Table {
 				$criteria->andWhere( new Comparison( $filters['group'], '=', $group ) );
 			}
 
-			$this->items = $this->logger->query( $criteria );
+			$this->items = $this->logger->query( $criteria, $has_more );
+		} else {
+			return;
 		}
 
-		if ( $this->items ) {
-			$this->set_pagination_args( array(
-				'per_page'    => $per_page,
-				'total_items' => $per_page * 9999,
-				'total_pages' => 9999
-			) );
-		} else {
-			$this->set_pagination_args( array(
-				'per_page' => $per_page
-			) );
-		}
+		if ( $has_more ) {
+			$total_pages = 9999;
+			$total_items = $per_page * $total_pages;
+		} elseif ( $this->items ) {
+		    $total_pages = $page;
+		    $total_items = $per_page * ( $total_pages - 1 ) + count( $this->items );
+        } else {
+		    $total_pages = 0;
+		    $total_items = 0;
+        }
+
+		$this->set_pagination_args( array(
+			'per_page'    => $per_page,
+			'total_items' => $total_items,
+			'total_pages' => $total_pages
+		) );
 	}
 }
