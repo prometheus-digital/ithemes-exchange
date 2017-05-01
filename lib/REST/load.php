@@ -39,6 +39,10 @@ add_action( 'rest_api_init', function () {
 
 	$manager = get_rest_manager();
 
+	if ( $manager->is_initialized() ) {
+		return;
+	}
+
 	/**
 	 * Fires when routes should be registered.
 	 *

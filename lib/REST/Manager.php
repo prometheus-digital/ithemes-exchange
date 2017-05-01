@@ -93,7 +93,8 @@ class Manager {
 	 */
 	public function register_route( Route $route ) {
 
-		if ( $this->initialized ) {
+		if ( $this->is_initialized() ) {
+			print_r( wp_debug_backtrace_summary());
 			throw new \UnexpectedValueException( 'Route Manager has already been initialized.' );
 		}
 
@@ -183,6 +184,17 @@ class Manager {
 		$this->initialized = true;
 
 		return $this;
+	}
+
+	/**
+	 * Is the manager already initialized.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return bool
+	 */
+	public function is_initialized() {
+		return $this->initialized;
 	}
 
 	/**
