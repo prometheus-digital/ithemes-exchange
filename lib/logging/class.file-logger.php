@@ -15,7 +15,7 @@ class ITE_File_Logger extends \Psr\Log\AbstractLogger implements ITE_Purgeable_L
 	private $directory;
 
 	/** @var string */
-	private $minimum_level;
+	private $minimum_severity;
 
 	/** @var string */
 	private $type;
@@ -27,7 +27,7 @@ class ITE_File_Logger extends \Psr\Log\AbstractLogger implements ITE_Purgeable_L
 	private static $line_count_cache = array();
 
 	const LINE_FORMAT = '{time}||{level}||{group}||{message}||{user}||{ip}';
-	const MAX_LINES = 10000;
+	const MAX_LINES = 250;
 	const MAX_FILES = 10;
 
 	/**
@@ -38,9 +38,9 @@ class ITE_File_Logger extends \Psr\Log\AbstractLogger implements ITE_Purgeable_L
 	 * @param string $type
 	 */
 	public function __construct( $directory, $minimum_level = '', $type = 'log' ) {
-		$this->directory     = trailingslashit( $directory );
-		$this->minimum_level = $minimum_level;
-		$this->type          = $type;
+		$this->directory        = trailingslashit( $directory );
+		$this->minimum_severity = $minimum_level ? ITE_Log_Levels::get_level_severity( $minimum_level ) : 0;
+		$this->type             = $type;
 
 		it_classes_load( 'it-file-utility.php' );
 	}
@@ -50,7 +50,7 @@ class ITE_File_Logger extends \Psr\Log\AbstractLogger implements ITE_Purgeable_L
 	 */
 	public function log( $level, $message, array $context = array() ) {
 
-		if ( ITE_Log_Levels::get_level_severity( $level ) < ITE_Log_Levels::get_level_severity( $this->minimum_level ) ) {
+		if ( ITE_Log_Levels::get_level_severity( $level ) < $this->minimum_severity ) {
 			return;
 		}
 
@@ -62,13 +62,20 @@ class ITE_File_Logger extends \Psr\Log\AbstractLogger implements ITE_Purgeable_L
 			'{level}'   => $level,
 			'{group}'   => empty( $context['_group'] ) ? '' : $context['_group'],
 			'{message}' => $interpolated,
-			'{user}'    => empty( $user ) ? '' : "#{$user}",
+			'{user}'    => empty( $user ) ? 0 : "#{$user}",
 			'{ip}'      => it_exchange_get_ip(),
 		);
 
 		$line = str_replace( array_keys( $parts ), array_values( $parts ), self::LINE_FORMAT );
 
-		$fh = $this->acquire_file_handle( $this->make_file_path() );
+		$path = $this->make_file_path();
+
+		if ( $this->file_should_rotate( $path ) ) {
+			$this->rotate();
+			$path = $this->make_file_path();
+		}
+
+		$fh = $this->acquire_file_handle( $path );
 
 		if ( ! $fh ) {
 			return;
@@ -77,6 +84,12 @@ class ITE_File_Logger extends \Psr\Log\AbstractLogger implements ITE_Purgeable_L
 		flock( $fh, LOCK_EX );
 		fwrite( $fh, $line . "\n" );
 		flock( $fh, LOCK_UN );
+
+		if ( isset( self::$line_count_cache[ $path ] ) ) {
+			self::$line_count_cache[ $path ] ++;
+		} else {
+			self::$line_count_cache[ $path ] = 1;
+		}
 	}
 
 	/**
@@ -146,38 +159,25 @@ class ITE_File_Logger extends \Psr\Log\AbstractLogger implements ITE_Purgeable_L
 		$file_to_open   = floor( $position );
 		$offset_in_file = ( $position - $file_to_open ) * self::MAX_LINES;
 
-		$file_path = $this->make_file_path( $file_to_open );
+		$lines = $this->read_lines( $file_to_open, $offset_in_file, $per_page );
 
-		if ( ! file_exists( $file_path ) ) {
+		if ( $lines === null ) {
 			return array();
 		}
 
-		$file = $this->acquire_file_handle( $file_path, 'r' );
+		if ( ! isset( $lines[ $offset_in_file ] ) ) {
+			$offset_in_file = 0;
+			$lines          = $this->read_lines( $file_to_open ++, $offset_in_file, $per_page );
 
-		if ( ! $file ) {
-			return array();
+			if ( $lines === null ) {
+				return array();
+			}
 		}
 
-		if ( ! flock( $file, LOCK_SH ) ) {
-			return array();
-		}
-
-		if ( ! $file_size = filesize( $file_path ) ) {
-			return array();
-		}
-
-		$contents = fread( $file, $file_size );
-		flock( $file, LOCK_UN );
-		$contents = strrev( $contents );
-		$contents = trim( $contents );
-
-		// todo optimize
-		$lines       = explode( "\n", $contents, $offset_in_file + $per_page );
 		$total_lines = count( $lines );
-
-		$tz       = new DateTimeZone( 'UTC' );
-		$items    = array();
-		$has_more = false;
+		$tz          = new DateTimeZone( 'UTC' );
+		$items       = array();
+		$has_more    = false;
 
 		for ( $i = $offset_in_file; $i < $total_lines; $i ++ ) {
 
@@ -211,6 +211,51 @@ class ITE_File_Logger extends \Psr\Log\AbstractLogger implements ITE_Purgeable_L
 		$has_more = $has_more ?: file_exists( $this->make_file_path( $file_to_open + 1 ) );
 
 		return $items;
+	}
+
+	/**
+	 * Read log lines from a file.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param int $file_to_open
+	 * @param int $offset_in_file
+	 * @param int $per_page
+	 *
+	 * @return array|null
+	 */
+	protected function read_lines( $file_to_open, $offset_in_file, $per_page ) {
+
+		$file_path = $this->make_file_path( $file_to_open );
+
+		if ( ! file_exists( $file_path ) ) {
+			return array();
+		}
+
+		$file = $this->acquire_file_handle( $file_path, 'r' );
+
+		if ( ! $file ) {
+			return null;
+		}
+
+		if ( ! flock( $file, LOCK_SH ) ) {
+			return null;
+		}
+
+		if ( ! $file_size = filesize( $file_path ) ) {
+			return null;
+		}
+
+		// todo optimize
+
+		$contents = fread( $file, $file_size );
+		flock( $file, LOCK_UN );
+		$contents = strrev( $contents );
+		$contents = trim( $contents );
+
+		$explode_limit = $offset_in_file + $per_page;
+
+		return explode( "\n", $contents, $explode_limit );
 	}
 
 	/**
@@ -343,28 +388,29 @@ class ITE_File_Logger extends \Psr\Log\AbstractLogger implements ITE_Purgeable_L
 	 */
 	protected function acquire_file_handle( $path, $mode = 'a' ) {
 
-		if ( isset( self::$handles[ $path ][ $mode ] ) ) {
-			return self::$handles[ $path ][ $mode ];
+		if ( ! isset( self::$handles[ $path ][ $mode ] ) ) {
+
+			if ( ! ITFileUtility::is_file_writable( $path ) ) {
+				_doing_it_wrong( 'ITE_File_Logger', "{$path} is not writable by file logger.", '2.0.0' );
+
+				return null;
+			}
+
+			@chmod( $path, 0644 );
+			$handle = fopen( $path, $mode );
+
+			if ( ! $handle ) {
+				return null;
+			}
+
+			if ( ! isset( self::$handles[ $path ] ) ) {
+				self::$handles[ $path ] = array();
+			}
+
+			self::$handles[ $path ][ $mode ] = $handle;
 		}
 
-		if ( ! ITFileUtility::is_file_writable( $path ) ) {
-			_doing_it_wrong( 'ITE_File_Logger', "{$path} is not writable by file logger.", '2.0.0' );
-
-			return null;
-		}
-
-		if ( $this->file_should_rotate( $path ) ) {
-			$this->rotate();
-		}
-
-		@chmod( $path, 0644 );
-		$handle = fopen( $path, $mode );
-
-		if ( ! $handle ) {
-			return null;
-		}
-
-		return self::$handles[ $path ][ $mode ] = $handle;
+		return self::$handles[ $path ][ $mode ];
 	}
 
 	/**
@@ -375,7 +421,13 @@ class ITE_File_Logger extends \Psr\Log\AbstractLogger implements ITE_Purgeable_L
 	 * @return string[]|WP_Error
 	 */
 	protected function get_files() {
-		return ITFileUtility::locate_file( "{$this->directory}{$this->type}*" );
+		$files = glob( "{$this->directory}{$this->type}*.log" );
+
+		if ( is_array( $files ) ) {
+			return $files;
+		}
+
+		return new WP_Error( 'locate_file_failed', __( 'Unable to find files.', 'it-l10n-ithemes-exchange' ) );
 	}
 
 	/**
@@ -390,6 +442,10 @@ class ITE_File_Logger extends \Psr\Log\AbstractLogger implements ITE_Purgeable_L
 	 * @return int|null Number of lines, or null on error.
 	 */
 	protected function get_lines_in_file( $path ) {
+
+		if ( ! file_exists( $path ) ) {
+			return null;
+		}
 
 		if ( isset( self::$line_count_cache[ $path ] ) ) {
 			return self::$line_count_cache[ $path ];
@@ -465,12 +521,15 @@ class ITE_File_Logger extends \Psr\Log\AbstractLogger implements ITE_Purgeable_L
 		$oldest_first = array_reverse( $files, true );
 
 		foreach ( $oldest_first as $number => $old_name ) {
-			$new_name = preg_replace( '/(\d+)\.log/', $number + 1, $old_name );
+			$new_name = preg_replace( '/(\d+)\.log/', $number + 1, $old_name ) . '.log';
 
 			if ( ! rename( $old_name, $new_name ) ) {
 				return false;
 			}
 		}
+
+		self::$line_count_cache = array();
+		self::$handles          = array();
 
 		return true;
 	}

@@ -18,3 +18,11 @@ require_once __DIR__ . '/class.file-logger.php';
 
 require_once __DIR__ . '/class.list-table.php';
 IronBound\DB\Manager::register( new ITE_Log_DB_Table( 'ite-logs' ) );
+
+add_action( 'init', function () {
+	if ( isset( $_GET['do_logs'] ) ) {
+		for ( $i = 0; $i < 1050; $i ++ ) {
+			it_exchange_log( "Testing rotate #{$i}" );
+		}
+	}
+} );
