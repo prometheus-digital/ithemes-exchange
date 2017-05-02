@@ -1034,6 +1034,7 @@ class IT_Exchange_Admin {
 			'enable-gallery-zoom'             => '1',
 			'product-gallery-zoom-action'     => 'click',
 			'checkout-reg-form'               => 'registration',
+			'logging-mode'                    => 'production',
 			'company-email'                   => get_bloginfo( 'admin_email' ),
 			'company-name'                    => wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ),
 			'customer-account-page'           => 'Welcome to your account, [it_exchange_customer show="first-name"].<br />Using the links above, you can edit your profile and view your purchases and products.<br />Thanks for being a customer.'

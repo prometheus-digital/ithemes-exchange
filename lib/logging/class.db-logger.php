@@ -21,20 +21,29 @@ class ITE_DB_Logger extends \IronBound\DBLogger\Logger implements ITE_Date_Purge
 	 */
 	protected $table;
 
+	/** @var int */
+	private $level;
+
 	/**
 	 * @inheritDoc
 	 */
-	public function __construct( \IronBound\DBLogger\AbstractTable $table, \wpdb $wpdb ) {
+	public function __construct( \IronBound\DBLogger\AbstractTable $table, \wpdb $wpdb, $level = '' ) {
 		parent::__construct( $table, new \IronBound\DB\Query\Simple_Query( $wpdb, $table ) );
 
 		$this->table = $table;
 		$this->wpdb  = $wpdb;
+		$this->level = ITE_Log_Levels::get_level_severity( $level );
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function log( $level, $message, array $context = array() ) {
+
+		if ( ITE_Log_Levels::get_level_severity( $level ) < $this->level ) {
+			return;
+		}
+
 		$context['_level_num'] = ITE_Log_Levels::get_level_severity( $level );
 		parent::log( $level, $message, $context );
 	}

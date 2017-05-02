@@ -3,11 +3,12 @@
  * This file contains the contents of the Settings page
  * @since 0.3.6
  * @package IT_Exchange
+ *
+ * @var ITForm $form
 */
 ?>
 <div class="wrap">
 	<?php
-	ITUtility::screen_icon( 'it-exchange' );
 	do_action( 'it_exchange_general_settings_page_top' );
 
 	$h = version_compare( $GLOBALS['wp_version'], '4.4', '>=' ) ? '1' : '2';
@@ -148,7 +149,7 @@
 						$form->add_drop_down( 'store-product-order', $order_by ); ?>
 					</td>
 				</tr>
-	
+
 				<?php do_action( 'it_exchange_general_settings_before_settings_currency', $form ); ?>
 				<tr valign="top">
 					<th scope="row"><strong><?php _e( 'Currency Settings', 'it-l10n-ithemes-exchange' ); ?></strong></th>
@@ -243,6 +244,25 @@
 						<label for="wysiwyg-for-product-description"><?php _e( 'Enable Visual Editor for Product Descriptions?', 'it-l10n-ithemes-exchange' ); ?>
 					</td>
 				</tr>
+                <tr valign="top">
+                    <th scope="row"><label for="logging-mode"><?php _e( 'Logging Mode', 'it-l10n-ithemes-exchange' ); ?></label></th>
+                    <td>
+                        <?php
+                        $changeable = it_exchange_is_logging_mode_changeable();
+                        $options = array(
+	                        'value' => wp_list_pluck( it_exchange_get_available_logging_modes(), 'label' )
+                        );
+                        if ( ! $changeable ) {
+                            $options['disabled'] = 'disabled';
+                        }
+
+                        $form->add_drop_down( 'logging-mode', $options ); ?>
+
+                        <?php if ( ! $changeable ) : ?>
+                            <p class="description"><?php _e( 'Logging mode is set in wp-config.php', 'it-l10n-ithemes-exchange' ); ?></p>
+                        <?php endif; ?>
+                    </td>
+                </tr>
 	            <?php do_action( 'it_exchange_general_settings_before_settings_product_gallery', $form ); ?>
 				<tr valign="top">
 					<th scope="row"><strong><?php _e( 'Product Gallery', 'it-l10n-ithemes-exchange' ); ?></strong></th>

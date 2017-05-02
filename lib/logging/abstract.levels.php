@@ -11,7 +11,7 @@
  *
  * @author WooCommerce GPLv2
  */
-class ITE_Log_Levels extends \Psr\Log\LogLevel {
+abstract class ITE_Log_Levels extends \Psr\Log\LogLevel {
 
 	/**
 	 * Level strings mapped to integer severity.
