@@ -32,7 +32,7 @@ class ITE_PayPal_Standard_Webhook_Handler implements ITE_Gateway_Request_Handler
 			$custom = false;
 		}
 
-		$cart = $lock = $parent = null;
+		$cart = $cart_id = $lock = $parent = null;
 
 		if ( $custom ) {
 
@@ -54,6 +54,10 @@ class ITE_PayPal_Standard_Webhook_Handler implements ITE_Gateway_Request_Handler
 		}
 
 		if ( $lock ) {
+			it_exchange_log( 'PayPal waiting for lock for {cart_id}', ITE_Log_Levels::DEBUG, array(
+				'cart_id' => $cart_id,
+				'_group'  => 'webhook',
+			) );
 			$self = $this;
 			$code = it_exchange_wait_for_lock( $lock, 5, function () use ( $self, $webhook, $cart, $parent ) {
 				return $self->process( $webhook, $cart, $parent );
@@ -78,6 +82,11 @@ class ITE_PayPal_Standard_Webhook_Handler implements ITE_Gateway_Request_Handler
 	 * @throws \InvalidArgumentException
 	 */
 	public function process( $webhook, ITE_Cart $cart = null, $parent = 0 ) {
+
+		it_exchange_log( 'PayPal processing webhook {webhook}', ITE_Log_Levels::DEBUG, array(
+			'webhook' => wp_json_encode( $webhook ),
+			'_group'  => 'webhook'
+		) );
 
 		$txn_id        = isset( $webhook['txn_id'] ) ? $webhook['txn_id'] : null;
 		$cart_id       = $cart ? $cart->get_id() : '';
@@ -114,6 +123,11 @@ class ITE_PayPal_Standard_Webhook_Handler implements ITE_Gateway_Request_Handler
 				}
 
 				if ( ! $cart ) {
+					it_exchange_log( 'PayPal unable to find transaction with cart id {cart_id} for web_accept txn_type', ITE_Log_Levels::ERROR, array(
+						'cart_id' => $cart_id,
+						'_group'  => 'webhook',
+					) );
+
 					return 500;
 				}
 
@@ -269,8 +283,10 @@ class ITE_PayPal_Standard_Webhook_Handler implements ITE_Gateway_Request_Handler
 
 		if ( 'VERIFIED' !== $body ) {
 
-			error_log( sprintf( __( 'Invalid IPN sent from PayPal - PayLoad: %s', 'it-l10n-ithemes-exchange' ), maybe_serialize( $payload ) ) );
-			error_log( sprintf( __( 'Invalid IPN sent from PayPal - Response: %s', 'it-l10n-ithemes-exchange' ), maybe_serialize( $response ) ) );
+			it_exchange_log( __( 'Invalid IPN sent from PayPal - Payload: {payload}' ), ITE_Log_Levels::ERROR, array(
+				wp_json_encode( $payload ),
+				'_group' => 'webhook'
+			) );
 
 			return false;
 		}

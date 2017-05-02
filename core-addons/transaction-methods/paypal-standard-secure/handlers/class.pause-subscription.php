@@ -42,6 +42,10 @@ class ITE_PayPal_Standard_Secure_Pause_Subscription_Handler implements ITE_Gatew
 		$paypal_api_signature = $use_sandbox ? $paypal_settings['sandbox-api-signature'] : $paypal_settings['live-api-signature'];
 
 		if ( ! $paypal_api_username || ! $paypal_api_password || ! $paypal_api_signature ) {
+			it_exchange_log( 'No PayPal Secure credentials provided.', ITE_Log_Levels::ALERT, array(
+				'_group' => 'gateway'
+			) );
+
 			return false;
 		}
 

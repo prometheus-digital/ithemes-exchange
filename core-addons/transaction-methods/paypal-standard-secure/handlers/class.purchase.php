@@ -50,6 +50,10 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 		$api_url       = $is_sandbox ? PAYPAL_NVP_API_SANDBOX_URL : PAYPAL_NVP_API_LIVE_URL;
 
 		if ( empty( $paypal_email ) || empty( $api_username ) || empty( $api_password ) || empty( $api_signature ) ) {
+			it_exchange_log( 'No PayPal Secure credentials provided.', ITE_Log_Levels::ALERT, array(
+				'_group' => 'gateway'
+			) );
+
 			return false;
 		}
 
@@ -165,6 +169,10 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 
 		if ( is_wp_error( $response ) ) {
 			$cart->get_feedback()->add_error( $response->get_error_message() );
+			it_exchange_log( 'Network error while encrypting a PayPal Secure button: {error}', ITE_Log_Levels::WARNING, array(
+				'error'  => $response->get_error_message(),
+				'_group' => 'payment',
+			) );
 
 			return false;
 		}
@@ -173,6 +181,10 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 
 		if ( empty( $response_array['ACK'] ) || ! 'Success' === $response_array['ACK'] || empty( $response_array['WEBSITECODE'] ) ) {
 			$cart->get_feedback()->add_error( __( 'Unable to make a request to PayPal', 'it-l10n-ithemes-exchange' ) );
+
+			it_exchange_log( 'PayPal Secure NVP credentials error', ITE_Log_Levels::ALERT, array(
+				'_group' => 'gateway',
+			) );
 
 			return false;
 		}
@@ -185,6 +197,10 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 
 			return trim( $matches[0] );
 		}
+
+		it_exchange_log( 'PayPal Secure encrypted button is invalid.', ITE_Log_Levels::ALERT, array(
+			'_group' => 'gateway',
+		) );
 
 		return false;
 	}
@@ -421,17 +437,40 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 				it_exchange_add_message( 'error', $error );
 			}
 
+			it_exchange_log( 'PayPal Secure payment nonce verification failed', ITE_Log_Levels::INFO, array(
+				'_group' => 'gateway'
+			) );
+
 			return null;
 		}
 
 		try {
-			$self = $this;
 
+			it_exchange_log( 'PayPal Secure waiting for lock for {cart_id}', ITE_Log_Levels::DEBUG, array(
+				'cart_id' => $cart->get_id(),
+				'_group'  => 'gateway',
+			) );
+
+			$self = $this;
 			$transaction = it_exchange_wait_for_lock( $lock, 5, function () use ( $self, $request, $pdt ) {
 				return $self->process_pdt( $request, $pdt );
 			} );
 
-			return $transaction ? it_exchange_get_transaction( $transaction ) : null;
+			if ( $transaction ) {
+				it_exchange_log( 'PayPal Secure payment for cart {cart_id} resulted in transaction {txn_id}', ITE_Log_Levels::INFO, array(
+					'txn_id'  => $transaction,
+					'cart_id' => $request->get_cart()->get_id(),
+					'_group'  => 'gateway',
+				) );
+
+				return it_exchange_get_transaction( $transaction );
+			}
+
+			it_exchange_log( 'PayPal Secure payment for cart {cart_id} failed to create a transaction.', ITE_Log_Levels::WARNING, array(
+				'cart_id' => $request->get_cart()->get_id()
+			) );
+
+			return null;
 		} catch ( IT_Exchange_Locking_Exception $e ) {
 			throw $e;
 		} catch ( Exception $e ) {
@@ -458,6 +497,11 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 	 * @throws Exception
 	 */
 	public function process_pdt( ITE_Gateway_Purchase_Request $request, $pdt ) {
+
+		it_exchange_log( 'PayPal Secure processing cart {cart_id} PDT: {pdt}', ITE_Log_Levels::DEBUG, array(
+			'pdt'     => wp_json_encode( $pdt ),
+			'cart_id' => $request->get_cart()->get_id(),
+		) );
 
 		$cart    = $request->get_cart();
 		$cart_id = $cart->get_id();

@@ -56,6 +56,14 @@
 	box-shadow: 0 1px 0 #943617;
 }
 
+.logs-wrap .column-message {
+	width: 50%;
+}
+
+.logs-wrap .column-level {
+	width: 75px;
+}
+
 #all-sessions-warning {
     color: #a00;
 }

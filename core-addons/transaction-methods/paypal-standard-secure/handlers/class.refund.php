@@ -35,8 +35,6 @@ class ITE_PayPal_Standard_Secure_Refund_Request_Handler implements ITE_Gateway_R
 		$amount      = $request->get_amount();
 		$is_full     = $amount >= $transaction->get_total();
 
-		$general_settings = it_exchange_get_option( 'settings_general' );
-
 		$paypal_settings = $this->get_gateway()->settings()->all();
 
 		if ( $transaction->is_sandbox_purchase() ) {
@@ -55,6 +53,10 @@ class ITE_PayPal_Standard_Secure_Refund_Request_Handler implements ITE_Gateway_R
 		$api_url       = $use_sandbox ? PAYPAL_NVP_API_SANDBOX_URL : PAYPAL_NVP_API_LIVE_URL;
 
 		if ( empty( $paypal_email ) || empty( $api_username ) || empty( $api_password ) || empty( $api_signature ) ) {
+			it_exchange_log( 'No PayPal Secure credentials provided.', ITE_Log_Levels::ALERT, array(
+				'_group' => 'gateway'
+			) );
+
 			throw new UnexpectedValueException( __( 'PayPal API Credentials not set.', 'it-l10n-ithemes-exchange' ) );
 		}
 
@@ -87,6 +89,11 @@ class ITE_PayPal_Standard_Secure_Refund_Request_Handler implements ITE_Gateway_R
 		if ( is_wp_error( $response ) ) {
 			it_exchange_release_lock( "paypal-secure-refund-created-{$transaction->ID}" );
 
+			it_exchange_log( 'Network error while refunding PayPal Secure payment: {error}', ITE_Log_Levels::WARNING, array(
+				'_group' => 'gateway',
+				'error'  => $response->get_error_message()
+			) );
+
 			throw new UnexpectedValueException( $response->get_error_message() );
 		}
 
@@ -94,6 +101,11 @@ class ITE_PayPal_Standard_Secure_Refund_Request_Handler implements ITE_Gateway_R
 
 		if ( empty( $response_array['REFUNDTRANSACTIONID'] ) ) {
 			it_exchange_release_lock( "paypal-secure-refund-created-{$transaction->ID}" );
+
+			it_exchange_log( 'PayPal Secure failed to create refund: {response}', ITE_Log_Levels::WARNING, array(
+				'_group'   => 'gateway',
+				'response' => wp_json_encode( $response ),
+			) );
 
 			throw new UnexpectedValueException( __( 'Unable to create refund in PayPal.', 'it-l10n-ithemes-exchange' ) );
 		}

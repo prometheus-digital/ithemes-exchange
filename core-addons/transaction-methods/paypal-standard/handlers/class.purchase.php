@@ -47,6 +47,9 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 
 		if ( ! ( $paypal_email = $this->get_gateway()->settings()->get( $setting ) ) ) {
 			$cart->get_feedback()->add_error( __( 'Invalid PayPal setup.', 'it-l10n-ithemes-exchange' ) );
+			it_exchange_log( 'No PayPal credentials provided.', ITE_Log_Levels::ALERT, array(
+				'_group' => 'gateway'
+			) );
 
 			return null;
 		}
@@ -279,20 +282,46 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 				it_exchange_add_message( 'error', $error );
 			}
 
+			it_exchange_log( 'PayPal payment nonce verification failed', ITE_Log_Levels::INFO, array(
+				'_group' => 'gateway'
+			) );
+
 			return null;
 		}
 
 		try {
-			$self = $this;
-
+			it_exchange_log( 'PayPal waiting for lock for {cart_id}', ITE_Log_Levels::DEBUG, array(
+				'cart_id' => $cart->get_id(),
+				'_group'  => 'gateway',
+			) );
+			$self        = $this;
 			$transaction = it_exchange_wait_for_lock( $lock, 5, function () use ( $self, $request, $pdt ) {
 				return $self->process_pdt( $request, $pdt );
 			} );
 
-			return $transaction ? it_exchange_get_transaction( $transaction ) : null;
+			if ( $transaction ) {
+				it_exchange_log( 'PayPal payment for cart {cart_id} resulted in transaction {txn_id}', ITE_Log_Levels::INFO, array(
+					'txn_id'  => $transaction,
+					'cart_id' => $request->get_cart()->get_id(),
+					'_group'  => 'gateway',
+				) );
+
+				return it_exchange_get_transaction( $transaction );
+			}
+
+			it_exchange_log( 'PayPal payment for cart {cart_id} failed to create a transaction.', ITE_Log_Levels::WARNING, array(
+				'cart_id' => $request->get_cart()->get_id()
+			) );
+
+			return null;
 		} catch ( IT_Exchange_Locking_Exception $e ) {
 			throw $e;
 		} catch ( Exception $e ) {
+
+			it_exchange_log( 'Unexpected exception while processing PayPal payment: {exception}', ITE_Log_Levels::ERROR, array(
+				'exception' => $e,
+				'_group'    => 'gateway',
+			) );
 
 			if ( $cart ) {
 				$cart->get_feedback()->add_error( $e->getMessage() );
@@ -316,6 +345,11 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 	 * @throws Exception
 	 */
 	public function process_pdt( ITE_Gateway_Purchase_Request $request, $pdt ) {
+
+		it_exchange_log( 'PayPal processing cart {cart_id} PDT: {pdt}', ITE_Log_Levels::DEBUG, array(
+			'pdt'     => wp_json_encode( $pdt ),
+			'cart_id' => $request->get_cart()->get_id(),
+		) );
 
 		$cart    = $request->get_cart();
 		$cart_id = $cart->get_id();

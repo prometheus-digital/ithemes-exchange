@@ -438,7 +438,11 @@ function it_exchange_process_webhooks() {
 		do_action( 'it_exchange_webhook_' . $param, $_REQUEST );
 	} catch ( IT_Exchange_Locking_Exception $e ) {
 		status_header( 500 );
-		error_log( "Locking exception during webooks: {$e->getMessage()}" );
+		it_exchange_log( 'Unable to acquire while processing {gateway} webhook: {exception}', ITE_Log_Levels::WARNING, array(
+		  'exception' => $e,
+          'gateway'   => $doing,
+          '_group'    => 'webhook',
+        ) );
 		die();
 	}
 
