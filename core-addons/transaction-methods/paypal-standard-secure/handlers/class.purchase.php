@@ -451,7 +451,7 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 				'_group'  => 'gateway',
 			) );
 
-			$self = $this;
+			$self        = $this;
 			$transaction = it_exchange_wait_for_lock( $lock, 5, function () use ( $self, $request, $pdt ) {
 				return $self->process_pdt( $request, $pdt );
 			} );
@@ -645,7 +645,11 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 		parse_str( wp_remote_retrieve_body( $response ), $response_array );
 
 		if ( ! isset( $response_array['PAYERID'] ) ) {
-			error_log( 'Invalid PayPal response format: ' . print_r( $response_array, true ) );
+			it_exchange_log( 'Invalid PayPal Secure transaction details {paypal_id} response: {response}', array(
+				'paypal_id' => $paypal_id,
+				'response'  => wp_json_encode( $response ),
+				'_group'    => 'gateway',
+			) );
 
 			throw new UnexpectedValueException( __( 'Invalid PayPal response. Please try again later.', 'it-l10n-ithemes-exchange' ) );
 		}

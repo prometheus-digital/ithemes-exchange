@@ -308,23 +308,6 @@ function it_exchange_install_tables_on_update() {
 add_action( 'it_exchange_version_updated', 'it_exchange_install_tables_on_update' );
 
 /**
- * This flushes the rewrite rules for us on activation
- *
- * @since 0.4.0
- *
- * @return void
- */
-function it_exchange_flush_rewrite_rules() {
-	if ( get_option( '_it-exchange-flush-rewrites', false ) ) {
-		delete_option( '_it-exchange-flush-rewrites' );
-		it_exchange_get_pages( true );
-		flush_rewrite_rules();
-	}
-}
-
-add_action( 'admin_init', 'it_exchange_flush_rewrite_rules', 99 );
-
-/**
  * Register all sync verbs
  *
  * @param Ithemes_Sync_API $api An instnance of the iThemes Sync API

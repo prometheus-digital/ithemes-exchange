@@ -194,7 +194,11 @@ function it_exchange_offline_payments_mark_subscriptions_as_active_on_purchase( 
 			remove_filter( 'it_exchange_subscriber_status_activity_use_gateway_actor', '__return_true' );
 		}
 	} catch ( Exception $e ) {
-		error_log( $e->getMessage() );
+		it_exchange_log( 'Unexpected exception while marking offline payments subscription as active on purchase of {txn_id}: {exception}', array(
+			'exception' => $e,
+			'txn_id'    => $transaction_id,
+			'_group'    => 'gateway',
+		) );
 	}
 }
 

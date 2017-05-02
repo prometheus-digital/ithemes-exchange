@@ -1089,6 +1089,25 @@ function it_exchange_print_home_url_in_js() {
 add_action( 'wp_head', 'it_exchange_print_home_url_in_js' );
 
 /**
+ * This flushes the rewrite rules for us on activation
+ *
+ * @since 0.4.0
+ *
+ * @return void
+ */
+function it_exchange_flush_rewrite_rules() {
+	if ( get_option( '_it-exchange-flush-rewrites', false ) ) {
+		delete_option( '_it-exchange-flush-rewrites' );
+		it_exchange_get_pages( true );
+		flush_rewrite_rules();
+
+		it_exchange_log( 'Flushed rewrite rules', ITE_Log_Levels::INFO );
+	}
+}
+
+add_action( 'admin_init', 'it_exchange_flush_rewrite_rules', 99 );
+
+/**
  * Force rewrite rule update on upgrade
  *
  * @since 1.4.0

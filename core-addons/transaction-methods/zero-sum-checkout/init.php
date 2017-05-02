@@ -260,7 +260,11 @@ function it_exchange_zero_sum_mark_subscriptions_as_active_on_purchase( $transac
 		}
 	}
 	catch ( Exception $e ) {
-		error_log( $e->getMessage() );
+	    it_exchange_log( 'Unexpected exception while marking zero subscription as active on purchase of {txn_id}: {exception}', array(
+            'exception' => $e,
+            'txn_id'    => $transaction_id,
+            '_group'    => 'gateway',
+        ) );
 	}
 }
 

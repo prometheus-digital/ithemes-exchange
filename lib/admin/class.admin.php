@@ -1840,8 +1840,6 @@ class IT_Exchange_Admin {
 			it_exchange_save_option( 'settings_pages', $settings );
 			$this->status_message = __( 'Settings Saved.', 'it-l10n-ithemes-exchange' );
 
-			//error_log(print_r($current,true));
-
 			if ( empty( $current['compat-mode'] ) && $compat_mode ) {
 				$this->auto_create_wordpress_pages();
 			}
