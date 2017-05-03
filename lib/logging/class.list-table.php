@@ -114,16 +114,14 @@ class ITE_Log_List_Table extends WP_List_Table {
 	public function column_level( ITE_Log_Item $item ) {
 
 		if ( ! $item->get_level() ) {
-			return '-';
+			return '';
 		}
 
-		$levels = ITE_Log_Levels::get_levels();
+		$levels      = ITE_Log_Levels::get_levels();
+		$label       = isset( $levels[ $item->get_level() ] ) ? $levels[ $item->get_level() ] : $item->get_level();
+		$level_class = sanitize_html_class( 'log-level--' . $item->get_level() );
 
-		if ( ! isset( $levels[ $item->get_level() ] ) ) {
-			return $item->get_level();
-		}
-
-		return $levels[ $item->get_level() ];
+		return '<span class="log-level ' . $level_class . '">' . $label . '</span>';
 	}
 
 	/**
@@ -158,7 +156,7 @@ class ITE_Log_List_Table extends WP_List_Table {
 		$time = $item->get_time();
 
 		if ( $time ) {
-			echo $time->format( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) );
+			echo $time->format('Y-m-d H:i:s'  );
 		} else {
 			echo '-';
 		}
@@ -313,12 +311,12 @@ class ITE_Log_List_Table extends WP_List_Table {
 			$total_pages = 9999;
 			$total_items = $per_page * $total_pages;
 		} elseif ( $this->items ) {
-		    $total_pages = $page;
-		    $total_items = $per_page * ( $total_pages - 1 ) + count( $this->items );
-        } else {
-		    $total_pages = 0;
-		    $total_items = 0;
-        }
+			$total_pages = $page;
+			$total_items = $per_page * ( $total_pages - 1 ) + count( $this->items );
+		} else {
+			$total_pages = 0;
+			$total_items = 0;
+		}
 
 		$this->set_pagination_args( array(
 			'per_page'    => $per_page,

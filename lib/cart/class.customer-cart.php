@@ -454,6 +454,14 @@ class ITE_Cart {
 			return null;
 		}
 
+		it_exchange_log( 'Added {type} item {id}, {name}, to the cart {cart_id}.', ITE_Log_Levels::INFO, array(
+			'_group'  => 'cart',
+			'type'    => $item->get_type(),
+			'name'    => $item->get_name(),
+			'id'      => $item->get_id(),
+			'cart_id' => $this->get_id(),
+		) );
+
 		if ( ! $add_new ) {
 			return $item;
 		}
@@ -593,6 +601,15 @@ class ITE_Cart {
 		}
 
 		if ( $deleted ) {
+
+			it_exchange_log( 'Removed {type} item with id {id}, {name}, from the cart {cart_id}.', ITE_Log_Levels::INFO, array(
+				'_group'  => 'cart',
+				'type'    => $item->get_type(),
+				'name'    => $item->get_name(),
+				'id'      => $item->get_id(),
+				'cart_id' => $this->get_id(),
+			) );
+
 			$this->_clear_item_cache();
 
 			/**
@@ -640,6 +657,12 @@ class ITE_Cart {
 		foreach ( $items as $item ) {
 			$this->remove_item( $item );
 		}
+
+		it_exchange_log( "Removed all items of type '{type}' from the cart {cart_id}", ITE_Log_Levels::INFO, array(
+			'type'    => $type,
+			'cart_id' => $this->get_id(),
+			'_group'  => 'cart',
+		) );
 
 		return true;
 	}
@@ -737,6 +760,11 @@ class ITE_Cart {
 	 */
 	public function _clear_item_cache() {
 		$this->items = null;
+
+		it_exchange_log( 'Cart {cart_id} item cache cleared.', ITE_Log_Levels::DEBUG, array(
+			'cart_id' => $this->get_id(),
+			'_group'  => 'cart',
+		) );
 	}
 
 	/**
@@ -1103,29 +1131,74 @@ class ITE_Cart {
 	 * @param \ITE_Line_Item $new_item
 	 *
 	 * @return bool
-	 *
-	 * @throws \ITE_Line_Item_Coercion_Failed_Exception
-	 * @throws \ITE_Cart_Coercion_Failed_Exception
 	 */
 	public function coerce( ITE_Line_Item $new_item = null ) {
 
 		$feedback = $this->feedback;
 		$valid    = true;
 
-		foreach ( $this->cart_validators as $cart_validator ) {
-			if ( ! $cart_validator->coerce( $this, $new_item, $feedback ) ) {
-				$valid = false;
+		try {
+			foreach ( $this->cart_validators as $cart_validator ) {
+				if ( ! $cart_validator->coerce( $this, $new_item, $feedback ) ) {
+					$valid = false;
+				}
 			}
+		} catch ( ITE_Cart_Coercion_Failed_Exception $e ) {
+			if ( $new_item ) {
+				it_exchange_log( 'Failed to coerce cart {cart_id} with new {type} item {id}, {name}: {exception}', ITE_Log_Levels::WARNING, array(
+					'cart_id'   => $this->get_id(),
+					'exception' => $e,
+					'type'      => $new_item->get_id(),
+					'name'      => $new_item->get_name(),
+					'id'        => $new_item->get_id(),
+					'_group'    => 'cart',
+				) );
+			} else {
+				it_exchange_log( 'Failed to coerce cart {cart_id}: {exception}', ITE_Log_Levels::WARNING, array(
+					'cart_id'   => $this->get_id(),
+					'exception' => $e,
+					'_group'    => 'cart',
+				) );
+			}
+			$this->get_feedback()->add_error( $e->getMessage() );
 		}
 
 		$items = $this->get_items();
 
-		foreach ( $this->item_validators as $item_validator ) {
-			foreach ( $items as $item ) {
-				if ( $item_validator->accepts( $item->get_type() ) && ! $item_validator->coerce( $item, $this, $feedback ) ) {
-					$valid = false;
+		try {
+			foreach ( $this->item_validators as $item_validator ) {
+				foreach ( $items as $item ) {
+					if ( $item_validator->accepts( $item->get_type() ) && ! $item_validator->coerce( $item, $this, $feedback ) ) {
+						$valid = false;
+					}
 				}
 			}
+		} catch ( ITE_Line_Item_Coercion_Failed_Exception $e ) {
+			if ( $new_item ) {
+				it_exchange_log(
+					'Failed to coerce {type} item {id}, {name} in cart {cart_id} with new {new_type} item {new_id}, {new_name}: {exception}',
+					ITE_Log_Levels::WARNING, array(
+					'cart_id'   => $this->get_id(),
+					'exception' => $e,
+					'type'      => $item->get_id(),
+					'name'      => $item->get_name(),
+					'id'        => $item->get_id(),
+					'new_type'  => $new_item->get_id(),
+					'new_name'  => $new_item->get_name(),
+					'new_id'    => $new_item->get_id(),
+					'_group'    => 'cart',
+				) );
+			} else {
+				it_exchange_log( 'Failed to coerce {type} item {id}, {name} in cart {cart_id}: {exception}', ITE_Log_Levels::WARNING, array(
+					'cart_id'   => $this->get_id(),
+					'exception' => $e,
+					'type'      => $item->get_id(),
+					'name'      => $item->get_name(),
+					'id'        => $item->get_id(),
+					'_group'    => 'cart',
+				) );
+			}
+			$this->get_feedback()->add_error( $e->getMessage(), $item );
 		}
 
 		return $valid;
@@ -1223,6 +1296,15 @@ class ITE_Cart {
 				it_exchange_update_multiple_shipping_method_for_cart_product( $for->get_id(), $method->slug );
 			}
 
+			it_exchange_log( 'Cart {cart_id} shipping method updated to {method} for {type} with id {id}, {name}.', ITE_Log_Levels::INFO, array(
+				'cart_id' => $this->get_id(),
+				'method'  => $method->slug,
+				'type'    => $for->get_type(),
+				'id'      => $for->get_id(),
+				'name'    => $for->get_name(),
+				'_group'  => 'cart',
+			) );
+
 			return true;
 		}
 
@@ -1246,6 +1328,12 @@ class ITE_Cart {
 					$this->get_shipping_method( $product ); // Set defaults
 				}
 			}
+
+			it_exchange_log( 'Cart {cart_id} shipping method updated to {method}.', ITE_Log_Levels::INFO, array(
+				'cart_id' => $this->get_id(),
+				'method'  => $method,
+				'_group'  => 'cart',
+			) );
 
 			return true;
 		}
@@ -1277,6 +1365,12 @@ class ITE_Cart {
 				$this->save_item( $item );
 			}
 		}
+
+		it_exchange_log( 'Cart {cart_id} shipping method updated to {method}.', ITE_Log_Levels::INFO, array(
+			'cart_id' => $this->get_id(),
+			'method'  => $method,
+			'_group'  => 'cart',
+		) );
 
 		return true;
 	}
@@ -1333,7 +1427,7 @@ class ITE_Cart {
 	/**
 	 * Set the forced shipping method for either the whole cart or a given item.
 	 *
-	 * @since 2.0.0
+	 * @since  2.0.0
 	 *
 	 * @param ITE_Line_Item|null $for
 	 *
@@ -1648,6 +1742,12 @@ class ITE_Cart {
 
 		$this->doing_merge = false;
 		$cart->doing_merge = false;
+
+		it_exchange_log( 'Cart {cart_id} merged with {other_cart_id}.', ITE_Log_Levels::INFO, array(
+			'cart_id'       => $this->get_id(),
+			'other_cart_id' => $cart->get_id(),
+			'_group'        => 'cart',
+		) );
 	}
 
 	/**
@@ -1723,6 +1823,18 @@ class ITE_Cart {
 		$clone             = clone $this;
 		$clone->repository = $repository;
 
+		if ( $new_ids ) {
+			it_exchange_log( 'Cart cloned with new repository {repository} with new ids', ITE_Log_Levels::DEBUG, array(
+				'repository' => get_class( $repository ),
+				'_group'     => 'cart',
+			) );
+		} else {
+			it_exchange_log( 'Cart cloned with new repository {repository}', ITE_Log_Levels::DEBUG, array(
+				'repository' => get_class( $repository ),
+				'_group'     => 'cart',
+			) );
+		}
+
 		return $clone;
 	}
 
@@ -1739,6 +1851,8 @@ class ITE_Cart {
 	 */
 	public final function generate_auth_secret( $life = 300 ) {
 
+		$e = null;
+
 		try {
 			$secret = \Firebase\JWT\JWT::encode( array(
 				'exp'     => time() + $life,
@@ -1749,6 +1863,11 @@ class ITE_Cart {
 		}
 
 		if ( empty( $secret ) ) {
+			it_exchange_log( 'Unable to generate cart hash for {cart_id} {exception}', ITE_Log_Levels::ALERT, array(
+				'cart_id'   => $this->get_id(),
+				'exception' => $e,
+				'_group'    => 'cart',
+			) );
 			throw new UnexpectedValueException( "Unable to generate cart hash for {$this->get_id()}." );
 		}
 

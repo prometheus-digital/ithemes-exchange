@@ -1,9 +1,9 @@
 .tools-upgrade-wrap.wrap h2.nav-tab-wrapper {
-	border-bottom: none;
+    border-bottom: none;
 }
 
 .tools-upgrade-wrap.wrap h2.nav-tab-wrapper .nav-tab-active {
-	border-bottom: 1px solid #CCC;
+    border-bottom: 1px solid #CCC;
 }
 
 .tool {
@@ -11,38 +11,38 @@
 }
 
 .tool label {
-	font-weight: bold;
-	display: block;
-	padding-bottom: 5px;
+    font-weight: bold;
+    display: block;
+    padding-bottom: 5px;
 }
 
 .logs-wrap form {
-	padding: 20px 0 0 0;
+    padding: 20px 0 0 0;
 }
 
 .logs-wrap .displaying-num {
-	display: none;
+    display: none;
 }
 
 .logs-wrap .tablenav .tablenav-pages .last-page {
-	display: none;
+    display: none;
 }
 
 .logs-wrap .total-pages {
-	display: none;
+    display: none;
 }
 
 .logs-wrap .tablenav-paging-text::after {
-	content: '∞';
-	display: inline;
+    content: '∞';
+    display: inline;
 }
 
 .logs-wrap .bulkactions {
-	display: none;
+    display: none;
 }
 
 .logs-wrap input[name="logs_older_than"] {
-	width: 120px;
+    width: 120px;
 }
 
 .logs-wrap .button-delete {
@@ -50,18 +50,59 @@
 }
 
 .logs-wrap .button-delete:hover {
-	color: #fff;
-	background-color: #d54e21;
-	border-color: #d54e21;
-	box-shadow: 0 1px 0 #943617;
+    color: #fff;
+    background-color: #d54e21;
+    border-color: #d54e21;
+    box-shadow: 0 1px 0 #943617;
 }
 
 .logs-wrap .column-message {
-	width: 50%;
+    width: 50%;
 }
 
 .logs-wrap .column-level {
-	width: 75px;
+    width: 75px;
+}
+
+.logs-wrap .column-level .log-level {
+    display: inline;
+    padding: .2em .6em .3em;
+    font-size: 80%;
+    font-weight: bold;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .2em;
+}
+
+.logs-wrap .column-level .log-level:empty {
+    display: none;
+}
+
+.logs-wrap .column-level .log-level--emergency,
+.logs-wrap .column-level .log-level--alert {
+    background-color: #ff4136;
+}
+
+.logs-wrap .column-level .log-level--critical,
+.logs-wrap .column-level .log-level--error {
+    background-color: #ff851b;
+}
+
+.logs-wrap .column-level .log-level--warning,
+.logs-wrap .column-level .log-level--notice {
+    color: #222;
+    background-color: #ffdc00;
+}
+
+.logs-wrap .column-level .log-level--info {
+    background-color: #0074d9;
+}
+
+.logs-wrap .column-level .log-level--debug {
+    background-color: #3d9970;
 }
 
 #all-sessions-warning {
@@ -69,126 +110,126 @@
 }
 
 .upgrades-container {
-	background: #FFF;
-	border: 1px solid #CCC;
-	border-radius: 3px;
-	border-bottom: none;
+    background: #FFF;
+    border: 1px solid #CCC;
+    border-radius: 3px;
+    border-bottom: none;
 }
 
 .upgrades-container .upgrade-row {
-	overflow: hidden;
-	padding: 30px;
-	border-bottom: 1px solid #CCC;
-	background: none;
-	-webkit-transition: all 0.5s ease-in-out;
-	-moz-transition: all 0.5s ease-in-out;
-	transition: all 0.5s ease-in-out;
+    overflow: hidden;
+    padding: 30px;
+    border-bottom: 1px solid #CCC;
+    background: none;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
 }
 
 .upgrades-container .upgrade-row.completed {
-	background: #ececec;
+    background: #ececec;
 }
 
 .upgrades-container .upgrade-row.erred {
-	background: #fbeaea;
+    background: #fbeaea;
 }
 
 .upgrades-container .upgrade-row.in-progress {
-	background: rgba(140, 197, 62, .2);
+    background: rgba(140, 197, 62, .2);
 }
 
 .upgrades-container .upgrade-row header {
-	margin-bottom: 7px;
+    margin-bottom: 7px;
 }
 
 .upgrades-container .upgrade-row header * {
-	margin: 0;
-	padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 .upgrades-container .upgrade-row header:after {
-	content: "";
-	display: table;
-	clear: both;
+    content: "";
+    display: table;
+    clear: both;
 }
 
 .upgrades-container .upgrade-row h3 {
-	float: left;
+    float: left;
 }
 
 .upgrades-container .upgrade-row h4 {
-	float: right;
-	background: #d7dde2;
-	color: #494f53;
-	border-radius: 3px;
-	padding: 3px 6px 4px;
+    float: right;
+    background: #d7dde2;
+    color: #494f53;
+    border-radius: 3px;
+    padding: 3px 6px 4px;
 }
 
 .upgrades-container .upgrade-row p {
-	margin-top: 0;
-	padding-top: 0;
-	margin-bottom: 1em;
+    margin-top: 0;
+    padding-top: 0;
+    margin-bottom: 1em;
 }
 
 .upgrades-container .upgrade-row.completed p {
-	margin-bottom: 0;
+    margin-bottom: 0;
 }
 
 .upgrades-container .upgrade-row button {
-	display: block;
+    display: block;
 }
 
 .upgrades-container .upgrade-row .upgrade-progress {
-	display: none;
+    display: none;
 }
 
 .upgrades-container .upgrade-row .upgrade-feedback {
-	opacity: 0;
-	height: 0;
-	margin-top: 0;
-	-webkit-transition: all 0.5s ease-in-out;
-	-moz-transition: all 0.5s ease-in-out;
-	transition: all 0.5s ease-in-out;
+    opacity: 0;
+    height: 0;
+    margin-top: 0;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
 }
 
 .upgrades-container .upgrade-row.upgrading .upgrade-progress {
-	display: block;
+    display: block;
 }
 
 .upgrades-container .upgrade-row.show-feedback .upgrade-feedback {
-	opacity: 1;
-	height: 300px;
-	margin-top: 10px;
+    opacity: 1;
+    height: 300px;
+    margin-top: 10px;
 }
 
 .upgrades-container .upgrade-row.upgrading p {
-	float: left;
+    float: left;
 }
 
 .upgrades-container .upgrade-row.upgrading button {
-	display: none;
+    display: none;
 }
 
 .upgrades-container .upgrade-progress a {
-	float: right;
+    float: right;
 }
 
 .upgrades-container .upgrade-progress progress {
-	width: 100%;
+    width: 100%;
 }
 
 .upgrades-container .upgrade-feedback textarea,
 #system-info {
-	font-family: monospace;
-	width: 100%;
-	margin: 0;
-	height: 300px;
-	padding: 20px;
-	-moz-border-radius: 0;
-	-webkit-border-radius: 0;
-	border-radius: 0;
-	resize: none;
-	font-size: 12px;
-	line-height: 20px;
-	outline: 0;
+    font-family: monospace;
+    width: 100%;
+    margin: 0;
+    height: 300px;
+    padding: 20px;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+    resize: none;
+    font-size: 12px;
+    line-height: 20px;
+    outline: 0;
 }

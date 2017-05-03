@@ -67,7 +67,7 @@ function it_exchange_logger() {
  * @param string $level_or_context Either the log level, defaults to 'warning' or the context for interpolation.
  * @param array  $context          The context for interpolation.
  */
-function it_exchange_log( $message, $level_or_context = \Psr\Log\LogLevel::ERROR, array $context = array() ) {
+function it_exchange_log( $message, $level_or_context = ITE_Log_Levels::ERROR, array $context = array() ) {
 
 	if ( is_array( $level_or_context ) ) {
 		$context = $level_or_context;

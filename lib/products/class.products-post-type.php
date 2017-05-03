@@ -13,6 +13,9 @@
 */
 class IT_Exchange_Product_Post_Type {
 
+	public $post_type;
+	public $options;
+
 	/**
 	 * Class Constructor
 	 *
@@ -194,7 +197,6 @@ class IT_Exchange_Product_Post_Type {
 	*/
 	function register_the_post_type() {
 		register_post_type( $this->post_type, $this->options );
-		it_exchange_flush_rewrite_rules();
 	}
 
 	/**
