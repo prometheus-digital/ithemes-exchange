@@ -85,16 +85,7 @@ class IT_Exchange_Super_Widget_Ajax {
 	public function handle() {
 
 		$success = $this->do_action( $this->action );
-
-		foreach ( $this->cart->get_feedback()->errors() as $error ) {
-			it_exchange_add_message( 'error', $error );
-		}
-
-		foreach ( $this->cart->get_feedback()->notices() as $notice ) {
-			it_exchange_add_message( 'notice', $notice );
-		}
-
-		$this->cart->get_feedback()->clear();
+		$this->cart->get_feedback()->to_messages();
 
 		it_exchange_commit_session();
 

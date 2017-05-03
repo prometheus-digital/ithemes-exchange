@@ -611,6 +611,12 @@ class IT_Exchange_Shopping_Cart {
 			return $status;
 		}
 
+		if ( $cart && ( $feedback = $cart->get_requirements_for_purchase() ) && $feedback->has_feedback() ) {
+			$feedback->to_messages();
+
+			return false;
+		}
+
 		// Verify transaction method exists
 		$method_var                   = it_exchange_get_field_name( 'transaction_method' );
 		$requested_transaction_method = empty( $_REQUEST[ $method_var ] ) ? false : $_REQUEST[ $method_var ];
@@ -695,17 +701,7 @@ class IT_Exchange_Shopping_Cart {
 			return;
 		}
 
-		$feedback = $cart->get_feedback();
-
-		foreach ( $feedback->errors() as $error ) {
-			it_exchange_add_message( 'error', $error );
-		}
-
-		foreach ( $feedback->notices() as $notice ) {
-			it_exchange_add_message( 'notice', $notice );
-		}
-
-		$feedback->clear();
+		$cart->get_feedback()->to_messages();
 	}
 
 	/**

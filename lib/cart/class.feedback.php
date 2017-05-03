@@ -119,4 +119,22 @@ class ITE_Cart_Feedback {
 	public function has_feedback() {
 		return $this->notices && $this->errors;
 	}
+
+	/**
+	 * Display messages using the message API for each notice or error in this feedback object.
+	 *
+	 * @since 2.0.0
+	 */
+	public function to_messages() {
+
+		foreach ( $this->errors() as $error ) {
+			it_exchange_add_message( 'error', $error );
+		}
+
+		foreach ( $this->notices() as $notice ) {
+			it_exchange_add_message( 'notice', $notice );
+		}
+
+		$this->clear();
+	}
 }

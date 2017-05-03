@@ -760,11 +760,6 @@ class ITE_Cart {
 	 */
 	public function _clear_item_cache() {
 		$this->items = null;
-
-		it_exchange_log( 'Cart {cart_id} item cache cleared.', ITE_Log_Levels::DEBUG, array(
-			'cart_id' => $this->get_id(),
-			'_group'  => 'cart',
-		) );
 	}
 
 	/**
@@ -1161,6 +1156,8 @@ class ITE_Cart {
 				) );
 			}
 			$this->get_feedback()->add_error( $e->getMessage() );
+
+			return false;
 		}
 
 		$items = $this->get_items();
@@ -1199,6 +1196,8 @@ class ITE_Cart {
 				) );
 			}
 			$this->get_feedback()->add_error( $e->getMessage(), $item );
+
+			return false;
 		}
 
 		return $valid;
@@ -2035,6 +2034,7 @@ class ITE_Cart {
 			new ITE_Multi_Item_Product_Validator(),
 			new ITE_Product_Inventory_Validator(),
 			new ITE_Product_Availability_Validator(),
+			new ITE_Coupon_Item_Validator(),
 		);
 
 		/**
