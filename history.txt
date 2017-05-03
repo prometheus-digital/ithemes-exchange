@@ -1318,3 +1318,5 @@
 	Security Fix: Automatically detect and remove development directory that could exist in the exchange-addon-membership plugin.
 1.36.3 - Timothy Jacobs
 	Tweak: Account for plugins or themes flushing rewrite rules in a non-admin context.
+1.36.4 - Timothy Jacobs, Chris Jean
+	Fix: Account for new return types in iThemes Security reCaptcha Module
