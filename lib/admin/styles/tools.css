@@ -41,6 +41,14 @@
     display: none;
 }
 
+.logs-wrap #filter-by-user {
+    width: 125px;
+}
+
+.logs-wrap #filter-by-group {
+    width: 100px;
+}
+
 .logs-wrap input[name="logs_older_than"] {
     width: 120px;
 }

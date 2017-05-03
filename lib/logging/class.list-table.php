@@ -156,7 +156,7 @@ class ITE_Log_List_Table extends WP_List_Table {
 		$time = $item->get_time();
 
 		if ( $time ) {
-			echo $time->format('Y-m-d H:i:s'  );
+			echo $time->format( 'Y-m-d H:i:s' );
 		} else {
 			echo '-';
 		}
@@ -202,6 +202,7 @@ class ITE_Log_List_Table extends WP_List_Table {
 
 		$selected_level = isset( $_GET['level'] ) ? $_GET['level'] : '';
 		$group          = isset( $_GET['group'] ) ? $_GET['group'] : '';
+		$user           = isset( $_GET['user'] ) ? $_GET['user'] : '';
 		?>
 
 		<?php if ( isset( $filters['level'] ) ) : ?>
@@ -216,6 +217,13 @@ class ITE_Log_List_Table extends WP_List_Table {
                     </option>
 				<?php endforeach; ?>
             </select>
+		<?php endif; ?>
+
+		<?php if ( isset( $filters['user'] ) ): ?>
+            <label for="filter-by-user" class="screen-reader-text">
+				<?php _e( 'Filter by Username or User ID', 'it-l10n-ithemes-exchange' ); ?>
+            </label>
+            <input type="text" name="user" id="filter-by-user" value="<?php echo esc_attr( $user ); ?>" placeholder="<?php esc_attr_e( 'Username or ID', 'it-l10n-ithemes-exchange' ); ?>">
 		<?php endif; ?>
 
 		<?php if ( isset( $filters['group'] ) ): ?>
@@ -282,6 +290,18 @@ class ITE_Log_List_Table extends WP_List_Table {
 			$level    = isset( $_GET['level'] ) ? $_GET['level'] : '';
 			$message  = isset( $_GET['s'] ) ? $_GET['s'] : '';
 			$group    = isset( $_GET['group'] ) ? $_GET['group'] : '';
+			$user     = '';
+
+			if ( isset( $_GET['user'] ) ) {
+				$user = $_GET['user'];
+
+				if ( is_numeric( $user ) ) {
+					$user = (int) $user;
+				} else {
+					$user = get_user_by( 'login', $user );
+					$user = $user ? $user->ID : '';
+				}
+			}
 
 			$filters = $this->logger->get_supported_filters();
 
@@ -300,6 +320,10 @@ class ITE_Log_List_Table extends WP_List_Table {
 
 			if ( $group && isset( $filters['group'] ) ) {
 				$criteria->andWhere( new Comparison( $filters['group'], '=', $group ) );
+			}
+
+			if ( $user && isset( $filters['user'] ) ) {
+				$criteria->andWhere( new Comparison( $filters['user'], '=', $user ) );
 			}
 
 			$this->items = $this->logger->query( $criteria, $has_more );
