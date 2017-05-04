@@ -394,21 +394,24 @@ class IT_Exchange_Product_Post_Type {
 		                    /** @var ITE_Optionally_Supported_Feature_Requirement $requirement */
 		                    foreach ( $item->optional_features_required() as $requirement ) {
 			                    foreach ( ITE_Gateways::all() as $gateway ) {
-				                    if ( $gateway->supports_feature( $requirement->get_feature() ) ) {
-					                    $all_meet = true;
+			                        /** @var ITE_Purchase_Request_Handler $handler */
+				                    foreach ( $gateway->get_handlers_by_request_name( 'purchase' ) as $handler ) {
+				                        if ( $handler->supports_feature( $requirement->get_feature() ) ) {
+					                        $all_meet = true;
 
-					                    foreach ( $requirement->get_requirement_details() as $slug => $detail ) {
-						                    if ( ! $gateway->supports_feature_and_detail( $requirement->get_feature(), $slug, $detail ) ) {
-							                    $all_meet = false;
+					                        foreach ( $requirement->get_requirement_details() as $slug => $detail ) {
+						                        if ( ! $handler->supports_feature_and_detail( $requirement->get_feature(), $slug, $detail ) ) {
+							                        $all_meet = false;
 
-							                    break;
-						                    }
-					                    }
+							                        break;
+						                        }
+					                        }
 
-					                    if ( $all_meet ) {
-						                    $useable[] = $gateway->get_name();
-					                    }
-				                    }
+					                        if ( $all_meet ) {
+						                        $useable[] = $gateway->get_name();
+					                        }
+				                        }
+			                        }
 			                    }
 		                    }
 	                    } else {

@@ -158,47 +158,4 @@ class ITE_Gateway_Offline_Payments extends ITE_Gateway {
 	 * @inheritDoc
 	 */
 	public function get_settings_name() { return 'addon_offline_payments'; }
-
-	/**
-	 * @inheritDoc
-	 */
-	public function supports_feature( ITE_Optionally_Supported_Feature $feature ) {
-
-		switch ( $feature->get_feature_slug() ) {
-			case 'recurring-payments':
-			case 'one-time-fee':
-				return true;
-		}
-
-		return parent::supports_feature( $feature );
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function supports_feature_and_detail( ITE_Optionally_Supported_Feature $feature, $slug, $detail ) {
-
-		switch ( $feature->get_feature_slug() ) {
-			case 'one-time-fee':
-				switch ( $slug ) {
-					case 'discount':
-						return true;
-					default:
-						return false;
-				}
-			case 'recurring-payments':
-				switch ( $slug ) {
-					case 'auto-renew':
-					case 'profile':
-					case 'trial':
-					case 'trial-profile':
-					case 'max-occurrences':
-						return true;
-					default:
-						return false;
-				}
-		}
-
-		return parent::supports_feature( $feature );
-	}
 }

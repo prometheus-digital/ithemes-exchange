@@ -9,7 +9,7 @@
 /**
  * Class ITE_Gateway
  */
-abstract class ITE_Gateway implements ITE_Supports_Optional_Features {
+abstract class ITE_Gateway {
 
 	const SSL_REQUIRED = 'required';
 	const SSL_SUGGESTED = 'suggested';
@@ -263,19 +263,5 @@ abstract class ITE_Gateway implements ITE_Supports_Optional_Features {
 	 */
 	public function settings() {
 		return new ITE_Settings_Controller( $this->get_settings_name() );
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function supports_feature( ITE_Optionally_Supported_Feature $feature ) {
-		return false;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function supports_feature_and_detail( ITE_Optionally_Supported_Feature $feature, $slug, $detail ) {
-		return false;
 	}
 }

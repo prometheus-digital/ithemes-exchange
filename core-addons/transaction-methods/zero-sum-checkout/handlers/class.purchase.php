@@ -59,6 +59,40 @@ class ITE_Zero_Sum_Checkout_Purchase_Handler extends ITE_Purchase_Request_Handle
 	/**
 	 * @inheritDoc
 	 */
+	public function supports_feature( ITE_Optionally_Supported_Feature $feature ) {
+
+		switch ( $feature->get_feature_slug() ) {
+			case 'recurring-payments':
+				return true;
+		}
+
+		return parent::supports_feature( $feature );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function supports_feature_and_detail( ITE_Optionally_Supported_Feature $feature, $slug, $detail ) {
+
+		switch ( $feature->get_feature_slug() ) {
+			case 'recurring-payments':
+				switch ( $slug ) {
+					case 'auto-renew':
+					case 'profile':
+					case 'trial':
+					case 'trial-profile':
+						return true;
+					default:
+						return false;
+				}
+		}
+
+		return parent::supports_feature( $feature );
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function get_payment_button_label() {
 		/**
 		 * Filter the Purchase Button label for Zero-Sum-Checkout.

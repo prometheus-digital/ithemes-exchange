@@ -9,7 +9,7 @@
 /**
  * Class ITE_Purchase_Request_Handler
  */
-abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handler {
+abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handler, ITE_Supports_Optional_Features {
 
 	/**
 	 * @var ITE_Gateway
@@ -323,18 +323,16 @@ HTML;
 			return $item instanceof ITE_Requires_Optionally_Supported_Features && $item->optional_features_required();
 		} )->unique();
 
-		$gateway = $this->get_gateway();
-
 		foreach ( $items as $item ) {
 			$requirements = $item->optional_features_required();
 
 			foreach ( $requirements as $requirement ) {
-				if ( ! $gateway->supports_feature( $requirement->get_feature() ) ) {
+				if ( ! $this->supports_feature( $requirement->get_feature() ) ) {
 					return false;
 				}
 
 				foreach ( $requirement->get_requirement_details() as $slug => $detail ) {
-					if ( ! $gateway->supports_feature_and_detail( $requirement->get_feature(), $slug, $detail ) ) {
+					if ( ! $this->supports_feature_and_detail( $requirement->get_feature(), $slug, $detail ) ) {
 						return false;
 					}
 				}
@@ -342,5 +340,19 @@ HTML;
 		}
 
 		return true;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function supports_feature( ITE_Optionally_Supported_Feature $feature ) {
+		return false;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function supports_feature_and_detail( ITE_Optionally_Supported_Feature $feature, $slug, $detail ) {
+		return false;
 	}
 }
