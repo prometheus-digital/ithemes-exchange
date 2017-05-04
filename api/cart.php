@@ -1037,39 +1037,6 @@ function it_exchange_get_cart_billing_address() {
 }
 
 /**
- * Get the available transaction methods for a cart.
- *
- * @since 2.0.0
- *
- * @param ITE_Cart|null $cart
- *
- * @return ITE_Gateway[]
- */
-function it_exchange_get_available_transaction_methods_for_cart( ITE_Cart $cart = null ) {
-
-	$cart = $cart ?: it_exchange_get_current_cart();
-
-	$methods = array();
-
-	foreach ( ITE_Gateways::accepting() as $gateway ) {
-		/** @var ITE_Purchase_Request_Handler $handler */
-		if ( ( $handler = $gateway->get_handler_by_request_name( 'purchase' ) ) && $handler->can_handle_cart( $cart ) ) {
-			$methods[] = $gateway;
-		}
-	}
-
-	/**
-	 * Filter the available transaction methods for a given cart.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @param \ITE_Gateway[] $methods
-	 * @param \ITE_Cart      $cart
-	 */
-	return apply_filters( 'it_exchange_available_transaction_methods_for_cart', $methods, $cart );
-}
-
-/**
  * Generates and returns a unique Cart ID to share across sessions
  *
  * Wrapper to it_exchange_get_unique_hash but allows filter for cart id

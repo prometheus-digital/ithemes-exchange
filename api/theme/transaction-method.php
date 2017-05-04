@@ -74,7 +74,7 @@ class IT_Theme_API_Transaction_Method implements IT_Theme_API {
 	 *
 	 * @return string
 	 */
-	function get_api_context() {
+	public function get_api_context() {
 		return $this->_context;
 	}
 
@@ -87,7 +87,7 @@ class IT_Theme_API_Transaction_Method implements IT_Theme_API {
 	 *
 	 * @return mixed
 	 */
-	function make_payment( $options = array() ) {
+	public function make_payment( $options = array() ) {
 
 		try {
 			$cart = it_exchange_get_requested_cart_and_check_auth();
@@ -105,7 +105,13 @@ class IT_Theme_API_Transaction_Method implements IT_Theme_API {
 			$options['cart'] = $cart;
 		}
 
-		return it_exchange_get_transaction_method_make_payment_button( $this->_transaction_method['slug'], $options );
+		if ( ! empty( $this->_transaction_method['handler_id'] ) ) {
+			$slug = $this->_transaction_method['handler_id'];
+		} else {
+			$slug = $this->_transaction_method['slug'];
+		}
+
+		return it_exchange_get_transaction_method_make_payment_button( $slug, $options );
 	}
 
 	/**

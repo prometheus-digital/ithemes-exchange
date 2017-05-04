@@ -51,7 +51,7 @@ class IT_Theme_API_Checkout implements IT_Theme_API {
 	 *
 	 * @return string
 	*/
-	function get_api_context() {
+	public function get_api_context() {
 		return $this->_context;
 	}
 
@@ -63,43 +63,34 @@ class IT_Theme_API_Checkout implements IT_Theme_API {
 	 * @param array $options
 	 * @return mixed
 	*/
-	function transaction_methods( $options=array() ) {
+	public function transaction_methods( $options=array() ) {
 
-		$cart = it_exchange_get_requested_cart_and_check_auth() ?: it_exchange_get_current_cart();
+		$methods = function() {
+			$cart = it_exchange_get_requested_cart_and_check_auth() ?: it_exchange_get_current_cart();
 
-		$methods = array_map(
-			function( ITE_Gateway $gateway ) { return $gateway->get_addon(); },
-			it_exchange_get_available_transaction_methods_for_cart( $cart )
-		);
+			$methods = array_map( function ( ITE_Purchase_Request_Handler $handler ) {
+				$addon = $handler->get_gateway()->get_addon();
+				$addon['handler_id'] = $handler->get_id();
 
-		foreach ( it_exchange_get_enabled_addons( array( 'category' => 'transaction-methods' ) ) as $addon ) {
+				return $addon;
+			}, it_exchange_get_available_transaction_methods_for_cart( $cart ) );
 
-			if ( ! ITE_Gateways::get( $addon['slug'] ) ) {
-				$methods[] = $addon;
+			foreach ( it_exchange_get_enabled_addons( array( 'category' => 'transaction-methods' ) ) as $addon ) {
+
+				if ( ! ITE_Gateways::get( $addon['slug'] ) ) {
+					$methods[] = $addon;
+				}
 			}
-		}
+
+			return $methods;
+		};
 
 		// Do we have any transaction methods
-		if ( ! empty( $options['has'] ) )
-			return (boolean) $methods;
-
-		// If we made it here, we're doing a loop of applied coupons
-		// This will init/reset the applied_coupons global and loop through them.
-		if ( empty( $GLOBALS['it_exchange']['transaction_methods'] ) ) {
-			$GLOBALS['it_exchange']['transaction_methods'] = $methods;
-			$GLOBALS['it_exchange']['transaction_method'] = reset( $GLOBALS['it_exchange']['transaction_methods'] );
-			return true;
-		} else {
-			if ( next( $GLOBALS['it_exchange']['transaction_methods'] ) ) {
-				$GLOBALS['it_exchange']['transaction_method'] = current( $GLOBALS['it_exchange']['transaction_methods'] );
-				return true;
-			} else {
-				$GLOBALS['it_exchange']['transaction_methods'] = array();
-				end( $GLOBALS['it_exchange']['transaction_methods'] );
-				$GLOBALS['it_exchange']['transaction_method'] = false;
-				return false;
-			}
+		if ( ! empty( $options['has'] ) ) {
+			return count( $methods() ) > 0;
 		}
+
+		return it_theme_api_loop( 'transaction_method', 'transaction_methods', $methods );
 	}
 
 	/**
@@ -110,7 +101,7 @@ class IT_Theme_API_Checkout implements IT_Theme_API {
 	 * @param array $options
 	 * @return mixed
 	*/
-	function cancel( $options=array() ) {
+	public function cancel( $options=array() ) {
 		$defaults = array(
 			'before' => '',
 			'after'  => '',

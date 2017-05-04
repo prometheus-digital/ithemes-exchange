@@ -59,10 +59,8 @@ class Purchase extends Base implements Getable, Postable, VariableSchema {
 
 		$data = array();
 
-		foreach ( it_exchange_get_available_transaction_methods_for_cart( $cart ) as $gateway ) {
-			if ( $handler = $gateway->get_handler_for( $purchase_request ) ) {
-				$data[] = $this->serializer->serialize( $handler, $purchase_request );
-			}
+		foreach ( it_exchange_get_available_transaction_methods_for_cart( $cart ) as $handler ) {
+			$data[] = $this->serializer->serialize( $handler, $purchase_request );
 		}
 
 		return new \WP_REST_Response( $data );
@@ -123,8 +121,7 @@ class Purchase extends Base implements Getable, Postable, VariableSchema {
 			);
 		}
 
-		$gateway = \ITE_Gateways::get( $request['id'] );
-		$handler = $gateway->get_handler_for( $purchase_request );
+		$handler = it_exchange_get_purchase_handler_by_id( $request['id'], $cart );
 
 		if ( ! $handler ) {
 			return new \WP_Error(

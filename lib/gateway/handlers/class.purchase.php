@@ -34,7 +34,7 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 		$self = $this;
 
 		add_filter(
-			"it_exchange_get_{$gateway->get_slug()}_make_payment_button",
+			"it_exchange_get_{$this->get_id()}_make_payment_button",
 			function ( $_, $options ) use ( $self, $factory ) {
 				try {
 
@@ -52,7 +52,7 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 		);
 
 		add_filter(
-			"it_exchange_do_transaction_{$gateway->get_slug()}",
+			"it_exchange_do_transaction_{$this->get_id()}",
 			function ( $_, $transaction_object, ITE_Cart $cart = null ) use ( $self, $factory ) {
 				if ( ! isset( $transaction_object->cart_id ) ) {
 					return $_;
@@ -78,6 +78,17 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 			},
 			10, 3
 		);
+	}
+
+	/**
+	 * Get a unique id for this purchase handler.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return string
+	 */
+	public function get_id() {
+		return $this->get_gateway()->get_slug();
 	}
 
 	/**
@@ -147,9 +158,9 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 
 		return <<<HTML
 <form $attributes>
-	<input type="submit" class="it-exchange-purchase-button it-exchange-purchase-button-{$this->gateway->get_slug()}" 
-	name="{$this->gateway->get_slug()}_purchase" value="{$label}">
-	<input type="hidden" name="{$field_name}" value="{$this->gateway->get_slug()}">
+	<input type="submit" class="it-exchange-purchase-button it-exchange-purchase-button-{$this->get_id()}" 
+	name="{$this->get_id()}_purchase" value="{$label}">
+	<input type="hidden" name="{$field_name}" value="{$this->get_id()}">
 	{$this->get_nonce_field()}
 	{$this->get_html_before_form_end( $request )}
 </form>
@@ -169,7 +180,7 @@ HTML;
 		return array(
 			'method'       => 'POST',
 			'action'       => $this->get_form_action(),
-			'id'           => "{$this->get_gateway()->get_slug()}-purchase-form",
+			'id'           => "{$this->get_id()}-purchase-form",
 			'data-gateway' => $this->get_gateway()->get_slug(),
 		);
 	}

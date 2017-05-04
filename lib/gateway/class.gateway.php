@@ -41,11 +41,11 @@ abstract class ITE_Gateway implements ITE_Supports_Optional_Features {
 	public abstract function get_slug();
 
 	/**
-	 * Get the add-on slug.
+	 * Get the add-on data.
 	 *
 	 * @since 2.0.0
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public abstract function get_addon();
 
@@ -96,6 +96,28 @@ abstract class ITE_Gateway implements ITE_Supports_Optional_Features {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Get the available gateway handlers for a request name.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $request_name
+	 *
+	 * @return ITE_Gateway_Request_Handler[]
+	 */
+	final public function get_handlers_by_request_name( $request_name ) {
+
+		$can_handle = array();
+
+		foreach ( $this->get_handlers() as $handler ) {
+			if ( $handler::can_handle( $request_name ) ) {
+				$can_handle[] = $handler;
+			}
+		}
+
+		return $can_handle;
 	}
 
 	/**

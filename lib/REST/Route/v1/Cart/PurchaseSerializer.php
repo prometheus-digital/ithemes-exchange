@@ -27,7 +27,7 @@ class PurchaseSerializer {
 	 */
 	public function serialize( \ITE_Purchase_Request_Handler $handler, \ITE_Gateway_Purchase_Request $request ) {
 		return array(
-			'id'     => $handler->get_gateway()->get_slug(),
+			'id'     => $handler->get_id(),
 			'name'   => $handler->get_gateway()->get_name(),
 			'label'  => $handler->get_payment_button_label(),
 			'nonce'  => $handler->get_nonce(),
@@ -50,7 +50,7 @@ class PurchaseSerializer {
 			'properties' => array(
 				'id'     => array(
 					'type'        => 'string',
-					'description' => __( 'The slug of the gateway.', 'it-l10n-ithemes-exchange' ),
+					'description' => __( 'The unique identifier for this payment method.', 'it-l10n-ithemes-exchange' ),
 					'required'    => true,
 				),
 				'name'   => array(
