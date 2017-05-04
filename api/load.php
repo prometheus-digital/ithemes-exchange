@@ -22,6 +22,7 @@ require_once __DIR__ . '/products.php' ;
 
 // Transaction Add-ons
 require_once __DIR__ . '/transactions.php' ;
+require_once __DIR__ . '/webhooks.php' ;
 
 // Sessions
 require_once __DIR__ . '/sessions.php' ;

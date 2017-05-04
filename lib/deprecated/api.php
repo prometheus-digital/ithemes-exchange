@@ -84,6 +84,76 @@ function it_exchange_add_transient_transaction( $method, $temp_id, $customer_id 
 	return it_exchange_update_transient_transaction( $method, $temp_id, $customer_id, $transaction_object );
 }
 
+
+/**
+ * Update a transient transaction, default expiry set to 4 hours
+ *
+ * @since CHANGEME
+ *
+ * @deprecated 2.0.0
+ *
+ * @param string $method name of method that created the transient
+ * @param string $temp_id temporary transaction ID created by the transient
+ * @param int|bool $customer_id ID of current customer
+ * @param stdClass $transaction_object Object used to pass to transaction methods
+ * @param string|bool $transaction_id Transaction ID of real transaction or false if no real transaction created yet
+ *
+ * @return bool true or false depending on success
+ */
+function it_exchange_update_transient_transaction( $method, $temp_id, $customer_id = false, $transaction_object, $transaction_id = false ) {
+
+	$expires = current_time( 'timestamp' ) + apply_filters( 'it_exchange_transient_transaction_expiry', 60 * 60 * 4 );
+
+	update_option( 'ite_temp_tnx_expires_' . $method . '_' . $temp_id, $expires, false );
+	update_option( 'ite_temp_tnx_' . $method . '_' . $temp_id, array(
+		'customer_id' => $customer_id,
+		'transaction_object' => $transaction_object,
+		'transaction_id' => $transaction_id
+	), false );
+	return true;
+}
+
+/**
+ * Gets a transient transaction
+ *
+ * @since 0.4.20
+ *
+ * @deprecated 2.0.0
+ *
+ * @param string $method name of method that created the transient
+ * @param string $temp_id temporary transaction ID created by the transient
+ *
+ * @return array|bool of customer_id and transaction_object False if expired.
+ */
+function it_exchange_get_transient_transaction( $method, $temp_id ) {
+	$expires = get_option( 'ite_temp_tnx_expires_' . $method . '_' . $temp_id, false );
+	$txn_details = get_option( 'ite_temp_tnx_' . $method . '_' . $temp_id, false );
+	$now = current_time( 'timestamp' );
+	if ( !empty( $txn_details ) && $now > intval( $expires ) ) {
+		it_exchange_delete_transient_transaction( $method, $temp_id );
+		return false;
+	}
+	return $txn_details;
+}
+
+/**
+ * Deletes a transient transaction
+ *
+ * @since 0.4.20
+ *
+ * @deprecated 2.0.0
+ *
+ * @param string $method name of method that created the transient
+ * @param string $temp_id temporary transaction ID created by the transient
+ *
+ * @return bool true or false depending on success
+ */
+function it_exchange_delete_transient_transaction( $method, $temp_id ) {
+	delete_option( 'ite_temp_tnx_expires_' . $method . '_' . $temp_id );
+	delete_option( 'ite_temp_tnx_' . $method . '_' . $temp_id );
+	return true;
+}
+
 /**
  * Is the product visible based on start and end availability dates
  *
