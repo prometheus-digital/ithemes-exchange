@@ -333,25 +333,6 @@ function it_exchange_get_enabled_shipping_methods_for_product( $product, $return
 }
 
 /**
- * Is cart address valid?
- *
- * @since 1.4.0
- *
- * @return boolean
-*/
-function it_exchange_is_shipping_address_valid() {
-
-	_deprecated_function( __FUNCTION__, '2.0.0' );
-
-	$cart_address  = it_exchange_get_cart_data( 'shipping-address' );
-	$cart_customer = empty( $cart_address['customer'] ) ? 0 : $cart_address['customer'];
-	$customer_id   = it_exchange_get_current_customer_id();
-	$customer_id   = empty( $customer_id ) ? $cart_customer : $customer_id;
-
-	return (boolean) get_user_meta( $customer_id, 'it_exchange_shipping_address', true );
-}
-
-/**
  * Returns the selected shipping method saved in the cart Session
  *
  * @since 1.4.0

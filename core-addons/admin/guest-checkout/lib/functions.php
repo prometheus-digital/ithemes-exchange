@@ -96,6 +96,11 @@ function it_exchange_init_guest_checkout_session( $customer_email ) {
 	// Bump the timeout var
 	it_exchange_guest_checkout_bump_session();
 
+	it_exchange_log( 'Guest checkout session initialized for {email}', ITE_Log_Levels::DEBUG, array(
+		'email'  => $customer_email,
+		'_group' => 'session',
+	) );
+
 	do_action( 'it_exchange_init_guest_checkout', $customer_email );
 }
 

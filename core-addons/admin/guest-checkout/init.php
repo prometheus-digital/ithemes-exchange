@@ -31,3 +31,5 @@ include( dirname( __FILE__ ) . '/lib/functions.php' );
  * This file includes our template related functions / hooks for template parts
 */
 include( dirname( __FILE__ ) . '/lib/template-functions.php' );
+
+include( dirname( __FILE__ ) . '/lib/deprecated.php' );

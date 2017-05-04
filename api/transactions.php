@@ -14,7 +14,6 @@
  * @since 0.3.3
  */
 
-
 /**
  * Grabs the transaction method of a transaction
  *
@@ -408,27 +407,6 @@ function it_exchange_update_transient_transaction( $method, $temp_id, $customer_
 }
 
 /**
- * Add a transient transaction
- *
- * @since 0.4.20
- *
- * @deprecated
- *
- * @param string $method name of method that created the transient
- * @param string $temp_id temporary transaction ID created by the transient
- * @param int|bool $customer_id ID of current customer
- * @param stdClass $transaction_object Object used to pass to transaction methods
- *
- * @return bool true or false depending on success
- */
-function it_exchange_add_transient_transaction( $method, $temp_id, $customer_id = false, $transaction_object ) {
-
-	_deprecated_function( 'it_exchange_add_transient_transaction', '1.31', 'it_exchange_update_transient_transaction' );
-
-	return it_exchange_update_transient_transaction( $method, $temp_id, $customer_id, $transaction_object );
-}
-
-/**
  * Gets a transient transaction
  *
  * @since 0.4.20
@@ -677,6 +655,12 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 		return $r;
 	}
 
+	it_exchange_log( 'Failed to create transaction for {method} with id {method_id}', ITE_Log_Levels::ERROR, array(
+		'method'    => $method,
+		'method_id' => $method_id,
+		'_group'    => 'transaction'
+	) );
+
 	do_action( 'it_exchange_add_transaction_failed', $method, $method_id, $status, $customer, $cart_object, $args );
 
 	return apply_filters( 'it_exchange_add_transaction', false, $method, $method_id, $status, $customer, $cart_object, $args);
@@ -727,7 +711,7 @@ function it_exchange_add_child_transaction( $method, $method_id, $status = 'pend
 	if ( is_array( $txn_object_or_args ) ) {
 		$args = $txn_object_or_args;
 	}
-	
+
 	$defaults = array(
 		'post_type'          => 'it_exchange_tran',
 		'post_status'        => 'publish',
@@ -858,6 +842,13 @@ function it_exchange_add_child_transaction( $method, $method_id, $status = 'pend
 		return $r;
 	}
 
+	it_exchange_log( 'Failed to create child transaction of {id} for {method} with id {method_id}', ITE_Log_Levels::ERROR, array(
+		'method'    => $method,
+		'method_id' => $method_id,
+		'id'        => $parent_tx_id,
+		'_group'    => 'transaction'
+	) );
+
 	do_action( 'it_exchange_add_child_transaction_failed', $method, $method_id, $status, $customer_id, $parent_tx_id, $txn_object, $args );
 
 	return apply_filters( 'it_exchange_add_child_transaction', false, $method, $method_id, $status, $customer_id, $parent_tx_id, $txn_object, $args );
@@ -883,28 +874,6 @@ function it_exchange_generate_transaction_hash( $transaction_id, $customer_id ) 
 	}
 
 	return apply_filters( 'it_exchange_generate_transaction_hash', $hash, $transaction_id, $customer_id );
-}
-
-/**
- * Return the transaction ID provided by the gateway (transaction method)
- *
- * @since 0.4.0
- *
- * @deprecated 2.0.0
- *
- * @param WP_Post|int|IT_Exchange_Transaction $transaction ID or object
- *
- * @return string|void
- */
-function it_exchange_get_gateway_id_for_transaction( $transaction ) {
-
-	_deprecated_function( __FUNCTION__, '2.0.0', 'it_exchange_get_transaction_method_id' );
-
-	if ( ! $transaction = it_exchange_get_transaction( $transaction ) )
-		return;
-
-	$gateway_transaction_id = $transaction->get_method_id();
-	return apply_filters( 'it_exchange_get_gateway_id_for_transaction', $gateway_transaction_id, $transaction );
 }
 
 /**
@@ -949,41 +918,6 @@ function it_exchange_get_transaction_hash( $transaction ) {
 	}
 
 	return apply_filters( 'it_exchange_get_transaction_hash', $transaction->hash, $transaction );
-}
-
-/**
- * Updates a transaction
- *
- * @since 0.3.3
- *
- * @deprecated 1.35
- *
- * @param array $args transaction args. Must include ID of a valid transaction post
- *
- * @return WP_Post transaction object
- */
-function it_exchange_update_transaction( $args ) {
-
-	_deprecated_function( 'it_exchange_update_transaction', '1.35' );
-
-	$id = empty( $args['id'] ) ? false : $args['id'];
-	$id = ( empty( $id ) && ! empty( $args['ID'] ) ) ? $args['ID']: $id;
-
-	if ( 'it_exchange_tran' != get_post_type( $id ) )
-		return false;
-
-	$args['ID'] = $id;
-
-	$result = wp_update_post( $args );
-	$transaction_method = it_exchange_get_transaction_method( $id );
-
-	do_action( 'it_exchange_update_transaction', $args );
-	do_action( 'it_exchange_update_transaction_' . $transaction_method, $args );
-
-	if ( ! empty( $args['_it_exchange_transaction_status'] ) )
-		it_exchange_update_transaction_status( $id, $args['_it_exchange_transaction_status'] );
-
-	return $result;
 }
 
 /**

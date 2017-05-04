@@ -308,35 +308,6 @@ function it_exchange_is_product_available( $product_id = 0 ) {
 
 	return $past_start_date && $before_end_date;
 }
-
-/**
- * Is the product visible based on start and end availability dates
- *
- * @since 0.4.0
- *
- * @deprecated 1.35
- *
- * @param int|bool $product_id Product ID
- *
- * @return boolean
-*/
-function it_exchange_is_product_visible( $product_id=false ) {
-
-	_deprecated_function( 'it_exchange_is_product_visible', '1.35', 'it_exchange_is_product_available' );
-
-	if ( ! it_exchange_get_product( $product_id ) )
-		return false;
-
-	// Check it has visibility
-	if ( it_exchange( 'product', 'has-visibility' ) ) {
-		if ( 'hidden' === get_post_meta( $product_id, '_it-exchange-visibility', true ) )
-			return apply_filters( 'it_exchange_is_product_visible', false, $product_id );
-	}
-
-	return apply_filters( 'it_exchange_is_product_visible', true, $product_id );
-
-}
-
 /**
  * Returns an array of all transactions for a product
  *

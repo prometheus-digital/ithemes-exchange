@@ -194,6 +194,12 @@ function it_exchange_db_session_cleanup() {
 		wp_cache_delete_group( $cache_group );
 	}
 
+	if ( doing_action( 'it_exchange_db_session_garbage_collection' ) ) {
+		it_exchange_log( 'Sessions cleaned up via CRON.', ITE_Log_Levels::DEBUG, array( '_group' => 'session' ) );
+	} else {
+		it_exchange_log( 'Sessions cleaned up.', ITE_Log_Levels::DEBUG, array( '_group' => 'session' ) );
+	}
+
 	// Allow other plugins to hook in to the garbage collection process.
 	do_action( 'it_exchange_db_session_cleanup' );
 }
@@ -229,6 +235,8 @@ function it_exchange_db_delete_all_sessions( $include_legacy = false ) {
 	} else {
 		wp_cache_flush();
 	}
+
+	it_exchange_log( 'All sessions deleted', ITE_Log_Levels::DEBUG, array( '_group' => 'session' ) );
 
 	// Allow other plugins to hook in to the garbage collection process.
 	do_action( 'it_exchange_db_session_cleanup' );
@@ -270,6 +278,8 @@ function it_exchange_db_delete_active_sessions() {
 	if ( function_exists( 'wp_cache_delete_group' ) ) {
 		wp_cache_delete_group( $cache_group );
 	}
+
+	it_exchange_log( 'Active sessions deleted.', ITE_Log_Levels::DEBUG, array( '_group' => 'session' ) );
 }
 
 /**

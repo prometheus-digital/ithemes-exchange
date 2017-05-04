@@ -372,23 +372,6 @@ if ( ! function_exists( 'wp_nav_menu_disabled_check' ) && version_compare( $GLOB
 }
 
 /**
- * Returns currency data
- *
- * Deprecated in 1.2.0.
- *
- * @since      0.3.4
- *
- * @deprecated 1.2.0 Use it_exchange_get_data_set( 'currencies' );
- * @return array
- */
-function it_exchange_get_currency_options() {
-
-	_deprecated_function( __FUNCTION__, '1.2.0', 'it_exchange_get_data_set' );
-
-	return it_exchange_get_data_set( 'currencies' );
-}
-
-/**
  * Returns the currency symbol based on the currency key
  *
  * @since 0.4.0
@@ -983,7 +966,17 @@ function it_exchange_send_email( $email_or_message, $subject = '', $recipient = 
 		$email_or_message = new IT_Exchange_Simple_Email( $subject, $email_or_message, $recipient, $context );
 	}
 
-	return it_exchange_email_notifications()->get_sender()->send( $email_or_message );
+	try {
+		return it_exchange_email_notifications()->get_sender()->send( $email_or_message );
+	} catch ( IT_Exchange_Email_Delivery_Exception $e ) {
+		it_exchange_log( 'Failed to send email {subject} to {to}', array(
+			'subject' => $email_or_message->get_subject(),
+			'to'      => $email_or_message->get_recipient()->get_email(),
+			'_group'  => 'email',
+		) );
+
+		throw $e;
+	}
 }
 
 /**

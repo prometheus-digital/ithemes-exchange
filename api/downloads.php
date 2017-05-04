@@ -419,8 +419,21 @@ function it_exchange_serve_product_download( $hash_data ) {
 				die();
 
 			}
-			die( __( 'Download Error: Invalid response: ', 'it-l10n-ithemes-exchange' ) . wp_remote_retrieve_response_code( $response ) );
+
+			$code  = wp_remote_retrieve_response_code( $response );
+			$level = $code < 500 ? ITE_Log_Levels::CRITICAL : ITE_Log_Levels::WARNING;
+			it_exchange_log( 'Failed to serve download {download}, {code} error code encountered.', $level, array(
+				'download' => $url,
+				'code'     => $code,
+				'_group'   => 'download'
+			) );
+			die( __( 'Download Error: Invalid response: ', 'it-l10n-ithemes-exchange' ) . $code );
 		} else {
+			it_exchange_log( 'Failed to serve download {download}: {error}', ITE_Log_Levels::WARNING, array(
+				'download' => $url,
+				'error'    => $response->get_error_message(),
+				'_group'   => 'download'
+			) );
 			die( __( 'Download Error:', 'it-l10n-ithemes-exchange' ) . ' ' . $response->get_error_message() );
 		}
 	}

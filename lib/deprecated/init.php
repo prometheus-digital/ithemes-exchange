@@ -9,6 +9,7 @@
 */
 
 require_once dirname( __FILE__ ) . '/class.meta.php';
+require_once dirname( __FILE__ ) . '/api.php';
 
 /**
  * Loads the deprecated template parts

@@ -274,12 +274,24 @@ class IT_Exchange_Deprecated_Meta {
 	 */
 	private function warn( $deprecated, $context = '' ) {
 
-		if ( ! $this->info[ $deprecated ]['warn'] ) {
-			return;
-		}
-
 		$replacement = $this->replacement( $deprecated );
 		$version     = $this->info[ $deprecated ]['version'];
+
+		if ( $replacement ) {
+			it_exchange_log( 'Meta key {key} in context {context} is deprecated since version {version} use {replacement} instead.', ITE_Log_Levels::WARNING, array(
+				'key'         => $deprecated,
+				'version'     => $version,
+				'replacement' => $replacement,
+				'context'     => $context ?: 'unknown',
+			) );
+		} else {
+			it_exchange_log( 'Meta key {key} in context {context} is deprecated since version {version} with no alternative available.', ITE_Log_Levels::WARNING, array(
+				'key'         => $deprecated,
+				'version'     => $version,
+				'replacement' => $replacement,
+				'context'     => $context ?: 'unknown',
+			) );
+		}
 
 		/**
 		 * Fires when a deprecated meta key is is used.
@@ -295,6 +307,10 @@ class IT_Exchange_Deprecated_Meta {
 
 		if ( $context ) {
 			$context = sprintf( __( 'Used in %s', 'it-l10n-ithemes-exchange' ), $context );
+		}
+
+		if ( ! $this->info[ $deprecated ]['warn'] ) {
+			return;
 		}
 
 		/**

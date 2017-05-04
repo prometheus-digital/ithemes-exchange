@@ -328,6 +328,8 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 	 */
 	public function transfer_session( ITE_Session_Model $model = null, $migrate_data = false ) {
 
+		$current_id = $this->session_id;
+
 		if ( $migrate_data && $this->container && is_array( $this->container ) && $model ) {
 			$model->data = array_merge( $model->data, $this->container );
 		}
@@ -340,6 +342,12 @@ final class IT_Exchange_DB_Sessions extends Recursive_ArrayAccess implements Ite
 
 		$this->session_id = $model ? $model->ID : null;
 		$this->container  = $model ? $model->data : array();
+
+		it_exchange_log( 'Sessions transferred from {old_session_id} to {new_session_id}', ITE_Log_Levels::DEBUG, array(
+			'old_session_id' => $current_id,
+			'new_session_id' => $this->session_id,
+			'_group'         => 'session',
+		) );
 	}
 
 	/**
