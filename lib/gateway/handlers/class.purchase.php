@@ -92,6 +92,20 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 	}
 
 	/**
+	 * Get the name of this purchase handler.
+	 *
+	 * By default, this is the Gateway's name. But could be overwritten for secondary purchase handlers. For example,
+	 * Stripe - Apple Pay.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return string
+	 */
+	public function get_name() {
+		return $this->get_gateway()->get_name();
+	}
+
+	/**
 	 * Build factory args from the global state.
 	 *
 	 * This is used to build the intermediary layer between the Gateway Request framework
