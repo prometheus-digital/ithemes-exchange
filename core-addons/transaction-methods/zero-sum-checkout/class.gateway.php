@@ -58,20 +58,6 @@ class ITE_Zero_Sum_Checkout_Gateway extends ITE_Gateway {
 	/**
 	 * @inheritDoc
 	 */
-	public function get_payment_button_label() {
-		/**
-		 * Filter the Purchase Button label for Zero-Sum-Checkout.
-		 *
-		 * @since 1.0.0
-		 *
-		 * @param string $label
-		 */
-		return apply_filters( 'zero_sum_checkout_button_label', __( 'Complete Purchase', 'it-l10n-ithemes-exchange' ) );
-	}
-
-	/**
-	 * @inheritDoc
-	 */
 	public function is_sandbox_mode() { return false; }
 
 	/**

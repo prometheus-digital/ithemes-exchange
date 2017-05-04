@@ -24,6 +24,18 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 	/**
 	 * @inheritDoc
 	 */
+	public function get_payment_button_label() {
+
+		if ( $this->get_gateway()->settings()->has( 'purchase-button-label' ) ) {
+			return $this->get_gateway()->settings()->get( 'purchase-button-label' );
+		}
+
+		return parent::get_payment_button_label();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function get_redirect_url( ITE_Gateway_Purchase_Request $request ) {
 		return $this->get_gateway()->is_sandbox_mode() ? PAYPAL_PAYMENT_SANDBOX_URL : PAYPAL_PAYMENT_LIVE_URL;
 	}

@@ -33,6 +33,18 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 	/**
 	 * @inheritDoc
 	 */
+	public function get_payment_button_label() {
+
+		if ( $this->get_gateway()->settings()->has( 'purchase-button-label' ) ) {
+			return $this->get_gateway()->settings()->get( 'purchase-button-label' );
+		}
+
+		return parent::get_payment_button_label();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function get_redirect_url( ITE_Gateway_Purchase_Request $request ) {
 
 		$cart = $request->get_cart();

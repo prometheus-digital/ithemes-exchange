@@ -65,18 +65,6 @@ class ITE_PayPal_Standard_Secure_Gateway extends ITE_Gateway {
 	/**
 	 * @inheritDoc
 	 */
-	public function get_payment_button_label() {
-
-		if ( $this->settings()->has( 'purchase-button-label' ) ) {
-			return $this->settings()->get( 'purchase-button-label' );
-		}
-
-		return parent::get_payment_button_label();
-	}
-
-	/**
-	 * @inheritDoc
-	 */
 	public function requires_cart_after_purchase() { return true; }
 
 	/**

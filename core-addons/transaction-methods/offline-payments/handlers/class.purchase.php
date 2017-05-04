@@ -46,4 +46,16 @@ class ITE_Offline_Payments_Purchase_Request_Handler extends ITE_Purchase_Request
 
 		return it_exchange_get_transaction( $txn_id );
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function get_payment_button_label() {
+
+		if ( $this->get_gateway()->settings()->has( 'offline-payments-title' ) ) {
+			return $this->get_gateway()->settings()->get( 'offline-payments-title' );
+		}
+
+		return parent::get_payment_button_label();
+	}
 }

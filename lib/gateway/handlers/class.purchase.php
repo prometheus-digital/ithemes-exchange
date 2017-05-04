@@ -67,7 +67,7 @@ abstract class ITE_Purchase_Request_Handler implements ITE_Gateway_Request_Handl
 						'purchase',
 						$self->build_factory_args_from_global_state( $cart, $_REQUEST )
 					);
-					$txn = $self->handle( $request );
+					$txn     = $self->handle( $request );
 				} catch ( Exception $e ) {
 					$cart->get_feedback()->add_error( $e->getMessage() );
 
@@ -182,7 +182,7 @@ HTML;
 	 * @return string
 	 */
 	public function get_payment_button_label() {
-		return it_exchange_get_payment_button_label( $this->get_gateway() );
+		return sprintf( __( 'Purchase with %s', 'it-l10n-ithemes-exchange' ), $this->get_gateway()->get_name() );
 	}
 
 	/**
@@ -240,7 +240,7 @@ HTML;
 		}
 
 		if ( $request->get_redirect_to() ) {
-			$to = esc_url( $request->get_redirect_to() );
+			$to   = esc_url( $request->get_redirect_to() );
 			$html .= "<input type='hidden' name='redirect_to' value='{$to}'>";
 		}
 

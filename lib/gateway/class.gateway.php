@@ -127,17 +127,6 @@ abstract class ITE_Gateway implements ITE_Supports_Optional_Features {
 	public abstract function is_sandbox_mode();
 
 	/**
-	 * Get the payment button label.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @return string
-	 */
-	public function get_payment_button_label() {
-		return sprintf( __( 'Purchase with %s', 'it-l10n-ithemes-exchange' ), $this->get_name() );
-	}
-
-	/**
 	 * Does this gateway require the cart after the purchase has been made.
 	 *
 	 * @since 2.0.0
