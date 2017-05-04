@@ -2035,7 +2035,6 @@ class ITE_Cart {
 			new ITE_Product_Inventory_Validator(),
 			new ITE_Product_Availability_Validator(),
 			new ITE_Coupon_Item_Validator(),
-			new ITE_Location_State_Matches_Country_Validator(),
 		);
 
 		/**

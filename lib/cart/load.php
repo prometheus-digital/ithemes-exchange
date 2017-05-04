@@ -54,7 +54,6 @@ require_once dirname( __FILE__ ) . '/validators/class.multi-item-product.php';
 require_once dirname( __FILE__ ) . '/validators/class.availability.php';
 require_once dirname( __FILE__ ) . '/validators/class.guest-customer-purchase.php';
 require_once dirname( __FILE__ ) . '/validators/class.coupon-item.php';
-require_once dirname( __FILE__ ) . '/validators/class.state-matches-country.php';
 
 require_once dirname( __FILE__ ) . '/exceptions/class.cart-coercion-failed.php';
 require_once dirname( __FILE__ ) . '/exceptions/class.line-item-coercion-failed.php';
