@@ -26,6 +26,9 @@ class ITE_File_Logger extends \Psr\Log\AbstractLogger implements ITE_Purgeable_L
 	/** @var int[] */
 	private static $line_count_cache = array();
 
+	/** @var int[] */
+	private static $file_modified_times = array();
+
 	const LINE_FORMAT = '{time}||{level}||{group}||{message}||{user}||{ip}';
 	const MAX_LINES = 250;
 	const MAX_FILES = 10;
@@ -84,6 +87,8 @@ class ITE_File_Logger extends \Psr\Log\AbstractLogger implements ITE_Purgeable_L
 		flock( $fh, LOCK_EX );
 		fwrite( $fh, $line . "\n" );
 		flock( $fh, LOCK_UN );
+
+		self::$file_modified_times[ $path ] = time();
 
 		if ( isset( self::$line_count_cache[ $path ] ) ) {
 			self::$line_count_cache[ $path ] ++;
@@ -445,6 +450,14 @@ class ITE_File_Logger extends \Psr\Log\AbstractLogger implements ITE_Purgeable_L
 
 		if ( ! file_exists( $path ) ) {
 			return null;
+		}
+
+		if ( isset( self::$file_modified_times[ $path ] ) ) {
+			$fmtime = filemtime( $path );
+
+			if ( $fmtime === false || $fmtime > self::$file_modified_times[ $path ] ) {
+				unset( self::$line_count_cache[ $path ] );
+			}
 		}
 
 		if ( isset( self::$line_count_cache[ $path ] ) ) {
