@@ -183,7 +183,7 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 			$cart->get_feedback()->add_error( $response->get_error_message() );
 			it_exchange_log( 'Network error while encrypting a PayPal Secure button: {error}', ITE_Log_Levels::WARNING, array(
 				'error'  => $response->get_error_message(),
-				'_group' => 'payment',
+				'_group' => 'gateway',
 			) );
 
 			return false;
