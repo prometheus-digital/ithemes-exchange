@@ -43,7 +43,7 @@ class ITE_PayPal_Standard_Secure_Resume_Subscription_Handler implements ITE_Gate
 
 		if ( ! $paypal_api_username || ! $paypal_api_password || ! $paypal_api_signature ) {
 			it_exchange_log( 'No PayPal Secure credentials provided.', ITE_Log_Levels::ALERT, array(
-				'_group' => 'gateway'
+				'_group' => 'subscription'
 			) );
 
 			return false;
@@ -61,17 +61,35 @@ class ITE_PayPal_Standard_Secure_Resume_Subscription_Handler implements ITE_Gate
 
 		$response = wp_remote_post( $paypal_api_url, array( 'body' => $body ) );
 
-		if ( ! is_wp_error( $response ) ) {
+		if ( is_wp_error( $response ) ) {
+			it_exchange_log( 'Network error while resuming PayPal Secure subscription: {error}', ITE_Log_Levels::WARNING, array(
+				'_group' => 'subscription',
+				'error'  => $response->get_error_message()
+			) );
 
-			parse_str( wp_remote_retrieve_body( $response ), $response_array );
-
-			if ( ! empty( $response_array['ACK'] ) && $response_array['ACK'] === 'Success' ) {
-
-				$subscription->set_resumed_by( $request->get_resumed_by() );
-
-				return true;
-			}
+			return false;
 		}
+
+		parse_str( wp_remote_retrieve_body( $response ), $response_array );
+
+		if ( ! empty( $response_array['ACK'] ) && $response_array['ACK'] === 'Success' ) {
+
+			$subscription->set_resumed_by( $request->get_resumed_by() );
+			it_exchange_log( 'Resumed PayPal Secure subscription #{sub_id} for transaction {txn_id}.', ITE_Log_Levels::INFO, array(
+				'sub_id' => $subscription->get_subscriber_id(),
+				'txn_id' => $subscription->get_transaction()->get_ID(),
+				'_group' => 'subscription',
+			) );
+
+			return true;
+		}
+
+		it_exchange_log( 'Failed to resume PayPal Secure subscription #{sub_id} for transaction {txn_id}: {response}', array(
+			'sub_id'   => $subscription->get_subscriber_id(),
+			'txn_id'   => $subscription->get_transaction()->get_ID(),
+			'response' => wp_json_encode( $response_array ),
+			'_group'   => 'subscription',
+		) );
 
 		return false;
 	}

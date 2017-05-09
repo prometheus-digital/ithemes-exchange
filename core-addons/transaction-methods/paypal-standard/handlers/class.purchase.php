@@ -322,7 +322,8 @@ class ITE_PayPal_Standard_Purchase_Handler extends ITE_Redirect_Purchase_Request
 			}
 
 			it_exchange_log( 'PayPal payment for cart {cart_id} failed to create a transaction.', ITE_Log_Levels::WARNING, array(
-				'cart_id' => $request->get_cart()->get_id()
+				'cart_id' => $request->get_cart()->get_id(),
+				'_group'  => 'gateway',
 			) );
 
 			return null;

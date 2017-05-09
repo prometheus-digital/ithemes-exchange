@@ -54,7 +54,7 @@ class ITE_PayPal_Standard_Secure_Refund_Request_Handler implements ITE_Gateway_R
 
 		if ( empty( $paypal_email ) || empty( $api_username ) || empty( $api_password ) || empty( $api_signature ) ) {
 			it_exchange_log( 'No PayPal Secure credentials provided.', ITE_Log_Levels::ALERT, array(
-				'_group' => 'gateway'
+				'_group' => 'refund'
 			) );
 
 			throw new UnexpectedValueException( __( 'PayPal API Credentials not set.', 'it-l10n-ithemes-exchange' ) );
@@ -83,6 +83,10 @@ class ITE_PayPal_Standard_Secure_Refund_Request_Handler implements ITE_Gateway_R
 
 		// Stripe sends webhooks insanely quick. Make sure we create the refund before the webhook handler does.
 		it_exchange_lock( "paypal-secure-refund-created-{$transaction->ID}", 2 );
+		it_exchange_log( 'Acquiring PayPal Secure refund lock for transaction #{txn_id}', ITE_Log_Levels::DEBUG, array(
+			'txn_id' => $transaction->get_ID(),
+			'_group' => 'refund',
+		) );
 
 		$response = wp_remote_post( $api_url, array( 'body' => $paypal_request, 'httpversion' => '1.1' ) );
 
@@ -90,7 +94,7 @@ class ITE_PayPal_Standard_Secure_Refund_Request_Handler implements ITE_Gateway_R
 			it_exchange_release_lock( "paypal-secure-refund-created-{$transaction->ID}" );
 
 			it_exchange_log( 'Network error while refunding PayPal Secure payment: {error}', ITE_Log_Levels::WARNING, array(
-				'_group' => 'gateway',
+				'_group' => 'refund',
 				'error'  => $response->get_error_message()
 			) );
 
@@ -103,7 +107,7 @@ class ITE_PayPal_Standard_Secure_Refund_Request_Handler implements ITE_Gateway_R
 			it_exchange_release_lock( "paypal-secure-refund-created-{$transaction->ID}" );
 
 			it_exchange_log( 'PayPal Secure failed to create refund: {response}', ITE_Log_Levels::WARNING, array(
-				'_group'   => 'gateway',
+				'_group'   => 'refund',
 				'response' => wp_json_encode( $response ),
 			) );
 
@@ -116,6 +120,13 @@ class ITE_PayPal_Standard_Secure_Refund_Request_Handler implements ITE_Gateway_R
 			'gateway_id'  => $response_array['REFUNDTRANSACTIONID'],
 			'reason'      => $request->get_reason(),
 			'issued_by'   => $request->issued_by(),
+		) );
+
+		it_exchange_log( 'Created PayPal Secure refund of {amount} for transaction #{txn_id} and charge {charge}.', ITE_Log_Levels::DEBUG, array(
+			'amount' => $request->get_amount(),
+			'txn_id' => $transaction->get_ID(),
+			'charge' => $method_id,
+			'_group' => 'refund',
 		) );
 
 		it_exchange_release_lock( "paypal-secure-refund-created-{$transaction->ID}" );

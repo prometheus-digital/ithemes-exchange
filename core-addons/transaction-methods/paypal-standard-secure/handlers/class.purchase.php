@@ -479,7 +479,8 @@ class ITE_PayPal_Standard_Secure_Purchase_Handler extends ITE_POST_Redirect_Purc
 			}
 
 			it_exchange_log( 'PayPal Secure payment for cart {cart_id} failed to create a transaction.', ITE_Log_Levels::WARNING, array(
-				'cart_id' => $request->get_cart()->get_id()
+				'cart_id' => $request->get_cart()->get_id(),
+				'_group'  => 'gateway',
 			) );
 
 			return null;
