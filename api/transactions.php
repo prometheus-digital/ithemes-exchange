@@ -566,6 +566,14 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 			$transaction->convert_cart_object();
 		}
 
+		it_exchange_log( 'Transaction added for cart {cart_id}. Method: {method} method_id: {method_id} status: {status}', ITE_Log_Levels::INFO, array(
+			'method'    => $method,
+			'method_id' => $method_id,
+			'status'    => $status,
+			'cart_id'   => $cart_id,
+			'_group'    => 'transaction',
+		) );
+
 		do_action( 'it_exchange_add_transaction_success', $transaction_id, $cart );
 
 		$r = apply_filters( 'it_exchange_add_transaction', $transaction_id, $method, $method_id, $status, $customer, $cart_object, $args );
@@ -595,7 +603,7 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 		return $r;
 	}
 
-	it_exchange_log( 'Failed to create transaction for {method} with id {method_id}', ITE_Log_Levels::ERROR, array(
+	it_exchange_log( 'Failed to create transaction for {method} with id {method_id}', array(
 		'method'    => $method,
 		'method_id' => $method_id,
 		'_group'    => 'transaction'

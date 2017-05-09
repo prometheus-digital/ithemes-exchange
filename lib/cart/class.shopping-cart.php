@@ -263,7 +263,7 @@ class IT_Exchange_Shopping_Cart {
 
 		$url = remove_query_arg( $error_var, $cart );
 		$url = add_query_arg( array( $message_var => 'cart-emptied' ), $url );
-		$url = remove_query_arg( it_exchange_get_field_name( 'empty_cart' ), $cart );
+		$url = remove_query_arg( it_exchange_get_field_name( 'empty_cart' ), $url );
 
 		$redirect_options = array( 'query_arg' => array( $message_var => 'cart-emptied' ) );
 		it_exchange_redirect( esc_url_raw( $url ), 'cart-empty-success', $redirect_options );
@@ -599,6 +599,7 @@ class IT_Exchange_Shopping_Cart {
 	 * Formats data and hands it off to the appropriate tranaction method
 	 *
 	 * @since 0.3.8
+	 * @since 2.0.0 Add $cart parameter.
 	 *
 	 * @param bool           $status
 	 * @param \ITE_Cart|null $cart
@@ -611,66 +612,100 @@ class IT_Exchange_Shopping_Cart {
 			return $status;
 		}
 
-		if ( $cart && ( $feedback = $cart->get_requirements_for_purchase() ) && $feedback->has_feedback() ) {
+		$cart = $cart ?: it_exchange_get_current_cart();
+
+		if ( ( $feedback = $cart->get_requirements_for_purchase() ) && $feedback->has_feedback() ) {
 			$feedback->to_messages();
+
+			it_exchange_log( 'Cart #{cart_id} purchase rejected due to pending requirements.', ITE_Log_Levels::DEBUG, array(
+				'cart_id' => $cart->get_id(),
+				'_group'  => 'cart',
+			) );
 
 			return false;
 		}
 
 		// Verify transaction method exists
-		$method_var                   = it_exchange_get_field_name( 'transaction_method' );
-		$requested_transaction_method = empty( $_REQUEST[ $method_var ] ) ? false : $_REQUEST[ $method_var ];
-		$enabled_addons               = it_exchange_get_enabled_addons( array( 'category' => 'transaction-methods' ) );
-		if ( ! $requested_transaction_method || empty( $enabled_addons[ $requested_transaction_method ] ) ) {
-			do_action( 'it_exchange_error_bad_transaction_method_at_purchase', $requested_transaction_method );
+		$method_var = it_exchange_get_field_name( 'transaction_method' );
+		$method     = empty( $_REQUEST[ $method_var ] ) ? false : $_REQUEST[ $method_var ];
+
+		$enabled_addons = it_exchange_get_enabled_addons( array( 'category' => 'transaction-methods' ) );
+		$handler        = it_exchange_get_purchase_handler_by_id( $method );
+
+		if ( ! $method || ( empty( $enabled_addons[ $method ] ) && ! $handler ) ) {
+			do_action( 'it_exchange_error_bad_transaction_method_at_purchase', $method, $cart );
 			it_exchange_add_message( 'error', $this->get_cart_message( 'bad-transaction-method' ) );
 
 			return false;
 		}
 
+		it_exchange_log(
+			'Processing purchase request for cart #{cart_id} containing {description} totalling {total} via {method}.',
+			ITE_Log_Levels::DEBUG,
+			array(
+				'cart_id'     => $cart->get_id(),
+				'description' => $cart,
+				'total'       => $cart->get_total(),
+				'method'      => $method
+			)
+		);
+
 		$transaction_object = it_exchange_generate_transaction_object( $cart );
-		if ( empty( $transaction_object ) && false !== ( $transaction_id = apply_filters( 'handle_purchase_cart_request_already_processed_for_' . $requested_transaction_method, false ) ) ) {
 
-			it_exchange_clear_messages( 'error' ); //we really need a way to only remove certain errors
-			return $transaction_id;
+		if ( ! $transaction_object ) {
+			$transaction_id = apply_filters( 'handle_purchase_cart_request_already_processed_for_' . $method, false );
 
-		} else {
-
-			$transaction_object = apply_filters( 'it_exchange_transaction_object', $transaction_object, $requested_transaction_method, $cart );
-
-			try {
-				// Do the transaction
-				$transaction_id = it_exchange_do_transaction( $requested_transaction_method, $transaction_object, $cart );
-
-				if ( $transaction_id ) {
-					it_exchange_empty_shopping_cart();
-				} else {
-					$this->convert_feedback_to_notices();
-				}
+			if ( $transaction_id ) {
+				it_exchange_clear_messages( 'error' );
 
 				return $transaction_id;
 			}
-			catch ( IT_Exchange_Locking_Exception $e ) {
-				sleep( 2 );
 
-				$transaction = it_exchange_get_transaction_by_cart_id( it_exchange_get_cart_id() );
+			return false;
+		}
 
-				if ( $transaction ) {
-					it_exchange_empty_shopping_cart();
+		$transaction_object = apply_filters( 'it_exchange_transaction_object', $transaction_object, $method, $cart );
 
-					return $transaction->ID;
-				} else {
+		try {
+			// Do the transaction
+			$transaction_id = it_exchange_do_transaction( $method, $transaction_object, $cart );
 
-					// this would happen in the following flow
-					// IPN -> Auto Return ( wait 2 seconds ) -> IPN fails
-
-					$message = __( 'A possible error occurred during your purchase.', 'it-l10n-ithemes-exchange' );
-					$message .= ' ' . __( 'If you do not receive an email receipt shortly, please contact the site owner', 'it-l10n-ithemes-exchange' );
-
-					it_exchange_add_message( 'error', $message );
-				}
+			if ( $transaction_id ) {
+				$cart->empty_cart();
+			} else {
+				$cart->get_feedback()->to_messages();
 			}
 
+			return $transaction_id;
+		} catch ( IT_Exchange_Locking_Exception $e ) {
+			sleep( 2 );
+
+			$transaction = it_exchange_get_transaction_by_cart_id( $cart->get_id() );
+
+			if ( $transaction ) {
+				$cart->empty_cart();
+
+				it_exchange_log( 'Captured transaction for cart #{cart_id} after waiting due to locking exception.', ITE_Log_Levels::DEBUG, array(
+					'cart_id' => $cart->get_id(),
+					'_group'  => 'cart',
+				) );
+
+				return $transaction->ID;
+			}
+
+			// this would happen in the following flow
+			// IPN -> Auto Return ( wait 2 seconds ) -> IPN fails
+
+			$message = __( 'A possible error occurred during your purchase.', 'it-l10n-ithemes-exchange' );
+			$message .= ' ' . __( 'If you do not receive an email receipt shortly, please contact the site owner', 'it-l10n-ithemes-exchange' );
+
+			it_exchange_add_message( 'error', $message );
+
+			it_exchange_log( 'Failed to purchase cart #{cart_id} via {method} after waiting due to locking exception.', array(
+				'cart_id' => $cart->get_id(),
+				'method'  => $method,
+				'_group'  => 'cart',
+			) );
 		}
 
 		return false;

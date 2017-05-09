@@ -898,15 +898,7 @@ function it_exchange_get_cart_description( $options = array() ) {
 		return '';
 	}
 
-	$items = $cart->get_items()->non_summary_only();
-
-	if ( ! $items->count() ) {
-		return '';
-	}
-
-	$parts = it_exchange_get_line_item_collection_description( $items, $cart, false );
-
-	return apply_filters( 'it_exchange_get_cart_description', implode( ', ', $parts ), $parts, $options );
+	return $cart->get_description( $options );
 }
 
 /**

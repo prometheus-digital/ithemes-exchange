@@ -454,13 +454,15 @@ class ITE_Cart {
 			return null;
 		}
 
-		it_exchange_log( 'Added {type} item {id}, {name}, to the cart {cart_id}.', ITE_Log_Levels::INFO, array(
-			'_group'  => 'cart',
-			'type'    => $item->get_type(),
-			'name'    => $item->get_name(),
-			'id'      => $item->get_id(),
-			'cart_id' => $this->get_id(),
-		) );
+		if ( ! $this->is_doing_merge() ) {
+			it_exchange_log( 'Added {type} item {id}, {name}, to the cart {cart_id}.', ITE_Log_Levels::INFO, array(
+				'_group'  => 'cart',
+				'type'    => $item->get_type(),
+				'name'    => $item->get_name(),
+				'id'      => $item->get_id(),
+				'cart_id' => $this->get_id(),
+			) );
+		}
 
 		if ( ! $add_new ) {
 			return $item;
@@ -602,13 +604,15 @@ class ITE_Cart {
 
 		if ( $deleted ) {
 
-			it_exchange_log( 'Removed {type} item with id {id}, {name}, from the cart {cart_id}.', ITE_Log_Levels::INFO, array(
-				'_group'  => 'cart',
-				'type'    => $item->get_type(),
-				'name'    => $item->get_name(),
-				'id'      => $item->get_id(),
-				'cart_id' => $this->get_id(),
-			) );
+			if ( ! $this->is_doing_merge() ) {
+				it_exchange_log( 'Removed {type} item with id {id}, {name}, from the cart {cart_id}.', ITE_Log_Levels::INFO, array(
+					'_group'  => 'cart',
+					'type'    => $item->get_type(),
+					'name'    => $item->get_name(),
+					'id'      => $item->get_id(),
+					'cart_id' => $this->get_id(),
+				) );
+			}
 
 			$this->_clear_item_cache();
 
@@ -658,11 +662,13 @@ class ITE_Cart {
 			$this->remove_item( $item );
 		}
 
-		it_exchange_log( "Removed all items of type '{type}' from the cart {cart_id}", ITE_Log_Levels::INFO, array(
-			'type'    => $type,
-			'cart_id' => $this->get_id(),
-			'_group'  => 'cart',
-		) );
+		if ( ! $this->is_doing_merge() ) {
+			it_exchange_log( "Removed all items of type '{type}' from the cart {cart_id}", ITE_Log_Levels::INFO, array(
+				'type'    => $type,
+				'cart_id' => $this->get_id(),
+				'_group'  => 'cart',
+			) );
+		}
 
 		return true;
 	}
@@ -1655,6 +1661,28 @@ class ITE_Cart {
 		}
 
 		return $feedback;
+	}
+
+	/**
+	 * Get a description of the items in this cart.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param array $options
+	 *
+	 * @return string
+	 */
+	public function get_description( array $options = array() ) {
+
+		$items = $this->get_items()->non_summary_only();
+
+		if ( ! $items->count() ) {
+			return '';
+		}
+
+		$parts = it_exchange_get_line_item_collection_description( $items, $this, false );
+
+		return apply_filters( 'it_exchange_get_cart_description', implode( ', ', $parts ), $parts, $options );
 	}
 
 	/**
