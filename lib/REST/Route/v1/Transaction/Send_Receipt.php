@@ -40,6 +40,8 @@ class Send_Receipt extends Base implements Postable {
 		$transaction = $request->get_route_object( 'transaction_id' );
 		$email       = $request['email'];
 
+		$r = false;
+
 		if ( $email && $email !== $transaction->get_customer_email() ) {
 			$notification = $this->notifications->get_notification( $transaction->has_parent() ? 'renewal-receipt' : 'receipt' );
 
@@ -50,13 +52,21 @@ class Send_Receipt extends Base implements Postable {
 					'customer'    => $transaction->get_customer()
 				) );
 
-				$this->notifications->get_sender()->send( $email );
+				$r = it_exchange_send_email( $email );
 			}
 		} else {
-			$this->notifications->send_purchase_emails( $transaction, false );
+			$r = $this->notifications->send_purchase_emails( $transaction, false );
 		}
 
-		return new \WP_REST_Response( null, \WP_Http::ACCEPTED );
+		if ( $r ) {
+			return new \WP_REST_Response( null, \WP_Http::ACCEPTED );
+		}
+
+		return new \WP_Error(
+			'it_exchange_rest_send_email_failed',
+			__( 'Resending email receipt failed.', 'it-l10n-ithemes-exchange' ),
+			array( 'status' => \WP_Http::INTERNAL_SERVER_ERROR )
+		);
 	}
 
 	/**

@@ -46,8 +46,8 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 	 */
 	public function __construct( IT_Exchange_Email_Sender $sender = null, IT_Exchange_Email_Tag_Replacer $replacer = null ) {
 
-		$this->replacer = $replacer ? $replacer : new IT_Exchange_Email_Curly_Tag_Replacer();
-		$this->sender   = $sender ? $sender : new IT_Exchange_Email_Null_Sender();
+		$this->replacer = $replacer ?: new IT_Exchange_Email_Curly_Tag_Replacer();
+		$this->sender   = $sender ?: new IT_Exchange_Email_Null_Sender();
 
 		add_action( 'it_exchange_send_email_notification', array( $this, 'it_exchange_send_email_notification' ), 20, 4 );
 
@@ -233,21 +233,20 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 
 		$url = remove_query_arg( array( 'it-exchange-customer-transaction-action', '_wpnonce' ) );
 
-		try {
-			// Resend w/o admin notification
-			$this->send_purchase_emails( $transaction, false );
+		// Resend w/o admin notification
+		$sent = $this->send_purchase_emails( $transaction, false );
 
+		if ( $sent ) {
 			it_exchange_add_message( 'notice', __( 'Confirmation email resent', 'it-l10n-ithemes-exchange' ) );
 			it_exchange_redirect( $url, 'admin-confirmation-email-resend-success' );
-			die();
-
-		}
-		catch ( IT_Exchange_Email_Delivery_Exception $e ) {
-
-			it_exchange_add_message( 'error', $e->getMessage() );
+		} else {
+			it_exchange_log( 'Failed to resend transaction #{txn_id} receipt.', array(
+				'txn_id' => $transaction->ID,
+				'_group' => 'email',
+			) );
 			it_exchange_redirect( $url, 'admin-confirmation-email-resend-failed' );
-			die();
 		}
+		die();
 	}
 
 	/**
@@ -258,15 +257,17 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 	 * @param mixed $transaction ID or object
 	 * @param bool  $send_admin_email
 	 *
-	 * @return void
+	 * @return bool
 	 */
 	public function send_purchase_emails( $transaction, $send_admin_email = true ) {
 
 		$transaction = it_exchange_get_transaction( $transaction );
 
 		if ( ! $transaction ) {
-			return;
+			return false;
 		}
+
+		$r = true;
 
 		/**
 		 * Determine whether purchase emails should be sent to a customer.
@@ -287,7 +288,15 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 					'transaction' => $transaction,
 					'customer'    => $transaction->get_customer()
 				) );
-				$this->sender->send( $email );
+
+				$r = $r && it_exchange_send_email( $email );
+
+				if ( $r ) {
+					it_exchange_log( 'Sent receipt for transaction #{txn_id} to customer.', ITE_Log_Levels::DEBUG, array(
+						'txn_id' => $transaction->ID,
+						'_group' => 'email',
+					) );
+				}
 			}
 		}
 
@@ -315,10 +324,21 @@ class IT_Exchange_Email_Notifications implements IT_Exchange_Email_Sender_Aware 
 						'transaction' => $transaction,
 						'customer'    => $transaction->get_customer()
 					) );
-					$this->sender->send( $email );
+
+					$r = $r && it_exchange_send_email( $email );
+
+					if ( $r ) {
+						it_exchange_log( 'Sent receipt for transaction #{txn_id} to admin {email}.', ITE_Log_Levels::DEBUG, array(
+							'txn_id' => $transaction->ID,
+							'email'  => $email,
+							'_group' => 'email',
+						) );
+					}
 				}
 			}
 		}
+
+		return $r;
 	}
 
 	/**

@@ -910,7 +910,6 @@ function it_exchange_convert_country_code( $code ) {
  * @param array                                                               $context
  *
  * @return bool
- * @throws IT_Exchange_Email_Delivery_Exception
  * @throws InvalidArgumentException
  */
 function it_exchange_send_email( $email_or_message, $subject = '', $recipient = '', $transaction = 0, $context = array() ) {
@@ -969,13 +968,14 @@ function it_exchange_send_email( $email_or_message, $subject = '', $recipient = 
 	try {
 		return it_exchange_email_notifications()->get_sender()->send( $email_or_message );
 	} catch ( IT_Exchange_Email_Delivery_Exception $e ) {
-		it_exchange_log( 'Failed to send email {subject} to {to}', array(
-			'subject' => $email_or_message->get_subject(),
-			'to'      => $email_or_message->get_recipient()->get_email(),
-			'_group'  => 'email',
+		it_exchange_log( 'Failed to send email {subject} to {to}: {exception}', array(
+			'subject'   => $email_or_message->get_subject(),
+			'to'        => $email_or_message->get_recipient()->get_email(),
+			'exception' => $e,
+			'_group'    => 'email',
 		) );
 
-		throw $e;
+		return false;
 	}
 }
 

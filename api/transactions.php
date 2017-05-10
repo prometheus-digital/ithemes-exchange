@@ -450,11 +450,27 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 		$customer = it_exchange_get_current_customer();
 	}
 
+	/** @var mixed $cart_object */
+	if ( isset( $cart_object->cart_id ) ) {
+		$cart_id = $cart_object->cart_id;
+	} elseif ( $cart ) {
+		$cart_id = $cart->get_id();
+	} else {
+		$cart_id = null;
+	}
+
 	if ( ! $cart_object ) {
 		throw new InvalidArgumentException( 'Either a \ITE_Cart or cart object must be provided.' );
 	}
 
 	if ( it_exchange_get_transaction_by_method_id( $method, $method_id ) ) {
+
+		it_exchange_log( 'Duplicate {method} transaction method id {method_id} encountered for cart {cart_id}', array(
+			'method'    => $method,
+			'method_id' => $method_id,
+			'cart_id'   => $cart_id,
+			'_group'    => 'transaction',
+		) );
 
 		do_action( 'it_exchange_add_transaction_failed', $method, $method_id, $status, $customer, $cart_object, $args );
 
@@ -481,15 +497,6 @@ function it_exchange_add_transaction( $method, $method_id, $status = 'pending', 
 		update_post_meta( $transaction_id, '_it_exchange_cart_object', $cart_object );
 
 		$hash = it_exchange_generate_transaction_hash( $transaction_id, $customer ? $customer->id  : false );
-
-		/** @var mixed $cart_object */
-		if ( isset( $cart_object->cart_id ) ) {
-			$cart_id = $cart_object->cart_id;
-		} elseif ( $cart ) {
-			$cart_id = $cart->get_id();
-		} else {
-			$cart_id = null;
-		}
 
 		if ( $gateway && $gateway->is_sandbox_mode() ) {
 			$mode = ITE_Const::P_MODE_SANDBOX;
@@ -658,6 +665,21 @@ function it_exchange_add_child_transaction( $method, $method_id, $status = 'pend
 
 	if ( is_array( $txn_object_or_args ) ) {
 		$args = $txn_object_or_args;
+	}
+
+	if ( it_exchange_get_transaction_by_method_id( $method, $method_id ) ) {
+
+		it_exchange_log( 'Duplicate {method} child transaction #{txn_id} method id {method_id} encountered for cart {cart_id}', array(
+			'method'    => $method,
+			'method_id' => $method_id,
+			'cart_id'   => isset( $txn_object->cart_id ) ? $txn_object->cart_id : 'unknown',
+			'txn_id'    => $parent_tx_id,
+			'_group'    => 'transaction',
+		) );
+
+		do_action( 'it_exchange_add_child_transaction_failed', $method, $method_id, $status, $customer_id, $parent_tx_id, $txn_object, $args );
+
+		return apply_filters( 'it_exchange_add_child_transaction_failed', false, $method, $method_id, $status, $customer_id, $parent_tx_id, $txn_object, $args );
 	}
 
 	$defaults = array(

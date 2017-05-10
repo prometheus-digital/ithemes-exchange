@@ -61,8 +61,7 @@ function it_exchange_send_public_note_to_customer( IT_Exchange_Txn_Activity $act
 			'customer'             => it_exchange_get_transaction_customer( $activity->get_transaction() ),
 			'transaction-activity' => $activity
 		) );
-
-		it_exchange_email_notifications()->get_sender()->send( $email );
+		it_exchange_send_email( $email );
 	}
 }
 
