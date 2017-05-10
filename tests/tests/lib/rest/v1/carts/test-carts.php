@@ -452,7 +452,7 @@ class Test_IT_Exchange_v1_Carts_Route extends Test_IT_Exchange_REST_Route {
 		$data = $response->get_data();
 		$cart = it_exchange_get_cart( $cart->get_id() );
 
-		$this->assertArrayNotHasKey( '_editable', $data['meta'] );
+		$this->assertArrayNotHasKey( '_editable', (array) $data['meta'] );
 		$this->assertFalse( $cart->has_meta( '_editable' ) );
 	}
 
@@ -481,7 +481,7 @@ class Test_IT_Exchange_v1_Carts_Route extends Test_IT_Exchange_REST_Route {
 		$data     = $response->get_data();
 		$cart     = it_exchange_get_cart( $cart->get_id() );
 
-		$this->assertArrayNotHasKey( '_visible', $data['meta'] );
+		$this->assertArrayNotHasKey( '_visible', (array) $data['meta'] );
 		$this->assertFalse( $cart->has_meta( '_visible' ) );
 	}
 

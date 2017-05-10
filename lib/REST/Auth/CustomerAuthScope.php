@@ -40,4 +40,11 @@ class CustomerAuthScope implements AuthScope {
 
 		return call_user_func_array( 'user_can', $args );
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function __toString() {
+		return sprintf( __( 'Customer #%d', 'it-l10n-ithemes-exchange' ), $this->customer->get_ID() );
+	}
 }

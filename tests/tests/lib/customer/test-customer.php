@@ -25,7 +25,8 @@ class Test_IT_Exchange_Customer extends IT_Exchange_UnitTestCase {
 		$customer = it_exchange_get_customer( self::factory()->user->create() );
 
 		$customer->set_billing_address( new ITE_In_Memory_Address( array(
-			'country' => 'US'
+			'country' => 'US',
+			'state'   => 'OK',
 		) ) );
 
 		$this->assertInternalType( 'array', $customer->data->billing_address );
@@ -37,7 +38,8 @@ class Test_IT_Exchange_Customer extends IT_Exchange_UnitTestCase {
 		$customer = it_exchange_get_customer( self::factory()->user->create() );
 
 		$customer->set_shipping_address( new ITE_In_Memory_Address( array(
-			'country' => 'US'
+			'country' => 'US',
+			'state'   => 'OK',
 		) ) );
 
 		$this->assertInternalType( 'array', $customer->data->shipping_address );

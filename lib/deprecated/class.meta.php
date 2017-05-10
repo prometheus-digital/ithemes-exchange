@@ -293,6 +293,10 @@ class IT_Exchange_Deprecated_Meta {
 			) );
 		}
 
+		if ( ! $this->info[ $deprecated ]['warn'] ) {
+			return;
+		}
+
 		/**
 		 * Fires when a deprecated meta key is is used.
 		 *
@@ -307,10 +311,6 @@ class IT_Exchange_Deprecated_Meta {
 
 		if ( $context ) {
 			$context = sprintf( __( 'Used in %s', 'it-l10n-ithemes-exchange' ), $context );
-		}
-
-		if ( ! $this->info[ $deprecated ]['warn'] ) {
-			return;
 		}
 
 		/**

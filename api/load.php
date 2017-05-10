@@ -15,6 +15,7 @@ require_once __DIR__ . '/addons.php' ;
 require_once __DIR__ . '/product-features.php' ;
 
 // Register and retreive form actions
+require_once __DIR__ . '/purchase-requirements.php' ;
 require_once __DIR__ . '/misc.php' ;
 
 // Product Type Add-ons

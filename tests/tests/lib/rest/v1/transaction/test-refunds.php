@@ -85,7 +85,7 @@ class Test_IT_Exchange_v1_Transaction_Refunds_Route extends Test_IT_Exchange_RES
 		$request->set_param( 'context', 'edit' );
 		$this->assertNotNull( $request );
 
-		$scope = $this->getMockBuilder( '\iThemes\Exchange\REST\Auth\AuthScope' )->setMethods( array( 'can' ) )->getMock();
+		$scope = $this->getMockBuilder( '\iThemes\Exchange\REST\Auth\AuthScope' )->setMethods( array( 'can' ) )->getMockForAbstractClass();
 		$scope->expects( $this->at( 0 ) )->method( 'can' )->with( 'it_list_transaction_refunds' )->willReturn( true );
 		$scope->expects( $this->at( 1 ) )->method( 'can' )->with( 'it_edit_refunds' )->willReturn( false );
 		$this->manager->set_auth_scope( $scope );

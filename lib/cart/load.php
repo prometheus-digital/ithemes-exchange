@@ -116,7 +116,7 @@ add_action( 'it_exchange_register_line_item_types', function ( ITE_Line_Item_Typ
 				'type'        => 'integer',
 				'context'     => array( 'view', 'edit' ),
 				'required'    => true,
-				'readonly'    => true,
+				'createonly'  => true,
 			),
 			'shipping_method' => array(
 				'description' => __( 'The shipping method selected for this item.', 'it-l10n-ithemes-exchange' ),

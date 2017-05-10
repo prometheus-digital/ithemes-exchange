@@ -114,4 +114,13 @@ class ITE_Coupon_Types {
 			return (bool) $type->get_rest_serializer();
 		} );
 	}
+
+	/**
+	 * Clear all coupon types.
+	 *
+	 * @since 2.0.0
+	 */
+	public static function clear() {
+		static::$types = array();
+	}
 }

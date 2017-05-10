@@ -310,9 +310,10 @@ class Test_IT_Exchange_v1_Cart_Purchase_Route extends Test_IT_Exchange_REST_Rout
 			ITE_Gateways::register( $gateway );
 		}
 
-		$gateway->handlers = array(
+		$gateway->handlers          = array(
 			$handler = new IT_Exchange_Stub_Gateway_Request_Handler( '__return_null' )
 		);
+		$handler->methods['get_id'] = function () { return 'test-gateway-live'; };
 
 		$customer = it_exchange_get_customer( self::factory()->user->create( array( 'role' => 'subscriber' ) ) );
 		$cart     = it_exchange_create_cart_and_session( $customer );
@@ -361,6 +362,7 @@ class Test_IT_Exchange_v1_Cart_Purchase_Route extends Test_IT_Exchange_REST_Rout
 		$gateway->handlers = array(
 			$handler = new IT_Exchange_Stub_Gateway_Request_Handler( '__return_null' )
 		);
+		$handler->methods['get_id'] = function () { return 'test-gateway-live'; };
 
 		$customer = it_exchange_get_customer( self::factory()->user->create( array( 'role' => 'subscriber' ) ) );
 		$cart     = it_exchange_create_cart_and_session( $customer );
@@ -405,6 +407,7 @@ class Test_IT_Exchange_v1_Cart_Purchase_Route extends Test_IT_Exchange_REST_Rout
 		$gateway->handlers = array(
 			$handler = new IT_Exchange_Stub_Gateway_Request_Handler( '__return_null' )
 		);
+		$handler->methods['get_id'] = function () { return 'test-gateway-live'; };
 
 		$customer = it_exchange_get_customer( self::factory()->user->create( array( 'role' => 'subscriber' ) ) );
 		$cart     = it_exchange_create_cart_and_session( $customer );
@@ -442,6 +445,7 @@ class Test_IT_Exchange_v1_Cart_Purchase_Route extends Test_IT_Exchange_REST_Rout
 		$gateway->handlers = array(
 			$handler = new IT_Exchange_Stub_Gateway_Request_Handler( '__return_null' )
 		);
+		$handler->methods['get_id'] = function () { return 'test-gateway-live'; };
 
 		$customer = it_exchange_get_customer( self::factory()->user->create( array( 'role' => 'subscriber' ) ) );
 		$cart     = it_exchange_create_cart_and_session( $customer );
@@ -480,6 +484,7 @@ class Test_IT_Exchange_v1_Cart_Purchase_Route extends Test_IT_Exchange_REST_Rout
 		$gateway->handlers = array(
 			$handler = new IT_Exchange_Stub_Gateway_Request_Handler( '__return_null' )
 		);
+		$handler->methods['get_id'] = function () { return 'test-gateway-live'; };
 
 		$customer = it_exchange_get_customer( self::factory()->user->create( array( 'role' => 'subscriber' ) ) );
 		$cart     = it_exchange_create_cart_and_session( $customer );

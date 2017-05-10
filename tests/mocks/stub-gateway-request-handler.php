@@ -14,6 +14,7 @@ class IT_Exchange_Stub_Gateway_Request_Handler implements ITE_Gateway_Request_Ha
 	/** @var ITE_Gateway_Request */
 	private $request;
 
+	public $methods = array();
 	public $callback;
 
 	/**
@@ -44,7 +45,14 @@ class IT_Exchange_Stub_Gateway_Request_Handler implements ITE_Gateway_Request_Ha
 	/**
 	 * @inheritDoc
 	 */
-	public function __call( $name, $arguments ) { return true; }
+	public function __call( $name, $arguments ) {
+
+		if ( isset( $this->methods[ $name ] ) ) {
+			return call_user_func_array( $this->methods[$name], $arguments );
+		}
+
+		return true;
+	}
 
 	/**
 	 * @inheritDoc

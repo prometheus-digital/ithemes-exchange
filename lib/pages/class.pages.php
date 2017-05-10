@@ -174,16 +174,17 @@ class IT_Exchange_Pages {
 
 			$customer_id = get_current_user_id();
 
-		} else if ( $account == (int)$account ) {
+		} else if ( $account == (int) $account ) {
 
 			$customer_id = $account;
 
 		} else {
 
-			if ( $customer = get_user_by( 'login', $account ) )
+			if ( $customer = get_user_by( 'login', $account ) ) {
 				$customer_id = $customer->ID;
-			else
+			} else {
 				$customer_id = false;
+			}
 
 		}
 

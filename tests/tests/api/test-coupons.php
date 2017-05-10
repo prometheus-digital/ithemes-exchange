@@ -15,6 +15,7 @@ class IT_Exchange_API_Coupons_Test extends IT_Exchange_UnitTestCase {
 
 	private $types_backup;
 	private $meta_backup;
+	private $types_objects;
 
 	/**
 	 * Do custom initialization.
@@ -24,6 +25,7 @@ class IT_Exchange_API_Coupons_Test extends IT_Exchange_UnitTestCase {
 
 		$this->types_backup = $GLOBALS['it_exchange']['coupon_types'];
 		$this->meta_backup  = $GLOBALS['it_exchange']['coupon_types_meta'];
+		$this->types_objects = ITE_Coupon_Types::all();
 
 		$GLOBALS['it_exchange']['coupon_types']      = array();
 		$GLOBALS['it_exchange']['coupon_types_meta'] = array();
@@ -37,6 +39,12 @@ class IT_Exchange_API_Coupons_Test extends IT_Exchange_UnitTestCase {
 
 		$GLOBALS['it_exchange']['coupon_types']      = $this->types_backup;
 		$GLOBALS['it_exchange']['coupon_types_meta'] = $this->meta_backup;
+
+		ITE_Coupon_Types::clear();
+
+		foreach ( $this->types_objects as $types_object ) {
+			ITE_Coupon_Types::register( $types_object );
+		}
 	}
 
 	public function test_get_coupon() {

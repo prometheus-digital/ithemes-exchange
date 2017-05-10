@@ -28,7 +28,7 @@ class ITE_Location_State_Matches_Country_Validator implements ITE_Location_Valid
 		$country = $location['country'];
 		$state   = $location['state'];
 
-		$states = it_exchange_get_country_states( array( 'country' => $country ) );
+		$states = it_exchange_get_data_set('states', array( 'country' => $country ) );
 
 		if ( empty( $states ) ) {
 			return true;

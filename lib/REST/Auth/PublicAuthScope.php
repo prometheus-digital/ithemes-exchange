@@ -26,4 +26,11 @@ class PublicAuthScope implements AuthScope {
 
 		return false;
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function __toString() {
+		return __( 'Anonymous', 'it-l10n-ithemes-exchange' );
+	}
 }

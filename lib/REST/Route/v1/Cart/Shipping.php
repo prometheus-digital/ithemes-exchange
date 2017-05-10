@@ -46,7 +46,7 @@ class Shipping extends Base implements Getable, Putable {
 		/** @var \ITE_Cart $cart */
 		$cart = $request->get_route_object( 'cart_id' );
 
-		$cart_method          = $cart->get_shipping_method();
+		$cart_method          = $cart->get_shipping_method( null, false );
 		$cart_method          = $cart_method ? $cart_method->slug : '';
 		$is_eligible          = it_exchange_cart_is_eligible_for_multiple_shipping_methods( $cart );
 		$switched_to_multiple = false;
@@ -90,20 +90,24 @@ class Shipping extends Base implements Getable, Putable {
 					continue;
 				}
 
-				$available = it_exchange_get_enabled_shipping_methods_for_product( $line_item->get_product(), 'slug', $cart );
-				$current   = $cart->get_shipping_method( $line_item );
-				$current   = $current ? $current->slug : '';
+				$available     = it_exchange_get_enabled_shipping_methods_for_product( $line_item->get_product(), 'slug', $cart );
+				$current       = $cart->get_shipping_method( $line_item );
+				$current       = $current ? $current->slug : '';
+				$method_forced = false;
 
 				if ( count( $available ) === 1 ) {
-					$cart->set_shipping_method( reset( $available ), $line_item );
-					continue;
+					$method_forced = reset( $available );
+					$cart->set_shipping_method( $method_forced, $line_item );
 				}
 
 				foreach ( $item['methods'] as $method ) {
 					if ( $method['selected'] && $method['id'] !== $current ) {
 
 						if ( isset( $available[ $method['id'] ] ) ) {
-							$cart->set_shipping_method( $method['id'], $line_item );
+							if ( $method_forced !== $method['id'] ) {
+								$cart->set_shipping_method( $method['id'], $line_item );
+							}
+
 							break;
 						}
 

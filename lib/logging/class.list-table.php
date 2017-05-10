@@ -7,6 +7,10 @@
  */
 use Doctrine\Common\Collections\Expr\Comparison;
 
+if ( ! class_exists( 'WP_List_Table' ) ) {
+    require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
+}
+
 /**
  * Class ITE_Log_List_Table
  */
@@ -223,7 +227,8 @@ class ITE_Log_List_Table extends WP_List_Table {
             <label for="filter-by-user" class="screen-reader-text">
 				<?php _e( 'Filter by Username or User ID', 'it-l10n-ithemes-exchange' ); ?>
             </label>
-            <input type="text" name="user" id="filter-by-user" value="<?php echo esc_attr( $user ); ?>" placeholder="<?php esc_attr_e( 'Username or ID', 'it-l10n-ithemes-exchange' ); ?>">
+            <input type="text" name="user" id="filter-by-user" value="<?php echo esc_attr( $user ); ?>"
+                   placeholder="<?php esc_attr_e( 'Username or ID', 'it-l10n-ithemes-exchange' ); ?>">
 		<?php endif; ?>
 
 		<?php if ( isset( $filters['group'] ) ): ?>

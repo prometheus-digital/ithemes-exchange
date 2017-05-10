@@ -87,7 +87,7 @@ class Test_IT_Exchange_v1_Customer_Tokens_Route extends Test_IT_Exchange_REST_Ro
 		$request  = \iThemes\Exchange\REST\Request::from_path( "/it_exchange/v1/customers/{$customer->get_ID()}/tokens" );
 		$request->set_param( 'context', 'edit' );
 
-		$scope = $this->getMockBuilder( '\iThemes\Exchange\REST\Auth\AuthScope' )->setMethods( array( 'can' ) )->getMock();
+		$scope = $this->getMockBuilder( '\iThemes\Exchange\REST\Auth\AuthScope' )->setMethods( array( 'can' ) )->getMockForAbstractClass();
 		$scope->expects( $this->at( 0 ) )->method( 'can' )->with( 'it_list_payment_tokens' )->willReturn( true );
 		$scope->expects( $this->at( 1 ) )->method( 'can' )->with( 'it_edit_customer_payment_tokens' )->willReturn( false );
 		$this->manager->set_auth_scope( $scope );

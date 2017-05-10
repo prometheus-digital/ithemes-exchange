@@ -44,6 +44,7 @@ abstract class Test_IT_Exchange_REST_Route extends IT_Exchange_UnitTestCase {
 	protected function assertErrorResponse( $code, $response, $status = null ) {
 
 		if ( $response instanceof WP_REST_Response ) {
+			$this->assertTrue( $response->is_error(), print_r( $response->get_data(), true ) );
 			$response = $response->as_error();
 		}
 

@@ -381,12 +381,20 @@ class Manager {
 
 			$middleware = $this->get_middleware();
 
-			$handle = function ( \WP_REST_Request $request ) use ( $middleware, $route, $exchange_request ) {
+			$handle = function ( \WP_REST_Request $request ) use ( $manager, $middleware, $route, $exchange_request ) {
 
 				if ( ! $exchange_request ) {
 					$exchange_request = Request::from_wp( $request );
 					$exchange_request->set_matched_route_controller( $route );
 				}
+
+				it_exchange_log( 'Processing {method} REST request to {route} for scope {scope} with body {body}', \ITE_Log_Levels::DEBUG, array(
+					'route'  => $request->get_route(),
+					'method' => $request->get_method(),
+					'scope'  => $manager->get_auth_scope(),
+					'body'   => $request->get_body(),
+					'_group' => 'REST',
+				) );
 
 				return $middleware->handle( $exchange_request, $route );
 			};
@@ -476,7 +484,7 @@ class Manager {
 			return $response;
 		}
 
-		$schema_object = $this->schema_storage->getSchema( url_for_schema( $title ) );
+		$schema_object = clone $this->schema_storage->getSchema( url_for_schema( $title ) );
 
 		$to_validate = array();
 
@@ -484,7 +492,16 @@ class Manager {
 		$properties     = $request->get_method() === 'GET' ? $query_args : $schema['properties'];
 
 		foreach ( $properties as $property => $_ ) {
-			if ( ! empty( $_['readonly'] ) && $request->has_param( $property, $types_to_check ) ) {
+
+			if ( ! empty( $_['readonly'] ) ) {
+				continue;
+			}
+
+			if ( ! empty( $_['createonly'] ) && $request->get_method() === 'POST' ) {
+				$schema_object->properties->$property->required = false;
+			}
+
+			if ( $request->has_param( $property, $types_to_check ) ) {
 				$to_validate[ $property ] = $request[ $property ];
 			}
 		}
@@ -790,10 +807,19 @@ class Manager {
 		$regex         = '/ITHEMES-EXCHANGE-GUEST\s?email="(\S+)"/i';
 
 		if ( ! preg_match( $regex, $authorization, $matches ) ) {
+			it_exchange_log( 'REST auth attempt made with invalid Guest Checkout authorization format: {auth}', \ITE_Log_Levels::DEBUG, array(
+				'auth'   => $authorization,
+				'_group' => 'REST',
+			) );
+
 			return $authed;
 		}
 
 		if ( ! it_exchange_is_guest_checkout_enabled() ) {
+			it_exchange_log( 'Guest Checkout REST auth attempt made while guest checkout is disabled.', \ITE_Log_Levels::WARNING, array(
+				'_group' => 'REST',
+			) );
+
 			return new \WP_Error(
 				'it_exchange_rest_guest_checkout_disabled',
 				__( 'Guest Checkout is disabled.', 'it-l10n-ithemes-exchange' ),
@@ -802,6 +828,11 @@ class Manager {
 		}
 
 		if ( empty( $matches[1] ) || ! is_email( $matches[1] ) ) {
+			it_exchange_log( 'Guest Checkout REST auth attempt made with invalid email: {email}', \ITE_Log_Levels::DEBUG, array(
+				'email'  => $matches[1],
+				'_group' => 'REST',
+			) );
+
 			return new \WP_Error(
 				'it_exchange_rest_authentication_failed',
 				__( 'Invalid guest email address provided.', 'it-l10n-ithemes-exchange' ),

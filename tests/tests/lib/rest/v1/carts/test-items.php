@@ -68,7 +68,7 @@ class Test_IT_Exchange_v1_Cart_Items_Route extends Test_IT_Exchange_REST_Route {
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
 
-		$this->assertEquals( 201, $response->get_status() );
+		$this->assertEquals( 201, $response->get_status(), print_r( $response->get_data(), true ) );
 		$this->assertNotEmpty( $data['id'] );
 		$this->assertEquals( 2, $data['quantity']['selected'] );
 		$cart = it_exchange_get_cart( $cart->get_id() );
@@ -323,7 +323,7 @@ class Test_IT_Exchange_v1_Cart_Items_Route extends Test_IT_Exchange_REST_Route {
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
 
-		$this->assertEquals( 200, $response->get_status() );
+		$this->assertEquals( 200, $response->get_status(), print_r( $response->get_data(), true ) );
 		$this->assertEquals( 2, $data['quantity']['selected'] );
 
 		$cart = it_exchange_get_cart( $cart->get_id() );

@@ -26,4 +26,13 @@ interface AuthScope {
 	 * @return bool
 	 */
 	public function can( $capability, $args = null );
+
+	/**
+	 * Representation of who is authed.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return string
+	 */
+	public function __toString();
 }

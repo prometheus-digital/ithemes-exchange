@@ -59,4 +59,11 @@ class GuestAuthScope implements AuthScope {
 				return false;
 		}
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function __toString() {
+		return sprintf( __( 'Guest Customer (%s)', 'it-l10n-ithemes-exchange' ), $this->customer->get_email() );
+	}
 }
