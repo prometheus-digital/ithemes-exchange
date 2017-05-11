@@ -51,6 +51,10 @@ class Products extends Base implements Getable {
 			$args['s'] = sanitize_text_field( $request['search'] );
 		}
 
+		if ( $request['type'] ) {
+			$args['product_type'] = $request['type'];
+		}
+
 		$products = it_exchange_get_products( $args, $total );
 		$data     = array();
 
@@ -112,6 +116,10 @@ class Products extends Base implements Getable {
 			return Errors::cannot_use_query_var( 'visible_only' );
 		}
 
+		if ( $request['type'] && ! $scope->can( 'edit_it_products' ) ) {
+			return Errors::cannot_use_query_var( 'type' );
+		}
+
 		if ( $request['context'] === 'stats' && ! $scope->can( 'edit_it_products'  ) ) {
 			return Errors::forbidden_context( 'stats' );
 		}
@@ -158,6 +166,13 @@ class Products extends Base implements Getable {
 				'minLength'   => 3,
 				'maxLength'   => 300,
 			),
+			'type' => array(
+				'description' => __( 'Limit results to products matching the given type(s).', 'it-l10n-ithemes-exchange'),
+				'oneOf' => array(
+					array( 'type' => 'string' ),
+					array( 'type' => 'array', 'items' => array( 'type' => 'string' ) ),
+				),
+			)
 		);
 	}
 

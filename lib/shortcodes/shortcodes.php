@@ -34,6 +34,7 @@ class IT_Exchange_SW_Shortcode {
 		add_action( 'it_exchange_enabled_addons_loaded', array( $this, 'register_feature' ) );
 		add_action( 'media_buttons', array( $this, 'insert_button' ) );
 		add_action( 'admin_footer', array( $this, 'thickbox' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 	}
 
 	/**
@@ -105,6 +106,29 @@ class IT_Exchange_SW_Shortcode {
 	}
 
 	/**
+	 * Enqueue scripts for the product dropdown.
+     *
+     * @since 2.0.0
+	 */
+	public function enqueue_scripts() {
+		$screen = get_current_screen();
+
+		if ( $screen && $screen->base !== 'post' && $screen->base !== 'add' ) {
+			return;
+		}
+
+		$post_type = ! empty( $screen->post_type ) ? $screen->post_type : get_post_type();
+
+		// This filter is documented in lib/shortcodes/shortcodes.php
+		if ( ! apply_filters( 'it_exchange_show_embed_sw_button', true, $post_type ) ) {
+			return;
+		}
+
+		wp_enqueue_script( 'it-exchange-select2' );
+		wp_enqueue_style( 'it-exchange-select2' );
+    }
+
+	/**
 	 * Render the thickbox for inserting a SW shortcode.
 	 *
 	 * @since 1.32
@@ -126,7 +150,7 @@ class IT_Exchange_SW_Shortcode {
 
 		$post_type = get_post_type_object( $post_type );
 
-		if ( ! $post_type || ! $post_type->public || $post_type->name == 'it_exchange_prod' ) {
+		if ( ! $post_type || ! $post_type->public || $post_type->name === 'it_exchange_prod' ) {
 			return;
 		}
 
@@ -139,29 +163,63 @@ class IT_Exchange_SW_Shortcode {
 				unset( $product_types[ $product_type ] );
 			}
 		}
-
-		$products = it_exchange_get_products( array(
-			'show_hidden'    => true,
-			'posts_per_page' => 250,
-		) );
 		?>
 
 		<script type="text/javascript">
 			jQuery(document).ready(function ($) {
+
+				var $select = $( '#it-exchange-sw-product' );
+				$select.select2( {
+					ajax: {
+						url     : '<?php echo esc_js( rest_url( 'it_exchange/v1/products/' ) ); ?>',
+						dataType: 'json',
+
+						beforeSend: function ( xhr ) {
+							xhr.setRequestHeader( 'X-WP-Nonce', '<?php echo esc_js( wp_create_nonce( 'wp_rest' ) ); ?>' );
+						},
+
+						data: function ( params ) {
+							return {
+								search : params.term,
+								context: 'embed',
+								type   : <?php echo wp_json_encode( array_keys( $product_types ) ) ?>,
+							}
+						},
+
+						processResults: function ( response ) {
+							var results = [];
+
+							for ( var i = 0; i < response.length; i++ ) {
+								results[i] = {
+									id  : response[i].id,
+									text: response[i].title
+								}
+							}
+
+							return {
+								results: results
+							}
+						},
+					},
+
+					minimumInputLength: 3,
+				} );
+
 				$(document).on('click', '#it-exchange-sw-insert', function (e) {
-					var prod = jQuery("#it-exchange-sw-product").val();
-					if (prod.length == 0 || prod == -1) {
-						alert("<?php echo esc_js( __( "You must select a product", 'it-l10n-ithemes-exchange' ) ); ?>");
+					var prod = $select.val();
+
+					if (prod.length === 0) {
+						alert("<?php echo esc_js( __( 'You must select a product', 'it-l10n-ithemes-exchange' ) ); ?>");
 						return;
 					}
 
 					var desc = '', title = '';
 
-					if (jQuery("#it-exchange-sw-description").is(':checked')) {
+					if ($("#it-exchange-sw-description").is(':checked')) {
 						desc = ' description="yes"';
 					}
 
-					if (jQuery("#it-exchange-sw-title").is(':checked')) {
+					if ($("#it-exchange-sw-title").is(':checked')) {
 						title = ' title="yes"';
 					}
 
@@ -178,36 +236,28 @@ class IT_Exchange_SW_Shortcode {
 
 				<div>
 					<label for="it-exchange-sw-product"><?php _e( 'Select a Product', 'it-l10n-ithemes-exchange' ); ?></label><br>
-					<select id="it-exchange-sw-product">
-						<option value="-1"><?php _e( 'Select', 'it-l10n-ithemes-exchange' ); ?></option>
-
-						<?php foreach ( $products as $product ): ?>
-							<option value="<?php echo $product->ID; ?>">
-								<?php echo $product->post_title; ?>
-							</option>
-						<?php endforeach; ?>
-					</select>
+					<select id="it-exchange-sw-product"></select>
 
 					<br><br>
 
 					<input type="checkbox" id="it-exchange-sw-title">
 					<label for="it-exchange-sw-title">
-						<?php _e( "Include product title?", 'it-l10n-ithemes-exchange' ); ?>
+						<?php _e( 'Include product title?', 'it-l10n-ithemes-exchange' ); ?>
 					</label>
 
 					<br><br>
 
 					<input type="checkbox" id="it-exchange-sw-description">
 					<label for="it-exchange-sw-description">
-						<?php _e( "Include product description?", 'it-l10n-ithemes-exchange' ); ?>
+						<?php _e( 'Include product description?', 'it-l10n-ithemes-exchange' ); ?>
 					</label>
 				</div>
 
 				<div style="padding: 15px 15px 15px 0">
-					<input type="button" class="button-primary" id="it-exchange-sw-insert" value="<?php _e( "Embed", 'it-l10n-ithemes-exchange' ); ?>" />
+					<input type="button" class="button-primary" id="it-exchange-sw-insert" value="<?php _e( 'Embed', 'it-l10n-ithemes-exchange' ); ?>" />
 					&nbsp;&nbsp;&nbsp;
 					<a class="button" style="color:#bbb;" href="#" onclick="tb_remove(); return false;">
-						<?php _e( "Cancel", 'it-l10n-ithemes-exchange' ); ?>
+						<?php _e( 'Cancel', 'it-l10n-ithemes-exchange' ); ?>
 					</a>
 				</div>
 			</div>
@@ -241,14 +291,16 @@ class IT_Exchange_SW_Shortcode {
 		$product = it_exchange_get_product( $atts['product'] );
 
 		if ( ! $product ) {
-			if ( current_user_can( 'edit_it_product', $GLOBALS['post']->ID ) ) {
+			if ( current_user_can( 'edit_post', $GLOBALS['post']->ID ) ) {
 				return __( "Invalid product ID.", 'it-l10n-ithemes-exchange' );
 			}
 
 			return '';
-		} else if ( ! it_exchange_product_type_supports_feature( it_exchange_get_product_type( $product->ID ), 'sw-shortcode' ) ) {
+		}
 
-			if ( current_user_can( 'edit_it_product', $GLOBALS['post']->ID ) ) {
+		if ( ! it_exchange_product_type_supports_feature( it_exchange_get_product_type( $product->ID ), 'sw-shortcode' ) ) {
+
+			if ( current_user_can( 'edit_post', $GLOBALS['post']->ID ) ) {
 				return __( "This product does not support being embedded in shortcodes.", 'it-l10n-ithemes-exchange' );
 			}
 
