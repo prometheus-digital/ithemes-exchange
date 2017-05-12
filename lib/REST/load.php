@@ -220,7 +220,7 @@ function get_rest_manager() {
 		$stack->before( new Empty_Attribute_Caster(), 'filter-by-context', 'empty-attribute-caster' );
 
 		$manager = new Manager( 'it_exchange', $stack, array(
-			'card' => array(
+			'card'    => array(
 				'title'                => 'card',
 				'type'                 => 'object',
 				'additionalProperties' => false,
@@ -254,6 +254,77 @@ function get_rest_manager() {
 						'description' => __( 'Card holder name.', 'it-l10n-ithemes-exchange' ),
 					),
 				),
+			),
+			'address' => array(
+				'title'                => 'address',
+				'type'                 => 'object',
+				'additionalProperties' => true,
+				'properties'           => array(
+					'first-name'   => array(
+						'description' => __( 'The first name for the address.', 'it-l10n-ithemes-exchange' ),
+						'type'        => 'string',
+						'context'     => array( 'view', 'edit', 'embed' ),
+					),
+					'last-name'    => array(
+						'description' => __( 'The last name for the address.', 'it-l10n-ithemes-exchange' ),
+						'type'        => 'string',
+						'context'     => array( 'view', 'edit', 'embed' ),
+					),
+					'company-name' => array(
+						'description' => __( 'The company name for the address.', 'it-l10n-ithemes-exchange' ),
+						'type'        => 'string',
+						'context'     => array( 'view', 'edit', 'embed' ),
+					),
+					'address1'     => array(
+						'description' => __( 'The address line 1 for the address.', 'it-l10n-ithemes-exchange' ),
+						'type'        => 'string',
+						'context'     => array( 'view', 'edit', 'embed' ),
+					),
+					'address2'     => array(
+						'description' => __( 'The address line 2 for the address.', 'it-l10n-ithemes-exchange' ),
+						'type'        => 'string',
+						'context'     => array( 'view', 'edit', 'embed' ),
+					),
+					'city'         => array(
+						'description' => __( 'The city for the address.', 'it-l10n-ithemes-exchange' ),
+						'type'        => 'string',
+						'context'     => array( 'view', 'edit', 'embed' ),
+					),
+					'state'        => array(
+						'description' => __( 'The state two-letter abbreviation for the address.', 'it-l10n-ithemes-exchange' ),
+						'type'        => 'string',
+						'context'     => array( 'view', 'edit', 'embed' ),
+					),
+					'country'      => array(
+						'description' => __( 'The country two-letter abbreviation for the address.', 'it-l10n-ithemes-exchange' ),
+						'type'        => 'string',
+						'context'     => array( 'view', 'edit', 'embed' ),
+					),
+					'zip'          => array(
+						'description' => __( 'The zip code for the address.', 'it-l10n-ithemes-exchange' ),
+						'type'        => 'string',
+						'context'     => array( 'view', 'edit', 'embed' ),
+					),
+					'email'        => array(
+						'description' => __( 'The email address for the address.', 'it-l10n-ithemes-exchange' ),
+						'context'     => array( 'view', 'edit', 'embed' ),
+						'oneOf'       => array(
+							array(
+								'type'   => 'string',
+								'format' => 'email',
+							),
+							array(
+								'type' => 'string',
+								'enum' => array( '' )
+							),
+						)
+					),
+					'phone'        => array(
+						'description' => __( 'The phone number for the address.', 'it-l10n-ithemes-exchange' ),
+						'type'        => 'string',
+						'context'     => array( 'view', 'edit', 'embed' ),
+					),
+				)
 			)
 		) );
 	}

@@ -14,7 +14,22 @@ class ITE_In_Memory_Address implements ITE_Location {
 	/**
 	 * @var array
 	 */
-	private $address = array();
+	private $address;
+
+	/** @var array */
+	private static $defaults = array(
+		'first-name'   => '',
+		'last-name'    => '',
+		'company-name' => '',
+		'address1'     => '',
+		'address2'     => '',
+		'city'         => '',
+		'state'        => '',
+		'zip'          => '',
+		'country'      => '',
+		'email'        => '',
+		'phone'        => '',
+	);
 
 	/**
 	 * ITE_In_Memory_Address constructor.
@@ -22,19 +37,7 @@ class ITE_In_Memory_Address implements ITE_Location {
 	 * @param array $address
 	 */
 	public function __construct( array $address = array() ) {
-		$this->address = ITUtility::merge_defaults( $address, array(
-			'first-name'   => '',
-			'last-name'    => '',
-			'company-name' => '',
-			'address1'     => '',
-			'address2'     => '',
-			'city'         => '',
-			'state'        => '',
-			'zip'          => '',
-			'country'      => '',
-			'email'        => '',
-			'phone'        => '',
-		) );
+		$this->address = ITUtility::merge_defaults( $address, static::$defaults );
 	}
 
 	/**
@@ -122,7 +125,7 @@ class ITE_In_Memory_Address implements ITE_Location {
 	/**
 	 * @inheritDoc
 	 */
-	public function to_array() {
-		return $this->address;
+	public function to_array( $whitelisted_only = false ) {
+		return $whitelisted_only ? array_intersect_key( $this->address, static::$defaults ) : $this->address;
 	}
 }

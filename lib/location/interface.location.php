@@ -56,7 +56,9 @@ interface ITE_Location extends ArrayAccess, IteratorAggregate {
 	 *
 	 * @since 2.0.0
 	 *
+	 * @param bool $whitelisted_only Only return the whitelisted ( default ) fields.
+	 *
 	 * @return array
 	 */
-	public function to_array();
+	public function to_array( $whitelisted_only = false );
 }

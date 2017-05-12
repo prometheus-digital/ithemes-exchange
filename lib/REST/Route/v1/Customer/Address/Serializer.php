@@ -46,7 +46,7 @@ class Serializer {
 	public function get_schema() {
 		return array(
 			'$schema'              => 'http://json-schema.org/draft-04/schema#',
-			'title'                => 'address',
+			'title'                => 'customer-address',
 			'type'                 => 'object',
 			'additionalProperties' => false,
 			'properties'           => array(

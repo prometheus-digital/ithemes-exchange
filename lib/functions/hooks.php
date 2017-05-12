@@ -1515,7 +1515,7 @@ function it_exchange_enqueue_profile_js() {
 		return;
 	}
 
-	it_exchange_preload_schemas( 'payment-token', 'customer', 'address' );
+	it_exchange_preload_schemas( 'payment-token', 'customer', 'customer-address' );
 
 	wp_enqueue_script(
 		'it-exchange-profile',

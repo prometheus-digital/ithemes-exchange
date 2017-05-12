@@ -49,11 +49,11 @@ class Serializer {
 		}
 
 		if ( $cart->get_billing_address() ) {
-			$data['billing_address'] = $cart->get_billing_address()->to_array();
+			$data['billing_address'] = $cart->get_billing_address()->to_array( true );
 		}
 
 		if ( $cart->get_shipping_address() ) {
-			$data['shipping_address'] = $cart->get_shipping_address()->to_array();
+			$data['shipping_address'] = $cart->get_shipping_address()->to_array( true );
 		}
 
 		if ( $cart->requires_shipping() ) {
@@ -63,7 +63,7 @@ class Serializer {
 		$items = array();
 
 		foreach ( \ITE_Line_Item_Types::shows_in_rest() as $item_type ) {
-			foreach ( $cart->get_items( $item_type->get_type() ) as $item ) {
+			foreach ( $cart->get_items( $item_type->get_type() )->non_summary_only() as $item ) {
 				$items[] = $item_type->get_rest_serializer()->serialize( $item, $cart );
 			}
 		}
@@ -191,8 +191,9 @@ class Serializer {
 					),
 				),
 				'items'            => array(
-					'context' => array( 'view', 'edit' ),
-					'oneOf'   => $item_references,
+					'context'  => array( 'view', 'edit' ),
+					'oneOf'    => $item_references,
+					'readonly' => true,
 				),
 				'subtotal'         => array(
 					'description' => __( 'The subtotal of the cart.', 'it-l10n-ithemes-exchange' ),

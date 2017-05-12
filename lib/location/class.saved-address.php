@@ -76,7 +76,7 @@ class ITE_Saved_Address extends \IronBound\DB\Model implements ITE_Location {
 	/**
 	 * @inheritDoc
 	 */
-	public function to_array() {
+	public function to_array( $whitelisted_only = false ) {
 		$data = parent::to_array();
 
 		foreach ( $data as $column => $value ) {

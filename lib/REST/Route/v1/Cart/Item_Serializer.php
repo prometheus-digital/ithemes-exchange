@@ -100,7 +100,7 @@ class Item_Serializer {
 		if ( $item instanceof \ITE_Aggregate_Line_Item ) {
 			$data['children'] = array();
 
-			foreach ( $item->get_line_items() as $child ) {
+			foreach ( $item->get_line_items()->non_summary_only() as $child ) {
 
 				$type = \ITE_Line_Item_Types::get( $child->get_type() );
 

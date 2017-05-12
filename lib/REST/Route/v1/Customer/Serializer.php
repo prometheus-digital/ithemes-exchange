@@ -109,7 +109,7 @@ class Serializer {
 							'description' => __( 'The billing address ID.', 'it-l10n-ithemes-exchange' ),
 						),
 						array(
-							'$ref'        => \iThemes\Exchange\REST\url_for_schema( 'address' ),
+							'$ref'        => \iThemes\Exchange\REST\url_for_schema( 'customer-address' ),
 							'description' => __( 'An address object.', 'it-l10n-ithemes-exchange' ),
 						),
 					)
@@ -123,7 +123,7 @@ class Serializer {
 							'description' => __( 'The shipping address ID.', 'it-l10n-ithemes-exchange' ),
 						),
 						array(
-							'$ref'        => \iThemes\Exchange\REST\url_for_schema( 'address' ),
+							'$ref'        => \iThemes\Exchange\REST\url_for_schema( 'customer-address' ),
 							'description' => __( 'An address object.', 'it-l10n-ithemes-exchange' ),
 						),
 					)
