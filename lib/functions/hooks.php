@@ -1210,6 +1210,10 @@ function it_exchange_process_compatibility_mode_login() {
 		return;
 	}
 
+	if ( ! isset( $_GET['it_exchange_login'] ) ) {
+	    return;
+    }
+
 	if ( isset( $_POST['pwd'], $_POST['log'] ) ) {
 		$errors = wp_signon();
 

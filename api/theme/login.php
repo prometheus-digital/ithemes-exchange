@@ -108,7 +108,7 @@ class IT_Theme_API_Login implements IT_Theme_API {
 		$action = site_url( 'wp-login.php', 'login_post' );
 
 		if ( apply_filters( 'it_exchange_login_page_use_compatibility_mode', false ) ) {
-			$action = it_exchange_get_page_url( 'login' );
+			$action = add_query_arg( 'it_exchange_login', 1, it_exchange_get_page_url( 'login' ) );
 		}
 
 		$action = add_query_arg( 'redirect_to', urlencode( $options['redirect'] ), $action );

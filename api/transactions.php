@@ -234,11 +234,11 @@ function it_exchange_get_transaction_by_cart_id( $cart_id ) {
 function it_exchange_generate_transaction_object( ITE_Cart $cart = null ) {
 
 	// Verify products exist
-	$cart          = $cart ? $cart : it_exchange_get_current_cart();
+	$cart          = $cart ?: it_exchange_get_current_cart();
 	$cart_products = $cart->get_items( 'product' );
 
 	if ( $cart->get_items()->count() < 1 ) {
-		do_action( 'it_exchange_error-no_products_to_purchase' );
+		do_action( 'it_exchange_error-no_products_to_purchase', $cart );
 		it_exchange_add_message(
 			'error', __( 'You cannot checkout without any items in your cart.', 'it-l10n-ithemes-exchange' )
 		);
@@ -261,9 +261,7 @@ function it_exchange_generate_transaction_object( ITE_Cart $cart = null ) {
 	}
 
 	// Grab default currency
-	$settings = it_exchange_get_option( 'settings_general' );
 	$currency = $cart->get_currency_code();
-	unset( $settings );
 
 	$products = array();
 
@@ -286,7 +284,7 @@ function it_exchange_generate_transaction_object( ITE_Cart $cart = null ) {
 	$transaction_object->total                  = $cart_total;
 	$transaction_object->sub_total              = $cart_sub_total;
 	$transaction_object->currency               = $currency;
-	$transaction_object->description            = it_exchange_get_cart_description( array( 'cart' => $cart ) );
+	$transaction_object->description            = $cart->get_description();
 	$transaction_object->products               = $products;
 
 	$coupon_data = array();
