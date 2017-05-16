@@ -287,8 +287,6 @@ class ITE_File_Logger extends \Psr\Log\AbstractLogger implements ITE_Purgeable_L
 	/**
 	 * Converts a value of unknown type to a string.
 	 *
-	 * @since 2.0.0
-	 *
 	 * @param mixed $value
 	 *
 	 * @return string
@@ -304,9 +302,11 @@ class ITE_File_Logger extends \Psr\Log\AbstractLogger implements ITE_Purgeable_L
 
 		if ( is_object( $value ) ) {
 
-			if ( $value instanceof \DateTime || ( interface_exists( '\DateTimeInterface' ) && $value instanceof \DateTimeInterface ) ) {
+			if ( $value instanceof \Exception || $value instanceof \Throwable ) {
+				return '(' . get_class( $value ) . "#{$value->getCode()}:{$value->getMessage()})";
+			} elseif ( $value instanceof \DateTime || ( interface_exists( '\DateTimeInterface' ) && $value instanceof \DateTimeInterface ) ) {
 				return $value->format( \DateTime::ATOM );
-			} else if ( method_exists( $value, '__toString' ) ) {
+			} elseif ( method_exists( $value, '__toString' ) ) {
 				return (string) $value;
 			} else {
 
@@ -324,20 +324,24 @@ class ITE_File_Logger extends \Psr\Log\AbstractLogger implements ITE_Purgeable_L
 			return $value;
 		}
 
+		if ( $value === null ) {
+			return '(Null)';
+		}
+
 		return '(Invalid)';
 	}
 
 	/**
 	 * Check if a value is a resource.
 	 *
-	 * @since 2.0
+	 * @since 1.0
 	 *
 	 * @param $maybe_resource
 	 *
 	 * @return bool
 	 */
 	protected function is_resource( $maybe_resource ) {
-		return ! is_null( @get_resource_type( $maybe_resource ) );
+		return null !== @get_resource_type( $maybe_resource );
 	}
 
 	/**

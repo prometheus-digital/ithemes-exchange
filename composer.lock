@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "a8f8085c3aef07beaa7e9b9514722245",
+    "content-hash": "e3a595d17aa89f56d14747bfc80d29c4",
     "packages": [
         {
             "name": "asika/autolink",
@@ -309,16 +309,16 @@
         },
         {
             "name": "ironbound/db-logger",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/iron-bound-designs/IronBound-DB-Logger.git",
-                "reference": "bafe435ff5d74e776e365efed8f17f634b210429"
+                "reference": "30a32840e4da2d2d69a237352d6835a3e61b1e45"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/iron-bound-designs/IronBound-DB-Logger/zipball/bafe435ff5d74e776e365efed8f17f634b210429",
-                "reference": "bafe435ff5d74e776e365efed8f17f634b210429",
+                "url": "https://api.github.com/repos/iron-bound-designs/IronBound-DB-Logger/zipball/30a32840e4da2d2d69a237352d6835a3e61b1e45",
+                "reference": "30a32840e4da2d2d69a237352d6835a3e61b1e45",
                 "shasum": ""
             },
             "require": {
@@ -345,7 +345,7 @@
                 }
             ],
             "description": "PSR-3 Logger for WordPress using IronBound-DB",
-            "time": "2017-04-24T03:39:53+00:00"
+            "time": "2017-05-16T16:03:15+00:00"
         },
         {
             "name": "ironbound/wpevents",
