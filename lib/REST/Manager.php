@@ -497,7 +497,7 @@ class Manager {
 				continue;
 			}
 
-			if ( ! empty( $_['createonly'] ) && $request->get_method() === 'POST' ) {
+			if ( ! empty( $_['createonly'] ) && $request->get_method() !== 'POST' ) {
 				$schema_object->properties->$property->required = false;
 			}
 
