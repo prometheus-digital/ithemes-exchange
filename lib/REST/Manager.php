@@ -806,11 +806,26 @@ class Manager {
 		$authorization = trim( wp_unslash( $_SERVER['HTTP_AUTHORIZATION'] ) );
 		$regex         = '/ITHEMES-EXCHANGE-GUEST\s?email="(\S+)"/i';
 
+		/**
+		 * Filter whether REST authentication errors should be logged.
+		 *
+		 * This has the possibility of including sensitive data in log files, so it is disabled by default.
+		 * This should never be enabled on production or any scenario where legitimate credentials would be used.
+		 *
+		 * @since 2.0.0
+		 *
+		 * @param bool $log_auth_errors
+		 */
+		$log_auth_errors = apply_filters( 'it_exchange_log_rest_auth_errors', false );
+
 		if ( ! preg_match( $regex, $authorization, $matches ) ) {
-			it_exchange_log( 'REST auth attempt made with invalid Guest Checkout authorization format: {auth}', \ITE_Log_Levels::DEBUG, array(
-				'auth'   => $authorization,
-				'_group' => 'REST',
-			) );
+
+			if ( $log_auth_errors ) {
+				it_exchange_log( 'REST auth attempt made with invalid Guest Checkout authorization format: {auth}', \ITE_Log_Levels::DEBUG, array(
+					'auth'   => $authorization,
+					'_group' => 'REST',
+				) );
+			}
 
 			return $authed;
 		}
@@ -828,10 +843,12 @@ class Manager {
 		}
 
 		if ( empty( $matches[1] ) || ! is_email( $matches[1] ) ) {
-			it_exchange_log( 'Guest Checkout REST auth attempt made with invalid email: {email}', \ITE_Log_Levels::DEBUG, array(
-				'email'  => $matches[1],
-				'_group' => 'REST',
-			) );
+			if ( $log_auth_errors ) {
+				it_exchange_log( 'Guest Checkout REST auth attempt made with invalid email: {email}', \ITE_Log_Levels::DEBUG, array(
+					'email'  => $matches[1],
+					'_group' => 'REST',
+				) );
+			}
 
 			return new \WP_Error(
 				'it_exchange_rest_authentication_failed',
