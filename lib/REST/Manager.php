@@ -12,11 +12,13 @@ use iThemes\Exchange\REST\Auth\AuthScope;
 use iThemes\Exchange\REST\Auth\CustomerAuthScope;
 use iThemes\Exchange\REST\Auth\GuestAuthScope;
 use iThemes\Exchange\REST\Auth\PublicAuthScope;
+use iThemes\Exchange\REST\Helpers\UriResolver;
 use iThemes\Exchange\REST\Middleware\Stack;
 use iThemes\Exchange\REST\Route\Base;
 use iThemes\Exchange\REST\Route\v1\Cart\Purchase;
 use JsonSchema\Constraints\Constraint;
 use JsonSchema\Constraints\Factory;
+use JsonSchema\Exception\ResourceNotFoundException;
 use JsonSchema\SchemaStorage;
 use JsonSchema\Uri\Retrievers\PredefinedArray;
 use JsonSchema\Uri\UriRetriever;
@@ -175,14 +177,65 @@ class Manager {
 		$this->uri_retreiver = new UriRetriever();
 		$this->uri_retreiver->setUriRetriever( $strategy );
 
-		$this->schema_storage = new SchemaStorage( $this->uri_retreiver );
+		$this->schema_storage = new SchemaStorage( $this->uri_retreiver, new UriResolver() );
 
 		add_filter( 'rest_authentication_errors', array( $this, 'authenticate' ), 20 );
 		add_filter( 'rest_dispatch_request', array( $this, 'conform_request_to_schema' ), 10, 4 );
 
 		$this->initialized = true;
+		$this->register_schema_route();
 
 		return $this;
+	}
+
+	/**
+	 * Register the REST Route to show schemas.
+	 *
+	 * @since 1.0.0
+	 */
+	protected function register_schema_route() {
+		register_rest_route( $this->namespace, '/schemas/(?P<title>\S+)', array(
+			'args'     => array(
+				'method' => array(
+					'description' => __( 'HTTP Method', 'it-l10n-ithemes-exchange' ),
+					'type'        => 'string',
+					'enum'        => array( 'GET', 'POST', 'PUT', 'PATCH', 'DELETE' ),
+				)
+			),
+			'methods'  => 'GET',
+			'callback' => array( $this, 'get_schema_endpoint' )
+		) );
+	}
+
+	/**
+	 * REST endpoint for retrieving a schema.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param \WP_REST_Request $request
+	 *
+	 * @return \WP_Error|\WP_REST_Response
+	 */
+	public function get_schema_endpoint( \WP_REST_Request $request ) {
+
+		$title  = $request['title'];
+		$schema = null;
+
+		try {
+			$url    = url_for_schema( $request['method'] ? $title . '-' . strtolower( $request['method'] ) : $title );
+			$schema = $this->schema_storage->getSchema( $url );
+		} catch ( ResourceNotFoundException $e ) {
+
+			if ( ! $schema ) {
+				return new \WP_Error(
+					'it_exchange_rest_schema_not_found',
+					__( 'Schema not found.', 'it-l10n-ithemes-exchange' ),
+					array( 'status' => \WP_Http::NOT_FOUND )
+				);
+			}
+		}
+
+		return new \WP_REST_Response( json_decode( wp_json_encode( $schema ), true ) );
 	}
 
 	/**

@@ -18,9 +18,6 @@ class Request extends \WP_REST_Request {
 	/** @var Route */
 	private $matched_route_controller;
 
-	/** @var \ITE_Cart|null */
-	private $cart;
-
 	/** @var array */
 	private $route_objects = array();
 

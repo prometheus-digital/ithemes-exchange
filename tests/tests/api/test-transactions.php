@@ -435,7 +435,9 @@ class IT_Exchange_API_Transactions_Test extends IT_Exchange_UnitTestCase {
 
 		$desc = 'My description';
 
-		WP_Mock::wpFunction( 'it_exchange_get_cart_description', array( 'return' => $desc ) );
+		add_filter( 'it_exchange_get_cart_description', function () use ( $desc ) {
+			return $desc;
+		} );
 
 		$txn = self::transaction_factory()->create();
 

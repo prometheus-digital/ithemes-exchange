@@ -363,7 +363,7 @@ function response_to_array( \WP_REST_Response $response ) {
  * @return string
  */
 function url_for_schema( $title ) {
-	return "https://api.ithemes.com/exchange/schemas/$title";
+	return rest_url( get_rest_manager()->get_namespace() . "/schemas/{$title}" );
 }
 
 /**
