@@ -172,9 +172,8 @@ class Serializer {
 							'type'        => 'integer',
 							'description' => __( 'Billing address id.', 'it-l10n-ithemes-exchange' ),
 						),
-						array(
-							'$ref' => \iThemes\Exchange\REST\url_for_schema( 'address' )
-						)
+						array( '$ref' => \iThemes\Exchange\REST\url_for_schema( 'address' ) ),
+						array( 'type' => 'null' ),
 					),
 				),
 				'shipping_address' => array(
@@ -185,9 +184,8 @@ class Serializer {
 							'type'        => 'integer',
 							'description' => __( 'Shipping address id.', 'it-l10n-ithemes-exchange' ),
 						),
-						array(
-							'$ref' => \iThemes\Exchange\REST\url_for_schema( 'address' )
-						)
+						array( '$ref' => \iThemes\Exchange\REST\url_for_schema( 'address' ) ),
+						array( 'type' => 'null' ),
 					),
 				),
 				'items'            => array(
