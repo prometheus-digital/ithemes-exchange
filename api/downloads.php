@@ -359,7 +359,7 @@ function it_exchange_serve_product_download( $hash_data ) {
 	do_action( 'it_exchange_serve_download_file', $download_info );
 
 	// Attempt to grab file
-	if ( $response = wp_remote_head( str_replace( ' ', '%20', $url ) ) ) {
+	if ( $response = wp_remote_head( str_replace( ' ', '%20', $url ), array( 'redirection' => 5 ) ) ) {
 		if ( ! is_wp_error( $response ) ) {
 			$valid_response_codes = array(
 				200,

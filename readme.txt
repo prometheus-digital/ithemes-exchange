@@ -2,8 +2,8 @@
 Contributors: ithemes, blepoxp, layotte, aaroncampbell, mattdanner
 Tags: ecommerce
 Requires at least: 3.7
-Tested up to: 4.7
-Stable tag: 1.36.4
+Tested up to: 4.8
+Stable tag: 1.36.5
 License: GPLv2 or later
 
 Easily sell your digital and physical products with iThemes Exchange, simple ecommerce for WordPress
@@ -87,6 +87,11 @@ Upload the Exchange plugin to your blog, activate it and enable the Digital Down
 http://ithemes.com/codex/page/Exchange_Installation
 
 == Changelog ==
+= 1.36.5 =
+* Fix: Ensure invalid transaction activity items are not returned.
+* Fix: PHP 7.1 compatibility.
+* Fix: Follow redirects when serving downloads.
+
 = 1.36.4 =
 * Fix: Account for new return types in iThemes Security reCaptcha Module
 
