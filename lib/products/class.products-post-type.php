@@ -83,7 +83,7 @@ class IT_Exchange_Product_Post_Type {
 		if ( is_admin() && ! empty( $post_type ) && 'it_exchange_prod' == $post_type ) {
 
 			// Preserve existing meta_query
-			$meta_query = $query->get( 'meta_query' );
+			$meta_query = $query->get( 'meta_query', array() );
 
 			// Add ours to existing
 			$meta_query[] = array(
