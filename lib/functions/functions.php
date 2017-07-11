@@ -1507,39 +1507,6 @@ function it_exchange_at_a_glance( $elements ) {
 }
 add_filter( 'dashboard_glance_items', 'it_exchange_at_a_glance' );
 
-/**
- * Adds notification about Sync Integration for users with admin rights
- *
- * @since 1.10.0
- *
- * @return void
-*/
-function it_exchange_show_ithemes_sync_integration_nag() {
-	$show_nag = true;
-
-	// Get current user
-	$current_user = wp_get_current_user();
-
-	// If nag is being dismissed, dismiss it.
-    if ( ! empty( $_GET['it-exchange-dismiss-sync-integration-nag'] ) ) {
-		update_user_meta( $current_user->ID, '_it_exchange_dismiss_sync_nag', true );
-		$show_nag = false;
-	}
-
-	// Check for dismissed tag
-	if ( $show_nag )
-		$show_nag = ( true == get_user_meta( $current_user->ID, '_it_exchange_dismiss_sync_nag', true ) ) ? false : true;
-
-	if ( ! current_user_can( 'manage_options' ) )
-		$show_nag = false;
-
-    if ( ! empty( $show_nag ) ) {
-        $more_info_url   = 'http://ithemes.com/2014/06/24/track-sales-sync-new-ithemes-exchange-integration/';
-        $dismiss_url = add_query_arg( array( 'it-exchange-dismiss-sync-integration-nag' => 1 ) ); // escaped before printed
-        include( dirname( dirname( __FILE__) ) . '/admin/views/admin-ithemes-sync-integration-notice.php' );
-    }
-}
-add_action( 'admin_notices', 'it_exchange_show_ithemes_sync_integration_nag' );
 
 /**
  * This should only run once on update.
