@@ -3,7 +3,7 @@
  * Plugin Name: ExchangeWP
  * Version: 1.36.6
  * Text Domain: it-l10n-ithemes-exchange
- * Description: Easily sell your digital goods with Exchange, simple ecommerce for WordPress
+ * Description: Easily sell your digital goods with ExchangeWP, simple ecommerce for WordPress
  * Plugin URI: https://exchangewp.com
  * Author: ExchangeWP
  * Author URI: https://exchangewp.com
