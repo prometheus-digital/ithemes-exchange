@@ -1,12 +1,12 @@
 <?php
 /*
- * Plugin Name: iThemes Exchange
- * Version: 1.36.5
+ * Plugin Name: ExchangeWP
+ * Version: 1.36.6
  * Text Domain: it-l10n-ithemes-exchange
- * Description: Easily sell your digital goods with iThemes Exchange, simple ecommerce for WordPress
- * Plugin URI: http://ithemes.com/exchange/
- * Author: iThemes
- * Author URI: http://ithemes.com
+ * Description: Easily sell your digital goods with Exchange, simple ecommerce for WordPress
+ * Plugin URI: https://exchangewp.com
+ * Author: ExchangeWP
+ * Author URI: https://exchangewp.com
  *
  * Installation:
  * 1. Download and unzip the latest release zip file.
@@ -24,7 +24,7 @@
 */
 class IT_Exchange {
 
-	var $_version         = '1.36.5';
+	var $_version         = '1.36.6';
 	var $_wp_minimum      = '3.5';
 	var $_slug            = 'ithemes-exchange';
 	var $_name            = 'iThemes Exchange';
