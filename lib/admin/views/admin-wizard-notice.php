@@ -10,7 +10,7 @@
 	<?php
 	$wizard_link    = add_query_arg( array( 'page' => 'it-exchange-setup' ), admin_url( 'admin.php' ) );
 	$wizard_dismiss = add_query_arg( array( 'it_exchange_settings-dismiss-wizard-nag' => true ) );
-	echo __( 'iThemes Exchange is now installed.', 'it-l10n-ithemes-exchange' ) . ' <a class="btn" href="' . esc_url( $wizard_link ) . '">' . __( 'Go to Quick Setup', 'it-l10n-ithemes-exchange' ) . '</a>';
+	echo __( 'ExchangeWP is now installed.', 'it-l10n-ithemes-exchange' ) . ' <a class="btn" href="' . esc_url( $wizard_link ) . '">' . __( 'Go to Quick Setup', 'it-l10n-ithemes-exchange' ) . '</a>';
 	?>
 	<a class="dismiss btn" href="<?php esc_url( $wizard_dismiss ); ?>">&times;</a>
 </div>
