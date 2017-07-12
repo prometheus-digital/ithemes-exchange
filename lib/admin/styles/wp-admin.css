@@ -20,4 +20,4 @@
 
 /** ----------------------------------------:[ add-ons menu item ]:------ */
 #adminmenu .wp-submenu a[href|="admin.php?page=it-exchange-addons"],
-#adminmenu .wp-submenu li.current a[href|="admin.php?page=it-exchange-addons"]{ color:#8cc53e; }
+#adminmenu .wp-submenu li.current a[href|="admin.php?page=it-exchange-addons"]{ color:#00af66; }
