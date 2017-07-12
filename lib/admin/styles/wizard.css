@@ -21,7 +21,7 @@
 .it-exchange-wizard .hide-if-wizard{display: none;}
 .it-exchange-wizard .it-exchange-addon-settings {max-width:960px;}
 
-.it-exchange-wizard .tip{display:inline-block;text-align:center;background:#d7f7a9;border:1px solid #b4d18c;border:1px solid transparent;color:#8fd034;border-radius:50%;font-size:8px;line-height:1.6;height:12px;width:12px;cursor:pointer;margin:2px 0 0 5px;-webkit-transition:all .1s linear;-moz-transition:all .1s lin}
+.it-exchange-wizard .tip{display:inline-block;text-align:center;background:#007a5a;border:1px solid #b4d18c;border:1px solid transparent;color:#8fd034;border-radius:50%;font-size:8px;line-height:1.6;height:12px;width:12px;cursor:pointer;margin:2px 0 0 5px;-webkit-transition:all .1s linear;-moz-transition:all .1s lin}
 .it-exchange-wizard .tip:hover{background:#a6de56;border-color:#a6df57;color:#334940;}
 .ui-tooltip2{box-shadow:0 0 12px rgba(0,0,0,0.05);background:#F3FCE6;border:1px solid #D8E9C1;border-radius:4px;font-family:'Open Sans','Helvetica Neue',sans-serif;font-size:13px;}
 .ui-tooltip{box-shadow:none;background:rgba(166,222,86,0.9);color:#334940;border:none;border-radius:4px;padding:11px 14px;font-size:13px;line-height:1.4;}
@@ -102,7 +102,7 @@
 .it-exchange-wizard .add-on-banner a:hover{background:#A6E054;color:#334940;}
 .it-exchange-wizard .add-on-banner a:active{outline:none;position:relative;top:2px;box-shadow:0 2px 0 -1px #283732;}
 
-@media screen and (max-width: 745px) { 
+@media screen and (max-width: 745px) {
 	.it-exchange-wizard .pro-pack-wizard .pro-pack-right-column {float:left;text-align:left;}
 	.it-exchange-wizard .pro-pack-wizard .pro-pack-right-column .pro-pack-cta {float:left;}
 }

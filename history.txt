@@ -1324,3 +1324,6 @@
 	Fix: Ensure invalid transaction activity items are not returned.
 	Fix: PHP 7.1 compatibility.
 	Fix: Follow redirects when serving downloads.
+1.36.6 - AJ Morris
+	Tweak: New branding, ExchangeWP
+	Tweak: Create Developer Emeriti section of Readme.

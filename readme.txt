@@ -1,17 +1,17 @@
-=== iThemes Exchange: Simple WP Ecommerce ===
-Contributors: ithemes, blepoxp, layotte, aaroncampbell, mattdanner
+=== ExchangeWP: Simple WP Ecommerce ===
+Contributors: ExchangeWP, ajmorris
 Tags: ecommerce
 Requires at least: 3.7
 Tested up to: 4.8
-Stable tag: 1.36.5
+Stable tag: 1.36.6
 License: GPLv2 or later
 
-Easily sell your digital and physical products with iThemes Exchange, simple ecommerce for WordPress
+Easily sell your digital and physical products with ExchangeWP, simple ecommerce for WordPress
 
 == Description ==
 
 = Sell Your Stuff Online in Under 5 Minutes =
-iThemes Exchange makes it easy to get your store up and running quickly by making the process simple. Just install, activate, choose your payment methods and start adding your products.
+ExchangeWP makes it easy to get your store up and running quickly by making the process simple. Just install, activate, choose your payment methods and start adding your products.
 
 = A Simple Interface =
 Your products are not blog posts. So we created an experience that makes creating products simpler and more intuitive.
@@ -85,6 +85,9 @@ Use the WordPress WSIWYG editor to make custom email templates for Admin Sales N
 
 Upload the Exchange plugin to your blog, activate it and enable the Digital Downloads add-on and a transaction method add-on. For more information, visit:
 http://ithemes.com/codex/page/Exchange_Installation
+
+== Developer Emeriti ==
+ithemes, blepoxp, layotte, aaroncampbell, mattdanner
 
 == Changelog ==
 = 1.36.5 =
@@ -260,7 +263,7 @@ http://ithemes.com/codex/page/Exchange_Installation
 * Fix bug causing shipping method overrise save issues when PHP Suhosin is compiled
 * Changing registration and login page default redirects to account page rather than profile page
 
-= 1.28.0 = 
+= 1.28.0 =
 * PHP7 Updates from Timothy Jacobs (Iron Bound Design)
 * Fix for Inventory Bug from Timothy Jacobe (Iron Bound Design)
 * Bug fix for race condition when PayPal IPN comes before PDT
@@ -268,7 +271,7 @@ http://ithemes.com/codex/page/Exchange_Installation
 = 1.27.0 =
 * Changing init priority for db sessions, to happen before widget_init
 
-= 1.26.0 = 
+= 1.26.0 =
 * Fix for registartion and checkout redirect bug
 
 = 1.25.0 =
@@ -358,7 +361,7 @@ http://ithemes.com/codex/page/Exchange_Installation
 
 = 1.11.17 =
 * Added filter to shipping address and method requirement
-* Added cart object verification to PayPal processing 
+* Added cart object verification to PayPal processing
 
 = 1.11.16 =
 * Fix for DB Session bloat bug
@@ -377,7 +380,7 @@ http://ithemes.com/codex/page/Exchange_Installation
 * Fix bug causing all categories in product dropdown widget to have 'selected' attribute
 * Update custom dropdown_category function to reflect WP Core changeset https://core.trac.wordpress.org/changeset/31024.
 * Sort addons by display name rather than addon-slug
-* Preserve logged in Guest when updating shipping method on Cart page 
+* Preserve logged in Guest when updating shipping method on Cart page
 * Add ability for store owners to change Guest Checkout heading text and button labels
 
 = 1.11.13 =
@@ -418,7 +421,7 @@ http://ithemes.com/codex/page/Exchange_Installation
 
 = 1.11.7 =
 * Don't pre-check box to mailchimp subscription in Exchange Startup Wizard
-* Fix for DB Session Cleanup 
+* Fix for DB Session Cleanup
 * Add a filter to the individual product description when generated for the cart description
 * Add product-[ID] and product-[product-type] class names to store product li elementes by default. Make filterable as well.
 
@@ -680,7 +683,7 @@ http://ithemes.com/codex/page/Exchange_Installation
 * Fixed issue with admin menu icons not functioning properly on sites that have an ABSPATH or WP_CONTENT_DIR of "/".
 
 = 1.7.23 =
-* Fix registration call for Cart and Checkout pages	
+* Fix registration call for Cart and Checkout pages
 * Fixed for Pages tab not showing Page Types set to WordPress or Disabled
 
 = 1.7.22 =
