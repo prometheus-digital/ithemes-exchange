@@ -33,14 +33,14 @@
 .it-exchange-button:active{outline:none;box-shadow:inset 0 -2px 10px #C0DB9D;color:#446551;}
 
 /** -----------------------------------------------------:[ tooltip ]:---------- */
-.tip,.it-exchange-tip{display:inline-block;text-align:center;background:#D8EAC2;border:1px solid #b4d18c;border:1px solid transparent;color:#8fd034;border-radius:50%;font-family:sans-serif;font-size:8px;line-height:1.6;height:12px;width:12px;cursor:pointer;margin:2px 0 0 5px;-webkit-transition:all .1s linear;-moz-transition:all .1s lin}
+.tip,.it-exchange-tip{display:inline-block;text-align:center;background:#00af66;color:#fff;border-radius:50%;font-family:sans-serif;font-size:8px;line-height:1.6;height:12px;width:12px;cursor:pointer;margin:2px 0 0 5px;-webkit-transition:all .1s linear;-moz-transition:all .1s lin}
 .tip:hover,.it-exchange-tip:hover{background:#a6de56;border-color:#a6df57;color:#334940;}
 .ui-tooltip{position:absolute;z-index:9999;max-width:300px;box-shadow:none;background:#A6DE56;color:#334940;border:none;border-radius:4px;padding:11px 14px;font-size:13px;line-height:1.4;}
 
 /** ----------------------------------------:[ dialog ]:--- */
 .it-exchange-tip-dialog{padding-top:20px !important; position: absolute; z-index: 10;}
-.it-exchange-tip-dialog a{cursor:pointer;outline:none;}
-.it-exchange-tip-dialog .ui-dialog-content{background:#A6DE56 !important;color:#334940;border:none;border-radius:4px;padding:10px 12px !important;font-size:13px;font-weight:normal;line-height:1.4;max-width:300px;}
+.it-exchange-tip-dialog a{cursor:pointer;outline:none;color:#3d7aca !important;}
+.it-exchange-tip-dialog .ui-dialog-content{background:#00af66 !important;color:#fff;border:none;border-radius:4px;padding:10px 12px !important;font-size:13px;font-weight:normal;line-height:1.4;max-width:300px;}
 .it-exchange-tip-dialog .ui-dialog-titlebar{display:none;}
 
 /** -----------------------------------------------------:[ input fix ]:---------- */
