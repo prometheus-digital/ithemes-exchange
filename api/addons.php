@@ -334,6 +334,7 @@ function it_exchange_get_disabled_addons( $options=array() ) {
 */
 function it_exchange_get_more_addons( $options=array() ) {
 	// Grab all registered add-ons
+	// Need to change this to ExchangeWP Add-ons list.
 	$remote_get = wp_remote_get( 'https://api.ithemes.com/exchange/addons/' );
 
 	// Return empty array if remote_get errored out.

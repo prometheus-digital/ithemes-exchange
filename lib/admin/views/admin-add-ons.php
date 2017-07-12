@@ -17,7 +17,7 @@
 	<?php
 		$tab = ! empty( $_REQUEST['tab'] ) ? $_REQUEST['tab'] : 'all';
 		$propack = false;
-		
+
 		switch ( $tab ) {
 			case 'enabled':
 				$addons = it_exchange_get_enabled_addons( array( 'show_required' => false ) );
