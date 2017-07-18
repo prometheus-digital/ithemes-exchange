@@ -100,6 +100,10 @@ class IT_Exchange_Admin {
 		add_filter( 'it_exchange_general_settings_tab_callback_pages', array( $this, 'register_pages_settings_tab_callback' ) );
 		add_action( 'it_exchange_print_general_settings_tab_links', array( $this, 'print_pages_settings_tab_link' ) );
 
+		// License settings callback
+		add_filter( 'it_exchange_general_settings_tab_callback_license', array( $this, 'register_license_settings_tab_callback' ) );
+		add_action( 'it_exchange_print_general_settings_tab_links', array( $this, 'print_license_settings_tab' ) );
+
 		// General Settings Defaults
 		add_filter( 'it_storage_get_defaults_exchange_settings_general', array( $this, 'set_general_settings_defaults' ) );
 
@@ -134,6 +138,12 @@ class IT_Exchange_Admin {
 		add_filter( 'plugin_row_meta', array( $this, 'it_exchange_plugin_row_meta' ), 10, 4 );
 
 		add_action( 'admin_footer', array( $this, 'add_store_link_to_product_saved_message' ) );
+
+		// Build License checker and activation functionality
+		// add_action( 'admin_init', array( $this, 'edd_sample_register_option' ) );
+		// add_action( 'admin_init', array( $this, 'edd_sample_deactivate_license' ) );
+		// add_action( 'admin_init', array( $this, 'edd_sample_activate_license' ) );
+		// add_action( 'admin_notices', array( $this, 'edd_sample_admin_notices' ) );
 	}
 
 	/**
@@ -153,7 +163,7 @@ class IT_Exchange_Admin {
 	/**
 	 * Returns the admin_menu_capability
 	 *
-	 * @since 1.11.15 
+	 * @since 1.11.15
 	 *
 	 * @return string
 	*/
@@ -408,6 +418,7 @@ class IT_Exchange_Admin {
 		}
 		add_submenu_page( 'it-exchange', 'iThemes Exchange Add-ons', 'Add-ons', $this->get_admin_menu_capability( 'it-exchange-addons' ), 'it-exchange-addons', $add_ons_callback );
 
+		// add_submenu_page( 'it-exchange', 'ExchangeWP Add-on Licenses', 'Licenses', $this->get_admin_menu_capability( 'it-exchange-licenses' ), 'it-exchange-licenses', array( $this, 'print_license_page') );
 		// Help menu
 		add_submenu_page( 'it-exchange', __( 'Help', 'it-l10n-ithemes-exchange' ), __( 'Help', 'it-l10n-ithemes-exchange' ), $this->get_admin_menu_capability( 'it-exchange-help' ), 'it-exchange-help', array( $this, 'print_help_page' ) );
 	}
@@ -503,6 +514,29 @@ class IT_Exchange_Admin {
 	}
 
 	/**
+		 * Registers the callback for the license tab
+		 *
+		 * @param mixed default callback for general settings.
+		 * @since 0.3.4
+		 * @return mixed function or class method name
+		*/
+		function register_license_settings_tab_callback( $default ) {
+			return array( $this, 'print_license_settings_page' );
+		}
+
+	/**
+	 * Prints the license tab for general settings
+	 *
+	 * @since 0.3.7
+	 * @param $current_tab the current tab
+	 * @return void
+	*/
+	function print_license_settings_tab( $current_tab ) {
+		$active = 'license' == $current_tab ? 'nav-tab-active' : '';
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-settings&tab=license' ); ?>"><?php _e( 'License', 'it-l10n-ithemes-exchange' ); ?></a><?php
+	}
+
+	/**
 	 * Prints the tabs for the iThemes Exchange Add-ons Page
 	 *
 	 * @since 0.4.0
@@ -580,6 +614,16 @@ class IT_Exchange_Admin {
 		$active = 'get-more' == $current_tab ? 'nav-tab-active' : '';
 		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-addons&tab=get-more' ); ?>"><?php _e( 'Get More', 'it-l10n-ithemes-exchange' ); ?></a><?php
 	}
+
+	/**
+	 * Prints the license page for ExchangeWP
+	 *
+	 * @since 1.36.6
+	 * @return void
+	*/
+	// function print_license_page() {
+	// 	include( 'views/admin-license.php' );
+	// }
 
 	/**
 	 * Prints the help/support page for iThemes Exchange
@@ -736,6 +780,29 @@ Order: %s
 		if ( ! empty( $this->error_message ) )
 			ITUtility::show_error_message( $this->error_message );
 		include( 'views/admin-email-settings.php' );
+	}
+
+	/**
+	 * Prints the license page for iThemes Exchange
+	 *
+	 * @since 0.3.4
+	 * @return void
+	*/
+	function print_license_settings_page() {
+		$flush_cache  = ! empty( $_POST );
+		$settings     = it_exchange_get_option( 'settings_license', $flush_cache );
+		$form_values  = empty( $this->error_message ) ? $settings : ITForm::get_post_data();
+		$form         = new ITForm( $form_values, array( 'prefix' => 'it_exchange_license_settings' ) );
+		$form_options = array(
+			'id'      => apply_filters( 'it_exchange_license_settings_form_id', 'it-exchange-license-settings' ),
+			'enctype' => apply_filters( 'it_exchange_license_settings_form_enctype', false ),
+			'action'  => 'admin.php?page=it-exchange-settings&tab=license',
+		);
+		if ( ! empty ( $this->status_message ) )
+			ITUtility::show_status_message( $this->status_message );
+		if ( ! empty( $this->error_message ) )
+			ITUtility::show_error_message( $this->error_message );
+		include( 'views/admin-license.php' );
 	}
 
 	/**
@@ -1640,7 +1707,7 @@ Order: %s
 		// All admin exchange pages
 		if ( preg_match('|(it_exchange)|i', str_replace( '-', '_', $hook_suffix ) ) || ( isset( $post_type ) && preg_match('|(it_exchange)|i', str_replace( '-', '_', $post_type ) ) ) ) {
 			wp_enqueue_style( 'it-exchange-exchange-only-admin', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/exchange-admin.css' );
-			
+
 			if ( $wp_version <= 3.7 ) {
 				wp_enqueue_style( 'it-exchange-exchange-only-admin-pre-3.8', ITUtility::get_url_from_file( dirname( __FILE__ ) ) . '/styles/exchange-admin-pre-3.8.css' );
 			}
