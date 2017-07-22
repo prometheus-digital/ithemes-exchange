@@ -307,7 +307,7 @@ add_action( 'admin_init', 'edd_sl_sample_plugin_updater', 0 );
 *************************************/
 
 function edd_sample_license_menu() {
-	add_plugins_page( 'Plugin License', 'Plugin License', 'manage_options', EDD_SAMPLE_PLUGIN_LICENSE_PAGE, 'edd_sample_license_page' );
+	// add_plugins_page( 'Plugin License', 'Plugin License', 'manage_options', EDD_SAMPLE_PLUGIN_LICENSE_PAGE, 'edd_sample_license_page' );
 }
 add_action('admin_menu', 'edd_sample_license_menu');
 
