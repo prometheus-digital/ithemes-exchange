@@ -418,7 +418,8 @@ class IT_Exchange_Admin {
 		}
 		add_submenu_page( 'it-exchange', 'iThemes Exchange Add-ons', 'Add-ons', $this->get_admin_menu_capability( 'it-exchange-addons' ), 'it-exchange-addons', $add_ons_callback );
 
-		// add_submenu_page( 'it-exchange', 'ExchangeWP Add-on Licenses', 'Licenses', $this->get_admin_menu_capability( 'it-exchange-licenses' ), 'it-exchange-licenses', array( $this, 'print_license_page') );
+		$license_callback = array( $this, 'print_license_page' );
+		add_submenu_page( 'it-exchange', 'ExchangeWP Add-on Licenses', 'Licenses', $this->get_admin_menu_capability( 'it-exchange-licenses' ), 'it-exchange-licenses', $license_callback );
 		// Help menu
 		add_submenu_page( 'it-exchange', __( 'Help', 'it-l10n-ithemes-exchange' ), __( 'Help', 'it-l10n-ithemes-exchange' ), $this->get_admin_menu_capability( 'it-exchange-help' ), 'it-exchange-help', array( $this, 'print_help_page' ) );
 	}
@@ -621,9 +622,9 @@ class IT_Exchange_Admin {
 	 * @since 1.36.6
 	 * @return void
 	*/
-	// function print_license_page() {
-	// 	include( 'views/admin-license.php' );
-	// }
+	function print_license_page() {
+		include( 'views/admin-license.php' );
+	}
 
 	/**
 	 * Prints the help/support page for iThemes Exchange

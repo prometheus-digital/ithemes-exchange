@@ -17,15 +17,15 @@ $status 	  = get_option( 'exchangewp_license_status' );
 ?>
 <div class="wrap">
 	<?php
-	ITUtility::screen_icon( 'it-exchange' );
-	$this->print_general_settings_tabs();
-	do_action( 'it_exchange_general_settings_license_page_top' );
+	// ITUtility::screen_icon( 'it-exchange' );
+	// $this->print_general_settings_tabs();
+	// do_action( 'it_exchange_general_settings_license_page_top' );
 	// $form->start_form( $form_options, 'exchange-email-settings' );
-	do_action( 'it_exchange_general_settings_license_form_top' );
+	// do_action( 'it_exchange_general_settings_license_form_top' );
 	?>
 
 	<table class="form-table">
-		<?php do_action( 'it_exchange_general_settings_email_top' ); ?>
+		<?php #do_action( 'it_exchange_general_settings_email_top' ); ?>
 		<form method="post" action="admin.php?page=it-exchange-settings&tab=license">
 		<?php settings_fields('exchangewp_license_key'); ?>
 		<tr valign="top">
