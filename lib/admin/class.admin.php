@@ -534,7 +534,7 @@ class IT_Exchange_Admin {
 	*/
 	function print_license_settings_tab( $current_tab ) {
 		$active = 'license' == $current_tab ? 'nav-tab-active' : '';
-		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-settings&tab=license' ); ?>"><?php _e( 'License', 'it-l10n-ithemes-exchange' ); ?></a><?php
+		?><a class="nav-tab <?php echo $active; ?>" href="<?php echo admin_url( 'admin.php?page=it-exchange-settings&tab=license' ); ?>"><?php _e( 'Licensing', 'it-l10n-ithemes-exchange' ); ?></a><?php
 	}
 
 	/**
