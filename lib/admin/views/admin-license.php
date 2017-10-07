@@ -69,7 +69,15 @@ function get_form_table( $form, $settings = array() ) {
     ?>
 
     <!-- This is where the form would start for all of the licenses. -->
-
+    <table class="form-table">
+      <tbody>
+        <tr>
+          <th>License key</th>
+          <td>
+          <?php $form->add_text_box( 'invoice_license' ); ?></td>
+        </tr>
+      </tbody>
+    </table>
         <?php
             // $exchangewp_licenses_options = get_option( 'it-storage-exchange_addon_licenses' );
             // $license = $exchangewp_licenses_options['licenses_license'];
@@ -79,7 +87,7 @@ function get_form_table( $form, $settings = array() ) {
          ?>
         <p>
           <label class="description" for="exchange_licenses_license_key"><?php _e('Enter your license key'); ?></label>
-          <?php $form->add_text_box( 'licenses_license' ); ?>
+          <!-- <?#php $form->add_text_box( 'licenses_license' ); ?>
           <span>
             <?php if( $exstatus !== false && $exstatus == 'valid' ) { ?>
 							<span style="color:green;"><?php _e('active'); ?></span>
@@ -90,7 +98,7 @@ function get_form_table( $form, $settings = array() ) {
 							<input type="submit" class="button-secondary" name="exchange_licenses_license_activate" value="<?php _e('Activate License'); ?>"/>
 						<?php } ?>
           </span>
-        </p>
+        </p> -->
     <?php
 }
 
