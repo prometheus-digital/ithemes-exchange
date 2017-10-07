@@ -37,7 +37,7 @@
       ?>
       <div class="wrap">
           <?php screen_icon( 'it-exchange' ); ?>
-          <?php do_action( 'it_exchange_paypa-pro_settings_page_top' ); ?>
+          <?php do_action( 'it_exchange_paypal-pro_settings_page_top' ); ?>
           <?php do_action( 'it_exchange_addon_settings_page_top' ); ?>
 
           <?php $form->start_form( $form_options, 'it-exchange-licenses-settings' ); ?>
