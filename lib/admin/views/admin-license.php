@@ -132,7 +132,25 @@ class IT_Exchange_Licensing {
           <tr>
             <th>License key</th>
             <td>
-            <?php $form->add_text_box( 'invoice_license' ); ?></td>
+              <?php $form->add_text_box( 'invoice_license' ); ?>
+              <span>
+                <?php
+                  $exchangewp_invoice_license = it_exchange_get_option( 'exchangewp_licenses' );
+                  $license = $exchangewp_invoice_license['invoice_license'];
+                  // var_dump($license);
+                  $exstatus = trim( get_option( 'exchange_invoice_license_status' ) );
+                  // var_dump($exstatus);
+                  ?>
+                <?php if( $exstatus !== false && $exstatus == 'valid' ) { ?>
+    							<span style="color:green;"><?php _e('active'); ?></span>
+    							<?php wp_nonce_field( 'exchange_2checkout_nonce', 'exchange_2checkout_nonce' ); ?>
+    							<input type="submit" class="button-secondary" name="exchange_2checkout_license_deactivate" value="<?php _e('Deactivate License'); ?>"/>
+    						<?php } else {
+    							wp_nonce_field( 'exchange_2checkout_nonce', 'exchange_2checkout_nonce' ); ?>
+    							<input type="submit" class="button-secondary" name="exchange_2checkout_license_activate" value="<?php _e('Activate License'); ?>"/>
+    						<?php } ?>
+              </span>
+            </td>
           </tr>
         </tbody>
       </table>
