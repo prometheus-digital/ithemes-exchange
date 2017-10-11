@@ -9,7 +9,7 @@
 	<?php ITUtility::screen_icon( 'it-exchange' );  ?>
 	<h2><?php _e( 'Help and Resources', 'it-l10n-ithemes-exchange' ); ?></h2>
 
-	<p class="top-description"><?php printf( __( 'We\'ve built %s to simplify ecommerce for WordPress. However, ecommerce is not always easy, so we\'ve taken the time to create some resources to help you get started.', 'it-l10n-ithemes-exchange' ), '<a title="iThemes Exchange" href="http://ithemes.com/exchange/" target="_blank">iThemes Exchange</a>' ); ?></p>
+	<p class="top-description"><?php printf( __( 'We\'ve built %s to simplify ecommerce for WordPress. However, ecommerce is not always easy, so we\'ve taken the time to create some resources to help you get started.', 'it-l10n-ithemes-exchange' ), '<a title="ExchangeWP" href="https://exchangewp.com/" target="_blank">ExchangeWP</a>' ); ?></p>
 
 	<div class="help-section-wrap clearfix">
 		<h3><?php _e( 'Quick Links', 'it-l10n-ithemes-exchange' ); ?></h3>
