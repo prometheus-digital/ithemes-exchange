@@ -3,7 +3,7 @@ Contributors: ExchangeWP, ajmorris
 Tags: ecommerce
 Requires at least: 3.7
 Tested up to: 4.8
-Stable tag: 1.36.6
+Stable tag: 1.36.7
 License: GPLv2 or later
 
 Easily sell your digital and physical products with ExchangeWP, simple ecommerce for WordPress
@@ -84,12 +84,17 @@ Use the WordPress WSIWYG editor to make custom email templates for Admin Sales N
 == Installation ==
 
 Upload the Exchange plugin to your blog, activate it and enable the Digital Downloads add-on and a transaction method add-on. For more information, visit:
-http://ithemes.com/codex/page/Exchange_Installation
+http://support.exchangewp.com/article/20-exchangewp-installation
 
 == Developer Emeriti ==
 ithemes, blepoxp, layotte, aaroncampbell, mattdanner
 
 == Changelog ==
+= 1.36.7 =
+* Rebrand: iThemes Exchange to ExchangeWP
+* Rebrand: Links point to ExchangeWP
+* Rebrand: Removing upsell of iThemes Products and ExchangeWP products
+
 = 1.36.5 =
 * Fix: Ensure invalid transaction activity items are not returned.
 * Fix: PHP 7.1 compatibility.
