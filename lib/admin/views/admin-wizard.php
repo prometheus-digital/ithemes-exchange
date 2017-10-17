@@ -12,12 +12,12 @@ $flat_rate_cost = it_exchange_format_price( it_exchange_convert_from_database_nu
 <div class="wrap">
 	<?php ITUtility::screen_icon( 'it-exchange' );  ?>
 
-	<h2>iThemes Exchange <?php _e( 'Setup', 'it-l10n-ithemes-exchange' ); ?></h2>
+	<h2>ExchangeWP <?php _e( 'Setup', 'it-l10n-ithemes-exchange' ); ?></h2>
 
 	<?php $form->start_form( $form_options, 'exchange-general-settings' ); ?>
 		<div class="it-exchange-wizard">
 			<div class="welcome">
-				<div class="welcome-title"><p class="section-label"><?php printf( __( 'Welcome to %s', 'it-l10n-ithemes-exchange' ), 'iThemes Exchange' ); ?></p></div>
+				<div class="welcome-title"><p class="section-label"><?php printf( __( 'Welcome to %s', 'it-l10n-ithemes-exchange' ), 'ExchangeWP' ); ?></p></div>
 				<p>
 					<?php printf( __( 'You can customize your store features by filling out some information below. (Don\'t worry, you can always change these settings on the Add-ons page and the %s Settings page later. And you can get back to this setup screen from the link on the help page.) If you have add-ons, please go to the %splugins page%s and install them now before starting the setup.' ), 'Exchange', '<a href="' . admin_url( 'plugins.php' ) . '">', '</a>' ); ?>
 			</div>
@@ -69,25 +69,7 @@ $flat_rate_cost = it_exchange_format_price( it_exchange_convert_from_database_nu
 								</div>
 							</li>
 						<?php endif; ?>
-
-						<li class="product-option pro-pack-product-option" data-toggle="pro-pack-wizard">
-							<div class="option-spacer">
-								<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/wizard-pro-pack.png' ); ?>" alt="<?php _e( 'Get more Add-ons', 'it-l10n-ithemes-exchange' ); ?>" />
-								<span class="product-name"><?php _e( 'Get more Add-ons', 'it-l10n-ithemes-exchange' ); ?></span>
-							</div>
-						</li>
 					</ul>
-				</div>
-
-				<div class="field pro-pack-wizard inactive hide-if-js">
-					<div class="pro-pack-left-column">
-						<h3><?php _e( 'Do more with your store with the Pro Pack', 'it-l10n-ithemes-exchange' ); ?></h3>
-						<p><?php _e( 'Membership, Invoices, Stripe Payments, MailChimp Integration and more!', 'it-l10n-ithemes-exchange' ); ?></p>
-					</div>
-					<div class="pro-pack-right-column">
-						<span class="pro-pack-coupon"><?php _e( 'Use Code GOPRO25 to get 25% off!', 'it-l10n-ithemes-exchange' ); ?></span><br />
-						<a href="http://ithemes.com/exchange/#pricing" target="_blank" class="pro-pack-cta"><?php _e( 'Get the Pro Pack', 'it-l10n-ithemes-exchange' ); ?></a>
-					</div>
 				</div>
 
 				<?php if ( ! it_exchange_is_addon_registered( 'membership-product-type' ) ) : ?>
