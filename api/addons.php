@@ -41,13 +41,13 @@ function it_exchange_register_addon( $slug, $params ) {
 	$file   = file_exists( $file )  ? $file : false;
 
 	if ( ! $slug  )
-		return new WP_Error( 'it_exchange_add_registration_error', __( 'All iThemes Exchange Add-ons require a slug parameter.', 'it-l10n-ithemes-exchange' ) );
+		return new WP_Error( 'it_exchange_add_registration_error', __( 'All ExchangeWP Add-ons require a slug parameter.', 'it-l10n-ithemes-exchange' ) );
 
 	if ( ! $name )
-		return new WP_Error( 'it_exchange_add_registration_error', __( 'All iThemes Exchange Add-ons require a name parameter.', 'it-l10n-ithemes-exchange' ) );
+		return new WP_Error( 'it_exchange_add_registration_error', __( 'All ExchangeWP Add-ons require a name parameter.', 'it-l10n-ithemes-exchange' ) );
 
 	if ( ! $file )
-		return new WP_Error( 'it_exchange_add_registration_error', __( 'All iThemes Exchange Add-ons require a file parameter.', 'it-l10n-ithemes-exchange' ) );
+		return new WP_Error( 'it_exchange_add_registration_error', __( 'All ExchangeWP Add-ons require a file parameter.', 'it-l10n-ithemes-exchange' ) );
 
 	$allowed_keys = array( 'category', 'tag', 'supports', 'labels', 'settings-callback', 'icon', 'wizard-icon', 'auto-enable', 'class' );
 
@@ -115,10 +115,10 @@ function it_exchange_register_addon_category( $slug, $name, $description, $optio
 	$options['supports']      = empty( $options['supports'] ) ? array() : $options['supports'];
 
 	if ( ! $slug  )
-		return new WP_Error( 'it_exchange_add_registration_error', __( 'All iThemes Exchange Add-on categories require a slug parameter.', 'it-l10n-ithemes-exchange' ) );
+		return new WP_Error( 'it_exchange_add_registration_error', __( 'All ExchangeWP Add-on categories require a slug parameter.', 'it-l10n-ithemes-exchange' ) );
 
 	if ( ! $name )
-		return new WP_Error( 'it_exchange_add_registration_error', __( 'All iThemes Exchange Add-ons categories require a name parameter.', 'it-l10n-ithemes-exchange' ) );
+		return new WP_Error( 'it_exchange_add_registration_error', __( 'All ExchangeWP Add-ons categories require a name parameter.', 'it-l10n-ithemes-exchange' ) );
 
 	// Add the add-on to our Global
 	$GLOBALS['it_exchange']['add_on_categories'][$slug] = apply_filters( 'it_exchange_register_addon_category', array(

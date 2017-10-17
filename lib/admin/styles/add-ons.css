@@ -35,7 +35,7 @@
 #it-exchange-add-ons-wrap .add-on-block .add-on-info .add-on-tag{background:#d7dde2;color:#494f53;border-radius:3px;padding:3px 6px 4px;margin-left:6px;margin-top:3px;font-size:11px;line-height:1;font-weight:bold;text-transform:uppercase;}
 #it-exchange-add-ons-wrap .add-on-block .add-on-info p{clear:left;margin-top:10px;color:#676c6e;font-size:14px;line-height:1.5;}
 #it-exchange-add-ons-wrap .add-on-block .add-on-actions{text-align:right;}
-#it-exchange-add-ons-wrap .add-on-block .add-on-actions a{float:right;width:100px;padding:10px 15px;background:#A8E457;box-shadow:0 2px 0 #84B243;border-radius:4px;color:#3f4e29;font-size:16px;text-align:center;text-decoration:none;}
+#it-exchange-add-ons-wrap .add-on-block .add-on-actions a{float:right;width:100px;padding:10px 15px;background:#00b063;box-shadow:0 2px 0 #84B243;border-radius:4px;color:#fff;font-size:16px;text-align:center;text-decoration:none;}
 #it-exchange-add-ons-wrap .add-on-block .add-on-actions .add-on-enabled a:hover{background:#EBEBEB;box-shadow:inset 0 1px 3px rgba(0,0,0,0.2);color:#606060;}
 #it-exchange-add-ons-wrap .add-on-block .add-on-actions .add-on-disabled a{background:#EBEBEB;box-shadow:inset 0 1px 3px rgba(0,0,0,0.2);color:#606060;}
 #it-exchange-add-ons-wrap .add-on-block .add-on-actions .add-on-disabled a:hover{background:#A8E457;box-shadow:0 1px 0 #84b243;color:#3f4e29;}
