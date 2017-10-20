@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name: ExchangeWP
- * Version: 1.36.6
+ * Version: 1.36.8
  * Text Domain: it-l10n-ithemes-exchange
  * Description: Easily sell your digital goods with ExchangeWP, simple ecommerce for WordPress
  * Plugin URI: https://exchangewp.com
@@ -24,10 +24,10 @@
 */
 class IT_Exchange {
 
-	var $_version         = '1.36.6';
+	var $_version         = '1.36.8';
 	var $_wp_minimum      = '3.5';
 	var $_slug            = 'ithemes-exchange';
-	var $_name            = 'iThemes Exchange';
+	var $_name            = 'ExchangeWP';
 	var $_series          = '';
 
 	var $_plugin_path     = '';

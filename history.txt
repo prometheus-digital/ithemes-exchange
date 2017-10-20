@@ -1327,3 +1327,8 @@
 1.36.6 - AJ Morris
 	Tweak: New branding, ExchangeWP
 	Tweak: Create Developer Emeriti section of Readme.
+1.36.7 - AJ Morris
+	Tweak: Version bump for WP.org
+1.36.8 - AJ Morris
+	Tweak: Include all changes from Git
+	Tweak: Include Branding and help docs change
