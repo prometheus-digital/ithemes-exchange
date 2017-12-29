@@ -276,13 +276,59 @@ define( 'EDD_SAMPLE_ITEM_NAME', 'ExchangeWP' ); // you should use your own CONST
 // the name of the settings page for the license input to be displayed
 define( 'EDD_SAMPLE_PLUGIN_LICENSE_PAGE', 'exchangewp-license' );
 
+function it_exchange_check_license_validity() {
+	// if (get_transient( 'exchangewp_license_check' ) )
+	// 	return;
+
+		$exchangewp_license = it_exchange_get_option( 'exchangewp_licenses' );
+		$license = $exchangewp_license['exchangewp_license'];
+
+		$api_params = array(
+			'edd_action' => 'check_license',
+			'license' 	 => $license,
+			'item_name'  => urlencode( 'exchange' ),
+			'url'				 => home_url()
+		);
+
+		$response = wp_remote_post(
+			'https://exchangewp.com',
+			array(
+				'timeout' => 15,
+				'sslverify' => false,
+				'body' => $api_params
+			)
+		);
+
+		if ( is_wp_error( $response ) )
+			return false;
+
+		$license_data = json_decode(
+			wp_remote_retrieve_body( $response )
+		);
+
+		if ( $license_data->license != 'valid' ) {
+        delete_option( 'exchangewp_license_status' );
+    }
+
+		set_transient(
+			'exchangewp_license_check',
+			$license_data,
+			( 60 * 60 * 12 )
+		);
+
+}
+
+add_action( 'admin_init', 'it_exchange_check_license_validity' );
+
+
 if( !class_exists( 'EDD_SL_Plugin_Updater' ) ) {
 	// load our custom updater
 	include( dirname( __FILE__ ) . '/EDD_SL_Plugin_Updater.php' );
 }
 
 function edd_sl_sample_plugin_updater() {
-
+	// This whole thing needs to check if the license is still "valid." If it's not valid,
+	// then we should not show updates available.
 	// retrieve our license key from the DB
 	$license_key = trim( get_option( 'edd_sample_license_key' ) );
 
@@ -298,8 +344,6 @@ function edd_sl_sample_plugin_updater() {
 
 }
 add_action( 'admin_init', 'edd_sl_sample_plugin_updater', 0 );
-
-
 
 //include( plugin_dir_path( __FILE__ ) . 'update.php' );
 
