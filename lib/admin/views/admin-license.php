@@ -138,16 +138,18 @@ class IT_Exchange_Licensing {
                   $exchangewp_invoice_license = it_exchange_get_option( 'exchangewp_licenses' );
                   $license = $exchangewp_license['exchangewp_license'];
                   // var_dump($license);
-                  $exstatus = trim( get_option( 'exchange_invoice_license_status' ) );
+                  // $exstatus = trim( it_exchange_get_option( 'exchange_license_status' ) );
+                  // this might be the only way to get it but I'll try the iThemes way first.
+                  $exstatus = trim( get_option( 'exchange_license_status' ) );
                   // var_dump($exstatus);
                   ?>
                 <?php if( $exstatus !== false && $exstatus == 'valid' ) { ?>
     							<span style="color:green;"><?php _e('active'); ?></span>
-    							<?php wp_nonce_field( 'exchange_2checkout_nonce', 'exchange_2checkout_nonce' ); ?>
-    							<input type="submit" class="button-secondary" name="exchange_2checkout_license_deactivate" value="<?php _e('Deactivate License'); ?>"/>
+    							<?php wp_nonce_field( 'exchangewp_license_nonce', 'exchangewp_license_nonce' ); ?>
+    							<input type="submit" class="button-secondary" name="exchangewp_license_license_deactivate" value="<?php _e('Deactivate License'); ?>"/>
     						<?php } else {
-    							wp_nonce_field( 'exchange_2checkout_nonce', 'exchange_2checkout_nonce' ); ?>
-    							<input type="submit" class="button-secondary" name="exchange_2checkout_license_activate" value="<?php _e('Activate License'); ?>"/>
+    							wp_nonce_field( 'exchangewp_license_nonce', 'exchangewp_license_nonce' ); ?>
+    							<input type="submit" class="button-secondary" name="exchangewp_license_license_activate" value="<?php _e('Activate License'); ?>"/>
     						<?php } ?>
               </span>
             </td>
@@ -183,6 +185,149 @@ class IT_Exchange_Licensing {
       } else {
           $this->status_message = __( 'Settings not saved.', 'LION' );
       }
+
+      if( isset( $_POST['exchangewp_license_activate'] ) ) {
+
+      		// run a quick security check
+      	 	if( ! check_admin_referer( 'exchangewp_license_nonce', 'exchangewp_license_nonce' ) )
+      			return; // get out if we didn't click the Activate button
+
+      		// retrieve the license from the database
+      		// $license = trim( get_option( 'exchangewp_license_license_key' ) );
+         $exchangewp_stripe_options = get_option( 'it-storage-exchange_addon_stripe' );
+         $license = trim( $exchangewp_stripe_options['stripe_license'] );
+
+      		// data to send in our API request
+      		$api_params = array(
+      			'edd_action' => 'activate_license',
+      			'license'    => $license,
+      			'item_name'  => urlencode( 'exchangewp' ), // the name of our product in EDD
+      			'url'        => home_url()
+      		);
+
+      		// Call the custom API.
+      		$response = wp_remote_post( 'https://exchangewp.com', array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
+
+      		// make sure the response came back okay
+      		if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+
+      			if ( is_wp_error( $response ) ) {
+      				$message = $response->get_error_message();
+      			} else {
+      				$message = __( 'An error occurred, please try again.' );
+      			}
+
+      		} else {
+
+      			$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+
+      			if ( false === $license_data->success ) {
+
+      				switch( $license_data->error ) {
+
+      					case 'expired' :
+
+      						$message = sprintf(
+      							__( 'Your license key expired on %s.' ),
+      							date_i18n( get_option( 'date_format' ), strtotime( $license_data->expires, current_time( 'timestamp' ) ) )
+      						);
+      						break;
+
+      					case 'revoked' :
+
+      						$message = __( 'Your license key has been disabled.' );
+      						break;
+
+      					case 'missing' :
+
+      						$message = __( 'Invalid license.' );
+      						break;
+
+      					case 'invalid' :
+      					case 'site_inactive' :
+
+      						$message = __( 'Your license is not active for this URL.' );
+      						break;
+
+      					case 'item_name_mismatch' :
+
+      						$message = sprintf( __( 'This appears to be an invalid license key for %s.' ), 'stripe' );
+      						break;
+
+      					case 'no_activations_left':
+
+      						$message = __( 'Your license key has reached its activation limit.' );
+      						break;
+
+      					default :
+
+      						$message = __( 'An error occurred, please try again.' );
+      						break;
+      				}
+
+      			}
+
+      		}
+
+      		// Check if anything passed on a message constituting a failure
+      		if ( ! empty( $message ) ) {
+      			return;
+      		}
+
+      		//$license_data->license will be either "valid" or "invalid"
+      		update_option( 'exchangewp_license_status', $license_data->license );
+      		return;
+      	}
+
+       // deactivate here
+       // listen for our activate button to be clicked
+      	if( isset( $_POST['exchangewp_license_deactivate'] ) ) {
+
+      		// run a quick security check
+      	 	if( ! check_admin_referer( 'exchangewp_license_nonce', 'exchangewp_license_nonce' ) )
+      			return; // get out if we didn't click the Activate button
+
+      		// retrieve the license from the database
+      		// $license = trim( get_option( 'exchangewp_license_license_key' ) );
+
+          // this likely needs to be changed.
+         $exchangewp_stripe_options = get_option( 'it-storage-exchange_addon_stripe' );
+         $license = $exchangewp_stripe_options['stripe_license'];
+
+      		// data to send in our API request
+      		$api_params = array(
+      			'edd_action' => 'deactivate_license',
+      			'license'    => $license,
+      			'item_name'  => urlencode( 'exchangewp' ), // the name of our product in EDD
+      			'url'        => home_url()
+      		);
+      		// Call the custom API.
+      		$response = wp_remote_post( 'https://exchangewp.com', array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
+
+      		// make sure the response came back okay
+      		if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+
+      			if ( is_wp_error( $response ) ) {
+      				$message = $response->get_error_message();
+      			} else {
+      				$message = __( 'An error occurred, please try again.' );
+      			}
+
+      			return;
+
+      		}
+
+      		// decode the license data
+      		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+      		// $license_data->license will be either "deactivated" or "failed"
+      		if( $license_data->license == 'deactivated' ) {
+      			delete_option( 'exchangewp_license_license_status' );
+      		}
+
+      		return;
+
+      	}
+
   }
 
   /**
