@@ -72,7 +72,7 @@ class IT_Exchange_Licensing {
   		$GLOBALS['IT_Exchange_Admin']->print_general_settings_tabs();
   		?>
       <!-- This should all probably be encoded for translation. -->
-  		<h2>License Keys</h2>
+  		<h2>License Key</h2>
   		<p>If you have purchased a license key for ExchangeWP and any official add-ons, you can enter that below.
   			If you some how haven't <br />purchased a license and want to get support and updates, you can do so
   			by <a href="https://exchangewp.com/pricing">deciding which pricing plan works for you.</a></p>
@@ -132,24 +132,24 @@ class IT_Exchange_Licensing {
           <tr>
             <th>License key</th>
             <td>
-              <?php $form->add_text_box( 'invoice_license' ); ?>
+              <?php $form->add_text_box( 'exchangewp_license' ); ?>
               <span>
                 <?php
-                  $exchangewp_invoice_license = it_exchange_get_option( 'exchangewp_licenses' );
+                  $exchangewp_license = it_exchange_get_option( 'exchangewp_licenses' );
                   $license = $exchangewp_license['exchangewp_license'];
                   // var_dump($license);
                   // $exstatus = trim( it_exchange_get_option( 'exchange_license_status' ) );
                   // this might be the only way to get it but I'll try the iThemes way first.
-                  $exstatus = trim( get_option( 'exchange_license_status' ) );
+                  $exstatus = trim( get_option( 'exchangewp_license_status' ) );
                   // var_dump($exstatus);
                   ?>
                 <?php if( $exstatus !== false && $exstatus == 'valid' ) { ?>
     							<span style="color:green;"><?php _e('active'); ?></span>
     							<?php wp_nonce_field( 'exchangewp_license_nonce', 'exchangewp_license_nonce' ); ?>
-    							<input type="submit" class="button-secondary" name="exchangewp_license_license_deactivate" value="<?php _e('Deactivate License'); ?>"/>
+    							<input type="submit" class="button-secondary" name="exchangewp_license_deactivate" value="<?php _e('Deactivate License'); ?>"/>
     						<?php } else {
     							wp_nonce_field( 'exchangewp_license_nonce', 'exchangewp_license_nonce' ); ?>
-    							<input type="submit" class="button-secondary" name="exchangewp_license_license_activate" value="<?php _e('Activate License'); ?>"/>
+    							<input type="submit" class="button-secondary" name="exchangewp_license_activate" value="<?php _e('Activate License'); ?>"/>
     						<?php } ?>
               </span>
             </td>
@@ -194,14 +194,14 @@ class IT_Exchange_Licensing {
 
       		// retrieve the license from the database
       		// $license = trim( get_option( 'exchangewp_license_license_key' ) );
-         $exchangewp_stripe_options = get_option( 'it-storage-exchange_addon_stripe' );
-         $license = trim( $exchangewp_stripe_options['stripe_license'] );
+          $exchangewp_license = it_exchange_get_option( 'exchangewp_licenses' );
+          $license = $exchangewp_license['exchangewp_license'];
 
       		// data to send in our API request
       		$api_params = array(
       			'edd_action' => 'activate_license',
       			'license'    => $license,
-      			'item_name'  => urlencode( 'exchangewp' ), // the name of our product in EDD
+      			'item_name'  => urlencode( 'exchange' ), // the name of our product in EDD
       			'url'        => home_url()
       		);
 
@@ -287,18 +287,15 @@ class IT_Exchange_Licensing {
       	 	if( ! check_admin_referer( 'exchangewp_license_nonce', 'exchangewp_license_nonce' ) )
       			return; // get out if we didn't click the Activate button
 
-      		// retrieve the license from the database
-      		// $license = trim( get_option( 'exchangewp_license_license_key' ) );
-
           // this likely needs to be changed.
-         $exchangewp_stripe_options = get_option( 'it-storage-exchange_addon_stripe' );
-         $license = $exchangewp_stripe_options['stripe_license'];
+          $exchangewp_license = it_exchange_get_option( 'exchangewp_licenses' );
+          $license = $exchangewp_license['exchangewp_license'];
 
       		// data to send in our API request
       		$api_params = array(
       			'edd_action' => 'deactivate_license',
       			'license'    => $license,
-      			'item_name'  => urlencode( 'exchangewp' ), // the name of our product in EDD
+      			'item_name'  => urlencode( 'exchange' ), // the name of our product in EDD
       			'url'        => home_url()
       		);
       		// Call the custom API.
@@ -321,7 +318,7 @@ class IT_Exchange_Licensing {
       		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
       		// $license_data->license will be either "deactivated" or "failed"
       		if( $license_data->license == 'deactivated' ) {
-      			delete_option( 'exchangewp_license_license_status' );
+      			delete_option( 'exchangewp_license_status' );
       		}
 
       		return;
