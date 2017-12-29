@@ -73,9 +73,9 @@ class IT_Exchange_Licensing {
   		?>
       <!-- This should all probably be encoded for translation. -->
   		<h2>License Keys</h2>
-  		<p>If you have purchased a license key for ExchangeWP, you can enter that below.
-  			If you'd like to purchase an ExchangeWP license, you can do so
-  			by <a href="https://exchangewp.com/pricing">going here.</a></p>
+  		<p>If you have purchased a license key for ExchangeWP and any official add-ons, you can enter that below.
+  			If you some how haven't <br />purchased a license and want to get support and updates, you can do so
+  			by <a href="https://exchangewp.com/pricing">deciding which pricing plan works for you.</a></p>
 
       <?php
         $settings = it_exchange_get_option( 'exchangewp_licenses', true );
@@ -130,36 +130,13 @@ class IT_Exchange_Licensing {
       <table class="form-table">
         <tbody>
           <tr>
-            <th>Invoice License key</th>
+            <th>License key</th>
             <td>
               <?php $form->add_text_box( 'invoice_license' ); ?>
               <span>
                 <?php
                   $exchangewp_invoice_license = it_exchange_get_option( 'exchangewp_licenses' );
-                  $license = $exchangewp_invoice_license['invoice_license'];
-                  // var_dump($license);
-                  $exstatus = trim( get_option( 'exchange_invoice_license_status' ) );
-                  // var_dump($exstatus);
-                  ?>
-                <?php if( $exstatus !== false && $exstatus == 'valid' ) { ?>
-    							<span style="color:green;"><?php _e('active'); ?></span>
-    							<?php wp_nonce_field( 'exchange_2checkout_nonce', 'exchange_2checkout_nonce' ); ?>
-    							<input type="submit" class="button-secondary" name="exchange_2checkout_license_deactivate" value="<?php _e('Deactivate License'); ?>"/>
-    						<?php } else {
-    							wp_nonce_field( 'exchange_2checkout_nonce', 'exchange_2checkout_nonce' ); ?>
-    							<input type="submit" class="button-secondary" name="exchange_2checkout_license_activate" value="<?php _e('Activate License'); ?>"/>
-    						<?php } ?>
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <th>Invoice License key</th>
-            <td>
-              <?php $form->add_text_box( 'invoice_license' ); ?>
-              <span>
-                <?php
-                  $exchangewp_invoice_license = it_exchange_get_option( 'exchangewp_licenses' );
-                  $license = $exchangewp_invoice_license['invoice_license'];
+                  $license = $exchangewp_license['exchangewp_license'];
                   // var_dump($license);
                   $exstatus = trim( get_option( 'exchange_invoice_license_status' ) );
                   // var_dump($exstatus);
