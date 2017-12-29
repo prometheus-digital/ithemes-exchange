@@ -203,10 +203,8 @@ class IT_Exchange_Admin {
 	*/
 	function it_exchange_plugin_row_meta( $meta, $plugin_file, $plugin_data, $status ) {
 		if ( 'ithemes-exchange/init.php' == $plugin_file ) {
-			$meta[] = '<a href="http://ithemes.com/codex/page/Exchange" target="_blank">' . __( 'Documentation', 'it-l10n-ithemes-exchange' ) . '</a>';
-			$meta[] = '<a href="http://ithemes.com/exchange/support" target="_blank">' . __( 'Support', 'it-l10n-ithemes-exchange' ) . '</a>';
-			$meta[] = '<a href="http://ithemes.com/exchange/add-ons" target="_blank">' . __( 'Add-ons', 'it-l10n-ithemes-exchange' ) . '</a>';
-			$meta[] = '<a href="http://ithemes.com/codex/page/Exchange_Changelog" target="_blank">' . __( 'Changelog', 'it-l10n-ithemes-exchange' ) . '</a>';
+			$meta[] = '<a href="http://support.exchangewp.com/" target="_blank">' . __( 'Documentation', 'it-l10n-ithemes-exchange' ) . '</a>';
+			$meta[] = '<a href="http://exchangewp.com/" target="_blank">' . __( 'Add-ons', 'it-l10n-ithemes-exchange' ) . '</a>';
 		}
 		return $meta;
 	}
@@ -403,9 +401,9 @@ class IT_Exchange_Admin {
 		$settings_callback = array( $this, 'print_exchange_settings_page' );
 		if ( 'it-exchange-settings' == $this->_current_page && ! empty( $this->_current_tab ) )
 			$settings_callback = apply_filters( 'it_exchange_general_settings_tab_callback_' . $this->_current_tab, $settings_callback );
-		add_submenu_page( 'it-exchange', 'iThemes Exchange Settings', 'Settings', $this->get_admin_menu_capability( 'it-exchange-settings' ), 'it-exchange-settings', $settings_callback );
+		add_submenu_page( 'it-exchange', 'ExchangeWP Settings', 'Settings', $this->get_admin_menu_capability( 'it-exchange-settings' ), 'it-exchange-settings', $settings_callback );
 
-		add_submenu_page( 'it-exchange', 'iThemes Exchange Tools', 'Tools', $this->get_admin_menu_capability( 'it-exchange-tools' ), 'it-exchange-tools', array( $this, 'print_tools_page' ) );
+		add_submenu_page( 'it-exchange', 'ExchangeWP Tools', 'Tools', $this->get_admin_menu_capability( 'it-exchange-tools' ), 'it-exchange-tools', array( $this, 'print_tools_page' ) );
 
 		// Add Add-ons menu item
 		$add_ons_callback = array( $this, 'print_exchange_add_ons_page' );
@@ -416,7 +414,7 @@ class IT_Exchange_Admin {
 			if ( ! empty( $addon['options']['settings-callback'] ) && is_callable( $addon['options']['settings-callback'] ) )
 				$add_ons_callback = $addon['options']['settings-callback'];
 		}
-		add_submenu_page( 'it-exchange', 'iThemes Exchange Add-ons', 'Add-ons', $this->get_admin_menu_capability( 'it-exchange-addons' ), 'it-exchange-addons', $add_ons_callback );
+		add_submenu_page( 'it-exchange', 'ExchangeWP Add-ons', 'Add-ons', $this->get_admin_menu_capability( 'it-exchange-addons' ), 'it-exchange-addons', $add_ons_callback );
 
 		$license_callback = array( $this, 'print_license_page' );
 		add_submenu_page( 'it-exchange', 'ExchangeWP Add-on Licenses', 'Licenses', $this->get_admin_menu_capability( 'it-exchange-licenses' ), 'it-exchange-licenses', $license_callback );

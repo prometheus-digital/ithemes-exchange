@@ -15,37 +15,6 @@
 
 	<div class="it-exchange-general-settings columns-2">
 
-		<div id="postbox-container-1" class="postbox-container">
-			<div class="it-settings-sidebar-content">
-				<div class="it-sidebar-content-section">
-					<h3>Get Exchange email updates and a <span>free ecommerce ebook</span></h3>
-					<p>We'll send you coupons and news about Exchange, as well as ecommerce tips and a free ecommerce ebook!</p>
-					<!-- Begin MailChimp Signup Form -->
-					<div id="mc_embed_signup">
-						<form action="http://ithemes.us2.list-manage.com/subscribe/post?u=7acf83c7a47b32c740ad94a4e&amp;id=9da0741ac0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-							<div class="mc-field-group">
-								<input type="email" value="<?php echo get_option( 'admin_email', 'email address' ); ?>" name="EMAIL" class="required email" id="mce-EMAIL">
-							</div>
-							<div id="mce-responses" class="clear">
-								<div class="response" id="mce-error-response" style="display:none"></div>
-								<div class="response" id="mce-success-response" style="display:none"></div>
-							</div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-							<div style="position: absolute; left: -5000px;"><input type="text" name="b_7acf83c7a47b32c740ad94a4e_9da0741ac0" value=""></div>
-							<div class="clear"><input type="submit" value="Subscribe and get a free ebook" name="subscribe" id="mc-embedded-subscribe" class="button-primary"></div>
-						</form>
-					</div>
-					<!--End mc_embed_signup-->
-				</div>
-				<div class="it-sidebar-content-section last">
-					<h3>Get the <span>Pro Pack</span></h3>
-					<p>The Pro Pack gets you all iThemes Exchange add-ons like Membership, Stripe Payments, MailChimp and more. If you really want to see what Exchange can do, check out the Pro Pack!</p>
-					<p class="it-coupon-label">Use this code for <span>25% off</span></p>
-					<p class="it-coupon">GOPRO25</p>
-					<a class="button-primary green" href="http://ithemes.com/exchange/#pricing" target="_blank">Get the Pro Pack</a>
-				</div>
-			</div>
-		</div>
-
 		<div id="postbox-container-2" class="postbox-container">
 		<?php $form->start_form( $form_options, 'exchange-general-settings' ); ?>
 
@@ -142,7 +111,7 @@
 						$form->add_drop_down( 'store-product-order', $order_by ); ?>
 					</td>
 				</tr>
-	
+
 				<?php do_action( 'it_exchange_general_settings_before_settings_currency', $form ); ?>
 				<tr valign="top">
 					<th scope="row"><strong><?php _e( 'Currency Settings', 'it-l10n-ithemes-exchange' ); ?></strong></th>

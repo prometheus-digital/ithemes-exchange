@@ -18,7 +18,7 @@ function it_exchange_basic_reporting_register_dashboard_widget() {
 	$cap = apply_filters( 'it_exchange_basic_reporting_capability_level', 'manage_options' );
 	if ( ! current_user_can( $cap ) )
 		return;
-	wp_add_dashboard_widget( 'it-exchange-dashboard-reporting-widget', __( 'iThemes Exchange', 'it-l10n-ithemes-exchange' ), 'it_exchange_basic_reporting_print_dashboard_widget' );
+	wp_add_dashboard_widget( 'it-exchange-dashboard-reporting-widget', __( 'ExchangeWP', 'it-l10n-ithemes-exchange' ), 'it_exchange_basic_reporting_print_dashboard_widget' );
 }
 add_action( 'wp_dashboard_setup', 'it_exchange_basic_reporting_register_dashboard_widget' );
 

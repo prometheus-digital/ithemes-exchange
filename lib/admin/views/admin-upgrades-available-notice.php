@@ -7,7 +7,7 @@
 ?>
 <div id="it-exchange-upgrades-available-nag" class="it-exchange-nag">
 	<?php printf(
-		__( 'iThemes Exchange needs to perform an %supgrade%s.' ),
+		__( 'ExchangeWP needs to perform an %supgrade%s.' ),
 		'<a href="' . esc_url( $upgrades_url ) . '">', '</a>' ) ?>
 	<a class="dismiss btn" href="<?php echo esc_url( $dismiss_url ); ?>">&times;</a>
 </div>
