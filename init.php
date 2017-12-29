@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name: ExchangeWP
- * Version: 1.36.6
+ * Version: 1.38.9
  * Text Domain: it-l10n-ithemes-exchange
  * Description: Easily sell your digital goods with ExchangeWP, simple ecommerce for WordPress
  * Plugin URI: https://exchangewp.com
@@ -24,7 +24,7 @@
 */
 class IT_Exchange {
 
-	var $_version         = '1.36.6';
+	var $_version         = '1.38.9';
 	var $_wp_minimum      = '3.5';
 	var $_slug            = 'ithemes-exchange';
 	var $_name            = 'ExchangeWP';
@@ -267,18 +267,10 @@ add_action( 'admin_init', 'it_exchange_flush_rewrite_rules', 99 );
  *
  * @return void
 */
-// this is the URL our updater / license checker pings. This should be the URL of the site with EDD installed
-define( 'EDD_SAMPLE_STORE_URL', 'https://exchangewp.com' ); // you should use your own CONSTANT name, and be sure to replace it throughout this file
-
-// the name of your product. This should match the download name in EDD exactly
-define( 'EDD_SAMPLE_ITEM_NAME', 'ExchangeWP' ); // you should use your own CONSTANT name, and be sure to replace it throughout this file
-
-// the name of the settings page for the license input to be displayed
-define( 'EDD_SAMPLE_PLUGIN_LICENSE_PAGE', 'exchangewp-license' );
 
 function it_exchange_check_license_validity() {
-	// if (get_transient( 'exchangewp_license_check' ) )
-	// 	return;
+	if (get_transient( 'exchangewp_license_check' ) )
+		return;
 
 		$exchangewp_license = it_exchange_get_option( 'exchangewp_licenses' );
 		$license = $exchangewp_license['exchangewp_license'];
@@ -326,24 +318,34 @@ if( !class_exists( 'EDD_SL_Plugin_Updater' ) ) {
 	include( dirname( __FILE__ ) . '/EDD_SL_Plugin_Updater.php' );
 }
 
-function edd_sl_sample_plugin_updater() {
+function it_exchange_plugin_updater() {
 	// This whole thing needs to check if the license is still "valid." If it's not valid,
 	// then we should not show updates available.
 	// retrieve our license key from the DB
-	$license_key = trim( get_option( 'edd_sample_license_key' ) );
+	$license_data = get_transient( 'exchangewp_license_check' );
 
-	// setup the updater
-	$edd_updater = new EDD_SL_Plugin_Updater( EDD_SAMPLE_STORE_URL, __FILE__, array(
-			'version' 	=> '1.0', 				// current version number
-			'license' 	=> $license_key, 		// license key (used get_option above to retrieve from DB)
-			'item_name' => EDD_SAMPLE_ITEM_NAME, 	// name of this plugin
-			'author' 	  => 'AJ Morris',  // author of this plugin
-			'beta'		  => false
-		)
-	);
+	if ( $license_data->license == 'valid' ) {
+
+		$exchangewp_license = it_exchange_get_option( 'exchangewp_licenses' );
+		$license = $exchangewp_license['exchangewp_license'];
+
+		// setup the updater
+		$edd_updater = new EDD_SL_Plugin_Updater( 'https://exchangewp.com', __FILE__, array(
+				'version' 		=> '1.38.9', 				// current version number
+				'license' 		=> $license, 		// license key (used get_option above to retrieve from DB)
+				'item_name' 	=> urlencode( 'exchange' ), 	  // name of this plugin
+				'author' 	  	=> 'ExchangeWP',    // author of this plugin
+				'url'       	=> home_url(),
+				'wp_override' => true,
+				'beta'		  	=> false
+			)
+		);
+
+	}
+
 
 }
-add_action( 'admin_init', 'edd_sl_sample_plugin_updater', 0 );
+add_action( 'admin_init', 'it_exchange_plugin_updater', 0 );
 
 //include( plugin_dir_path( __FILE__ ) . 'update.php' );
 
