@@ -417,7 +417,7 @@ class IT_Exchange_Admin {
 		add_submenu_page( 'it-exchange', 'ExchangeWP Add-ons', 'Add-ons', $this->get_admin_menu_capability( 'it-exchange-addons' ), 'it-exchange-addons', $add_ons_callback );
 
 		$license_callback = array( $this, 'print_license_page' );
-		add_submenu_page( 'it-exchange', 'ExchangeWP Add-on Licenses', 'Licenses', $this->get_admin_menu_capability( 'it-exchange-settings&tab=license' ), 'it-exchange-settings&tab=license', $license_callback );
+		add_submenu_page( 'it-exchange', 'ExchangeWP License', 'License', $this->get_admin_menu_capability( 'it-exchange-settings&tab=license' ), 'it-exchange-settings&tab=license', $license_callback );
 		// Help menu
 		add_submenu_page( 'it-exchange', __( 'Help', 'it-l10n-ithemes-exchange' ), __( 'Help', 'it-l10n-ithemes-exchange' ), $this->get_admin_menu_capability( 'it-exchange-help' ), 'it-exchange-help', array( $this, 'print_help_page' ) );
 	}

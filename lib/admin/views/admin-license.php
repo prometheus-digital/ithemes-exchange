@@ -1,6 +1,6 @@
 <?php
 /**
- * This file contains the contents of the Licenses page
+ * This file contains the contents of the License page
  * @since 0.0.1
  * @package IT_Exchange
 */

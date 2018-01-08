@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name: ExchangeWP
- * Version: 1.38.9
+ * Version: 1.37.8
  * Text Domain: it-l10n-ithemes-exchange
  * Description: Easily sell your digital goods with ExchangeWP, simple ecommerce for WordPress
  * Plugin URI: https://exchangewp.com
@@ -330,10 +330,10 @@ function it_exchange_plugin_updater() {
 		$license = $exchangewp_license['exchangewp_license'];
 
 		// setup the updater
-		$edd_updater = new EDD_SL_Plugin_Updater( 'https://exchangewp.com', __FILE__, array(
-				'version' 		=> '1.38.9', 				// current version number
+		$edd_updater = new EDD_SL_Plugin_Updater( 'https://exchangewp.com/', __FILE__, array(
+				'version' 		=> '1.37.9', 				// current version number
 				'license' 		=> $license, 		// license key (used get_option above to retrieve from DB)
-				'item_name' 	=> urlencode( 'exchange' ), 	  // name of this plugin
+				'item_name' 	=> 'exchange', 	  // name of this plugin
 				'author' 	  	=> 'ExchangeWP',    // author of this plugin
 				'url'       	=> home_url(),
 				'wp_override' => true,
@@ -346,8 +346,6 @@ function it_exchange_plugin_updater() {
 
 }
 add_action( 'admin_init', 'it_exchange_plugin_updater', 0 );
-
-//include( plugin_dir_path( __FILE__ ) . 'update.php' );
 
 // Init DB sessions
 require( plugin_dir_path( __FILE__ ) . 'lib/sessions/load.php' );
