@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name: ExchangeWP
- * Version: 1.36.6
+ * Version: 1.38.9
  * Text Domain: it-l10n-ithemes-exchange
  * Description: Easily sell your digital goods with ExchangeWP, simple ecommerce for WordPress
  * Plugin URI: https://exchangewp.com
@@ -24,10 +24,10 @@
 */
 class IT_Exchange {
 
-	var $_version         = '1.36.6';
+	var $_version         = '1.38.9';
 	var $_wp_minimum      = '3.5';
 	var $_slug            = 'ithemes-exchange';
-	var $_name            = 'iThemes Exchange';
+	var $_name            = 'ExchangeWP';
 	var $_series          = '';
 
 	var $_plugin_path     = '';
@@ -259,6 +259,93 @@ function it_exchange_flush_rewrite_rules() {
 	}
 }
 add_action( 'admin_init', 'it_exchange_flush_rewrite_rules', 99 );
+
+/**
+ * This setups up the updater functionality
+ *
+ * @since 1.36.6
+ *
+ * @return void
+*/
+
+function it_exchange_check_license_validity() {
+	if (get_transient( 'exchangewp_license_check' ) )
+		return;
+
+		$exchangewp_license = it_exchange_get_option( 'exchangewp_licenses' );
+		$license = $exchangewp_license['exchangewp_license'];
+
+		$api_params = array(
+			'edd_action' => 'check_license',
+			'license' 	 => $license,
+			'item_name'  => urlencode( 'exchange' ),
+			'url'				 => home_url()
+		);
+
+		$response = wp_remote_post(
+			'https://exchangewp.com',
+			array(
+				'timeout' => 15,
+				'sslverify' => false,
+				'body' => $api_params
+			)
+		);
+
+		if ( is_wp_error( $response ) )
+			return false;
+
+		$license_data = json_decode(
+			wp_remote_retrieve_body( $response )
+		);
+
+		if ( $license_data->license != 'valid' ) {
+        delete_option( 'exchangewp_license_status' );
+    }
+
+		set_transient(
+			'exchangewp_license_check',
+			$license_data,
+			( 60 * 60 * 12 )
+		);
+
+}
+
+add_action( 'admin_init', 'it_exchange_check_license_validity' );
+
+
+if( !class_exists( 'EDD_SL_Plugin_Updater' ) ) {
+	// load our custom updater
+	include( dirname( __FILE__ ) . '/EDD_SL_Plugin_Updater.php' );
+}
+
+function it_exchange_plugin_updater() {
+	// This whole thing needs to check if the license is still "valid." If it's not valid,
+	// then we should not show updates available.
+	// retrieve our license key from the DB
+	$license_data = get_transient( 'exchangewp_license_check' );
+
+	if ( $license_data->license == 'valid' ) {
+
+		$exchangewp_license = it_exchange_get_option( 'exchangewp_licenses' );
+		$license = $exchangewp_license['exchangewp_license'];
+
+		// setup the updater
+		$edd_updater = new EDD_SL_Plugin_Updater( 'https://exchangewp.com/', __FILE__, array(
+				'version' 		=> '1.38.9', 				// current version number
+				'license' 		=> $license, 				// license key (used get_option above to retrieve from DB)
+				'item_id' 		=> 512,					 	  // name of this plugin
+				'author' 	  	=> 'ExchangeWP',    // author of this plugin
+				'url'       	=> home_url(),
+				'wp_override' => true,
+				'beta'		  	=> false
+			)
+		);
+
+	}
+
+
+}
+add_action( 'admin_init', 'it_exchange_plugin_updater', 0 );
 
 // Init DB sessions
 require( plugin_dir_path( __FILE__ ) . 'lib/sessions/load.php' );

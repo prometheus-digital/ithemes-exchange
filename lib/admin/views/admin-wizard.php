@@ -193,33 +193,6 @@ $flat_rate_cost = it_exchange_format_price( it_exchange_convert_from_database_nu
 							}
 						?>
 
-						<?php if ( ! it_exchange_is_addon_registered( 'stripe' ) ) : ?>
-							<li class="stripe-payoption inactive" data-toggle="stripe-wizard">
-								<div class="option-spacer">
-									<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/stripe32.png' ); ?>" alt="<?php _e( 'Stripe', 'it-l10n-ithemes-exchange' ); ?>" />
-								</div>
-							</li>
-						<?php endif; ?>
-					</ul>
-				</div>
-
-				<?php if ( ! it_exchange_is_addon_registered( 'stripe' ) ) : ?>
-					<div class="field stripe-wizard inactive hide-if-js">
-						<h3><?php _e( 'Stripe', 'it-l10n-ithemes-exchange' ); ?></h3>
-						<p><?php _e( 'To use Stripe, you need to install the Stripe add-on.', 'it-l10n-ithemes-exchange' ); ?></p>
-						<div class="stripe-action activate-stripe">
-							<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/plugin32.png' ); ?>" />
-							<p><?php _e( 'I have the Stripe add-on and just need to install and/or activate it.', 'it-l10n-ithemes-exchange' ); ?></p>
-							<p><a href="<?php echo admin_url( 'plugins.php' ); ?>" target="_self"><?php _e( 'Go to the plugins page', 'it-l10n-ithemes-exchange' ); ?></a></p>
-						</div>
-						<div class="stripe-action buy-stripe">
-							<img src="<?php echo ITUtility::get_url_from_file( dirname( dirname( __FILE__ ) ) . '/images/icon32.png' ); ?>" />
-							<p><?php _e( "I don't have the Stripe add-on yet, but I want to use Stripe.", 'it-l10n-ithemes-exchange' ); ?></p>
-							<p><a href="http://ithemes.com/exchange/stripe/" target="_blank"><?php _e( 'Get the free Stripe Add-on', 'it-l10n-ithemes-exchange' ); ?></a></p>
-						</div>
-					</div>
-				<?php endif; ?>
-
 				<?php
 				foreach( (array) $addons as $addon ) {
 					do_action( 'it_exchange_print_' . $addon['slug'] . '_wizard_settings', $form );
